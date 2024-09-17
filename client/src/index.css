@@ -1,0 +1,10 @@
+body {
+    height: 100vh;
+    margin: 0;
+}
+
+#root {
+    height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
