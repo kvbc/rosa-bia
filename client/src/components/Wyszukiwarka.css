@@ -1,0 +1,9 @@
+.wyszukiwarka {
+    text-align: center;
+}
+
+.strony {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}

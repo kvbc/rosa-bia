@@ -1,9 +1,8 @@
-import "./RegistersPage.css";
 import RejestrComponent from "../components/registers_page/Rejestr";
 import { Rejestr, stworzRejestr } from "../Rejestr";
 import { useState } from "react";
 
-function RegistersPage() {
+export default function RejestryStrona() {
     const [rejestr, setRejestr] = useState<Rejestr>(
         stworzRejestr("PnB (6740)")
     );
@@ -14,5 +13,3 @@ function RegistersPage() {
         </div>
     );
 }
-
-export default RegistersPage;
