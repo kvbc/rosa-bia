@@ -1,26 +1,22 @@
-import { ReactNode, useContext, useEffect, useState } from "react";
-import Wyszukiwarka from "../components/Wyszukiwarka";
+import { useContext, useEffect, useState } from "react";
+import Wyszukiwarka from "../../components/Wyszukiwarka";
 import axios from "axios";
 import {
+    HTTPFetchResponse,
     Inwestor,
     InwestorRequestPost,
     InwestorRequestPut,
-    InwestorResponseGet,
     WSSBCMessage,
     WSSBCMessageInvestor,
     WSSBCMessageType,
-} from "../../../server/src/types";
-import InwestorKomponent from "../components/inwestorzy_strona/InwestorComponent";
-import WebSocketContext from "../contexts/WebSocketContext";
+} from "../../../../server/src/types";
+import WebSocketContext from "../../contexts/WebSocketContext";
+import TableEdit from "../../components/TableEdit";
+import InvestorTableEditRow from "./InvestorTableEditRow";
 
 export default function InwestorzyStrona() {
     const [liczbaInwestorow, setLiczbaInwestorow] = useState<number>(0);
     const [inwestorzy, setInwestorzy] = useState<Inwestor[]>([]);
-    const [nowyInwestor, setNowyInwestor] = useState<Inwestor>({
-        id: 0,
-        nazwa: "",
-        adres: "",
-    });
     const webSocket = useContext(WebSocketContext);
 
     useEffect(() => {
@@ -52,6 +48,16 @@ export default function InwestorzyStrona() {
                 }
                 case WSSBCMessageType.InvestorUpdated: {
                     const updatedInvestor = investorMessage.investor;
+                    console.log(updatedInvestor);
+                    // console.log(inwestorzy);
+                    console.log(inwestorzy.map((inwestor) => inwestor.id));
+                    console.log(
+                        inwestorzy.map((investor) =>
+                            investor.id === updatedInvestor.id
+                                ? updatedInvestor
+                                : investor
+                        )
+                    );
                     setInwestorzy((investors) =>
                         investors.map((investor) =>
                             investor.id === updatedInvestor.id
@@ -67,7 +73,7 @@ export default function InwestorzyStrona() {
         return () => {
             webSocket.removeEventListener("message", onMessage);
         };
-    }, [webSocket]);
+    }, [webSocket, inwestorzy]);
 
     const fetchInwestorzy = (
         startIndex: number,
@@ -75,7 +81,7 @@ export default function InwestorzyStrona() {
     ): (() => void) => {
         const abortController = new AbortController();
         axios
-            .get<InwestorResponseGet>(
+            .get<HTTPFetchResponse<Inwestor>>(
                 import.meta.env.VITE_HTTP_SERVER_HOSTNAME +
                     `/inwestorzy/${startIndex}-${endIndex}`,
                 {
@@ -85,7 +91,7 @@ export default function InwestorzyStrona() {
             .then((res) => {
                 console.log(startIndex, endIndex, res.data);
                 setLiczbaInwestorow(res.data.liczba);
-                setInwestorzy(res.data.inwestorzy);
+                setInwestorzy(res.data.results);
             });
 
         return () => {
@@ -123,29 +129,23 @@ export default function InwestorzyStrona() {
                 liczbaWynikow={liczbaInwestorow}
                 fetchWyniki={fetchInwestorzy}
             >
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Inwestor</th>
-                            <th>Adres</th>
-                            <th>Akcje</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {inwestorzy.map((inwestor) => (
-                            <InwestorKomponent
-                                key={inwestor.id}
-                                startInwestor={inwestor}
-                                onUsunClicked={onInwestorUsunClicked}
-                                onZapiszClicked={onInwestorZapiszClicked}
-                            />
-                        ))}
-                        <InwestorKomponent
-                            onDodajClicked={onInwestorDodajClicked}
+                <TableEdit headers={["ID", "Inwestor", "Adres"]}>
+                    {inwestorzy.map((inwestor) => (
+                        <InvestorTableEditRow
+                            key={inwestor.id}
+                            inwestor={inwestor}
+                            events={{
+                                onDeleteClicked: onInwestorUsunClicked,
+                                onSaveClicked: onInwestorZapiszClicked,
+                            }}
                         />
-                    </tbody>
-                </table>
+                    ))}
+                    <InvestorTableEditRow
+                        events={{
+                            onAddClicked: onInwestorDodajClicked,
+                        }}
+                    />
+                </TableEdit>
             </Wyszukiwarka>
         </>
     );

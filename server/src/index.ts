@@ -1,10 +1,10 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import {
+    HTTPFetchResponse,
     Inwestor,
     InwestorRequestPost,
     InwestorRequestPut,
-    InwestorResponseGet,
     WSSBCMessage,
     WSSBCMessageInvestor,
     WSSBCMessageType,
@@ -40,26 +40,27 @@ const db = new Database("db/db.db");
 app.use(express.json());
 app.use(cors());
 
-app.get("/inwestorzy/:startIndex-:endIndex", (req: Request, res: Response) => {
-    console.log("GET inwestorzy");
-
+app.get("/:table/:startIndex-:endIndex", (req: Request, res: Response) => {
+    const table: string = req.params.table;
     const startIndex: number = Number(req.params.startIndex);
     const endIndex: number = Number(req.params.endIndex);
     const length = endIndex - startIndex;
 
-    db.all<Inwestor>(
-        "select * from inwestorzy limit ?, ?",
+    console.log(`GET ${table}`);
+
+    db.all(
+        `select * from ${table} limit ?, ?`,
         [startIndex, length],
-        (err, inwestorzy) => {
+        (err, results) => {
             if (err) throw err;
             db.get<{ "count(*)": number }>(
-                "select count(*) from inwestorzy",
+                `select count(*) from ${table}`,
                 (err, row) => {
                     if (err) throw err;
                     const liczba = row["count(*)"];
-                    const odp: InwestorResponseGet = {
-                        inwestorzy,
+                    const odp: HTTPFetchResponse<any> = {
                         liczba,
+                        results,
                     };
                     res.json(odp);
                 }

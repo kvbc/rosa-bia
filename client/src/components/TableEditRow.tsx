@@ -1,4 +1,11 @@
-import { PropsWithChildren, useState } from "react";
+import {
+    Dispatch,
+    PropsWithChildren,
+    ReactNode,
+    SetStateAction,
+    useEffect,
+    useState,
+} from "react";
 import "./TableEditRow.css";
 
 export enum State {
@@ -7,49 +14,64 @@ export enum State {
     Adding,
 }
 
-export default function TableEditRow({
+export type Events<TRowData> = {
+    onDeleteClicked?: (rowData: TRowData) => void;
+    onAddClicked?: (rowData: TRowData) => void;
+    onSaveClicked?: (rowData: TRowData) => void;
+};
+
+export default function TableEditRow<TRowData>({
     children,
-    onDeleteClicked,
-    onAddClicked: _onAddClicked,
-    onSaveClicked: _onSaveClicked,
-    onEditClicked: _onEditClicked,
-    onCancelClicked: _onCancelClicked,
-    onClearClicked,
+    events,
+    rowData,
+    setRowData,
+    startRowData,
+    renderContent,
 }: PropsWithChildren<{
-    onDeleteClicked?: () => void;
-    onAddClicked?: () => void;
-    onSaveClicked?: () => void;
-    onCancelClicked?: () => void;
-    onClearClicked?: () => void;
-    onEditClicked?: () => void;
+    events: Events<TRowData>;
+    rowData: TRowData;
+    setRowData: Dispatch<SetStateAction<TRowData>>;
+    startRowData: TRowData;
+    renderContent: (state: State) => ReactNode;
 }>) {
     const [state, setState] = useState<State>(
-        _onAddClicked ? State.Adding : State.Viewing
+        events.onAddClicked ? State.Adding : State.Viewing
     );
+
+    useEffect(() => {
+        if (state == State.Viewing) setRowData(startRowData);
+    }, [state, startRowData]);
 
     const onEditClicked = () => {
         setState(State.Editing);
-        if (_onEditClicked) _onEditClicked();
     };
 
     const onSaveClicked = () => {
         setState(State.Viewing);
-        if (_onSaveClicked) _onSaveClicked();
+        if (events.onSaveClicked) events.onSaveClicked(rowData);
     };
 
     const onCancelClicked = () => {
         setState(State.Viewing);
-        if (_onCancelClicked) _onCancelClicked();
+        setRowData(startRowData);
     };
 
     const onAddClicked = () => {
-        if (onClearClicked) onClearClicked();
-        if (_onAddClicked) _onAddClicked();
+        onClearClicked();
+        if (events.onAddClicked) events.onAddClicked(rowData);
+    };
+
+    const onDeleteClicked = () => {
+        if (events.onDeleteClicked) events.onDeleteClicked(rowData);
+    };
+
+    const onClearClicked = () => {
+        setRowData(startRowData);
     };
 
     return (
         <tr className="table-edit-row">
-            {children}
+            {renderContent(state)}
             <td className="table-edit-row_actions">
                 {state == State.Viewing && (
                     <>

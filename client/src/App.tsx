@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/GlownaStrona";
 import RegistersPage from "./pages/RejestryStrona";
-import GeodesyPage from "./pages/GeodezjaStrona";
-import InvestorsPage from "./pages/InwestorzyStrona";
+import GeodesyPage from "./pages/geodesy/GeodezjaStrona";
+import InvestorsPage from "./pages/investors/InwestorzyStrona";
 import Navbar from "./components/home_page/Navbar";
 import "./App.css";
 import PKOBStrona from "./pages/PKOBStrona";

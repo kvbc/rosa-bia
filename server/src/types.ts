@@ -7,6 +7,11 @@ export type WSSBCMessage = {
     type: WSSBCMessageType;
 };
 
+export type HTTPFetchResponse<T> = {
+    liczba: number;
+    results: T[];
+};
+
 //
 // Inwestorzy
 //
@@ -17,10 +22,6 @@ export type Inwestor = {
     adres: string;
 };
 
-export type InwestorResponseGet = {
-    liczba: number;
-    inwestorzy: Inwestor[];
-};
 export type InwestorRequestPost = Inwestor;
 export type InwestorRequestPut = Inwestor;
 
@@ -31,3 +32,15 @@ export type WSSBCMessageInvestor = WSSBCMessage & {
         | WSSBCMessageType.InvestorUpdated;
     investor: Inwestor;
 };
+
+//
+// Geodesy
+//
+
+export type Commune = {
+    id: number;
+    name: string;
+};
+
+export type CommuneRequestPost = Commune;
+export type CommuneRequestPut = Commune;

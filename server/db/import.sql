@@ -12,9 +12,9 @@ create table inwestorzy(
 -- Geodezja
 -- 
 
-create table gminy(
+create table communes(
     id integer primary key autoincrement,
-    nazwa text not null unique
+    name text not null unique
 );
 create table miejscowosci(
     id integer primary key autoincrement,
@@ -22,7 +22,7 @@ create table miejscowosci(
     gmina_id integer not null,
     obreb_id integer not null,
     jedn_ewid text not null unique,
-    foreign key(gmina_id) references gminy(id),
+    foreign key(gmina_id) references communes(id),
     foreign key(obreb_id) references miejscowosci(id)
 );
 create table ulice(
@@ -214,6 +214,19 @@ insert into inwestorzy values (null, 'Szymon Szultka', 'blah blah blah');
 insert into inwestorzy values (null, 'Władysław Stec', 'blah blah blah');
 insert into inwestorzy values (null, 'Wojewódzki Konserwator Zabytków', 'blah blah blah');
 insert into inwestorzy values (null, 'Wojewódzki Urząd Ochrony Zabytków w Gdańsku', 'blah blah blah');
-insert into inwestorzy values (null, 'Wójt Gminy Przechlewo', 'blah blah blah');
+insert into inwestorzy values (null, 'Wójt communes Przechlewo', 'blah blah blah');
 insert into inwestorzy values (null, 'Zakład Karny w Czarnem', 'blah blah blah');
 insert into inwestorzy values (null, 'Zarząd Powiatu Człuchowskiego', 'blah blah blah');
+
+insert into communes values (null, 'Bukowo');
+insert into communes values (null, 'Człuchów');
+insert into communes values (null, 'Płonica');
+insert into communes values (null, 'Polnica');
+insert into communes values (null, 'Wierzchowo');
+insert into communes values (null, 'Wejherowo');
+insert into communes values (null, 'Gdańsk');
+insert into communes values (null, 'Pomerania');
+insert into communes values (null, 'Gdynia');
+insert into communes values (null, 'Bydgoszcz');
+insert into communes values (null, 'Radom');
+insert into communes values (null, 'Warszawa');
