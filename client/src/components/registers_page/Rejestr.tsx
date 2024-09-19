@@ -92,7 +92,7 @@ export default function RejestrComponent({
     }
 
     return (
-        <>
+        <div id="rejestr">
             {/* Typ Rejestru */}
             <table>
                 <thead>
@@ -118,7 +118,7 @@ export default function RejestrComponent({
                     </tr>
                 </tbody>
             </table>
-            <div id="rejestr">
+            <div>
                 {/* Góra */}
                 <div id="gora">
                     {/* Góra : dane wniosku */}
@@ -799,6 +799,6 @@ export default function RejestrComponent({
                     </table>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

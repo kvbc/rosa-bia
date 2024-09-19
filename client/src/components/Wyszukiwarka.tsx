@@ -5,12 +5,10 @@ import { Link } from "react-router-dom";
 export default function Wyszukiwarka({
     liczbaWynikow,
     fetchWyniki,
-    wyniki,
     children,
 }: PropsWithChildren<{
     liczbaWynikow: number;
     fetchWyniki: (startIndex: number, endIndex: number) => () => void; // return destructor
-    wyniki: ReactNode;
 }>) {
     const [liczbaWynikowNaStrone, setLiczbaWynikowNaStrone] =
         useState<number>(25);
@@ -84,7 +82,6 @@ export default function Wyszukiwarka({
             <br />
             <Strony />
             <br />
-            {wyniki}
             {children}
             <br />
             <Strony />
