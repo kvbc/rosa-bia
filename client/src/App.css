@@ -5,12 +5,12 @@
 table,
 th,
 td {
-    border: 1px solid lightgray;
+    border: 1px solid gray;
     border-collapse: collapse;
 }
 table {
     width: 100%;
-    table-layout: fixed;
+    /* table-layout: fixed; */
 }
 td {
     text-align: center;

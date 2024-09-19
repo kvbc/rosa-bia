@@ -47,7 +47,9 @@ export default function Wyszukiwarka({
                 {Array.from({ length: liczbaStron }).map(
                     (_, i) =>
                         i + 1 >= minStrona &&
-                        i + 1 <= maxStrona && <StronaButton strona={i + 1} />
+                        i + 1 <= maxStrona && (
+                            <StronaButton key={i + 1} strona={i + 1} />
+                        )
                 )}
                 {maxStrona < liczbaStron && (
                     <>

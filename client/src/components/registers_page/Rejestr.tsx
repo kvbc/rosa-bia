@@ -92,7 +92,7 @@ export default function RejestrComponent({
     }
 
     return (
-        <div id="rejestr">
+        <div className="rejestr">
             {/* Typ Rejestru */}
             <table>
                 <thead>
@@ -253,7 +253,6 @@ export default function RejestrComponent({
 
                 <div
                     id="rozwijacz"
-                    data-rozwiniety
                     onClick={onRozwijaczClicked}
                     ref={refRozwijacz}
                 >

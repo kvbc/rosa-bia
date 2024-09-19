@@ -1,3 +1,11 @@
+.rejestr {
+    background-color: lightgray;
+    margin: 5px;
+}
+.rejestr table {
+    table-layout: fixed;
+}
+
 #gora {
     display: flex;
     gap: 10px;

@@ -1,0 +1,8 @@
+.table-edit-row button {
+    width: 25%;
+}
+
+.table-edit-row_actions {
+    display: flex;
+    justify-content: space-evenly;
+}

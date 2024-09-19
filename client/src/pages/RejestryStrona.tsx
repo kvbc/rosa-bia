@@ -9,7 +9,72 @@ export default function RejestryStrona() {
 
     return (
         <div id="registers-page">
-            <RejestrComponent rejestr={rejestr} setRejestr={setRejestr} />
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rejestr</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <RejestrComponent
+                                rejestr={rejestr}
+                                setRejestr={setRejestr}
+                            />
+                        </td>
+                        <td>123</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <RejestrComponent
+                                rejestr={rejestr}
+                                setRejestr={setRejestr}
+                            />
+                        </td>
+                        <td>123</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <RejestrComponent
+                                rejestr={rejestr}
+                                setRejestr={setRejestr}
+                            />
+                        </td>
+                        <td>123</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <RejestrComponent
+                                rejestr={rejestr}
+                                setRejestr={setRejestr}
+                            />
+                        </td>
+                        <td>123</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <RejestrComponent
+                                rejestr={rejestr}
+                                setRejestr={setRejestr}
+                            />
+                        </td>
+                        <td>123</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <RejestrComponent
+                                rejestr={rejestr}
+                                setRejestr={setRejestr}
+                            />
+                        </td>
+                        <td>123</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            {/* <RejestrComponent rejestr={rejestr} setRejestr={setRejestr} /> */}
         </div>
     );
 }
