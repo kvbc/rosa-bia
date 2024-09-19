@@ -12,7 +12,7 @@ export default function Wyszukiwarka({
 }>) {
     const [liczbaWynikowNaStrone, setLiczbaWynikowNaStrone] =
         useState<number>(25);
-    const [strona, setStrona] = useState<number>(5);
+    const [strona, setStrona] = useState<number>(1);
     const startIndex = (strona - 1) * liczbaWynikowNaStrone;
     const endIndex = strona * liczbaWynikowNaStrone;
     const liczbaStron = Math.ceil(liczbaWynikow / liczbaWynikowNaStrone);
