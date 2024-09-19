@@ -1,20 +1,20 @@
 import { useState } from "react";
-import { Commune } from "../../../../server/src/types";
+import { Gmina } from "../../../../server/src/types";
 import TableEditRow, { Events, State } from "../../components/TableEditRow";
 
 export default function CommuneTableEditRow({
     commune: _commune,
     events,
 }: {
-    commune?: Commune;
-    events: Events<Commune>;
+    commune?: Gmina;
+    events: Events<Gmina>;
 }) {
     _commune = _commune || {
         id: 0,
-        name: "",
+        nazwa: "",
     };
 
-    const [commune, setCommune] = useState<Commune>(_commune);
+    const [commune, setCommune] = useState<Gmina>(_commune);
 
     const renderContent = (state: State) => (
         <>
@@ -29,11 +29,11 @@ export default function CommuneTableEditRow({
                 <input
                     type="text"
                     placeholder="Gmina"
-                    value={commune.name}
+                    value={commune.nazwa}
                     onChange={(e) =>
                         setCommune((commune) => ({
                             ...commune,
-                            name: e.target.value,
+                            nazwa: e.target.value,
                         }))
                     }
                     disabled={state == State.Viewing}

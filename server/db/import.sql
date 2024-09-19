@@ -12,9 +12,9 @@ create table inwestorzy(
 -- Geodezja
 -- 
 
-create table communes(
+create table gminy(
     id integer primary key autoincrement,
-    name text not null unique
+    nazwa text not null unique
 );
 create table miejscowosci(
     id integer primary key autoincrement,
@@ -22,7 +22,7 @@ create table miejscowosci(
     gmina_id integer not null,
     obreb_id integer not null,
     jedn_ewid text not null unique,
-    foreign key(gmina_id) references communes(id),
+    foreign key(gmina_id) references gminy(id),
     foreign key(obreb_id) references miejscowosci(id)
 );
 create table ulice(
@@ -214,19 +214,19 @@ insert into inwestorzy values (null, 'Szymon Szultka', 'blah blah blah');
 insert into inwestorzy values (null, 'Władysław Stec', 'blah blah blah');
 insert into inwestorzy values (null, 'Wojewódzki Konserwator Zabytków', 'blah blah blah');
 insert into inwestorzy values (null, 'Wojewódzki Urząd Ochrony Zabytków w Gdańsku', 'blah blah blah');
-insert into inwestorzy values (null, 'Wójt communes Przechlewo', 'blah blah blah');
+insert into inwestorzy values (null, 'Wójt gminy Przechlewo', 'blah blah blah');
 insert into inwestorzy values (null, 'Zakład Karny w Czarnem', 'blah blah blah');
 insert into inwestorzy values (null, 'Zarząd Powiatu Człuchowskiego', 'blah blah blah');
 
-insert into communes values (null, 'Bukowo');
-insert into communes values (null, 'Człuchów');
-insert into communes values (null, 'Płonica');
-insert into communes values (null, 'Polnica');
-insert into communes values (null, 'Wierzchowo');
-insert into communes values (null, 'Wejherowo');
-insert into communes values (null, 'Gdańsk');
-insert into communes values (null, 'Pomerania');
-insert into communes values (null, 'Gdynia');
-insert into communes values (null, 'Bydgoszcz');
-insert into communes values (null, 'Radom');
-insert into communes values (null, 'Warszawa');
+insert into gminy values (null, 'Bukowo');
+insert into gminy values (null, 'Człuchów');
+insert into gminy values (null, 'Płonica');
+insert into gminy values (null, 'Polnica');
+insert into gminy values (null, 'Wierzchowo');
+insert into gminy values (null, 'Wejherowo');
+insert into gminy values (null, 'Gdańsk');
+insert into gminy values (null, 'Pomerania');
+insert into gminy values (null, 'Gdynia');
+insert into gminy values (null, 'Bydgoszcz');
+insert into gminy values (null, 'Radom');
+insert into gminy values (null, 'Warszawa');

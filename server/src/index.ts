@@ -3,10 +3,7 @@ import dotenv from "dotenv";
 import {
     HTTPFetchResponse,
     Inwestor,
-    InwestorRequestPost,
-    InwestorRequestPut,
     WSSBCMessage,
-    WSSBCMessageInvestor,
     WSSBCMessageType,
 } from "./types";
 import { Database } from "sqlite3";
@@ -69,34 +66,39 @@ app.get("/:table/:startIndex-:endIndex", (req: Request, res: Response) => {
     );
 });
 
-app.post(
-    "/inwestorzy",
-    (req: Request<{}, {}, InwestorRequestPost>, res: Response) => {
-        console.log("POST inwestorzy");
-        console.log(req.body);
+app.post("/:table", (req: Request, res: Response) => {
+    const table = req.params.table;
 
-        db.run("insert into inwestorzy(id, nazwa, adres) values(null, ?, ?)", [
-            req.body.nazwa,
-            req.body.adres,
-        ]);
-
-        var bcastMsg: WSSBCMessageInvestor = {
-            type: WSSBCMessageType.InvestorAdded,
-            investor: req.body,
-        };
-        wsBroadcast(bcastMsg);
+    let keys = "id";
+    let values = "null";
+    const params: any[] = [];
+    for (const key in req.body) {
+        if (key !== "id") {
+            keys += ", " + key;
+            values += ", ?";
+            params.push(req.body[key]);
+        }
     }
-);
 
-app.delete("/inwestorzy/:id", (req: Request, res: Response) => {
-    const investorID = Number(req.params.id);
+    db.run(`insert into ${table}(${keys}) values(${values})`, params);
 
-    db.run("delete from inwestorzy where id = ?", [investorID]);
+    var bcastMsg: WSSBCMessage = {
+        type: WSSBCMessageType.EntryAdded,
+        entry: req.body,
+    };
+    wsBroadcast(bcastMsg);
+});
 
-    var bcastMsg: WSSBCMessageInvestor = {
-        type: WSSBCMessageType.InvestorDeleted,
-        investor: {
-            id: investorID,
+app.delete("/:table/:id", (req: Request, res: Response) => {
+    const table = req.params.table;
+    const entryID = Number(req.params.id);
+
+    db.run(`delete from ${table} where id = ?`, [entryID]);
+
+    var bcastMsg: WSSBCMessage = {
+        type: WSSBCMessageType.EntryDeleted,
+        entry: {
+            id: entryID,
             nazwa: "",
             adres: "",
         },
@@ -104,22 +106,29 @@ app.delete("/inwestorzy/:id", (req: Request, res: Response) => {
     wsBroadcast(bcastMsg);
 });
 
-app.put(
-    "/inwestorzy",
-    (req: Request<{}, {}, InwestorRequestPut>, res: Response) => {
-        db.run("update inwestorzy set nazwa=?, adres=? where id=?", [
-            req.body.nazwa,
-            req.body.adres,
-            req.body.id,
-        ]);
+app.put("/:table", (req: Request, res: Response) => {
+    const table = req.params.table;
 
-        var bcastMsg: WSSBCMessageInvestor = {
-            type: WSSBCMessageType.InvestorUpdated,
-            investor: req.body,
-        };
-        wsBroadcast(bcastMsg);
+    let query = `update ${table} set `;
+    const params = [];
+    for (const key in req.body) {
+        if (key != "id") {
+            if (params.length > 0) query += ", ";
+            query += `${key}=?`;
+            params.push(req.body[key]);
+        }
     }
-);
+    query += "where id=?";
+    params.push(req.body.id);
+
+    db.run(query, params);
+
+    var bcastMsg: WSSBCMessage = {
+        type: WSSBCMessageType.EntryUpdated,
+        entry: req.body,
+    };
+    wsBroadcast(bcastMsg);
+});
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

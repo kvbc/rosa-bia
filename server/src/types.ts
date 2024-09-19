@@ -1,10 +1,15 @@
 export enum WSSBCMessageType {
-    InvestorAdded,
-    InvestorUpdated,
-    InvestorDeleted,
+    EntryAdded,
+    EntryUpdated,
+    EntryDeleted,
 }
-export type WSSBCMessage = {
+export type DBEntry = {
+    id: number;
+    [key: string]: any;
+};
+export type WSSBCMessage<TEntry = DBEntry> = {
     type: WSSBCMessageType;
+    entry: TEntry;
 };
 
 export type HTTPFetchResponse<T> = {
@@ -22,25 +27,11 @@ export type Inwestor = {
     adres: string;
 };
 
-export type InwestorRequestPost = Inwestor;
-export type InwestorRequestPut = Inwestor;
-
-export type WSSBCMessageInvestor = WSSBCMessage & {
-    type:
-        | WSSBCMessageType.InvestorAdded
-        | WSSBCMessageType.InvestorDeleted
-        | WSSBCMessageType.InvestorUpdated;
-    investor: Inwestor;
-};
-
 //
-// Geodesy
+// Geodezja
 //
 
-export type Commune = {
+export type Gmina = {
     id: number;
-    name: string;
+    nazwa: string;
 };
-
-export type CommuneRequestPost = Commune;
-export type CommuneRequestPut = Commune;
