@@ -230,3 +230,16 @@ insert into gminy values (null, 'Gdynia');
 insert into gminy values (null, 'Bydgoszcz');
 insert into gminy values (null, 'Radom');
 insert into gminy values (null, 'Warszawa');
+
+insert into miejscowosci values (null, 'Niggerowo', 0, 0, '1234');
+insert into miejscowosci values (null, 'Murzynowo', 0, 0, '1231114');
+insert into miejscowosci values (null, 'Wejcherowo', 0, 0, '132334');
+insert into miejscowosci values (null, 'Bukowo', 0, 0, '13423344');
+insert into miejscowosci values (null, 'Dzuma', 0, 0, '3412334434');
+insert into miejscowosci values (null, 'Las', 0, 0, '1234433');
+insert into miejscowosci values (null, 'xd', 0, 0, '1230');
+
+insert into ulice values (null, 'Jana Pawla', 1);
+insert into ulice values (null, 'Jana Pawla II', 2);
+insert into ulice values (null, 'Zygmunta', 2);
+insert into ulice values (null, 'Tadeusza', 4);

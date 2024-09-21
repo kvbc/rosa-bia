@@ -85,6 +85,7 @@ app.post("/:table", (req: Request, res: Response) => {
     var bcastMsg: WSSBCMessage = {
         type: WSSBCMessageType.EntryAdded,
         entry: req.body,
+        endpoint: table,
     };
     wsBroadcast(bcastMsg);
 });
@@ -102,6 +103,7 @@ app.delete("/:table/:id", (req: Request, res: Response) => {
             nazwa: "",
             adres: "",
         },
+        endpoint: table,
     };
     wsBroadcast(bcastMsg);
 });
@@ -126,6 +128,7 @@ app.put("/:table", (req: Request, res: Response) => {
     var bcastMsg: WSSBCMessage = {
         type: WSSBCMessageType.EntryUpdated,
         entry: req.body,
+        endpoint: table,
     };
     wsBroadcast(bcastMsg);
 });
