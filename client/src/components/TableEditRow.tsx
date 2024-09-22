@@ -1,94 +1,94 @@
 import {
+    ComponentType,
     Dispatch,
-    PropsWithChildren,
-    ReactNode,
     SetStateAction,
     useEffect,
     useState,
 } from "react";
 import "./TableEditRow.css";
+import { TableEditEntry } from "./TableEdit";
 
-export enum State {
+export enum TableEditRowState {
     Viewing,
     Editing,
     Adding,
 }
 
-export type Events<TRowData> = {
-    onDeleteClicked?: (rowData: TRowData) => void;
-    onAddClicked?: (rowData: TRowData) => void;
-    onSaveClicked?: (rowData: TRowData) => void;
+export type TableEditRowEvents = {
+    onDeleteClicked?: () => void;
+    onAddClicked?: () => void;
+    onSaveClicked?: () => void;
 };
 
-export default function TableEditRow<TRowData>({
-    children,
+export type TableEditRowContentProps<TEntry extends TableEditEntry> = {
+    state: TableEditRowState;
+    entry: TEntry;
+    setEntry: (entry: TEntry) => void;
+};
+
+export type TableEditRowProps<TEntry extends TableEditEntry> = {
+    events: TableEditRowEvents;
+    entry: TEntry;
+    setEntry: (entry: TEntry) => void;
+    rowContentElement: ComponentType<TableEditRowContentProps<TEntry>>;
+};
+
+export default function TableEditRow<TEntry extends TableEditEntry>({
     events,
-    rowData,
-    setRowData,
-    startRowData,
-    renderContent,
-}: PropsWithChildren<{
-    events: Events<TRowData>;
-    rowData: TRowData;
-    setRowData: Dispatch<SetStateAction<TRowData>>;
-    startRowData: TRowData;
-    renderContent: (state: State) => ReactNode;
-}>) {
-    const [state, setState] = useState<State>(
-        events.onAddClicked ? State.Adding : State.Viewing
+    entry,
+    setEntry,
+    rowContentElement: RowContentElement,
+}: TableEditRowProps<TEntry>) {
+    const [state, setState] = useState<TableEditRowState>(
+        events.onAddClicked
+            ? TableEditRowState.Adding
+            : TableEditRowState.Viewing
     );
 
-    useEffect(() => {
-        if (state == State.Viewing) setRowData(startRowData);
-    }, [state, startRowData]);
-
     const onEditClicked = () => {
-        setState(State.Editing);
+        setState(TableEditRowState.Editing);
     };
 
     const onSaveClicked = () => {
-        setState(State.Viewing);
-        if (events.onSaveClicked) events.onSaveClicked(rowData);
+        setState(TableEditRowState.Viewing);
+        if (events.onSaveClicked) events.onSaveClicked();
     };
 
     const onCancelClicked = () => {
-        setState(State.Viewing);
-        setRowData(startRowData);
+        setState(TableEditRowState.Viewing);
     };
 
     const onAddClicked = () => {
-        onClearClicked();
-        if (events.onAddClicked) events.onAddClicked(rowData);
+        if (events.onAddClicked) events.onAddClicked();
     };
 
     const onDeleteClicked = () => {
-        if (events.onDeleteClicked) events.onDeleteClicked(rowData);
-    };
-
-    const onClearClicked = () => {
-        setRowData(startRowData);
+        if (events.onDeleteClicked) events.onDeleteClicked();
     };
 
     return (
         <tr className="table-edit-row">
-            {renderContent(state)}
+            <RowContentElement
+                state={state}
+                entry={entry}
+                setEntry={setEntry}
+            />
             <td className="table-edit-row_actions">
-                {state == State.Viewing && (
+                {state == TableEditRowState.Viewing && (
                     <>
                         <button onClick={onEditClicked}>Edytuj</button>
                         <button onClick={onDeleteClicked}>Usuń</button>
                     </>
                 )}
-                {state == State.Editing && (
+                {state == TableEditRowState.Editing && (
                     <>
                         <button onClick={onSaveClicked}>Zapisz</button>
                         <button onClick={onCancelClicked}>Anuluj</button>
                     </>
                 )}
-                {state == State.Adding && (
+                {state == TableEditRowState.Adding && (
                     <>
                         <button onClick={onAddClicked}>Dodaj</button>
-                        <button onClick={onClearClicked}>Wyczyść</button>
                     </>
                 )}
             </td>

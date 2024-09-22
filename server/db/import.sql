@@ -243,3 +243,31 @@ insert into ulice values (null, 'Jana Pawla', 1);
 insert into ulice values (null, 'Jana Pawla II', 2);
 insert into ulice values (null, 'Zygmunta', 2);
 insert into ulice values (null, 'Tadeusza', 4);
+
+insert into typy_decyzji_starosty values (null, 'Pozytywna');
+insert into typy_decyzji_starosty values (null, 'Sprzeciwu');
+insert into typy_decyzji_starosty values (null, 'Umarzająca');
+insert into typy_decyzji_starosty values (null, 'Inne rozstrzygnięcie');
+
+insert into typy_rozstrzygniec values (null, 'Wygaśnięcia');
+insert into typy_rozstrzygniec values (null, 'Bez rozpatrzenia');
+insert into typy_rozstrzygniec values (null, 'Uchylająca');
+insert into typy_rozstrzygniec values (null, 'Utrzymana w mocy');
+
+insert into typy_czynnosci_admin values (null, 'Wezwanie');
+insert into typy_czynnosci_admin values (null, 'Zawiadomienie');
+insert into typy_czynnosci_admin values (null, 'Postanowienie');
+insert into typy_czynnosci_admin values (null, 'Konserwator');
+insert into typy_czynnosci_admin values (null, 'Zawieszenie postępowania');
+insert into typy_czynnosci_admin values (null, 'Przedłużenie terminu');
+
+insert into typy_rejestrow values (null, 'PnB (6740)');
+insert into typy_rejestrow values (null, 'O Rozbiórkę (6741)');
+insert into typy_rejestrow values (null, 'Zgłoszenie Rozbiórki (6743.1)');
+insert into typy_rejestrow values (null, 'Zgłoszenie „zwykłe” (6743.2)');
+insert into typy_rejestrow values (null, 'Zgłoszenie ZSU (6743.3)');
+insert into typy_rejestrow values (null, 'Zgłoszenie BiP (6743.4)');
+insert into typy_rejestrow values (null, 'Zaświadczenie (705)');
+insert into typy_rejestrow values (null, 'Sprawy Różne (670)');
+insert into typy_rejestrow values (null, 'ZRiD (7012)');
+insert into typy_rejestrow values (null, 'Rejestr do Budowy');

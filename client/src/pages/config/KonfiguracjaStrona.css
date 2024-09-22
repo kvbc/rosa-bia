@@ -1,0 +1,12 @@
+.config-page tr,
+.config-page td {
+    height: 100%;
+}
+
+.config-page td > * {
+    height: 100%;
+}
+
+.config-page table {
+    table-layout: fixed;
+}

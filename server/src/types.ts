@@ -1,3 +1,5 @@
+import internal from "stream";
+
 export enum WSSBCMessageType {
     EntryAdded,
     EntryUpdated,
@@ -50,3 +52,15 @@ export type Ulica = {
     nazwa: string;
     miejscowosc_id: number;
 };
+
+//
+// Configuration Page
+//
+
+export type TypeEntry = DBEntry & {
+    typ: string;
+};
+
+//
+// PKOB Page
+//

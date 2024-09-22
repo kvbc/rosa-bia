@@ -1,7 +1,7 @@
-import { Entries } from "../hooks/useEntries";
+import { DBEntries } from "../hooks/useDBEntries";
 import { Miejscowosc } from "../../../server/src/types";
 import { createContext } from "react";
 
-const PlaceEntriesContext = createContext<Entries<Miejscowosc> | null>(null);
+const PlaceEntriesContext = createContext<DBEntries<Miejscowosc> | null>(null);
 
 export default PlaceEntriesContext;

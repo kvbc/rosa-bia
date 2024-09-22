@@ -16,19 +16,20 @@ import {
 import WebSocketContext from "../contexts/WebSocketContext";
 import axios from "axios";
 
-export type Entries<T> = {
+export type DBEntries<T> = {
     entries: T[];
     setEntries: Dispatch<SetStateAction<T[]>>;
     entryCount: number;
     fetchEntries: (startIndex: number, endIndex: number) => () => void;
 };
 
-export default function useEntries<T extends DBEntry>(
-    endpoint: string
-): Entries<T> {
+export default function useDBEntries<T extends DBEntry>(
+    endpoint: string,
+    customWebSocket?: WebSocket
+): DBEntries<T> {
     const [entries, setEntries] = useState<T[]>([]);
     const [entryCount, setEntryCount] = useState<number>(0);
-    const webSocket = useContext(WebSocketContext);
+    const webSocket = useContext(WebSocketContext) || customWebSocket;
 
     useEffect(() => {
         if (!webSocket) return;

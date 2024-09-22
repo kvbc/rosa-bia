@@ -1,5 +1,5 @@
-import RejestrComponent from "../components/registers_page/Rejestr";
-import { Rejestr, stworzRejestr } from "../Rejestr";
+import RejestrComponent from "./Rejestr";
+import { Rejestr, stworzRejestr } from "../../Rejestr";
 import { useState } from "react";
 
 export default function RejestryStrona() {

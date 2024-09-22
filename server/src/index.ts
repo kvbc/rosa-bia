@@ -80,14 +80,20 @@ app.post("/:table", (req: Request, res: Response) => {
         }
     }
 
-    db.run(`insert into ${table}(${keys}) values(${values})`, params);
-
-    var bcastMsg: WSSBCMessage = {
-        type: WSSBCMessageType.EntryAdded,
-        entry: req.body,
-        endpoint: table,
-    };
-    wsBroadcast(bcastMsg);
+    db.run(`insert into ${table}(${keys}) values(${values})`, params, (err) => {
+        db.get<{ "last_insert_rowid()": number }>(
+            "select last_insert_rowid()",
+            (err, row) => {
+                const insert_id = row["last_insert_rowid()"];
+                var bcastMsg: WSSBCMessage = {
+                    type: WSSBCMessageType.EntryAdded,
+                    entry: { ...req.body, id: insert_id },
+                    endpoint: table,
+                };
+                wsBroadcast(bcastMsg);
+            }
+        );
+    });
 });
 
 app.delete("/:table/:id", (req: Request, res: Response) => {
