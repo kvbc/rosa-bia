@@ -1,23 +1,14 @@
-import { useContext } from "react";
-import CommuneEntriesContext from "../../contexts/CommuneEntriesContext";
-import PlaceEntriesContext from "../../contexts/PlaceEntriesContext";
-import StreetEntriesContext from "../../contexts/StreetEntriesContext";
 import "./GeodezjaStrona.css";
 import Wyszukiwarka from "../../components/Wyszukiwarka";
 import DBTableEdit from "../../components/DBTableEdit";
-import { DBEntryEndpoint } from "../../App";
-import CommuneTableEditRowContent from "./CommuneTableEditRowContent";
-import PlaceTableEditRowContent from "./PlaceTableEditRowContent";
-import StreetTableEditRowContent from "./StreetTableEditRowContent";
+import { TableEditRowInputSelectOption } from "../../components/TableEditRow";
+import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import { Gmina, Miejscowosc, Ulica } from "../../../../server/src/types";
 
 export default function GeodezjaStrona() {
-    const communeDBEntries = useContext(CommuneEntriesContext);
-    const placeDBEntries = useContext(PlaceEntriesContext);
-    const streetDBEntries = useContext(StreetEntriesContext);
-
-    if (communeDBEntries === null) throw "Error";
-    if (placeDBEntries === null) throw "Error";
-    if (streetDBEntries === null) throw "Error";
+    const communeDBEntries = useDBEntriesStore<Gmina>("gminy")();
+    const placeDBEntries = useDBEntriesStore<Miejscowosc>("miejscowosci")();
+    const streetDBEntries = useDBEntriesStore<Ulica>("ulice")();
 
     return (
         <>
@@ -40,15 +31,23 @@ export default function GeodezjaStrona() {
                                 >
                                     <DBTableEdit
                                         dbEntries={communeDBEntries}
-                                        endpoint={DBEntryEndpoint.Commune}
+                                        endpoint={communeDBEntries.endpoint}
                                         headers={["ID", "Gmina"]}
-                                        rowContentComponent={
-                                            CommuneTableEditRowContent
-                                        }
                                         emptyEntry={{
                                             id: 0,
                                             nazwa: "",
                                         }}
+                                        rowInputInfos={[
+                                            {
+                                                type: "number",
+                                                entryKey: "id",
+                                                uneditable: true,
+                                            },
+                                            {
+                                                type: "text",
+                                                entryKey: "nazwa",
+                                            },
+                                        ]}
                                     />
                                 </Wyszukiwarka>
                             </td>
@@ -59,7 +58,7 @@ export default function GeodezjaStrona() {
                                 >
                                     <DBTableEdit
                                         dbEntries={placeDBEntries}
-                                        endpoint={DBEntryEndpoint.Place}
+                                        endpoint={placeDBEntries.endpoint}
                                         headers={[
                                             "ID",
                                             "Miejscowość",
@@ -67,9 +66,6 @@ export default function GeodezjaStrona() {
                                             "Obręb",
                                             "Jedn. ewid.",
                                         ]}
-                                        rowContentComponent={
-                                            PlaceTableEditRowContent
-                                        }
                                         emptyEntry={{
                                             id: 0,
                                             gmina_id: 0,
@@ -77,6 +73,43 @@ export default function GeodezjaStrona() {
                                             nazwa: "",
                                             obreb_id: 0,
                                         }}
+                                        rowInputInfos={[
+                                            {
+                                                type: "number",
+                                                entryKey: "id",
+                                                uneditable: true,
+                                            },
+                                            {
+                                                type: "text",
+                                                entryKey: "nazwa",
+                                            },
+                                            {
+                                                type: "select",
+                                                entryKey: "gmina_id",
+                                                selectOptions:
+                                                    communeDBEntries.entries.map<TableEditRowInputSelectOption>(
+                                                        (entry) => ({
+                                                            value: entry.id,
+                                                            name: entry.nazwa,
+                                                        })
+                                                    ),
+                                            },
+                                            {
+                                                type: "select",
+                                                entryKey: "obreb_id",
+                                                selectOptions:
+                                                    placeDBEntries.entries.map<TableEditRowInputSelectOption>(
+                                                        (entry) => ({
+                                                            value: entry.id,
+                                                            name: entry.nazwa,
+                                                        })
+                                                    ),
+                                            },
+                                            {
+                                                type: "text",
+                                                entryKey: "jedn_ewid",
+                                            },
+                                        ]}
                                     />
                                 </Wyszukiwarka>
                             </td>
@@ -87,42 +120,38 @@ export default function GeodezjaStrona() {
                                 >
                                     <DBTableEdit
                                         dbEntries={streetDBEntries}
-                                        endpoint={DBEntryEndpoint.Street}
+                                        endpoint={streetDBEntries.endpoint}
                                         headers={["ID", "Ulica", "Miejscowosc"]}
-                                        rowContentComponent={
-                                            StreetTableEditRowContent
-                                        }
                                         emptyEntry={{
                                             id: 0,
                                             miejscowosc_id: 0,
                                             nazwa: "",
                                         }}
+                                        rowInputInfos={[
+                                            {
+                                                type: "number",
+                                                entryKey: "id",
+                                                uneditable: true,
+                                            },
+                                            {
+                                                type: "text",
+                                                entryKey: "nazwa",
+                                            },
+                                            {
+                                                type: "select",
+                                                entryKey: "miejscowosc_id",
+                                                selectOptions:
+                                                    placeDBEntries.entries.map<TableEditRowInputSelectOption>(
+                                                        (entry) => ({
+                                                            value: entry.id,
+                                                            name: entry.nazwa,
+                                                        })
+                                                    ),
+                                            },
+                                        ]}
                                     />
                                 </Wyszukiwarka>
                             </td>
-                            {/* <td>
-                                        <Listing
-                                            endpoint="gminy"
-                                            entries={communeEntries}
-                                            renderTableEdit={CommunesTableEdit}
-                                        />
-                                    </td>
-                                    <td>
-                                        <Listing
-                                            endpoint="miejscowosci"
-                                            entries={placeEntries}
-                                            renderTableEdit={
-                                                MiejscowosciTableEdit
-                                            }
-                                        />
-                                    </td>
-                                    <td>
-                                        <Listing
-                                            endpoint="ulice"
-                                            entries={streetEntries}
-                                            renderTableEdit={StreetTableEdit}
-                                        />
-                                    </td> */}
                         </tr>
                     </tbody>
                 </table>

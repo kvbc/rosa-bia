@@ -1,11 +1,17 @@
-import { ComponentType, Dispatch, SetStateAction } from "react";
+import {
+    Dispatch,
+    HTMLAttributes,
+    InputHTMLAttributes,
+    SetStateAction,
+} from "react";
 import TableEditRow, {
-    TableEditRowContentProps,
     TableEditRowEvents,
+    TableEditRowInputInfo,
 } from "./TableEditRow";
 
 export type TableEditEntry = {
     id: number;
+    [key: string]: InputHTMLAttributes<any>["value"];
 };
 
 export type TableEditEvents<TEntry extends TableEditEntry> = {
@@ -15,17 +21,17 @@ export type TableEditEvents<TEntry extends TableEditEntry> = {
 };
 
 export default function TableEdit<TEntry extends TableEditEntry>({
-    headers,
     entries,
     setEntries,
     events,
-    rowContentElement: RowContentElement,
+    headers,
+    rowInputInfos,
 }: {
     entries: TEntry[];
-    setEntries: Dispatch<SetStateAction<typeof entries>>;
     headers: string[];
+    setEntries: Dispatch<SetStateAction<typeof entries>>;
     events: TableEditEvents<TEntry>;
-    rowContentElement: ComponentType<TableEditRowContentProps<TEntry>>;
+    rowInputInfos: TableEditRowInputInfo<TEntry>[];
 }) {
     return (
         <table>
@@ -54,7 +60,7 @@ export default function TableEdit<TEntry extends TableEditEntry>({
                             key={entry.id}
                             entry={entry}
                             events={entryEvents}
-                            rowContentElement={RowContentElement}
+                            inputInfos={rowInputInfos}
                             setEntry={(newEntry) => {
                                 setEntries((entries) =>
                                     entries.map((entry) =>

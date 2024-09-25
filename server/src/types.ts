@@ -64,3 +64,40 @@ export type TypeEntry = DBEntry & {
 //
 // PKOB Page
 //
+
+namespace PKOB {
+    export type ConstructionSection = {
+        id: number;
+        sekcja: string;
+    };
+    export type ConstructionDivision = {
+        id: number;
+        dzial: string;
+        sekcja_id: number;
+    };
+    export type ConstructionIntention = {
+        id: number;
+        zamierzenie: string;
+        pkob: number;
+        klasa_zl: string;
+        kat_ob: string;
+        dzial_id: number;
+    };
+    export type ConstructionClass = {
+        id: number;
+        klasa: string;
+        zamierzenie_id: number;
+    };
+    export type BuildType = {
+        id: number;
+        typ: string;
+    };
+    export type ConstructionForm = {
+        id: number;
+        forma: string;
+    };
+    export type SpatialPlans = {
+        id: number;
+        planowanie: string;
+    };
+}

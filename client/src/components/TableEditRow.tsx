@@ -1,10 +1,4 @@
-import {
-    ComponentType,
-    Dispatch,
-    SetStateAction,
-    useEffect,
-    useState,
-} from "react";
+import { HTMLInputTypeAttribute, InputHTMLAttributes, useState } from "react";
 import "./TableEditRow.css";
 import { TableEditEntry } from "./TableEdit";
 
@@ -20,25 +14,30 @@ export type TableEditRowEvents = {
     onSaveClicked?: () => void;
 };
 
-export type TableEditRowContentProps<TEntry extends TableEditEntry> = {
-    state: TableEditRowState;
-    entry: TEntry;
-    setEntry: (entry: TEntry) => void;
+export type TableEditRowInputSelectOption = {
+    value: string | number;
+    name: string;
 };
 
-export type TableEditRowProps<TEntry extends TableEditEntry> = {
-    events: TableEditRowEvents;
-    entry: TEntry;
-    setEntry: (entry: TEntry) => void;
-    rowContentElement: ComponentType<TableEditRowContentProps<TEntry>>;
+export type TableEditRowInputInfo<TEntry extends TableEditEntry> = {
+    type: HTMLInputTypeAttribute | "select";
+    entryKey: keyof TEntry;
+    uneditable?: boolean;
+    selectOptions?: TableEditRowInputSelectOption[];
+    placeholder?: string;
 };
 
 export default function TableEditRow<TEntry extends TableEditEntry>({
     events,
     entry,
     setEntry,
-    rowContentElement: RowContentElement,
-}: TableEditRowProps<TEntry>) {
+    inputInfos,
+}: {
+    events: TableEditRowEvents;
+    entry: TEntry;
+    setEntry: (entry: TEntry) => void;
+    inputInfos: TableEditRowInputInfo<TEntry>[];
+}) {
     const [state, setState] = useState<TableEditRowState>(
         events.onAddClicked
             ? TableEditRowState.Adding
@@ -68,11 +67,54 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
 
     return (
         <tr className="table-edit-row">
-            <RowContentElement
-                state={state}
-                entry={entry}
-                setEntry={setEntry}
-            />
+            {inputInfos.map((inputInfo) => (
+                <td>
+                    {inputInfo.type === "select" && (
+                        <select
+                            value={entry[inputInfo.entryKey]}
+                            onChange={(e) =>
+                                setEntry({
+                                    ...entry,
+                                    [inputInfo.entryKey]: e.target.value,
+                                })
+                            }
+                            disabled={
+                                inputInfo.uneditable
+                                    ? true
+                                    : state == TableEditRowState.Viewing
+                            }
+                        >
+                            {inputInfo.selectOptions &&
+                                inputInfo.selectOptions.map((selectOption) => (
+                                    <option
+                                        value={selectOption.value}
+                                        key={selectOption.value}
+                                    >
+                                        {selectOption.name}
+                                    </option>
+                                ))}
+                        </select>
+                    )}
+                    {inputInfo.type !== "select" && (
+                        <input
+                            type={inputInfo.type}
+                            value={entry[inputInfo.entryKey]}
+                            onChange={(e) =>
+                                setEntry({
+                                    ...entry,
+                                    [inputInfo.entryKey]: e.target.value,
+                                })
+                            }
+                            disabled={
+                                inputInfo.uneditable
+                                    ? true
+                                    : state == TableEditRowState.Viewing
+                            }
+                            placeholder={inputInfo.placeholder}
+                        />
+                    )}
+                </td>
+            ))}
             <td className="table-edit-row_actions">
                 {state == TableEditRowState.Viewing && (
                     <>

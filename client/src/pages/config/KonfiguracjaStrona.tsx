@@ -1,54 +1,41 @@
 import { useContext } from "react";
-import { DBEntryEndpoint } from "../../App";
 import Wyszukiwarka from "../../components/Wyszukiwarka";
-import MayorDecisionTypeDBEntriesContext from "../../contexts/MayorDecisionTypeDBEntriesContext";
-import { DBEntries } from "../../hooks/useDBEntries";
-import ResolutionTypeDBEntriesContext from "../../contexts/ResolutionTypeDBEntriesContext";
-import AdminActionTypeDBEntriesContext from "../../contexts/AdminActionTypeDBEntriesContext";
-import RegisterTypeDBEntriesContext from "../../contexts/RegisterTypeDBEntriesContext";
+import useDBEntriesStore, { DBEntries } from "../../hooks/useDBEntriesStore";
 import DBTableEdit from "../../components/DBTableEdit";
-import ConfigTableEditRowContent from "./ConfigTableEditRowContent";
 import { TypeEntry } from "../../../../server/src/types";
 import "./KonfiguracjaStrona.css";
 
 export default function KonfiguracjaStrona() {
-    const mayorDecisionTypeDBEntries = useContext(
-        MayorDecisionTypeDBEntriesContext
-    );
-    const resolutionTypeDBEntries = useContext(ResolutionTypeDBEntriesContext);
-    const adminActionTypeDBEntries = useContext(
-        AdminActionTypeDBEntriesContext
-    );
-    const registerTypeDBEntries = useContext(RegisterTypeDBEntriesContext);
+    const mayorDecisionTypeDBEntries = useDBEntriesStore<TypeEntry>(
+        "typy_decyzji_starosty"
+    )();
 
-    if (mayorDecisionTypeDBEntries === null) throw "Error";
-    if (resolutionTypeDBEntries === null) throw "Error";
-    if (adminActionTypeDBEntries === null) throw "Error";
-    if (registerTypeDBEntries === null) throw "Error";
+    const resolutionTypeDBEntries =
+        useDBEntriesStore<TypeEntry>("typy_rozstrzygniec")();
+    const adminActionTypeDBEntries = useDBEntriesStore<TypeEntry>(
+        "typy_czynnosci_admin"
+    )();
+    const registerTypeDBEntries =
+        useDBEntriesStore<TypeEntry>("typy_rejestrow")();
 
     const entries: {
         dbEntries: DBEntries<TypeEntry>;
-        endpoint: DBEntryEndpoint;
         name: string;
     }[] = [
         {
             dbEntries: mayorDecisionTypeDBEntries,
-            endpoint: DBEntryEndpoint.MayorDecisionTypes,
             name: "Decyzja Starosty",
         },
         {
             dbEntries: resolutionTypeDBEntries,
-            endpoint: DBEntryEndpoint.ResolutionTypes,
             name: "Rozstrzygnięcie",
         },
         {
             dbEntries: adminActionTypeDBEntries,
-            endpoint: DBEntryEndpoint.AdminActionTypes,
             name: "Czynność admin.",
         },
         {
             dbEntries: registerTypeDBEntries,
-            endpoint: DBEntryEndpoint.RegisterTypes,
             name: "Typ Rejestru",
         },
     ];
@@ -80,15 +67,24 @@ export default function KonfiguracjaStrona() {
                                     >
                                         <DBTableEdit
                                             dbEntries={entry.dbEntries}
-                                            endpoint={entry.endpoint}
+                                            endpoint={entry.dbEntries.endpoint}
                                             headers={["ID", entry.name]}
-                                            rowContentComponent={
-                                                ConfigTableEditRowContent
-                                            }
                                             emptyEntry={{
                                                 id: 0,
                                                 typ: "",
                                             }}
+                                            rowInputInfos={[
+                                                {
+                                                    type: "number",
+                                                    entryKey: "id",
+                                                    uneditable: true,
+                                                },
+                                                {
+                                                    type: "text",
+                                                    entryKey: "typ",
+                                                    placeholder: "Typ",
+                                                },
+                                            ]}
                                         />
                                     </Wyszukiwarka>
                                 </td>

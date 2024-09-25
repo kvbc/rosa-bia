@@ -1,0 +1,12 @@
+.pkob-strona tr,
+.pkob-strona td {
+    height: 100%;
+}
+
+.pkob-strona td > * {
+    height: 100%;
+}
+
+.pkob-strona table {
+    /* table-layout: fixed; */
+}

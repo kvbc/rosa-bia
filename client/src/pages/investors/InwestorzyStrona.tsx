@@ -1,12 +1,14 @@
 import { useContext } from "react";
 import Wyszukiwarka from "../../components/Wyszukiwarka";
-import InvestorEntriesContext from "../../contexts/InvestorEntriesContext";
 import DBTableEdit from "../../components/DBTableEdit";
 import { DBEntryEndpoint } from "../../App";
-import InvestorTableEditRowContent from "./InvestorTableEditRowContent";
+import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import { Inwestor } from "../../../../server/src/types";
 
 export default function InwestorzyStrona() {
-    const investorDBEntries = useContext(InvestorEntriesContext)!;
+    const investorDBEntries = useDBEntriesStore<Inwestor>("inwestorzy")();
+
+    console.log("test");
 
     return (
         <>
@@ -17,14 +19,28 @@ export default function InwestorzyStrona() {
             >
                 <DBTableEdit
                     dbEntries={investorDBEntries}
-                    endpoint={DBEntryEndpoint.Investor}
+                    endpoint={investorDBEntries.endpoint}
                     headers={["ID", "Inwestor", "Adres"]}
-                    rowContentComponent={InvestorTableEditRowContent}
                     emptyEntry={{
                         id: 0,
                         adres: "",
                         nazwa: "",
                     }}
+                    rowInputInfos={[
+                        {
+                            type: "number",
+                            entryKey: "id",
+                            uneditable: true,
+                        },
+                        {
+                            type: "text",
+                            entryKey: "nazwa",
+                        },
+                        {
+                            type: "text",
+                            entryKey: "adres",
+                        },
+                    ]}
                 />
             </Wyszukiwarka>
         </>

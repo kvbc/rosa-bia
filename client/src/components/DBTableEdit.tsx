@@ -1,23 +1,22 @@
 import axios from "axios";
 import { DBEntry } from "../../../server/src/types";
-import { DBEntries } from "../hooks/useDBEntries";
+import { DBEntries } from "../hooks/useDBEntriesStore";
 import TableEdit from "./TableEdit";
-import { ComponentType, useContext, useEffect, useState } from "react";
-import { TableEditRowContentProps } from "./TableEditRow";
-import WebSocketContext from "../contexts/WebSocketContext";
+import { ComponentType, useEffect, useState } from "react";
+import { TableEditRowInputInfo } from "./TableEditRow";
 
 export default function DBTableEdit<TEntry extends DBEntry>({
     endpoint,
     headers,
     dbEntries,
     emptyEntry,
-    rowContentComponent: RowContentComponent,
+    rowInputInfos,
 }: {
     endpoint: string;
     headers: string[];
     dbEntries: DBEntries<TEntry>;
     emptyEntry: TEntry;
-    rowContentComponent: ComponentType<TableEditRowContentProps<TEntry>>;
+    rowInputInfos: TableEditRowInputInfo<TEntry>[];
 }) {
     const [entries, setEntries] = useState<TEntry[]>(dbEntries.entries);
 
@@ -51,13 +50,13 @@ export default function DBTableEdit<TEntry extends DBEntry>({
             <TableEdit
                 entries={entries}
                 setEntries={setEntries}
+                rowInputInfos={rowInputInfos}
                 events={{
                     onEntryAddClicked,
                     onEntryDeleteClicked,
                     onEntrySaveClicked,
                 }}
                 headers={headers}
-                rowContentElement={RowContentComponent}
             />
         </div>
     );
