@@ -18,7 +18,10 @@ export default function DBTableEdit<TEntry extends DBEntry>({
     emptyEntry: TEntry;
     rowInputInfos: TableEditRowInputInfo<TEntry>[];
 }) {
-    const [entries, setEntries] = useState<TEntry[]>(dbEntries.entries);
+    const [entries, setEntries] = useState<TEntry[]>([
+        ...dbEntries.entries,
+        { ...emptyEntry },
+    ]);
 
     useEffect(() => {
         setEntries([...dbEntries.entries, { ...emptyEntry }]);
