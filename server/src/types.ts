@@ -18,6 +18,7 @@ export type WSSBCMessage<TEntry = DBEntry> = {
 export type HTTPFetchResponse<T> = {
     liczba: number;
     results: T[];
+    next_insert_id: number;
 };
 
 //
@@ -65,7 +66,7 @@ export type TypeEntry = DBEntry & {
 // PKOB Page
 //
 
-namespace PKOB {
+export namespace PKOB {
     export type ConstructionSection = {
         id: number;
         sekcja: string;
@@ -96,8 +97,53 @@ namespace PKOB {
         id: number;
         forma: string;
     };
-    export type SpatialPlans = {
+    export type SpatialPlan = {
         id: number;
         planowanie: string;
     };
 }
+
+//
+// Register Page
+//
+
+export type Register = {
+    id: number;
+    typ_id: number;
+
+    wniosek_numer: number;
+    wniosek_data_zlozenia: string;
+    wniosek_inwestor_id: number;
+    wniosek_decyzja_typ_id: number;
+    wniosek_decyzja_numer: number;
+    wniosek_decyzja_data_wydania: string;
+    wniosek_rozstrzygniecie_typ_id: number;
+    wniosek_rozstrzygniecie_numer_pisma: number;
+    wniosek_rozstrzygniecie_data_wydania: string;
+
+    obiekt_klasa_id: number;
+    obiekt_forma_budownictwa_id: number;
+    obiekt_planowanie_przestrzenne_id: number;
+    obiekt_ulica_id: number;
+    obiekt_nr: string;
+};
+export type RegisterBuildTypes = {
+    id: number;
+    typ_id: number;
+    rejestr_id: number;
+};
+export type RegisterInvestPlots = {
+    id: number;
+    dzialka: string;
+    rejestr_id: number;
+};
+export type RegisterAdminActions = {
+    id: number;
+    typ_id: number;
+    rejestr_id: number;
+    wybor: boolean;
+    termin: number;
+    data_pisma: string;
+    data_odebrania: string;
+    data_odpowiedzi: string;
+};

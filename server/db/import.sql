@@ -114,10 +114,9 @@ create table rejestry(
     wniosek_rozstrzygniecie_numer_pisma integer not null,
     wniosek_rozstrzygniecie_data_wydania date not null,
 
-    obiekt_zamierzenie_id integer not null,
+    obiekt_klasa_id integer not null,
     obiekt_forma_budownictwa_id integer not null,
     obiekt_planowanie_przestrzenne_id integer not null,
-    obiekt_miejscowosc_id integer not null,
     obiekt_ulica_id integer not null,
     obiekt_nr text not null,
 
@@ -125,10 +124,9 @@ create table rejestry(
     foreign key(wniosek_decyzja_typ_id) references typy_decyzji_starosty(id),
     foreign key(wniosek_rozstrzygniecie_typ_id) references typy_rozstrzygniec(id),
 
-    foreign key(obiekt_zamierzenie_id) references zamierzenia_budowlane(id),
+    foreign key(obiekt_klasa_id) references klasy_budowlane(id),
     foreign key(obiekt_forma_budownictwa_id) references formy_budownictwa(id),
     foreign key(obiekt_planowanie_przestrzenne_id) references planowania_przestrzenne(id),
-    foreign key(obiekt_miejscowosc_id) references miejscowosci(id),
     foreign key(obiekt_ulica_id) references ulice(id)
 );
 create table rejestry_typy_budowy(
@@ -161,113 +159,204 @@ create table rejestry_czynnosci_admin(
 -- 
 -- 
 
-insert into inwestorzy values (null, '"ODEJEWSKI - ODAN" Sp.  Z o.o.', 'blah blah blah');
-insert into inwestorzy values (null, '"ROLA" Sp. z o.o.', 'blah blah blah');
-insert into inwestorzy values (null, '"SZCZEPAN" J. SZCZEPAŃSKI i Z. SZCZEPAŃSKI', 'blah blah blah');
-insert into inwestorzy values (null, '„POLSTYR” Sp. z o. o.', 'blah blah blah');
-insert into inwestorzy values (null, 'Adam Stec', 'blah blah blah');
-insert into inwestorzy values (null, 'Agencja Mienia Wojskowego', 'blah blah blah');
-insert into inwestorzy values (null, 'Agnieszka Chudy', 'blah blah blah');
-insert into inwestorzy values (null, 'Anna Bartoś', 'blah blah blah');
-insert into inwestorzy values (null, 'Anna Szymanek', 'blah blah blah');
-insert into inwestorzy values (null, 'Burmistrz Czarnego', 'blah blah blah');
-insert into inwestorzy values (null, 'Burmistrz Debrzna', 'blah blah blah');
-insert into inwestorzy values (null, 'Burmistrz Miasta Człuchów', 'blah blah blah');
-insert into inwestorzy values (null, 'Daniel Folehr', 'blah blah blah');
-insert into inwestorzy values (null, 'Edyta Sobolewska', 'blah blah blah');
-insert into inwestorzy values (null, 'Ewa Stroińska', 'blah blah blah');
-insert into inwestorzy values (null, 'Ewa Zagórzańska', 'blah blah blah');
-insert into inwestorzy values (null, 'GABI BIS JERCZYŃSKI ', 'blah blah blah');
-insert into inwestorzy values (null, 'Generalna Dyrekcja Dróg Krajowych i Autostrad', 'blah blah blah');
-insert into inwestorzy values (null, 'Gmina Czarne', 'blah blah blah');
-insert into inwestorzy values (null, 'Gmina Człuchów', 'blah blah blah');
-insert into inwestorzy values (null, 'Gmina Debrzno', 'blah blah blah');
-insert into inwestorzy values (null, 'Gmina Miejska Człuchów', 'blah blah blah');
-insert into inwestorzy values (null, 'Gmina Przechlewo', 'blah blah blah');
-insert into inwestorzy values (null, 'Grzegorz Józefko', 'blah blah blah');
-insert into inwestorzy values (null, 'Inwestycje Sp. z o . o.', 'blah blah blah');
-insert into inwestorzy values (null, 'Józef Rzeszczyński', 'blah blah blah');
-insert into inwestorzy values (null, 'Katarzyna Stec', 'blah blah blah');
-insert into inwestorzy values (null, 'Krajowy Ośrodek Wsparcia Rolnictwa', 'blah blah blah');
-insert into inwestorzy values (null, 'Krystyna Rzeszczyńska', 'blah blah blah');
-insert into inwestorzy values (null, 'Marcin Bartoś', 'blah blah blah');
-insert into inwestorzy values (null, 'Michał Dyl', 'blah blah blah');
-insert into inwestorzy values (null, 'MKS Piast Człuchów', 'blah blah blah');
-insert into inwestorzy values (null, 'Nadleśnictwo Czarnobór ', 'blah blah blah');
-insert into inwestorzy values (null, 'Nadleśnictwo Człuchów', 'blah blah blah');
-insert into inwestorzy values (null, 'NOVODOM Developer Sp. z o.o.', 'blah blah blah');
-insert into inwestorzy values (null, 'Ośrodek Sportu i Rekreacji ', 'blah blah blah');
-insert into inwestorzy values (null, 'Pan Grzegorz Wojas', 'blah blah blah');
-insert into inwestorzy values (null, 'Pan Piotr Piotrowicz', 'blah blah blah');
-insert into inwestorzy values (null, 'Państwowe Gospodarstwo Leśne Lasy Państwowe', 'blah blah blah');
-insert into inwestorzy values (null, 'PINB w Człuchowie', 'blah blah blah');
-insert into inwestorzy values (null, 'Piotr Staszków', 'blah blah blah');
-insert into inwestorzy values (null, 'POLTAREX Polskie Drewno Sp. z o.o. ', 'blah blah blah');
-insert into inwestorzy values (null, 'Powiat Człuchowski', 'blah blah blah');
-insert into inwestorzy values (null, 'Przedsiębiorstwo Komunalne Spółka z o.o.', 'blah blah blah');
-insert into inwestorzy values (null, 'PVE 19 Sp. z o.o.', 'blah blah blah');
-insert into inwestorzy values (null, 'Regionalny Zarząd Gospodarki Wodnej', 'blah blah blah');
-insert into inwestorzy values (null, 'Rodzinny Ogród Działkowy "NASZ OGRÓD"', 'blah blah blah');
-insert into inwestorzy values (null, 'Starostwo Powiatowe w Człuchowie', 'blah blah blah');
-insert into inwestorzy values (null, 'Stowarzyszenie Solidarni "PLUS"', 'blah blah blah');
-insert into inwestorzy values (null, 'Szymon Szultka', 'blah blah blah');
-insert into inwestorzy values (null, 'Władysław Stec', 'blah blah blah');
-insert into inwestorzy values (null, 'Wojewódzki Konserwator Zabytków', 'blah blah blah');
-insert into inwestorzy values (null, 'Wojewódzki Urząd Ochrony Zabytków w Gdańsku', 'blah blah blah');
-insert into inwestorzy values (null, 'Wójt gminy Przechlewo', 'blah blah blah');
-insert into inwestorzy values (null, 'Zakład Karny w Czarnem', 'blah blah blah');
-insert into inwestorzy values (null, 'Zarząd Powiatu Człuchowskiego', 'blah blah blah');
+insert into inwestorzy values
+    (null, '"ODEJEWSKI - ODAN" Sp.  Z o.o.', 'blah blah blah'),
+    (null, '"ROLA" Sp. z o.o.', 'blah blah blah'),
+    (null, '"SZCZEPAN" J. SZCZEPAŃSKI i Z. SZCZEPAŃSKI', 'blah blah blah'),
+    (null, '„POLSTYR” Sp. z o. o.', 'blah blah blah'),
+    (null, 'Adam Stec', 'blah blah blah'),
+    (null, 'Agencja Mienia Wojskowego', 'blah blah blah'),
+    (null, 'Agnieszka Chudy', 'blah blah blah'),
+    (null, 'Anna Bartoś', 'blah blah blah'),
+    (null, 'Anna Szymanek', 'blah blah blah'),
+    (null, 'Burmistrz Czarnego', 'blah blah blah'),
+    (null, 'Burmistrz Debrzna', 'blah blah blah'),
+    (null, 'Burmistrz Miasta Człuchów', 'blah blah blah'),
+    (null, 'Daniel Folehr', 'blah blah blah'),
+    (null, 'Edyta Sobolewska', 'blah blah blah'),
+    (null, 'Ewa Stroińska', 'blah blah blah'),
+    (null, 'Ewa Zagórzańska', 'blah blah blah'),
+    (null, 'GABI BIS JERCZYŃSKI ', 'blah blah blah'),
+    (null, 'Generalna Dyrekcja Dróg Krajowych i Autostrad', 'blah blah blah'),
+    (null, 'Gmina Czarne', 'blah blah blah'),
+    (null, 'Gmina Człuchów', 'blah blah blah'),
+    (null, 'Gmina Debrzno', 'blah blah blah'),
+    (null, 'Gmina Miejska Człuchów', 'blah blah blah'),
+    (null, 'Gmina Przechlewo', 'blah blah blah'),
+    (null, 'Grzegorz Józefko', 'blah blah blah'),
+    (null, 'Inwestycje Sp. z o . o.', 'blah blah blah'),
+    (null, 'Józef Rzeszczyński', 'blah blah blah'),
+    (null, 'Katarzyna Stec', 'blah blah blah'),
+    (null, 'Krajowy Ośrodek Wsparcia Rolnictwa', 'blah blah blah'),
+    (null, 'Krystyna Rzeszczyńska', 'blah blah blah'),
+    (null, 'Marcin Bartoś', 'blah blah blah'),
+    (null, 'Michał Dyl', 'blah blah blah'),
+    (null, 'MKS Piast Człuchów', 'blah blah blah'),
+    (null, 'Nadleśnictwo Czarnobór ', 'blah blah blah'),
+    (null, 'Nadleśnictwo Człuchów', 'blah blah blah'),
+    (null, 'NOVODOM Developer Sp. z o.o.', 'blah blah blah'),
+    (null, 'Ośrodek Sportu i Rekreacji ', 'blah blah blah'),
+    (null, 'Pan Grzegorz Wojas', 'blah blah blah'),
+    (null, 'Pan Piotr Piotrowicz', 'blah blah blah'),
+    (null, 'Państwowe Gospodarstwo Leśne Lasy Państwowe', 'blah blah blah'),
+    (null, 'PINB w Człuchowie', 'blah blah blah'),
+    (null, 'Piotr Staszków', 'blah blah blah'),
+    (null, 'POLTAREX Polskie Drewno Sp. z o.o. ', 'blah blah blah'),
+    (null, 'Powiat Człuchowski', 'blah blah blah'),
+    (null, 'Przedsiębiorstwo Komunalne Spółka z o.o.', 'blah blah blah'),
+    (null, 'PVE 19 Sp. z o.o.', 'blah blah blah'),
+    (null, 'Regionalny Zarząd Gospodarki Wodnej', 'blah blah blah'),
+    (null, 'Rodzinny Ogród Działkowy "NASZ OGRÓD"', 'blah blah blah'),
+    (null, 'Starostwo Powiatowe w Człuchowie', 'blah blah blah'),
+    (null, 'Stowarzyszenie Solidarni "PLUS"', 'blah blah blah'),
+    (null, 'Szymon Szultka', 'blah blah blah'),
+    (null, 'Władysław Stec', 'blah blah blah'),
+    (null, 'Wojewódzki Konserwator Zabytków', 'blah blah blah'),
+    (null, 'Wojewódzki Urząd Ochrony Zabytków w Gdańsku', 'blah blah blah'),
+    (null, 'Wójt gminy Przechlewo', 'blah blah blah'),
+    (null, 'Zakład Karny w Czarnem', 'blah blah blah'),
+    (null, 'Zarząd Powiatu Człuchowskiego', 'blah blah blah');
 
-insert into gminy values (null, 'Bukowo');
-insert into gminy values (null, 'Człuchów');
-insert into gminy values (null, 'Płonica');
-insert into gminy values (null, 'Polnica');
-insert into gminy values (null, 'Wierzchowo');
-insert into gminy values (null, 'Wejherowo');
-insert into gminy values (null, 'Gdańsk');
-insert into gminy values (null, 'Pomerania');
-insert into gminy values (null, 'Gdynia');
-insert into gminy values (null, 'Bydgoszcz');
-insert into gminy values (null, 'Radom');
-insert into gminy values (null, 'Warszawa');
+insert into gminy values
+    (null, 'Bukowo'),
+    (null, 'Człuchów'),
+    (null, 'Płonica'),
+    (null, 'Polnica'),
+    (null, 'Wierzchowo'),
+    (null, 'Wejherowo'),
+    (null, 'Gdańsk'),
+    (null, 'Pomerania'),
+    (null, 'Gdynia'),
+    (null, 'Bydgoszcz'),
+    (null, 'Radom'),
+    (null, 'Warszawa');
 
-insert into miejscowosci values (null, 'Niggerowo', 0, 0, '1234');
-insert into miejscowosci values (null, 'Murzynowo', 0, 0, '1231114');
-insert into miejscowosci values (null, 'Wejcherowo', 0, 0, '132334');
-insert into miejscowosci values (null, 'Bukowo', 0, 0, '13423344');
-insert into miejscowosci values (null, 'Dzuma', 0, 0, '3412334434');
-insert into miejscowosci values (null, 'Las', 0, 0, '1234433');
-insert into miejscowosci values (null, 'xd', 0, 0, '1230');
+insert into miejscowosci values
+    (null, 'Niggerowo', 0, 0, '1234'),
+    (null, 'Murzynowo', 0, 0, '1231114'),
+    (null, 'Wejcherowo', 0, 0, '132334'),
+    (null, 'Bukowo', 0, 0, '13423344'),
+    (null, 'Dzuma', 0, 0, '3412334434'),
+    (null, 'Las', 0, 0, '1234433'),
+    (null, 'xd', 0, 0, '1230');
+    
+insert into ulice values
+    (null, 'Jana Pawla', 1),
+    (null, 'Jana Pawla II', 2),
+    (null, 'Zygmunta', 2),
+    (null, 'Tadeusza', 4);
 
-insert into ulice values (null, 'Jana Pawla', 1);
-insert into ulice values (null, 'Jana Pawla II', 2);
-insert into ulice values (null, 'Zygmunta', 2);
-insert into ulice values (null, 'Tadeusza', 4);
+insert into typy_decyzji_starosty values
+    (null, 'Sprzeciwu'),
+    (null, 'Pozytywna'),
+    (null, 'Umarzająca'),
+    (null, 'Inne rozstrzygnięcie');
 
-insert into typy_decyzji_starosty values (null, 'Pozytywna');
-insert into typy_decyzji_starosty values (null, 'Sprzeciwu');
-insert into typy_decyzji_starosty values (null, 'Umarzająca');
-insert into typy_decyzji_starosty values (null, 'Inne rozstrzygnięcie');
+insert into typy_rozstrzygniec values
+    (null, 'Wygaśnięcia'),
+    (null, 'Bez rozpatrzenia'),
+    (null, 'Uchylająca'),
+    (null, 'Utrzymana w mocy');
 
-insert into typy_rozstrzygniec values (null, 'Wygaśnięcia');
-insert into typy_rozstrzygniec values (null, 'Bez rozpatrzenia');
-insert into typy_rozstrzygniec values (null, 'Uchylająca');
-insert into typy_rozstrzygniec values (null, 'Utrzymana w mocy');
+insert into typy_czynnosci_admin values
+    (null, 'Wezwanie'),
+    (null, 'Zawiadomienie'),
+    (null, 'Postanowienie'),
+    (null, 'Konserwator'),
+    (null, 'Zawieszenie postępowania'),
+    (null, 'Przedłużenie terminu');
 
-insert into typy_czynnosci_admin values (null, 'Wezwanie');
-insert into typy_czynnosci_admin values (null, 'Zawiadomienie');
-insert into typy_czynnosci_admin values (null, 'Postanowienie');
-insert into typy_czynnosci_admin values (null, 'Konserwator');
-insert into typy_czynnosci_admin values (null, 'Zawieszenie postępowania');
-insert into typy_czynnosci_admin values (null, 'Przedłużenie terminu');
+insert into typy_rejestrow values 
+    (null, 'PnB (6740)'),
+    (null, 'O Rozbiórkę (6741)'),
+    (null, 'Zgłoszenie Rozbiórki (6743.1)'),
+    (null, 'Zgłoszenie „zwykłe” (6743.2)'),
+    (null, 'Zgłoszenie ZSU (6743.3)'),
+    (null, 'Zgłoszenie BiP (6743.4)'),
+    (null, 'Zaświadczenie (705)'),
+    (null, 'Sprawy Różne (670)'),
+    (null, 'ZRiD (7012)'),
+    (null, 'Rejestr do Budowy');
 
-insert into typy_rejestrow values (null, 'PnB (6740)');
-insert into typy_rejestrow values (null, 'O Rozbiórkę (6741)');
-insert into typy_rejestrow values (null, 'Zgłoszenie Rozbiórki (6743.1)');
-insert into typy_rejestrow values (null, 'Zgłoszenie „zwykłe” (6743.2)');
-insert into typy_rejestrow values (null, 'Zgłoszenie ZSU (6743.3)');
-insert into typy_rejestrow values (null, 'Zgłoszenie BiP (6743.4)');
-insert into typy_rejestrow values (null, 'Zaświadczenie (705)');
-insert into typy_rejestrow values (null, 'Sprawy Różne (670)');
-insert into typy_rejestrow values (null, 'ZRiD (7012)');
-insert into typy_rejestrow values (null, 'Rejestr do Budowy');
+insert into sekcje_budowlane values
+    (null, 'Budynki'),
+    (null, 'Statki'),
+    (null, 'Pałace');
+
+insert into dzialy_budowlane values
+    (null, 'mieszkalne', 0),
+    (null, 'niemieszkalne', 0),
+    (null, 'kosmiczne', 1),
+    (null, 'pasazerskie', 1),
+    (null, 'wakacyjne', 1),
+    (null, 'kultury', 2),
+    (null, 'sztuki', 2),
+    (null, 'nauki', 2);
+
+insert into zamierzenia_budowlane values
+    (null, 'jednorodzinne', 1110, 'WR', 'XVI', 0),
+    (null, 'wielorodzinne', 1112, 'FF', 'DOS', 0),
+    (null, 'udekorowane', 4554, 'DE', 'LOS', 1),
+    (null, 'nieudekorowane', 4551, 'DE', 'LOS', 1),
+    (null, 'malarnej', 1337, 'DAE', 'TROS', 6),
+    (null, 'digitalnej', 420, 'FAE', 'DES', 6);
+
+insert into klasy_budowlane values
+    (null, 'pawilon', 0),
+    (null, 'willa', 0);
+
+insert into typy_budowy values
+    (null, 'Budowa'),
+    (null, 'Rozbudowa'),
+    (null, 'Nadbudowa'),
+    (null, 'Odbudowa'),
+    (null, 'Wykonanie robót budowlanych'),
+    (null, 'Remont'),
+    (null, 'Zmiana sposobu użytkowania'),
+    (null, 'Rozbiórka'),
+    (null, 'Przebudowa');
+
+insert into formy_budownictwa values
+    (null, 'Indywidualna'),
+    (null, 'Zakładowa'),
+    (null, 'Sprzedaż / wynajem');
+
+insert into planowania_przestrzenne values  
+    (null, 'Dec WZ'),
+    (null, 'MPZP');
+
+insert into rejestry(
+    id,
+    typ_id,
+
+    wniosek_numer,
+    wniosek_data_zlozenia,
+    wniosek_inwestor_id,
+    wniosek_decyzja_typ_id,
+    wniosek_decyzja_numer,
+    wniosek_decyzja_data_wydania,
+    wniosek_rozstrzygniecie_typ_id,
+    wniosek_rozstrzygniecie_numer_pisma,
+    wniosek_rozstrzygniecie_data_wydania,
+
+    obiekt_klasa_id,
+    obiekt_forma_budownictwa_id,
+    obiekt_planowanie_przestrzenne_id,
+    obiekt_ulica_id,
+    obiekt_nr
+) values (
+    null,
+    0,
+
+    69,
+    '2006-12-19',
+    0,
+    0, 420, '2019-02-05',
+    0, 2137, '2011-07-23',
+
+    0,
+    0,
+    0,
+    0,
+    34
+);

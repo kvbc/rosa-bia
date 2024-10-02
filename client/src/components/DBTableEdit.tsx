@@ -2,29 +2,45 @@ import axios from "axios";
 import { DBEntry } from "../../../server/src/types";
 import { DBEntries } from "../hooks/useDBEntriesStore";
 import TableEdit from "./TableEdit";
-import { ComponentType, useEffect, useState } from "react";
-import { TableEditRowInputInfo } from "./TableEditRow";
+import { useEffect, useState } from "react";
+import { MyInputProps } from "./MyInput";
+import {
+    TableEditRowContentComponentType,
+    TableEditRowInputProps,
+} from "./TableEditRow";
 
 export default function DBTableEdit<TEntry extends DBEntry>({
     endpoint,
     headers,
     dbEntries,
+    entriesFilter,
     emptyEntry,
-    rowInputInfos,
+    rowInputsProps,
+    showActionsHeader,
+    RowContentComponent,
 }: {
     endpoint: string;
     headers: string[];
     dbEntries: DBEntries<TEntry>;
+    entriesFilter?: (entry: TEntry) => boolean;
+    showActionsHeader?: boolean;
+
     emptyEntry: TEntry;
-    rowInputInfos: TableEditRowInputInfo<TEntry>[];
+    rowInputsProps: TableEditRowInputProps<TEntry>[];
+    RowContentComponent?: TableEditRowContentComponentType<TEntry>;
 }) {
     const [entries, setEntries] = useState<TEntry[]>([
         ...dbEntries.entries,
+        // { ...emptyEntry, id: dbEntries.nextInsertID },
         { ...emptyEntry },
     ]);
 
     useEffect(() => {
-        setEntries([...dbEntries.entries, { ...emptyEntry }]);
+        setEntries([
+            ...dbEntries.entries,
+            // { ...emptyEntry, id: dbEntries.nextInsertID },
+            { ...emptyEntry },
+        ]);
     }, [dbEntries.entries]);
 
     const onEntryAddClicked = (entry: TEntry): void => {
@@ -49,17 +65,21 @@ export default function DBTableEdit<TEntry extends DBEntry>({
     };
 
     return (
-        <div className="db-table-edit">
+        <div className="db-table-edit w-full">
             <TableEdit
-                entries={entries}
+                entries={
+                    entriesFilter ? entries.filter(entriesFilter) : entries
+                }
+                showActionsHeader={showActionsHeader}
                 setEntries={setEntries}
-                rowInputInfos={rowInputInfos}
+                rowInputsProps={rowInputsProps}
                 events={{
                     onEntryAddClicked,
                     onEntryDeleteClicked,
                     onEntrySaveClicked,
                 }}
                 headers={headers}
+                RowContentComponent={RowContentComponent}
             />
         </div>
     );

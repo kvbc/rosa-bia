@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import Wyszukiwarka from "../../components/Wyszukiwarka";
 import useDBEntriesStore, { DBEntries } from "../../hooks/useDBEntriesStore";
 import DBTableEdit from "../../components/DBTableEdit";
@@ -73,7 +72,7 @@ export default function KonfiguracjaStrona() {
                                                 id: 0,
                                                 typ: "",
                                             }}
-                                            rowInputInfos={[
+                                            rowInputsProps={[
                                                 {
                                                     type: "number",
                                                     entryKey: "id",

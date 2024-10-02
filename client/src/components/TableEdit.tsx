@@ -5,9 +5,11 @@ import {
     SetStateAction,
 } from "react";
 import TableEditRow, {
+    TableEditRowContentComponentType,
     TableEditRowEvents,
-    TableEditRowInputInfo,
+    TableEditRowInputProps,
 } from "./TableEditRow";
+import { MyInputProps } from "./MyInput";
 
 export type TableEditEntry = {
     id: number;
@@ -25,22 +27,30 @@ export default function TableEdit<TEntry extends TableEditEntry>({
     setEntries,
     events,
     headers,
-    rowInputInfos,
+    showActionsHeader,
+    rowInputsProps,
+    RowContentComponent,
 }: {
     entries: TEntry[];
     headers: string[];
+    showActionsHeader?: boolean;
     setEntries: Dispatch<SetStateAction<typeof entries>>;
     events: TableEditEvents<TEntry>;
-    rowInputInfos: TableEditRowInputInfo<TEntry>[];
+    rowInputsProps: TableEditRowInputProps<TEntry>[];
+    RowContentComponent?: TableEditRowContentComponentType<TEntry>;
 }) {
     return (
-        <table>
+        <table className="h-full w-full">
             <thead>
                 <tr>
-                    {headers.map((header) => (
-                        <th>{header}</th>
-                    ))}
-                    <th>Akcje</th>
+                    {headers.length === 1 ? (
+                        <th colSpan={1 + (showActionsHeader ? 0 : 1)}>
+                            {headers[0]}
+                        </th>
+                    ) : (
+                        headers.map((header) => <th>{header}</th>)
+                    )}
+                    {showActionsHeader && <th>Akcje</th>}
                 </tr>
             </thead>
             <tbody>
@@ -60,7 +70,8 @@ export default function TableEdit<TEntry extends TableEditEntry>({
                             key={entry.id}
                             entry={entry}
                             events={entryEvents}
-                            inputInfos={rowInputInfos}
+                            inputsProps={rowInputsProps}
+                            ContentComponent={RowContentComponent}
                             setEntry={(newEntry) => {
                                 setEntries((entries) =>
                                     entries.map((entry) =>

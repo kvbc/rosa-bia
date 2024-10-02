@@ -19,6 +19,17 @@ export const DB_ENTRY_ENDPOINTS = [
     "typy_rozstrzygniec",
     "typy_czynnosci_admin",
     "typy_rejestrow",
+    "sekcje_budowlane",
+    "dzialy_budowlane",
+    "zamierzenia_budowlane",
+    "klasy_budowlane",
+    "typy_budowy",
+    "formy_budownictwa",
+    "planowania_przestrzenne",
+    "rejestry",
+    "rejestry_typy_budowy",
+    "rejestry_dzialki_objete_inwestycja",
+    "rejestry_czynnosci_admin",
 ] as const;
 export type DBEntryEndpoint = (typeof DB_ENTRY_ENDPOINTS)[number];
 

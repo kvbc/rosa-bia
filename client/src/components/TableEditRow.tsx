@@ -1,6 +1,7 @@
-import { HTMLInputTypeAttribute, InputHTMLAttributes, useState } from "react";
+import { ComponentType, ReactNode, useState } from "react";
 import "./TableEditRow.css";
 import { TableEditEntry } from "./TableEdit";
+import MyInput, { MyInputProps } from "./MyInput";
 
 export enum TableEditRowState {
     Viewing,
@@ -14,29 +15,33 @@ export type TableEditRowEvents = {
     onSaveClicked?: () => void;
 };
 
-export type TableEditRowInputSelectOption = {
-    value: string | number;
-    name: string;
+export type TableEditRowContentProps<TEntry> = {
+    inputs: { [key in keyof TEntry]?: ReactNode };
+    entry: TEntry;
+    setEntry: (entry: TEntry) => void;
 };
 
-export type TableEditRowInputInfo<TEntry extends TableEditEntry> = {
-    type: HTMLInputTypeAttribute | "select";
-    entryKey: keyof TEntry;
-    uneditable?: boolean;
-    selectOptions?: TableEditRowInputSelectOption[];
-    placeholder?: string;
-};
+export type TableEditRowInputProps<TEntry extends TableEditEntry> = Omit<
+    MyInputProps<TEntry>,
+    "entry" | "setEntry"
+>;
+
+export type TableEditRowContentComponentType<TEntry> = ComponentType<
+    TableEditRowContentProps<TEntry>
+>;
 
 export default function TableEditRow<TEntry extends TableEditEntry>({
     events,
     entry,
     setEntry,
-    inputInfos,
+    inputsProps,
+    ContentComponent,
 }: {
     events: TableEditRowEvents;
     entry: TEntry;
     setEntry: (entry: TEntry) => void;
-    inputInfos: TableEditRowInputInfo<TEntry>[];
+    inputsProps: TableEditRowInputProps<TEntry>[];
+    ContentComponent?: TableEditRowContentComponentType<TEntry>;
 }) {
     const [state, setState] = useState<TableEditRowState>(
         events.onAddClicked
@@ -65,56 +70,42 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
         if (events.onDeleteClicked) events.onDeleteClicked();
     };
 
+    let content: ReactNode = "";
+    if (ContentComponent) {
+        const inputs: TableEditRowContentProps<TEntry>["inputs"] = {};
+        inputsProps.forEach((inputProps) => {
+            inputs[inputProps.entryKey] = (
+                <MyInput
+                    entry={entry}
+                    setEntry={setEntry}
+                    {...inputProps}
+                    disabled={state == TableEditRowState.Viewing}
+                />
+            );
+        });
+        content = (
+            <ContentComponent
+                inputs={inputs}
+                entry={entry}
+                setEntry={setEntry}
+            />
+        );
+    } else {
+        content = inputsProps.map((inputProps) => (
+            <td>
+                <MyInput
+                    entry={entry}
+                    setEntry={setEntry}
+                    {...inputProps}
+                    disabled={state == TableEditRowState.Viewing}
+                />
+            </td>
+        ));
+    }
+
     return (
         <tr className="table-edit-row">
-            {inputInfos.map((inputInfo) => (
-                <td>
-                    {inputInfo.type === "select" && (
-                        <select
-                            value={entry[inputInfo.entryKey]}
-                            onChange={(e) =>
-                                setEntry({
-                                    ...entry,
-                                    [inputInfo.entryKey]: e.target.value,
-                                })
-                            }
-                            disabled={
-                                inputInfo.uneditable
-                                    ? true
-                                    : state == TableEditRowState.Viewing
-                            }
-                        >
-                            {inputInfo.selectOptions &&
-                                inputInfo.selectOptions.map((selectOption) => (
-                                    <option
-                                        value={selectOption.value}
-                                        key={selectOption.value}
-                                    >
-                                        {selectOption.name}
-                                    </option>
-                                ))}
-                        </select>
-                    )}
-                    {inputInfo.type !== "select" && (
-                        <input
-                            type={inputInfo.type}
-                            value={entry[inputInfo.entryKey]}
-                            onChange={(e) =>
-                                setEntry({
-                                    ...entry,
-                                    [inputInfo.entryKey]: e.target.value,
-                                })
-                            }
-                            disabled={
-                                inputInfo.uneditable
-                                    ? true
-                                    : state == TableEditRowState.Viewing
-                            }
-                            placeholder={inputInfo.placeholder}
-                        />
-                    )}
-                </td>
-            ))}
+            {content}
             <td className="table-edit-row_actions">
                 {state == TableEditRowState.Viewing && (
                     <>

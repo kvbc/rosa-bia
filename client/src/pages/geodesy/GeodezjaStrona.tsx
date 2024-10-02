@@ -1,9 +1,9 @@
 import "./GeodezjaStrona.css";
 import Wyszukiwarka from "../../components/Wyszukiwarka";
 import DBTableEdit from "../../components/DBTableEdit";
-import { TableEditRowInputSelectOption } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import { Gmina, Miejscowosc, Ulica } from "../../../../server/src/types";
+import { MyInputSelectOption } from "../../components/MyInput";
 
 export default function GeodezjaStrona() {
     const communeDBEntries = useDBEntriesStore<Gmina>("gminy")();
@@ -37,7 +37,7 @@ export default function GeodezjaStrona() {
                                             id: 0,
                                             nazwa: "",
                                         }}
-                                        rowInputInfos={[
+                                        rowInputsProps={[
                                             {
                                                 type: "number",
                                                 entryKey: "id",
@@ -73,7 +73,7 @@ export default function GeodezjaStrona() {
                                             nazwa: "",
                                             obreb_id: 0,
                                         }}
-                                        rowInputInfos={[
+                                        rowInputsProps={[
                                             {
                                                 type: "number",
                                                 entryKey: "id",
@@ -87,7 +87,7 @@ export default function GeodezjaStrona() {
                                                 type: "select",
                                                 entryKey: "gmina_id",
                                                 selectOptions:
-                                                    communeDBEntries.entries.map<TableEditRowInputSelectOption>(
+                                                    communeDBEntries.entries.map<MyInputSelectOption>(
                                                         (entry) => ({
                                                             value: entry.id,
                                                             name: entry.nazwa,
@@ -98,7 +98,7 @@ export default function GeodezjaStrona() {
                                                 type: "select",
                                                 entryKey: "obreb_id",
                                                 selectOptions:
-                                                    placeDBEntries.entries.map<TableEditRowInputSelectOption>(
+                                                    placeDBEntries.entries.map<MyInputSelectOption>(
                                                         (entry) => ({
                                                             value: entry.id,
                                                             name: entry.nazwa,
@@ -127,7 +127,7 @@ export default function GeodezjaStrona() {
                                             miejscowosc_id: 0,
                                             nazwa: "",
                                         }}
-                                        rowInputInfos={[
+                                        rowInputsProps={[
                                             {
                                                 type: "number",
                                                 entryKey: "id",
@@ -141,7 +141,7 @@ export default function GeodezjaStrona() {
                                                 type: "select",
                                                 entryKey: "miejscowosc_id",
                                                 selectOptions:
-                                                    placeDBEntries.entries.map<TableEditRowInputSelectOption>(
+                                                    placeDBEntries.entries.map<MyInputSelectOption>(
                                                         (entry) => ({
                                                             value: entry.id,
                                                             name: entry.nazwa,

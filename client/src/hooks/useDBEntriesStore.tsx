@@ -16,6 +16,8 @@ export type DBEntries<T extends DBEntry> = {
     entryCount: number;
     endpoint: DBEntryEndpoint;
     addEntry: (newEntry: T) => void;
+    nextInsertID: number;
+    saveEntry: (entry: T) => void;
     fetchEntries: (startIndex: number, endIndex: number) => () => void;
 };
 
@@ -71,8 +73,20 @@ function createDBEntriesStore<T extends DBEntry>(endpoint: DBEntryEndpoint) {
                 set((state) => ({ ...state, entries: newEntries })),
             entryCount: 0,
             endpoint,
+            nextInsertID: 0,
             addEntry: (newEntry) =>
                 get().setEntries([...get().entries, newEntry]),
+            saveEntry: (entry) => {
+                get().setEntries(
+                    get().entries.map((fEntry) =>
+                        fEntry.id === entry.id ? entry : fEntry
+                    )
+                );
+                axios.put(
+                    import.meta.env.VITE_HTTP_SERVER_HOSTNAME + "/" + endpoint,
+                    entry
+                );
+            },
             fetchEntries: (startIndex: number, endIndex: number) => {
                 const abortController = new AbortController();
                 axios
@@ -89,6 +103,7 @@ function createDBEntriesStore<T extends DBEntry>(endpoint: DBEntryEndpoint) {
                         set((state) => ({
                             ...state,
                             entryCount: res.data.liczba,
+                            nextInsertID: res.data.next_insert_id
                         }));
                     });
 
@@ -106,7 +121,9 @@ export default function useDBEntriesStore<TEntry extends DBEntry>(
     endpoint: DBEntryEndpoint
 ): UseBoundStore<StoreApi<DBEntries<TEntry>>> {
     if (!stores[endpoint]) {
-        stores[endpoint] = createDBEntriesStore<TEntry>(endpoint);
+        const store = createDBEntriesStore<TEntry>(endpoint);
+        store().fetchEntries(0, 500);
+        stores[endpoint] = store;
     }
     return stores[endpoint];
 }

@@ -55,11 +55,20 @@ app.get("/:table/:startIndex-:endIndex", (req: Request, res: Response) => {
                 (err, row) => {
                     if (err) throw err;
                     const liczba = row["count(*)"];
-                    const odp: HTTPFetchResponse<any> = {
-                        liczba,
-                        results,
-                    };
-                    res.json(odp);
+                    db.get<{ "last_insert_rowid()": number }>(
+                        "select last_insert_rowid()",
+                        (err, row) => {
+                            if (err) throw err;
+                            const next_insert_id =
+                                row["last_insert_rowid()"] + 1;
+                            const odp: HTTPFetchResponse<any> = {
+                                liczba,
+                                results,
+                                next_insert_id,
+                            };
+                            res.json(odp);
+                        }
+                    );
                 }
             );
         }
@@ -81,9 +90,11 @@ app.post("/:table", (req: Request, res: Response) => {
     }
 
     db.run(`insert into ${table}(${keys}) values(${values})`, params, (err) => {
+        if (err) throw err;
         db.get<{ "last_insert_rowid()": number }>(
             "select last_insert_rowid()",
             (err, row) => {
+                if (err) throw err;
                 const insert_id = row["last_insert_rowid()"];
                 var bcastMsg: WSSBCMessage = {
                     type: WSSBCMessageType.EntryAdded,
