@@ -3,7 +3,6 @@ import DBTableEdit from "../../components/DBTableEdit";
 import { MyInputSelectOption } from "../../components/MyInput";
 import Wyszukiwarka from "../../components/Wyszukiwarka";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
-import "./PKOBStrona.css";
 
 export default function PKOBStrona() {
     const constructionSectionDBEntries =
@@ -27,13 +26,14 @@ export default function PKOBStrona() {
 
     return (
         <>
-            <h1>PKOB</h1>
-            <div className="pkob-strona">
-                <table>
+            <div className="[&>table>tbody>tr]:h-full [&>table>tbody>tr>td]:h-full">
+                <table className="w-full">
                     <thead>
                         <tr>
                             <th>Sekcje Budowlane</th>
                             <th>Działy Budowlane</th>
+                            <th>Zamierzenia Budowlane</th>
+                            <th>Klasy Budowlane</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -112,21 +112,6 @@ export default function PKOBStrona() {
                                     />
                                 </Wyszukiwarka>
                             </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br />
-                <br />
-                <br />
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Zamierzenia Budowlane</th>
-                            <th>Klasy Budowlane</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td>
                                 <Wyszukiwarka
                                     fetchWyniki={
@@ -238,8 +223,6 @@ export default function PKOBStrona() {
                         </tr>
                     </tbody>
                 </table>
-                <br />
-                <br />
                 <br />
                 <table>
                     <thead>

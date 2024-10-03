@@ -8,7 +8,6 @@ export default function InwestorzyStrona() {
 
     return (
         <>
-            <h1>Inwestorzy</h1>
             <Wyszukiwarka
                 fetchWyniki={investorDBEntries.fetchEntries}
                 liczbaWynikow={investorDBEntries.entryCount}

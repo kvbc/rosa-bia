@@ -84,7 +84,7 @@ export default function RejestryStrona() {
     addSelectInputProps("wniosek_rozstrzygniecie_typ_id", resolutionDBEntries, 'typ'); // prettier-ignore
 
     return (
-        <div id="registers-page">
+        <div>
             <Wyszukiwarka
                 fetchWyniki={registerDBEntries.fetchEntries}
                 liczbaWynikow={registerDBEntries.entryCount}

@@ -1,5 +1,4 @@
 import { ComponentType, ReactNode, useEffect, useState } from "react";
-import "./TableEditRow.css";
 import { TableEditEntry } from "./TableEdit";
 import MyInput, { MyInputProps } from "./MyInput";
 
@@ -116,25 +115,50 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
     }
 
     return (
-        <tr className="table-edit-row">
+        <tr className="h-full">
             {content}
             {editable && (
-                <td className="table-edit-row_actions">
+                <td className="flex flex-row justify-evenly gap-1 h-full">
                     {state == TableEditRowState.Viewing && (
                         <>
-                            <button onClick={onEditClicked}>Edytuj</button>
-                            <button onClick={onDeleteClicked}>Usuń</button>
+                            <button
+                                onClick={onEditClicked}
+                                className="text-blue-500 hover:underline"
+                            >
+                                Edytuj
+                            </button>
+                            <button
+                                onClick={onDeleteClicked}
+                                className="text-red-500 hover:underline"
+                            >
+                                Usuń
+                            </button>
                         </>
                     )}
                     {state == TableEditRowState.Editing && (
                         <>
-                            <button onClick={onSaveClicked}>Zapisz</button>
-                            <button onClick={onCancelClicked}>Anuluj</button>
+                            <button
+                                onClick={onSaveClicked}
+                                className="text-green-500 hover:underline"
+                            >
+                                Zapisz
+                            </button>
+                            <button
+                                onClick={onCancelClicked}
+                                className="text-red-500 hover:underline"
+                            >
+                                Anuluj
+                            </button>
                         </>
                     )}
                     {state == TableEditRowState.Adding && (
                         <>
-                            <button onClick={onAddClicked}>Dodaj</button>
+                            <button
+                                onClick={onAddClicked}
+                                className="text-green-500 hover:underline"
+                            >
+                                Dodaj
+                            </button>
                         </>
                     )}
                 </td>

@@ -1,5 +1,4 @@
 import { PropsWithChildren, useEffect, useState } from "react";
-import "./Wyszukiwarka.css";
 import { Link } from "react-router-dom";
 
 export default function Wyszukiwarka({
@@ -27,17 +26,25 @@ export default function Wyszukiwarka({
         return fetchWyniki(startIndex, endIndex);
     }, [strona, liczbaWynikowNaStrone]);
 
-    const StronaButton = ({ strona }: { strona: number }) => {
+    const StronaButton = ({ strona: thisStrona }: { strona: number }) => {
         return (
-            <Link to="" onClick={() => setStrona(strona)}>
-                {strona}
+            <Link
+                to=""
+                onClick={() => setStrona(thisStrona)}
+                className={
+                    thisStrona === strona
+                        ? "font-medium"
+                        : "font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                }
+            >
+                {thisStrona}
             </Link>
         );
     };
 
     const Strony = () => {
         return (
-            <div className="strony">
+            <div className="flex gap-3 justify-center">
                 {minStrona > 1 && (
                     <>
                         <StronaButton strona={1} />
@@ -62,7 +69,7 @@ export default function Wyszukiwarka({
     };
 
     return (
-        <div className="wyszukiwarka">
+        <div className="text-center h-full p-1">
             <span>Liczba wyników: {liczbaWynikow}</span>
             <br />
             <span>

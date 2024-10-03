@@ -1,8 +1,6 @@
 import Wyszukiwarka from "../../components/Wyszukiwarka";
 import useDBEntriesStore, { DBEntries } from "../../hooks/useDBEntriesStore";
 import { TypeEntry } from "../../../../server/src/types";
-import "./KonfiguracjaStrona.css";
-import TableEdit from "../../components/TableEdit";
 import DBTableEdit from "../../components/DBTableEdit";
 
 export default function KonfiguracjaStrona() {
@@ -42,9 +40,8 @@ export default function KonfiguracjaStrona() {
 
     return (
         <>
-            <h1>Konfiguracja</h1>
-            <div className="config-page">
-                <table>
+            <div>
+                <table className="w-full">
                     <thead>
                         <tr>
                             <th>Decyzje Starosty</th>
@@ -54,7 +51,7 @@ export default function KonfiguracjaStrona() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr className="[&>td]:h-full h-full">
                             {entries.map((entry) => (
                                 <td>
                                     <Wyszukiwarka
@@ -67,17 +64,12 @@ export default function KonfiguracjaStrona() {
                                     >
                                         <DBTableEdit
                                             dbEntries={entry.dbEntries}
-                                            headers={["ID", entry.name]}
+                                            headers={[entry.name]}
                                             emptyEntry={{
                                                 id: 0,
                                                 typ: "",
                                             }}
                                             rowInputsProps={[
-                                                {
-                                                    type: "number",
-                                                    entryKey: "id",
-                                                    uneditable: true,
-                                                },
                                                 {
                                                     type: "text",
                                                     entryKey: "typ",

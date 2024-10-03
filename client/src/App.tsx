@@ -3,7 +3,7 @@ import HomePage from "./pages/glowna/GlownaStrona";
 import RegistersPage from "./pages/rejestry/RejestryStrona";
 import GeodesyPage from "./pages/geodesy/GeodezjaStrona";
 import InvestorsPage from "./pages/investors/InwestorzyStrona";
-import Navbar from "./pages/glowna/Navbar";
+import Navbar from "./components/Navbar";
 import "./App.css";
 import PKOBStrona from "./pages/pkob/PKOBStrona";
 import KonfiguracjaStrona from "./pages/config/KonfiguracjaStrona";
@@ -40,23 +40,31 @@ function App() {
 
     return (
         <BrowserRouter>
-            <Navbar />
-            <br />
-            <main>
-                <WebSocketContext.Provider value={webSocket}>
-                    <Routes>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/rejestry" element={<RegistersPage />} />
-                        <Route path="/geodezja" element={<GeodesyPage />} />
-                        <Route path="/inwestorzy" element={<InvestorsPage />} />
-                        <Route path="/pkob" element={<PKOBStrona />} />
-                        <Route
-                            path="/konfiguracja"
-                            element={<KonfiguracjaStrona />}
-                        />
-                    </Routes>
-                </WebSocketContext.Provider>
-            </main>
+            <div className="flex flex-col justify-stretch h-full">
+                <Navbar />
+                <br />
+                <main className="flex-1 p-4">
+                    <WebSocketContext.Provider value={webSocket}>
+                        <Routes>
+                            <Route path="/" element={<HomePage />} />
+                            <Route
+                                path="/rejestry"
+                                element={<RegistersPage />}
+                            />
+                            <Route path="/geodezja" element={<GeodesyPage />} />
+                            <Route
+                                path="/inwestorzy"
+                                element={<InvestorsPage />}
+                            />
+                            <Route path="/pkob" element={<PKOBStrona />} />
+                            <Route
+                                path="/konfiguracja"
+                                element={<KonfiguracjaStrona />}
+                            />
+                        </Routes>
+                    </WebSocketContext.Provider>
+                </main>
+            </div>
         </BrowserRouter>
     );
 }

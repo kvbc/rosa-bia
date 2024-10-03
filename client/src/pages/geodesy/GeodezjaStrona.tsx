@@ -1,9 +1,7 @@
-import "./GeodezjaStrona.css";
 import Wyszukiwarka from "../../components/Wyszukiwarka";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import { Gmina, Miejscowosc, Ulica } from "../../../../server/src/types";
 import { MyInputSelectOption } from "../../components/MyInput";
-import TableEdit from "../../components/TableEdit";
 import DBTableEdit from "../../components/DBTableEdit";
 
 export default function GeodezjaStrona() {
@@ -13,8 +11,7 @@ export default function GeodezjaStrona() {
 
     return (
         <>
-            <h1>Geodezja</h1>
-            <div className="geodezja-strona">
+            <div className="[&>table>tbody>tr]:h-full [&>table>tbody>tr>td]:h-full">
                 <table>
                     <thead>
                         <tr>

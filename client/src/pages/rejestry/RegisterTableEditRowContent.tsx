@@ -139,7 +139,9 @@ export default function RegisterTableEditRowContent({
     useEffect(updateConstructionIntent, [constructionIntent, constructionDivisionID])
 
     return (
-        <td>
+        <td className="p-1">
+            <div className="bg-gray-100">
+                
             <table>
                 <thead>
                     <tr>
@@ -639,6 +641,7 @@ export default function RegisterTableEditRowContent({
                     //     );
                     // }}
                 />
+            </div>
             </div>
         </td>
     );

@@ -139,7 +139,7 @@ export default function TableEdit<TEntry extends TableEditEntry>({
     };
 
     return (
-        <table className="w-full border-gray-500 border-2 p-3">
+        <table className="w-full">
             <thead>
                 <tr>
                     {headers.length === 1 ? (
@@ -150,7 +150,7 @@ export default function TableEdit<TEntry extends TableEditEntry>({
                     {/* {showActionsHeader && <th>Akcje</th>} */}
                 </tr>
             </thead>
-            <tbody>
+            <tbody className="h-full">
                 <TableEditHistoryContext.Provider
                     value={outCommitHistoryNumber}
                 >
