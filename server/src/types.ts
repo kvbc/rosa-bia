@@ -18,7 +18,6 @@ export type WSSBCMessage<TEntry = DBEntry> = {
 export type HTTPFetchResponse<T> = {
     liczba: number;
     results: T[];
-    next_insert_id: number;
 };
 
 //

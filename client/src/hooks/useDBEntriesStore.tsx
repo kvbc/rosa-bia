@@ -16,7 +16,6 @@ export type DBEntries<T extends DBEntry> = {
     entryCount: number;
     endpoint: DBEntryEndpoint;
     addEntry: (newEntry: T) => void;
-    nextInsertID: number;
     deleteEntry: (entry: T) => void;
     saveEntry: (entry: T) => void;
     fetchEntries: (startIndex: number, endIndex: number) => () => void;
@@ -74,7 +73,6 @@ function createDBEntriesStore<T extends DBEntry>(endpoint: DBEntryEndpoint) {
                 set((state) => ({ ...state, entries: newEntries })),
             entryCount: 0,
             endpoint,
-            nextInsertID: 0,
             addEntry: (entry) => {
                 // get().setEntries([...get().entries, entry]);
                 axios.post(
@@ -118,7 +116,6 @@ function createDBEntriesStore<T extends DBEntry>(endpoint: DBEntryEndpoint) {
                         set((state) => ({
                             ...state,
                             entryCount: res.data.liczba,
-                            nextInsertID: res.data.next_insert_id,
                         }));
                     });
 

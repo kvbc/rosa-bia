@@ -27,7 +27,7 @@ export default function RejestryStrona() {
     const resolutionDBEntries = useDBEntriesStore<TypeEntry>('typy_rozstrzygniec')(); // prettier-ignore
 
     const emptyEntry: Register = {
-        id: registerDBEntries.nextInsertID,
+        id: registerDBEntries.entryCount + 1,
         obiekt_forma_budownictwa_id: 0,
         obiekt_nr: "",
         obiekt_planowanie_przestrzenne_id: 0,
@@ -70,7 +70,7 @@ export default function RejestryStrona() {
     addSelectInputProps('obiekt_forma_budownictwa_id', constructionFormDBEntries, 'forma') // prettier-ignore
     addInputProps('obiekt_nr', 'text') // prettier-ignore
     addSelectInputProps("obiekt_planowanie_przestrzenne_id", spatialPlanDBEntries, 'planowanie'); // prettier-ignore
-    addSelectInputProps("obiekt_ulica_id", streetDBEntries, 'nazwa'); // prettier-ignore
+    // addSelectInputProps("obiekt_ulica_id", streetDBEntries, 'nazwa'); // prettier-ignore
     addSelectInputProps("obiekt_klasa_id", constructionClassDBEntries, 'klasa'); // prettier-ignore
     addSelectInputProps("typ_id", registerTypeDBEntries, 'typ'); // prettier-ignore
     addInputProps('wniosek_data_zlozenia', 'date') // prettier-ignore

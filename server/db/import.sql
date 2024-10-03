@@ -232,13 +232,13 @@ insert into gminy values
     (null, 'Warszawa');
 
 insert into miejscowosci values
-    (null, 'Niggerowo', 0, 0, '1234'),
-    (null, 'Murzynowo', 0, 0, '1231114'),
-    (null, 'Wejcherowo', 0, 0, '132334'),
-    (null, 'Bukowo', 0, 0, '13423344'),
-    (null, 'Dzuma', 0, 0, '3412334434'),
-    (null, 'Las', 0, 0, '1234433'),
-    (null, 'xd', 0, 0, '1230');
+    (null, 'Niggerowo', 1, 1, '1234'),
+    (null, 'Murzynowo', 1, 1, '1231114'),
+    (null, 'Wejcherowo', 1, 1, '132334'),
+    (null, 'Bukowo', 1, 1, '13423344'),
+    (null, 'Dzuma', 1, 1, '3412334434'),
+    (null, 'Las', 1, 1, '1234433'),
+    (null, 'xd', 1, 1, '1230');
     
 insert into ulice values
     (null, 'Jana Pawla', 1),
@@ -284,26 +284,26 @@ insert into sekcje_budowlane values
     (null, 'Pałace');
 
 insert into dzialy_budowlane values
-    (null, 'mieszkalne', 0),
-    (null, 'niemieszkalne', 0),
-    (null, 'kosmiczne', 1),
-    (null, 'pasazerskie', 1),
-    (null, 'wakacyjne', 1),
-    (null, 'kultury', 2),
-    (null, 'sztuki', 2),
-    (null, 'nauki', 2);
+    (null, 'mieszkalne', 1),
+    (null, 'niemieszkalne', 1),
+    (null, 'kosmiczne', 2),
+    (null, 'pasazerskie', 2),
+    (null, 'wakacyjne', 3),
+    (null, 'kultury', 3),
+    (null, 'sztuki', 3),
+    (null, 'nauki', 3);
 
 insert into zamierzenia_budowlane values
-    (null, 'jednorodzinne', 1110, 'WR', 'XVI', 0),
-    (null, 'wielorodzinne', 1112, 'FF', 'DOS', 0),
-    (null, 'udekorowane', 4554, 'DE', 'LOS', 1),
-    (null, 'nieudekorowane', 4551, 'DE', 'LOS', 1),
-    (null, 'malarnej', 1337, 'DAE', 'TROS', 6),
-    (null, 'digitalnej', 420, 'FAE', 'DES', 6);
+    (null, 'jednorodzinne', 1110, 'WR', 'XVI', 1),
+    (null, 'wielorodzinne', 1112, 'FF', 'DOS', 1),
+    (null, 'udekorowane', 4554, 'DE', 'LOS', 2),
+    (null, 'nieudekorowane', 4551, 'DE', 'LOS', 2),
+    (null, 'malarnej', 1337, 'DAE', 'TROS', 3),
+    (null, 'digitalnej', 420, 'FAE', 'DES', 3);
 
 insert into klasy_budowlane values
-    (null, 'pawilon', 0),
-    (null, 'willa', 0);
+    (null, 'pawilon', 1),
+    (null, 'willa', 1);
 
 insert into typy_budowy values
     (null, 'Budowa'),
@@ -346,17 +346,17 @@ insert into rejestry(
     obiekt_nr
 ) values (
     null,
-    0,
+    1,
 
     69,
     '2006-12-19',
-    0,
-    0, 420, '2019-02-05',
-    0, 2137, '2011-07-23',
+    1,
+    1, 420, '2019-02-05',
+    1, 2137, '2011-07-23',
 
-    0,
-    0,
-    0,
-    0,
+    1,
+    1,
+    1,
+    1,
     34
 );

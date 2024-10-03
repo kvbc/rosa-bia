@@ -118,35 +118,27 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
     return (
         <tr className="table-edit-row">
             {content}
-            <td className="table-edit-row_actions">
-                {state == TableEditRowState.Viewing && (
-                    <>
-                        <button onClick={onEditClicked} disabled={!editable}>
-                            Edytuj
-                        </button>
-                        <button onClick={onDeleteClicked} disabled={!editable}>
-                            Usuń
-                        </button>
-                    </>
-                )}
-                {state == TableEditRowState.Editing && (
-                    <>
-                        <button onClick={onSaveClicked} disabled={!editable}>
-                            Zapisz
-                        </button>
-                        <button onClick={onCancelClicked} disabled={!editable}>
-                            Anuluj
-                        </button>
-                    </>
-                )}
-                {state == TableEditRowState.Adding && (
-                    <>
-                        <button onClick={onAddClicked} disabled={!editable}>
-                            Dodaj
-                        </button>
-                    </>
-                )}
-            </td>
+            {editable && (
+                <td className="table-edit-row_actions">
+                    {state == TableEditRowState.Viewing && (
+                        <>
+                            <button onClick={onEditClicked}>Edytuj</button>
+                            <button onClick={onDeleteClicked}>Usuń</button>
+                        </>
+                    )}
+                    {state == TableEditRowState.Editing && (
+                        <>
+                            <button onClick={onSaveClicked}>Zapisz</button>
+                            <button onClick={onCancelClicked}>Anuluj</button>
+                        </>
+                    )}
+                    {state == TableEditRowState.Adding && (
+                        <>
+                            <button onClick={onAddClicked}>Dodaj</button>
+                        </>
+                    )}
+                </td>
+            )}
         </tr>
     );
 }

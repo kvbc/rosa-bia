@@ -55,20 +55,11 @@ app.get("/:table/:startIndex-:endIndex", (req: Request, res: Response) => {
                 (err, row) => {
                     if (err) throw err;
                     const liczba = row["count(*)"];
-                    db.get<{ "last_insert_rowid()": number }>(
-                        "select last_insert_rowid()",
-                        (err, row) => {
-                            if (err) throw err;
-                            const next_insert_id =
-                                row["last_insert_rowid()"] + 1;
-                            const odp: HTTPFetchResponse<any> = {
-                                liczba,
-                                results,
-                                next_insert_id,
-                            };
-                            res.json(odp);
-                        }
-                    );
+                    const odp: HTTPFetchResponse<any> = {
+                        liczba,
+                        results,
+                    };
+                    res.json(odp);
                 }
             );
         }

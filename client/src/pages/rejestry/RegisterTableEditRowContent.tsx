@@ -1,9 +1,14 @@
+import { useEffect, useMemo, useState } from "react";
 import {
+    Gmina,
+    Miejscowosc,
+    PKOB,
     Register,
     RegisterAdminActions,
     RegisterBuildTypes,
     RegisterInvestPlots,
     TypeEntry,
+    Ulica,
 } from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
 import { MyInputSelectOption } from "../../components/MyInput";
@@ -17,11 +22,106 @@ export default function RegisterTableEditRowContent({
     editable,
     setEntry,
 }: TableEditRowContentProps<Register>) {
+    const communeDBEntries = useDBEntriesStore<Gmina>('gminy')(); // prettier-ignore
+    const streetDBEntries = useDBEntriesStore<Ulica>('ulice')(); // prettier-ignore
+    const placeDBEntries = useDBEntriesStore<Miejscowosc>('miejscowosci')(); // prettier-ignore
     const adminActionTypeDBEntries = useDBEntriesStore<TypeEntry>('typy_czynnosci_admin')(); // prettier-ignore
     const registerAdminActionDBEntries = useDBEntriesStore<RegisterAdminActions>("rejestry_czynnosci_admin")(); // prettier-ignore
     const registerInvestPlotDBEntries = useDBEntriesStore<RegisterInvestPlots>("rejestry_dzialki_objete_inwestycja")(); // prettier-ignore
     const registerBuildTypeDBEntries = useDBEntriesStore<RegisterBuildTypes>("rejestry_typy_budowy")(); // prettier-ignore
     const buildTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_budowy")(); // prettier-ignore
+    const constructionSectionDBEntries = useDBEntriesStore<PKOB.ConstructionSection>("sekcje_budowlane")(); // prettier-ignore
+    const constructionDivisionDBEntries = useDBEntriesStore<PKOB.ConstructionDivision>("dzialy_budowlane")(); // prettier-ignore
+    const constructionIntentDBEntries = useDBEntriesStore<PKOB.ConstructionIntention>("zamierzenia_budowlane")(); // prettier-ignore
+    const constructionClassDBEntries = useDBEntriesStore<PKOB.ConstructionClass>("klasy_budowlane")(); // prettier-ignore
+
+    const [communeID, setCommuneID] = useState<number>(0);
+    const [placeID, setPlaceID] = useState<number>(0);
+    const [constructionSectionID, setConstructionSectionID] = useState<number>(0); // prettier-ignore
+    const [constructionDivisionID, setConstructionDivisionID] = useState<number>(0); // prettier-ignore
+    const [constructionIntentID, setConstructionIntentID] = useState<number>(0); // prettier-ignore
+
+    const places  = placeDBEntries.entries.filter((entry) => entry.gmina_id === communeID); // prettier-ignore
+    const streets = streetDBEntries.entries.filter((entry) => entry.miejscowosc_id === placeID); // prettier-ignore
+    const place   = places.find((entry) => entry.id === placeID); // prettier-ignore
+    const area    = placeDBEntries.entries.find((entry) => entry.id === place?.obreb_id); // prettier-ignore
+    const street  = streets.find(fEntry => fEntry.id === entry.obiekt_ulica_id) // prettier-ignore
+    const constructionSections  = constructionSectionDBEntries.entries; // prettier-ignore
+    const constructionDivisions = constructionDivisionDBEntries.entries.filter(entry => entry.sekcja_id === constructionSectionID) // prettier-ignore
+    const constructionIntents   = constructionIntentDBEntries.entries.filter(entry => entry.dzial_id === constructionDivisionID) // prettier-ignore
+    const constructionClasses   = constructionClassDBEntries.entries.filter(entry => entry.zamierzenie_id === constructionIntentID) // prettier-ignore
+    const constructionClass    = constructionClasses.find(fEntry => fEntry.id === entry.obiekt_klasa_id) // prettier-ignore
+    const constructionDivision = constructionDivisions.find(fEntry => fEntry.id === constructionDivisionID) // prettier-ignore
+    const constructionSection  = constructionSections.find(fEntry => fEntry.id === constructionSectionID) // prettier-ignore
+    const constructionIntent   = constructionIntents.find(fEntry => fEntry.id === constructionIntentID) // prettier-ignore
+
+    const handleStreetUpdated = () => {
+        const street = streetDBEntries.entries.find((fEntry) => fEntry.id === entry.obiekt_ulica_id); // prettier-ignore
+        const place = placeDBEntries.entries.find((fEntry) => fEntry.id === street?.miejscowosc_id); // prettier-ignore
+        const commune = communeDBEntries.entries.find((fEntry) => fEntry.id === place?.gmina_id); // prettier-ignore
+        if (commune?.id) setCommuneID(commune?.id);
+        else
+            setCommuneID(
+                communeDBEntries.entries.length > 0
+                    ? communeDBEntries.entries[0].id
+                    : 0
+            );
+        if (place?.id) setPlaceID(place?.id);
+    };
+    const updateStreet = () => {
+        if (!street && placeID > 0) {
+            if (streets.length > 0)
+                setEntry({ ...entry, obiekt_ulica_id: streets[0].id });
+            else setEntry({ ...entry, obiekt_ulica_id: 0 });
+        }
+    };
+    const updatePlace = () => {
+        if (!place && communeID > 0) {
+            if (places.length > 0) setPlaceID(places[0].id);
+            else setPlaceID(0);
+        }
+    };
+
+    useEffect(() => {
+        handleStreetUpdated();
+        updatePlace();
+        updateStreet();
+    }, []);
+    useEffect(handleStreetUpdated, [entry.obiekt_ulica_id]);
+    useEffect(updatePlace, [place, communeID]);
+    useEffect(updateStreet, [street, placeID]);
+
+    const handleConstructionClassUpdated = () => {
+        const constructionClass = constructionClassDBEntries.entries.find(fEntry => fEntry.id === entry.obiekt_klasa_id) // prettier-ignore
+        const constructionIntent = constructionIntentDBEntries.entries.find(fEntry => fEntry.id === constructionClass?.zamierzenie_id) // prettier-ignore
+        const constructionDivision = constructionDivisionDBEntries.entries.find(fEntry => fEntry.id === constructionIntent?.dzial_id) // prettier-ignore
+        const constructionSection = constructionSectionDBEntries.entries.find(fEntry => fEntry.id === constructionDivision?.sekcja_id) // prettier-ignore
+
+        if (constructionSection?.id)
+            setConstructionSectionID(constructionSection.id);
+        else
+            setConstructionSectionID(
+                constructionSections.length > 0 ? constructionSections[0].id : 0
+            );
+
+        if(constructionIntent?.id) setConstructionIntentID(constructionIntent.id) // prettier-ignore
+        if(constructionDivision?.id) setConstructionDivisionID(constructionDivision.id) // prettier-ignore
+    };
+    const updateConstructionClass = () => {
+        if (!constructionClass && constructionSectionID > 0) {
+            if (constructionClasses.length > 0) setEntry({...entry, obiekt_klasa_id: constructionClasses[0].id }) // prettier-ignore
+            else setEntry({...entry, obiekt_klasa_id: 0})
+        }
+    };
+    // 
+    // todo add more see above
+    // 
+    useEffect(() => {
+        handleConstructionClassUpdated();
+        updateConstructionClass()
+    }, []);
+    useEffect(handleConstructionClassUpdated, [entry.obiekt_klasa_id]);
+    useEffect(updateConstructionClass, [constructionClass, constructionSectionID])
 
     return (
         <td>
@@ -92,7 +192,7 @@ export default function RegisterTableEditRowContent({
                 </table>
             </div>
 
-            <div className="flex flex-row items-stretch justify-stretch">
+            <div className="flex flex-row items-stretch justify-around">
                 <table>
                     <thead>
                         <tr>
@@ -209,11 +309,58 @@ export default function RegisterTableEditRowContent({
                             <td>Nr</td>
                         </tr>
                         <tr>
-                            <td>TODO</td>
-                            <td>TODO</td>
-                            <td>TODO</td>
-                            <td>TODO</td>
-                            <td>{inputs.obiekt_ulica_id}</td>
+                            <td>
+                                <select
+                                    value={communeID}
+                                    onChange={(e) =>
+                                        setCommuneID(Number(e.target.value))
+                                    }
+                                    disabled={!editable}
+                                >
+                                    {communeDBEntries.entries.map((entry) => (
+                                        <option value={entry.id}>
+                                            {entry.nazwa}
+                                        </option>
+                                    ))}
+                                </select>
+                            </td>
+                            <td>
+                                <select
+                                    value={placeID}
+                                    onChange={(e) =>
+                                        setPlaceID(Number(e.target.value))
+                                    }
+                                    disabled={!editable}
+                                >
+                                    {places.map((entry) => (
+                                        <option value={entry.id}>
+                                            {entry.nazwa}
+                                        </option>
+                                    ))}
+                                </select>
+                            </td>
+                            <td>{area?.nazwa}</td>
+                            <td>{place?.jedn_ewid}</td>
+                            <td>
+                                <select
+                                    value={entry.obiekt_ulica_id}
+                                    onChange={(e) =>
+                                        setEntry({
+                                            ...entry,
+                                            obiekt_ulica_id: Number(
+                                                e.target.value
+                                            ),
+                                        })
+                                    }
+                                    disabled={!editable}
+                                >
+                                    {streets.map((entry) => (
+                                        <option value={entry.id}>
+                                            {entry.nazwa}
+                                        </option>
+                                    ))}
+                                </select>
+                            </td>
                             <td>{inputs.obiekt_nr}</td>
                         </tr>
                     </tbody>
@@ -221,28 +368,12 @@ export default function RegisterTableEditRowContent({
                     <tbody>
                         <tr>
                             <td colSpan={6}>
-                                <TableEdit
-                                    // dbEntries={registerInvestPlotDBEntries}
+                                <DBTableEdit
+                                    dbEntries={registerInvestPlotDBEntries}
                                     entries={registerInvestPlotDBEntries.entries.filter(
                                         (fEntry) =>
                                             fEntry.rejestr_id === entry.id
                                     )}
-                                    events={{
-                                        onEntryAddClicked(entry) {},
-                                        onEntryDeleteClicked(entry) {},
-                                        onEntrySaveClicked(entry) {},
-                                        // onEntryAddClicked(entry) {
-                                        //     const dbEntries =
-                                        //         registerInvestPlotDBEntries;
-                                        //     dbEntries.setEntries([
-                                        //         ...dbEntries.entries,
-                                        //         {
-                                        //             ...entry,
-                                        //             id: dbEntries.entryCount,
-                                        //         },
-                                        //     ]);
-                                        // },
-                                    }}
                                     editable={editable}
                                     emptyEntry={{
                                         id: 0,
@@ -276,13 +407,8 @@ export default function RegisterTableEditRowContent({
                     <tbody>
                         <tr>
                             <td colSpan={6}>
-                                <TableEdit
-                                    //
-                                    // IMPORTANT: TODO: !!!!
-                                    // DBTableEdit nie zawsze powinno odrazu zapisywac,
-                                    // tylko zapisywac jesli zapisze sie outer DBTableEdit
-                                    //
-                                    // dbEntries={registerBuildTypeDBEntries}
+                                <DBTableEdit
+                                    dbEntries={registerBuildTypeDBEntries}
                                     entries={registerBuildTypeDBEntries.entries.filter(
                                         (fEntry) =>
                                             fEntry.rejestr_id === entry.id
