@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Gmina,
     Miejscowosc,
@@ -12,7 +12,6 @@ import {
 } from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
 import { MyInputSelectOption } from "../../components/MyInput";
-import TableEdit from "../../components/TableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 
@@ -108,20 +107,36 @@ export default function RegisterTableEditRowContent({
         if(constructionDivision?.id) setConstructionDivisionID(constructionDivision.id) // prettier-ignore
     };
     const updateConstructionClass = () => {
-        if (!constructionClass && constructionSectionID > 0) {
+        if (!constructionClass && constructionIntentID > 0) {
             if (constructionClasses.length > 0) setEntry({...entry, obiekt_klasa_id: constructionClasses[0].id }) // prettier-ignore
             else setEntry({...entry, obiekt_klasa_id: 0})
         }
     };
+    const updateConstructionIntent = () => {
+        if(!constructionIntent && constructionDivisionID > 0) {
+            if(constructionIntents.length > 0) setConstructionIntentID(constructionIntents[0].id)
+            else setConstructionIntentID(0)
+        }
+    }
+    const updateConstructionDivision = () => {
+        if(!constructionDivision && constructionSectionID > 0) {
+            if(constructionDivisions.length > 0) setConstructionDivisionID(constructionDivisions[0].id)
+            else setConstructionDivisionID(0)
+        }
+    }
     // 
     // todo add more see above
     // 
     useEffect(() => {
         handleConstructionClassUpdated();
-        updateConstructionClass()
+        updateConstructionDivision()
+        updateConstructionIntent()
+        updateConstructionClass();
     }, []);
     useEffect(handleConstructionClassUpdated, [entry.obiekt_klasa_id]);
-    useEffect(updateConstructionClass, [constructionClass, constructionSectionID])
+    useEffect(updateConstructionClass, [constructionClass, constructionIntentID])
+    useEffect(updateConstructionDivision, [constructionDivision, constructionSectionID])
+    useEffect(updateConstructionIntent, [constructionIntent, constructionDivisionID])
 
     return (
         <td>
@@ -165,7 +180,21 @@ export default function RegisterTableEditRowContent({
                     <tbody>
                         <tr>
                             <td>Nazwa zamierzenia budowlanego</td>
-                            <td>TODO</td>
+                            <td>
+                                <select
+                                    value={constructionIntentID}
+                                    onChange={(e) =>
+                                        setConstructionIntentID(Number(e.target.value))
+                                    }
+                                    disabled={!editable}
+                                >
+                                    {constructionIntents.map((entry) => (
+                                        <option value={entry.id}>
+                                            {entry.zamierzenie}
+                                        </option>
+                                    ))}
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <td>Forma budownictwa</td>
@@ -273,9 +302,9 @@ export default function RegisterTableEditRowContent({
                     </thead>
                     <tbody>
                         <tr>
-                            <td colSpan={2}>TODO</td>
-                            <td colSpan={2}>TODO</td>
-                            <td colSpan={2}>TODO</td>
+                            <td colSpan={2}>{constructionIntent?.pkob}</td>
+                            <td colSpan={2}>{constructionIntent?.klasa_zl}</td>
+                            <td colSpan={2}>{constructionIntent?.kat_ob}</td>
                         </tr>
                     </tbody>
 
@@ -288,9 +317,56 @@ export default function RegisterTableEditRowContent({
                     </thead>
                     <tbody>
                         <tr>
-                            <td colSpan={2}>TODO</td>
-                            <td colSpan={2}>TODO</td>
-                            <td colSpan={2}>{inputs.obiekt_klasa_id}</td>
+                            <td colSpan={2}>
+                                <select
+                                    value={constructionSectionID}
+                                    onChange={(e) =>
+                                        setConstructionSectionID(Number(e.target.value))
+                                    }
+                                    disabled={!editable}
+                                >
+                                    {constructionSections.map((entry) => (
+                                        <option value={entry.id}>
+                                            {entry.sekcja}
+                                        </option>
+                                    ))}
+                                </select>
+                            </td>
+                            <td colSpan={2}>
+                                <select
+                                    value={constructionDivisionID}
+                                    onChange={(e) =>
+                                        setConstructionDivisionID(Number(e.target.value))
+                                    }
+                                    disabled={!editable}
+                                >
+                                    {constructionDivisions.map((entry) => (
+                                        <option value={entry.id}>
+                                            {entry.dzial}
+                                        </option>
+                                    ))}
+                                </select>
+                            </td>
+                            <td colSpan={2}>
+                                <select
+                                    value={entry.obiekt_klasa_id}
+                                    onChange={(e) =>
+                                        setEntry({
+                                            ...entry,
+                                            obiekt_klasa_id: Number(
+                                                e.target.value
+                                            ),
+                                        })
+                                    }
+                                    disabled={!editable}
+                                >
+                                    {constructionClasses.map((entry) => (
+                                        <option value={entry.id}>
+                                            {entry.klasa}
+                                        </option>
+                                    ))}
+                                </select>
+                            </td>
                         </tr>
                     </tbody>
 

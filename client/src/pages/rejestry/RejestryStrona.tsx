@@ -71,7 +71,7 @@ export default function RejestryStrona() {
     addInputProps('obiekt_nr', 'text') // prettier-ignore
     addSelectInputProps("obiekt_planowanie_przestrzenne_id", spatialPlanDBEntries, 'planowanie'); // prettier-ignore
     // addSelectInputProps("obiekt_ulica_id", streetDBEntries, 'nazwa'); // prettier-ignore
-    addSelectInputProps("obiekt_klasa_id", constructionClassDBEntries, 'klasa'); // prettier-ignore
+    // addSelectInputProps("obiekt_klasa_id", constructionClassDBEntries, 'klasa'); // prettier-ignore
     addSelectInputProps("typ_id", registerTypeDBEntries, 'typ'); // prettier-ignore
     addInputProps('wniosek_data_zlozenia', 'date') // prettier-ignore
     addInputProps('wniosek_decyzja_data_wydania', 'date') // prettier-ignore
