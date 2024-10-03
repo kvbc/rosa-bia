@@ -1,5 +1,3 @@
-import RejestrComponent from "./Rejestr";
-import { Rejestr, stworzRejestr } from "../../Rejestr";
 import { useState } from "react";
 import Wyszukiwarka from "../../components/Wyszukiwarka";
 import useDBEntriesStore, { DBEntries } from "../../hooks/useDBEntriesStore";
@@ -12,16 +10,12 @@ import {
     TypeEntry,
     Ulica,
 } from "../../../../server/src/types";
-import DBTableEdit from "../../components/DBTableEdit";
 import { MyInputSelectOption } from "../../components/MyInput";
 import RegisterTableEditRowContent from "./RegisterTableEditRowContent";
 import { TableEditRowInputProps } from "../../components/TableEditRow";
+import DBTableEdit from "../../components/DBTableEdit";
 
 export default function RejestryStrona() {
-    const [rejestr, setRejestr] = useState<Rejestr>(
-        stworzRejestr("PnB (6740)")
-    );
-
     const registerDBEntries = useDBEntriesStore<Register>("rejestry")(); // prettier-ignore
     const registerTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_rejestrow")(); // prettier-ignore
     const constructionClassDBEntries = useDBEntriesStore<PKOB.ConstructionClass>("klasy_budowlane")(); // prettier-ignore
@@ -33,7 +27,7 @@ export default function RejestryStrona() {
     const resolutionDBEntries = useDBEntriesStore<TypeEntry>('typy_rozstrzygniec')(); // prettier-ignore
 
     const emptyEntry: Register = {
-        id: 0,
+        id: registerDBEntries.nextInsertID,
         obiekt_forma_budownictwa_id: 0,
         obiekt_nr: "",
         obiekt_planowanie_przestrzenne_id: 0,
@@ -99,78 +93,10 @@ export default function RejestryStrona() {
                     dbEntries={registerDBEntries}
                     headers={["Rejestr"]}
                     emptyEntry={emptyEntry}
-                    endpoint={registerDBEntries.endpoint}
                     rowInputsProps={rowInputsProps}
                     RowContentComponent={RegisterTableEditRowContent}
                 />
             </Wyszukiwarka>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Rejestr</th>
-                        <th>Akcje</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <RejestrComponent
-                                rejestr={rejestr}
-                                setRejestr={setRejestr}
-                            />
-                        </td>
-                        <td>123</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <RejestrComponent
-                                rejestr={rejestr}
-                                setRejestr={setRejestr}
-                            />
-                        </td>
-                        <td>123</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <RejestrComponent
-                                rejestr={rejestr}
-                                setRejestr={setRejestr}
-                            />
-                        </td>
-                        <td>123</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <RejestrComponent
-                                rejestr={rejestr}
-                                setRejestr={setRejestr}
-                            />
-                        </td>
-                        <td>123</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <RejestrComponent
-                                rejestr={rejestr}
-                                setRejestr={setRejestr}
-                            />
-                        </td>
-                        <td>123</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <RejestrComponent
-                                rejestr={rejestr}
-                                setRejestr={setRejestr}
-                            />
-                        </td>
-                        <td>123</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            {/* <RejestrComponent rejestr={rejestr} setRejestr={setRejestr} /> */}
         </div>
     );
 }

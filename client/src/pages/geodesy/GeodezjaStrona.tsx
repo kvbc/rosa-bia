@@ -1,9 +1,10 @@
 import "./GeodezjaStrona.css";
 import Wyszukiwarka from "../../components/Wyszukiwarka";
-import DBTableEdit from "../../components/DBTableEdit";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import { Gmina, Miejscowosc, Ulica } from "../../../../server/src/types";
 import { MyInputSelectOption } from "../../components/MyInput";
+import TableEdit from "../../components/TableEdit";
+import DBTableEdit from "../../components/DBTableEdit";
 
 export default function GeodezjaStrona() {
     const communeDBEntries = useDBEntriesStore<Gmina>("gminy")();
@@ -31,7 +32,6 @@ export default function GeodezjaStrona() {
                                 >
                                     <DBTableEdit
                                         dbEntries={communeDBEntries}
-                                        endpoint={communeDBEntries.endpoint}
                                         headers={["ID", "Gmina"]}
                                         emptyEntry={{
                                             id: 0,
@@ -58,7 +58,6 @@ export default function GeodezjaStrona() {
                                 >
                                     <DBTableEdit
                                         dbEntries={placeDBEntries}
-                                        endpoint={placeDBEntries.endpoint}
                                         headers={[
                                             "ID",
                                             "Miejscowość",
@@ -120,7 +119,6 @@ export default function GeodezjaStrona() {
                                 >
                                     <DBTableEdit
                                         dbEntries={streetDBEntries}
-                                        endpoint={streetDBEntries.endpoint}
                                         headers={["ID", "Ulica", "Miejscowosc"]}
                                         emptyEntry={{
                                             id: 0,

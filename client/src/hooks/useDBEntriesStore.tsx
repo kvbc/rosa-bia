@@ -17,6 +17,7 @@ export type DBEntries<T extends DBEntry> = {
     endpoint: DBEntryEndpoint;
     addEntry: (newEntry: T) => void;
     nextInsertID: number;
+    deleteEntry: (entry: T) => void;
     saveEntry: (entry: T) => void;
     fetchEntries: (startIndex: number, endIndex: number) => () => void;
 };
@@ -74,8 +75,22 @@ function createDBEntriesStore<T extends DBEntry>(endpoint: DBEntryEndpoint) {
             entryCount: 0,
             endpoint,
             nextInsertID: 0,
-            addEntry: (newEntry) =>
-                get().setEntries([...get().entries, newEntry]),
+            addEntry: (entry) => {
+                // get().setEntries([...get().entries, entry]);
+                axios.post(
+                    import.meta.env.VITE_HTTP_SERVER_HOSTNAME + "/" + endpoint,
+                    entry
+                );
+            },
+            deleteEntry: (entry) => {
+                get().setEntries(
+                    get().entries.filter((fEntry) => fEntry.id !== entry.id)
+                );
+                axios.delete(
+                    import.meta.env.VITE_HTTP_SERVER_HOSTNAME +
+                        `/${endpoint}/${entry.id}`
+                );
+            },
             saveEntry: (entry) => {
                 get().setEntries(
                     get().entries.map((fEntry) =>
@@ -103,7 +118,7 @@ function createDBEntriesStore<T extends DBEntry>(endpoint: DBEntryEndpoint) {
                         set((state) => ({
                             ...state,
                             entryCount: res.data.liczba,
-                            nextInsertID: res.data.next_insert_id
+                            nextInsertID: res.data.next_insert_id,
                         }));
                     });
 

@@ -49,9 +49,6 @@ export default function PKOBStrona() {
                                 >
                                     <DBTableEdit
                                         dbEntries={constructionSectionDBEntries}
-                                        endpoint={
-                                            constructionSectionDBEntries.endpoint
-                                        }
                                         headers={["ID", "Sekcja"]}
                                         emptyEntry={{
                                             id: 0,
@@ -83,9 +80,6 @@ export default function PKOBStrona() {
                                     <DBTableEdit
                                         dbEntries={
                                             constructionDivisionDBEntries
-                                        }
-                                        endpoint={
-                                            constructionDivisionDBEntries.endpoint
                                         }
                                         headers={["ID", "Dział", "Sekcja"]}
                                         emptyEntry={{
@@ -145,9 +139,6 @@ export default function PKOBStrona() {
                                     <DBTableEdit
                                         dbEntries={
                                             constructionIntentionDBEntries
-                                        }
-                                        endpoint={
-                                            constructionIntentionDBEntries.endpoint
                                         }
                                         headers={[
                                             "ID",
@@ -213,9 +204,6 @@ export default function PKOBStrona() {
                                 >
                                     <DBTableEdit
                                         dbEntries={constructionClassDBEntries}
-                                        endpoint={
-                                            constructionClassDBEntries.endpoint
-                                        }
                                         headers={["ID", "Klasa", "Zamierzenie"]}
                                         emptyEntry={{
                                             id: 0,
@@ -274,7 +262,6 @@ export default function PKOBStrona() {
                                 >
                                     <DBTableEdit
                                         dbEntries={buildTypeDBEntries}
-                                        endpoint={buildTypeDBEntries.endpoint}
                                         headers={["ID", "Typ Budowy"]}
                                         emptyEntry={{
                                             id: 0,
@@ -305,9 +292,6 @@ export default function PKOBStrona() {
                                 >
                                     <DBTableEdit
                                         dbEntries={constructionFormDBEntries}
-                                        endpoint={
-                                            constructionFormDBEntries.endpoint
-                                        }
                                         headers={["ID", "Forma Budownictwa"]}
                                         emptyEntry={{
                                             id: 0,
@@ -338,7 +322,6 @@ export default function PKOBStrona() {
                                 >
                                     <DBTableEdit
                                         dbEntries={spatialPlanDBEntries}
-                                        endpoint={spatialPlanDBEntries.endpoint}
                                         headers={[
                                             "ID",
                                             "Planowanie Przestrzenne",

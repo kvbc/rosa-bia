@@ -7,12 +7,14 @@ import {
 } from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
 import { MyInputSelectOption } from "../../components/MyInput";
+import TableEdit from "../../components/TableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 
 export default function RegisterTableEditRowContent({
     inputs,
     entry,
+    editable,
     setEntry,
 }: TableEditRowContentProps<Register>) {
     const adminActionTypeDBEntries = useDBEntriesStore<TypeEntry>('typy_czynnosci_admin')(); // prettier-ignore
@@ -20,10 +22,6 @@ export default function RegisterTableEditRowContent({
     const registerInvestPlotDBEntries = useDBEntriesStore<RegisterInvestPlots>("rejestry_dzialki_objete_inwestycja")(); // prettier-ignore
     const registerBuildTypeDBEntries = useDBEntriesStore<RegisterBuildTypes>("rejestry_typy_budowy")(); // prettier-ignore
     const buildTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_budowy")(); // prettier-ignore
-
-    const adminActions = registerAdminActionDBEntries.entries.filter(
-        (dbEntry) => dbEntry.rejestr_id === entry.id
-    );
 
     return (
         <td>
@@ -94,7 +92,7 @@ export default function RegisterTableEditRowContent({
                 </table>
             </div>
 
-            <div className="flex flex-row">
+            <div className="flex flex-row items-stretch justify-stretch">
                 <table>
                     <thead>
                         <tr>
@@ -223,20 +221,35 @@ export default function RegisterTableEditRowContent({
                     <tbody>
                         <tr>
                             <td colSpan={6}>
-                                <DBTableEdit
-                                    dbEntries={registerInvestPlotDBEntries}
+                                <TableEdit
+                                    // dbEntries={registerInvestPlotDBEntries}
+                                    entries={registerInvestPlotDBEntries.entries.filter(
+                                        (fEntry) =>
+                                            fEntry.rejestr_id === entry.id
+                                    )}
+                                    events={{
+                                        onEntryAddClicked(entry) {},
+                                        onEntryDeleteClicked(entry) {},
+                                        onEntrySaveClicked(entry) {},
+                                        // onEntryAddClicked(entry) {
+                                        //     const dbEntries =
+                                        //         registerInvestPlotDBEntries;
+                                        //     dbEntries.setEntries([
+                                        //         ...dbEntries.entries,
+                                        //         {
+                                        //             ...entry,
+                                        //             id: dbEntries.entryCount,
+                                        //         },
+                                        //     ]);
+                                        // },
+                                    }}
+                                    editable={editable}
                                     emptyEntry={{
                                         id: 0,
                                         rejestr_id: entry.id,
                                         dzialka: "",
                                     }}
-                                    entriesFilter={(plotEntry) =>
-                                        plotEntry.rejestr_id === entry.id
-                                    }
                                     headers={["Działki objęte inwestycją"]}
-                                    endpoint={
-                                        registerInvestPlotDBEntries.endpoint
-                                    }
                                     showActionsHeader={false}
                                     rowInputsProps={[
                                         {
@@ -263,25 +276,24 @@ export default function RegisterTableEditRowContent({
                     <tbody>
                         <tr>
                             <td colSpan={6}>
-                                <DBTableEdit
+                                <TableEdit
                                     //
                                     // IMPORTANT: TODO: !!!!
                                     // DBTableEdit nie zawsze powinno odrazu zapisywac,
                                     // tylko zapisywac jesli zapisze sie outer DBTableEdit
                                     //
-                                    dbEntries={registerBuildTypeDBEntries}
+                                    // dbEntries={registerBuildTypeDBEntries}
+                                    entries={registerBuildTypeDBEntries.entries.filter(
+                                        (fEntry) =>
+                                            fEntry.rejestr_id === entry.id
+                                    )}
+                                    editable={editable}
                                     emptyEntry={{
                                         id: 0,
                                         rejestr_id: entry.id,
                                         typ_id: 0,
                                     }}
-                                    entriesFilter={(fEntry) =>
-                                        fEntry.rejestr_id === entry.id
-                                    }
                                     headers={["Stany Budowy"]}
-                                    endpoint={
-                                        registerBuildTypeDBEntries.endpoint
-                                    }
                                     showActionsHeader={false}
                                     rowInputsProps={[
                                         {
@@ -358,6 +370,10 @@ export default function RegisterTableEditRowContent({
                 </table> */}
                 <DBTableEdit
                     dbEntries={registerAdminActionDBEntries}
+                    entries={registerAdminActionDBEntries.entries.filter(
+                        (fEntry) => fEntry.rejestr_id === entry.id
+                    )}
+                    editable={editable}
                     emptyEntry={{
                         data_odebrania: "",
                         data_odpowiedzi: "",
@@ -368,9 +384,6 @@ export default function RegisterTableEditRowContent({
                         typ_id: 0,
                         wybor: false,
                     }}
-                    entriesFilter={(actionEntry) =>
-                        actionEntry.rejestr_id === entry.id
-                    }
                     headers={[
                         "Czynność",
                         "Termin [dni]",
@@ -378,7 +391,6 @@ export default function RegisterTableEditRowContent({
                         "Data odebrania",
                         "Data odpowiedzi",
                     ]}
-                    endpoint={registerAdminActionDBEntries.endpoint}
                     rowInputsProps={[
                         {
                             type: "select",

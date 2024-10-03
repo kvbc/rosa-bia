@@ -1,4 +1,4 @@
-import { ComponentType, ReactNode, useState } from "react";
+import { ComponentType, ReactNode, useEffect, useState } from "react";
 import "./TableEditRow.css";
 import { TableEditEntry } from "./TableEdit";
 import MyInput, { MyInputProps } from "./MyInput";
@@ -18,6 +18,7 @@ export type TableEditRowEvents = {
 export type TableEditRowContentProps<TEntry> = {
     inputs: { [key in keyof TEntry]?: ReactNode };
     entry: TEntry;
+    editable: boolean;
     setEntry: (entry: TEntry) => void;
 };
 
@@ -33,12 +34,14 @@ export type TableEditRowContentComponentType<TEntry> = ComponentType<
 export default function TableEditRow<TEntry extends TableEditEntry>({
     events,
     entry,
+    editable,
     setEntry,
     inputsProps,
     ContentComponent,
 }: {
     events: TableEditRowEvents;
     entry: TEntry;
+    editable: boolean;
     setEntry: (entry: TEntry) => void;
     inputsProps: TableEditRowInputProps<TEntry>[];
     ContentComponent?: TableEditRowContentComponentType<TEntry>;
@@ -48,6 +51,14 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
             ? TableEditRowState.Adding
             : TableEditRowState.Viewing
     );
+
+    useEffect(() => {
+        setState(
+            events.onAddClicked
+                ? TableEditRowState.Adding
+                : TableEditRowState.Viewing
+        );
+    }, [events.onAddClicked]);
 
     const onEditClicked = () => {
         setState(TableEditRowState.Editing);
@@ -79,7 +90,7 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
                     entry={entry}
                     setEntry={setEntry}
                     {...inputProps}
-                    disabled={state == TableEditRowState.Viewing}
+                    disabled={!editable || state == TableEditRowState.Viewing}
                 />
             );
         });
@@ -87,6 +98,7 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
             <ContentComponent
                 inputs={inputs}
                 entry={entry}
+                editable={editable && state != TableEditRowState.Viewing}
                 setEntry={setEntry}
             />
         );
@@ -97,7 +109,7 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
                     entry={entry}
                     setEntry={setEntry}
                     {...inputProps}
-                    disabled={state == TableEditRowState.Viewing}
+                    disabled={!editable || state == TableEditRowState.Viewing}
                 />
             </td>
         ));
@@ -109,19 +121,29 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
             <td className="table-edit-row_actions">
                 {state == TableEditRowState.Viewing && (
                     <>
-                        <button onClick={onEditClicked}>Edytuj</button>
-                        <button onClick={onDeleteClicked}>Usuń</button>
+                        <button onClick={onEditClicked} disabled={!editable}>
+                            Edytuj
+                        </button>
+                        <button onClick={onDeleteClicked} disabled={!editable}>
+                            Usuń
+                        </button>
                     </>
                 )}
                 {state == TableEditRowState.Editing && (
                     <>
-                        <button onClick={onSaveClicked}>Zapisz</button>
-                        <button onClick={onCancelClicked}>Anuluj</button>
+                        <button onClick={onSaveClicked} disabled={!editable}>
+                            Zapisz
+                        </button>
+                        <button onClick={onCancelClicked} disabled={!editable}>
+                            Anuluj
+                        </button>
                     </>
                 )}
                 {state == TableEditRowState.Adding && (
                     <>
-                        <button onClick={onAddClicked}>Dodaj</button>
+                        <button onClick={onAddClicked} disabled={!editable}>
+                            Dodaj
+                        </button>
                     </>
                 )}
             </td>

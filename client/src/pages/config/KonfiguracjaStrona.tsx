@@ -1,8 +1,9 @@
 import Wyszukiwarka from "../../components/Wyszukiwarka";
 import useDBEntriesStore, { DBEntries } from "../../hooks/useDBEntriesStore";
-import DBTableEdit from "../../components/DBTableEdit";
 import { TypeEntry } from "../../../../server/src/types";
 import "./KonfiguracjaStrona.css";
+import TableEdit from "../../components/TableEdit";
+import DBTableEdit from "../../components/DBTableEdit";
 
 export default function KonfiguracjaStrona() {
     const mayorDecisionTypeDBEntries = useDBEntriesStore<TypeEntry>(
@@ -66,7 +67,6 @@ export default function KonfiguracjaStrona() {
                                     >
                                         <DBTableEdit
                                             dbEntries={entry.dbEntries}
-                                            endpoint={entry.dbEntries.endpoint}
                                             headers={["ID", entry.name]}
                                             emptyEntry={{
                                                 id: 0,

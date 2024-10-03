@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import "./Wyszukiwarka.css";
 import { Link } from "react-router-dom";
 

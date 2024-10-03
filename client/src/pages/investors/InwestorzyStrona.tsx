@@ -1,7 +1,7 @@
 import Wyszukiwarka from "../../components/Wyszukiwarka";
-import DBTableEdit from "../../components/DBTableEdit";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import { Inwestor } from "../../../../server/src/types";
+import DBTableEdit from "../../components/DBTableEdit";
 
 export default function InwestorzyStrona() {
     const investorDBEntries = useDBEntriesStore<Inwestor>("inwestorzy")();
@@ -15,7 +15,6 @@ export default function InwestorzyStrona() {
             >
                 <DBTableEdit
                     dbEntries={investorDBEntries}
-                    endpoint={investorDBEntries.endpoint}
                     headers={["ID", "Inwestor", "Adres"]}
                     emptyEntry={{
                         id: 0,

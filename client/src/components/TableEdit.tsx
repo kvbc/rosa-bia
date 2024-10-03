@@ -1,15 +1,9 @@
-import {
-    Dispatch,
-    HTMLAttributes,
-    InputHTMLAttributes,
-    SetStateAction,
-} from "react";
+import { InputHTMLAttributes, useEffect, useState } from "react";
 import TableEditRow, {
     TableEditRowContentComponentType,
     TableEditRowEvents,
     TableEditRowInputProps,
 } from "./TableEditRow";
-import { MyInputProps } from "./MyInput";
 
 export type TableEditEntry = {
     id: number;
@@ -23,24 +17,38 @@ export type TableEditEvents<TEntry extends TableEditEntry> = {
 };
 
 export default function TableEdit<TEntry extends TableEditEntry>({
-    entries,
-    setEntries,
+    entries: _entries,
     events,
+    emptyEntry,
     headers,
     showActionsHeader,
     rowInputsProps,
+    editable,
     RowContentComponent,
 }: {
-    entries: TEntry[];
+    entries?: TEntry[];
     headers: string[];
+    emptyEntry: TEntry;
+    editable?: boolean;
     showActionsHeader?: boolean;
-    setEntries: Dispatch<SetStateAction<typeof entries>>;
-    events: TableEditEvents<TEntry>;
+    events?: TableEditEvents<TEntry>;
     rowInputsProps: TableEditRowInputProps<TEntry>[];
     RowContentComponent?: TableEditRowContentComponentType<TEntry>;
 }) {
+    if (!_entries) throw "Error";
+    if (editable === undefined) editable = true;
+
+    const [entries, setEntries] = useState<TEntry[]>([
+        ..._entries,
+        { ...emptyEntry },
+    ]);
+
+    useEffect(() => {
+        setEntries([..._entries, { ...emptyEntry }]);
+    }, [_entries]);
+
     return (
-        <table className="h-full w-full">
+        <table className="w-full border-gray-500 border-2 p-3">
             <thead>
                 <tr>
                     {headers.length === 1 ? (
@@ -54,26 +62,46 @@ export default function TableEdit<TEntry extends TableEditEntry>({
                 </tr>
             </thead>
             <tbody>
-                {entries.map((entry) => {
+                {/* 
+                
+                TODO: ADD CHANGE HISTORY and commit
+                
+                */}
+                {entries.map((entry, entryIndex) => {
                     const entryEvents: TableEditRowEvents = {
-                        onDeleteClicked: () =>
-                            events.onEntryDeleteClicked?.(entry),
-                        onSaveClicked: () => events.onEntrySaveClicked?.(entry),
+                        onDeleteClicked: () => {
+                            setEntries(
+                                entries.filter(
+                                    (fEntry) => fEntry.id !== entry.id
+                                )
+                            );
+                            events?.onEntryDeleteClicked?.(entry);
+                        },
+                        onSaveClicked: () => {
+                            events?.onEntrySaveClicked?.(entry);
+                        },
                     };
-                    if (entry === entries.at(-1)) {
+                    if (entryIndex === entries.length - 1) {
                         // last entry (use for adding)
-                        entryEvents.onAddClicked = () =>
-                            events.onEntryAddClicked?.(entry);
+                        console.log(entry, entryIndex, "/", entries.length);
+                        entryEvents.onAddClicked = () => {
+                            setEntries([
+                                ...entries,
+                                { ...emptyEntry, id: entries.length + 1 },
+                            ]);
+                            events?.onEntryAddClicked?.(entry);
+                        };
                     }
                     return (
                         <TableEditRow
                             key={entry.id}
                             entry={entry}
                             events={entryEvents}
+                            editable={editable}
                             inputsProps={rowInputsProps}
                             ContentComponent={RowContentComponent}
-                            setEntry={(newEntry) => {
-                                setEntries((entries) =>
+                            setEntry={(newEntry: TEntry) => {
+                                setEntries(
                                     entries.map((entry) =>
                                         entry.id === newEntry.id
                                             ? newEntry
