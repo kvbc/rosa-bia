@@ -4,6 +4,7 @@ Tech Stack:
 
 -   React
 -   TypeScript
+-   Tailwind
 -   Vite
 -   Zustand
 -   Express
