@@ -7,36 +7,29 @@ export default function InwestorzyStrona() {
     const investorDBEntries = useDBEntriesStore<Inwestor>("inwestorzy")();
 
     return (
-        <>
-            <Wyszukiwarka
-                fetchWyniki={investorDBEntries.fetchEntries}
-                liczbaWynikow={investorDBEntries.entryCount}
-            >
-                <DBTableEdit
-                    dbEntries={investorDBEntries}
-                    headers={["ID", "Inwestor", "Adres"]}
-                    emptyEntry={{
-                        id: 0,
-                        adres: "",
-                        nazwa: "",
-                    }}
-                    rowInputsProps={[
-                        {
-                            type: "number",
-                            entryKey: "id",
-                            uneditable: true,
-                        },
-                        {
-                            type: "text",
-                            entryKey: "nazwa",
-                        },
-                        {
-                            type: "text",
-                            entryKey: "adres",
-                        },
-                    ]}
-                />
-            </Wyszukiwarka>
-        </>
+        <DBTableEdit
+            dbEntries={investorDBEntries}
+            headers={["ID", "Inwestor", "Adres"]}
+            emptyEntry={{
+                id: 0,
+                adres: "",
+                nazwa: "",
+            }}
+            rowInputsProps={[
+                {
+                    type: "number",
+                    entryKey: "id",
+                    uneditable: true,
+                },
+                {
+                    type: "text",
+                    entryKey: "nazwa",
+                },
+                {
+                    type: "text",
+                    entryKey: "adres",
+                },
+            ]}
+        />
     );
 }

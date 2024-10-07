@@ -1,4 +1,7 @@
 import { HTMLInputTypeAttribute } from "react";
+import Input from "@mui/joy/Input";
+import Select from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
 
 export type MyInputSelectOption = {
     value: string | number;
@@ -29,29 +32,30 @@ export default function MyInput<TEntry extends { [key: string]: any }>({
     return (
         <>
             {type === "select" && (
-                <select
+                <Select
                     value={entry[entryKey]}
-                    onChange={(e) =>
+                    onChange={(e, v) =>
                         setEntry({
                             ...entry,
-                            [entryKey]: e.target.value,
+                            [entryKey]: v,
                         })
                     }
                     disabled={uneditable ? true : disabled}
                 >
                     {selectOptions &&
                         selectOptions.map((selectOption) => (
-                            <option
+                            <Option
                                 value={selectOption.value}
                                 key={selectOption.value}
                             >
                                 {selectOption.name}
-                            </option>
+                            </Option>
                         ))}
-                </select>
+                </Select>
             )}
             {type !== "select" && (
-                <input
+                <Input
+                    size="sm"
                     type={type}
                     value={entry[entryKey]}
                     onChange={(e) =>

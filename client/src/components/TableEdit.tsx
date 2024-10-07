@@ -8,13 +8,32 @@ import {
 } from "react";
 import TableEditRow, {
     TableEditRowContentComponentType,
+    TableEditRowContext,
     TableEditRowEvents,
     TableEditRowInputProps,
+    TableEditRowState,
 } from "./TableEditRow";
+import Table from "@mui/joy/Table";
+import Tooltip from "@mui/joy/Tooltip";
+import Box from "@mui/joy/Box";
+import FormControl from "@mui/joy/FormControl";
+import Select from "@mui/joy/Select";
+import Typography from "@mui/joy/Typography";
+import FormLabel from "@mui/joy/FormLabel";
+import Option from "@mui/joy/Option";
+import IconButton from "@mui/joy/IconButton";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { SxProps } from "@mui/material";
 
 export type TableEditEntry = {
     id: number;
     [key: string]: InputHTMLAttributes<any>["value"];
+};
+
+export type TableEditHeader = {
+    name: string;
+    width?: string;
 };
 
 export type TableEditEvents<TEntry extends TableEditEntry> = {
@@ -39,12 +58,22 @@ export default function TableEdit<TEntry extends TableEditEntry>({
     showActionsHeader,
     rowInputsProps,
     editable,
+    headersClassName,
+    title,
+    totalEntryCount,
+    onUpdateEntries,
     RowContentComponent,
+    rowActionTDClassName,
 }: {
     entries?: TEntry[];
-    headers: string[];
+    headers: (TableEditHeader | string)[];
+    totalEntryCount: number;
     emptyEntry: TEntry;
+    headersClassName?: string;
     editable?: boolean;
+    title?: string;
+    rowActionTDClassName?: string;
+    onUpdateEntries?: (startRowIndex: number, endRowIndex: number) => void;
     showActionsHeader?: boolean;
     events?: TableEditEvents<TEntry>;
     rowInputsProps: TableEditRowInputProps<TEntry>[];
@@ -52,8 +81,11 @@ export default function TableEdit<TEntry extends TableEditEntry>({
 }) {
     if (!_entries) throw "Error";
     if (editable === undefined) editable = true;
-    // if (editable === false) showActionsHeader = false;
+    if (showActionsHeader === undefined) showActionsHeader = true;
+    if (editable === false) showActionsHeader = false;
 
+    const [page, setPage] = useState<number>(1);
+    const [rowsPerPage, setRowsPerPage] = useState<number>(25);
     const [entries, setEntries] = useState<TEntry[]>([
         ..._entries,
         { ...emptyEntry },
@@ -62,8 +94,23 @@ export default function TableEdit<TEntry extends TableEditEntry>({
         TableEditAction<TEntry>[]
     >([]);
     const commitHistoryNumber = useContext(TableEditHistoryContext);
+    const tableEditRowContext = useContext(TableEditRowContext);
     const [outCommitHistoryNumber, setOutCommitHistoryNumber] =
         useState<number>(1);
+    const pageCount = Math.ceil(totalEntryCount / rowsPerPage);
+    const startRowIndex = (page - 1) * rowsPerPage;
+    const endRowIndex = page * rowsPerPage;
+
+    if (tableEditRowContext) {
+        editable = [
+            TableEditRowState.Editing,
+            TableEditRowState.Adding,
+        ].includes(tableEditRowContext.rowState);
+    }
+
+    useEffect(() => {
+        if (onUpdateEntries) onUpdateEntries(startRowIndex, endRowIndex);
+    }, [startRowIndex, endRowIndex]);
 
     useEffect(() => {
         setEntries([..._entries, { ...emptyEntry }]);
@@ -138,47 +185,161 @@ export default function TableEdit<TEntry extends TableEditEntry>({
         );
     };
 
+    const handleChangeRowsPerPage = (event: any, newValue: number | null) => {
+        setRowsPerPage(parseInt(newValue!.toString(), 10));
+        setPage(1);
+    };
+
+    const bodyContent = entries
+        .slice(0, editable ? entries.length : -1)
+        .map((entry, entryIndex) => {
+            const entryEvents: TableEditRowEvents = {
+                onDeleteClicked: () => handleEntryDeleted(entry), // prettier-ignore
+                onSaveClicked: () => handleEntrySaved(entry), // prettier-ignore
+            };
+            if (entryIndex === entries.length - 1) {
+                // last entry (use for adding)
+                entryEvents.onAddClicked = () => handleEntryAdded(entry); // prettier-ignore
+            }
+            return (
+                <TableEditRow
+                    actionTDClassName={rowActionTDClassName}
+                    key={entry.id}
+                    entry={entry}
+                    events={entryEvents}
+                    editable={editable}
+                    inputsProps={rowInputsProps}
+                    ContentComponent={RowContentComponent}
+                    setEntry={setEntry}
+                />
+            );
+        });
+
     return (
-        <table className="w-full">
+        <Table
+            variant="outlined"
+            size="sm"
+            borderAxis="bothBetween"
+            stickyFooter
+            stickyHeader
+            // sx={{ width: "inherit" }}
+        >
+            {title && <caption>{title}</caption>}
             <thead>
                 <tr>
-                    {headers.length === 1 ? (
-                        <th colSpan={2}>{headers[0]}</th>
-                    ) : (
-                        headers.map((header) => <th>{header}</th>)
-                    )}
-                    {/* {showActionsHeader && <th>Akcje</th>} */}
-                </tr>
-            </thead>
-            <tbody className="h-full">
-                <TableEditHistoryContext.Provider
-                    value={outCommitHistoryNumber}
-                >
-                    {entries
-                        .slice(0, editable ? entries.length : -1)
-                        .map((entry, entryIndex) => {
-                            const entryEvents: TableEditRowEvents = {
-                                onDeleteClicked: () => handleEntryDeleted(entry), // prettier-ignore
-                                onSaveClicked: () => handleEntrySaved(entry), // prettier-ignore
-                            };
-                            if (entryIndex === entries.length - 1) {
-                                // last entry (use for adding)
-                                entryEvents.onAddClicked = () => handleEntryAdded(entry); // prettier-ignore
+                    {/* {headers.length === 1 ? (
+                        <th colSpan={3}>{headers[0]}</th>
+                    ) : ( */}
+                    <>
+                        {headers.map((header) => {
+                            let name,
+                                width = "inherit";
+                            if (typeof header === "string") name = header;
+                            else {
+                                name = header.name;
+                                width = header.width ?? "inherit";
                             }
                             return (
-                                <TableEditRow
-                                    key={entry.id}
-                                    entry={entry}
-                                    events={entryEvents}
-                                    editable={editable}
-                                    inputsProps={rowInputsProps}
-                                    ContentComponent={RowContentComponent}
-                                    setEntry={setEntry}
-                                />
+                                <Tooltip title={name} variant="soft">
+                                    <th
+                                        style={{ width }}
+                                        className={headersClassName}
+                                    >
+                                        {name}
+                                    </th>
+                                </Tooltip>
                             );
                         })}
-                </TableEditHistoryContext.Provider>
+                        {showActionsHeader && (
+                            <th
+                                style={{
+                                    width: "70px",
+                                }}
+                                className={headersClassName}
+                            >
+                                Akcje
+                            </th>
+                        )}
+                    </>
+                    {/* )} */}
+                </tr>
+            </thead>
+            <tbody>
+                {commitHistoryNumber ? (
+                    bodyContent
+                ) : (
+                    <TableEditHistoryContext.Provider
+                        value={outCommitHistoryNumber}
+                    >
+                        {bodyContent}
+                    </TableEditHistoryContext.Provider>
+                )}
             </tbody>
-        </table>
+            {onUpdateEntries && (
+                <tfoot>
+                    <tr>
+                        <td colSpan={headers.length + 2}>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 2,
+                                    justifyContent: "flex-end",
+                                }}
+                            >
+                                <FormControl orientation="horizontal" size="sm">
+                                    <FormLabel>Wyniki na stronę:</FormLabel>
+                                    <Select
+                                        onChange={handleChangeRowsPerPage}
+                                        value={rowsPerPage}
+                                    >
+                                        <Option value={25}>25</Option>
+                                        <Option value={50}>50</Option>
+                                        <Option value={100}>100</Option>
+                                        <Option value={250}>250</Option>
+                                        <Option value={500}>500</Option>
+                                    </Select>
+                                    <FormLabel sx={{ paddingLeft: "4px" }}>
+                                        z {totalEntryCount}
+                                    </FormLabel>
+                                </FormControl>
+                                <Typography
+                                    sx={{ textAlign: "center", minWidth: 20 }}
+                                >
+                                    {page} / {pageCount} ({startRowIndex + 1}-
+                                    {endRowIndex})
+                                </Typography>
+                                <Box sx={{ display: "flex", gap: 1 }}>
+                                    <IconButton
+                                        size="sm"
+                                        color="neutral"
+                                        variant="outlined"
+                                        disabled={page === 1}
+                                        onClick={() =>
+                                            setPage((page) => page - 1)
+                                        }
+                                        sx={{ bgcolor: "background.surface" }}
+                                    >
+                                        <KeyboardArrowLeftIcon />
+                                    </IconButton>
+                                    <IconButton
+                                        size="sm"
+                                        color="neutral"
+                                        variant="outlined"
+                                        disabled={page === pageCount}
+                                        onClick={() =>
+                                            setPage((page) => page + 1)
+                                        }
+                                        sx={{ bgcolor: "background.surface" }}
+                                    >
+                                        <KeyboardArrowRightIcon />
+                                    </IconButton>
+                                </Box>
+                            </Box>
+                        </td>
+                    </tr>
+                </tfoot>
+            )}
+        </Table>
     );
 }

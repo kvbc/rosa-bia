@@ -1,6 +1,17 @@
-import { ComponentType, ReactNode, useEffect, useState } from "react";
+import {
+    ComponentType,
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import { TableEditEntry } from "./TableEdit";
 import MyInput, { MyInputProps } from "./MyInput";
+import IconButton from "@mui/joy/IconButton";
+import Button from "@mui/joy/Button";
+import ButtonGroup from "@mui/joy/ButtonGroup";
+import { MdEdit, MdDelete, MdAdd, MdCancel, MdSave } from "react-icons/md";
 
 export enum TableEditRowState {
     Viewing,
@@ -30,17 +41,23 @@ export type TableEditRowContentComponentType<TEntry> = ComponentType<
     TableEditRowContentProps<TEntry>
 >;
 
+export const TableEditRowContext = createContext<{
+    rowState: TableEditRowState;
+} | null>(null);
+
 export default function TableEditRow<TEntry extends TableEditEntry>({
     events,
     entry,
     editable,
     setEntry,
     inputsProps,
+    actionTDClassName,
     ContentComponent,
 }: {
     events: TableEditRowEvents;
     entry: TEntry;
     editable: boolean;
+    actionTDClassName?: string;
     setEntry: (entry: TEntry) => void;
     inputsProps: TableEditRowInputProps<TEntry>[];
     ContentComponent?: TableEditRowContentComponentType<TEntry>;
@@ -50,6 +67,15 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
             ? TableEditRowState.Adding
             : TableEditRowState.Viewing
     );
+    const tableEditRowContext = useContext(TableEditRowContext);
+
+    useEffect(() => {
+        if (
+            tableEditRowContext &&
+            tableEditRowContext.rowState !== TableEditRowState.Adding
+        )
+            setState(tableEditRowContext.rowState);
+    }, [tableEditRowContext?.rowState]);
 
     useEffect(() => {
         setState(
@@ -115,54 +141,100 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
     }
 
     return (
-        <tr className="h-full">
-            {content}
-            {editable && (
-                <td className="flex flex-row justify-evenly gap-1 h-full">
-                    {state == TableEditRowState.Viewing && (
-                        <>
-                            <button
-                                onClick={onEditClicked}
-                                className="text-blue-500 hover:underline"
-                            >
-                                Edytuj
-                            </button>
-                            <button
-                                onClick={onDeleteClicked}
-                                className="text-red-500 hover:underline"
-                            >
-                                Usuń
-                            </button>
-                        </>
-                    )}
-                    {state == TableEditRowState.Editing && (
-                        <>
-                            <button
-                                onClick={onSaveClicked}
-                                className="text-green-500 hover:underline"
-                            >
-                                Zapisz
-                            </button>
-                            <button
-                                onClick={onCancelClicked}
-                                className="text-red-500 hover:underline"
-                            >
-                                Anuluj
-                            </button>
-                        </>
-                    )}
-                    {state == TableEditRowState.Adding && (
-                        <>
-                            <button
-                                onClick={onAddClicked}
-                                className="text-green-500 hover:underline"
-                            >
-                                Dodaj
-                            </button>
-                        </>
-                    )}
-                </td>
-            )}
-        </tr>
+        <TableEditRowContext.Provider
+            value={{
+                rowState: state,
+            }}
+        >
+            <tr>
+                {content}
+                {editable && (
+                    <>
+                        {tableEditRowContext && (
+                            <td className={actionTDClassName}>
+                                <div className="w-full h-full flex items-center justify-center">
+                                    {state !== TableEditRowState.Adding && (
+                                        <IconButton
+                                            onClick={onDeleteClicked}
+                                            size="sm"
+                                            variant="plain"
+                                            color="danger"
+                                        >
+                                            <MdDelete />
+                                        </IconButton>
+                                    )}
+                                    {state === TableEditRowState.Adding && (
+                                        <IconButton
+                                            onClick={onAddClicked}
+                                            size="sm"
+                                            variant="plain"
+                                            color="success"
+                                        >
+                                            <MdAdd />
+                                        </IconButton>
+                                    )}
+                                </div>
+                            </td>
+                        )}
+                        {!tableEditRowContext && (
+                            <td className={actionTDClassName}>
+                                {state == TableEditRowState.Viewing && (
+                                    <ButtonGroup>
+                                        <IconButton
+                                            onClick={onEditClicked}
+                                            size="sm"
+                                            variant="plain"
+                                            color="primary"
+                                        >
+                                            <MdEdit />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={onDeleteClicked}
+                                            size="sm"
+                                            variant="plain"
+                                            color="danger"
+                                        >
+                                            <MdDelete />
+                                        </IconButton>
+                                    </ButtonGroup>
+                                )}
+                                {state == TableEditRowState.Editing && (
+                                    <ButtonGroup>
+                                        <IconButton
+                                            onClick={onSaveClicked}
+                                            size="sm"
+                                            variant="plain"
+                                            color="success"
+                                        >
+                                            <MdSave />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={onCancelClicked}
+                                            size="sm"
+                                            variant="plain"
+                                            color="danger"
+                                        >
+                                            <MdCancel />
+                                        </IconButton>
+                                    </ButtonGroup>
+                                )}
+                                {state == TableEditRowState.Adding && (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <IconButton
+                                            onClick={onAddClicked}
+                                            size="sm"
+                                            variant="plain"
+                                            color="success"
+                                        >
+                                            <MdAdd />
+                                        </IconButton>
+                                    </div>
+                                )}
+                            </td>
+                        )}
+                    </>
+                )}
+            </tr>
+        </TableEditRowContext.Provider>
     );
 }

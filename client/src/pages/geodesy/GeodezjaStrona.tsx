@@ -11,6 +11,87 @@ export default function GeodezjaStrona() {
 
     return (
         <>
+            <div className="flex gap-2 items-start w-full">
+                <DBTableEdit
+                    title="Gminy"
+                    dbEntries={communeDBEntries}
+                    headers={["ID", "Gmina"]}
+                    emptyEntry={{
+                        id: 0,
+                        nazwa: "",
+                    }}
+                    rowInputsProps={[
+                        {
+                            type: "number",
+                            entryKey: "id",
+                            uneditable: true,
+                        },
+                        {
+                            type: "text",
+                            entryKey: "nazwa",
+                        },
+                    ]}
+                />
+            </div>
+            <br />
+            <div className="flex gap-2 items-start w-full">
+                <DBTableEdit
+                    title="Miejscowości"
+                    dbEntries={placeDBEntries}
+                    headers={[
+                        "ID",
+                        "Miejscowość",
+                        "Gmina",
+                        "Obręb",
+                        "Jedn. ewid.",
+                    ]}
+                    emptyEntry={{
+                        id: 0,
+                        gmina_id: 0,
+                        jedn_ewid: "",
+                        nazwa: "",
+                        obreb_id: 0,
+                    }}
+                    rowInputsProps={[
+                        {
+                            type: "number",
+                            entryKey: "id",
+                            uneditable: true,
+                        },
+                        {
+                            type: "text",
+                            entryKey: "nazwa",
+                        },
+                        {
+                            type: "select",
+                            entryKey: "gmina_id",
+                            selectOptions:
+                                communeDBEntries.entries.map<MyInputSelectOption>(
+                                    (entry) => ({
+                                        value: entry.id,
+                                        name: entry.nazwa,
+                                    })
+                                ),
+                        },
+                        {
+                            type: "select",
+                            entryKey: "obreb_id",
+                            selectOptions:
+                                placeDBEntries.entries.map<MyInputSelectOption>(
+                                    (entry) => ({
+                                        value: entry.id,
+                                        name: entry.nazwa,
+                                    })
+                                ),
+                        },
+                        {
+                            type: "text",
+                            entryKey: "jedn_ewid",
+                        },
+                    ]}
+                />
+            </div>
+
             <div className="[&>table>tbody>tr]:h-full [&>table>tbody>tr>td]:h-full">
                 <table>
                     <thead>

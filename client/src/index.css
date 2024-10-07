@@ -13,22 +13,37 @@ body {
 }
 
 @layer base {
-    input {
-        @apply bg-gray-100 border border-gray-300 text-gray-900 text-[0.5rem] block w-full p-0.5 disabled:bg-gray-200 disabled:border-gray-400 disabled:text-gray-700;
+    tbody,
+    thead,
+    tr,
+    th,
+    td {
+        @apply w-full;
     }
+    /* tbody,
+    tr,
+    td {
+        @apply h-full;
+    } */
+    /* input {
+        @apply bg-gray-100 border border-gray-300 text-gray-900 text-[0.5rem] block w-full p-0.5 disabled:bg-gray-200 disabled:border-gray-400 disabled:text-gray-700;
+    } */
     /* button {
         @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-1.5 py-1 text-center;
     } */
-    table,
+    /* table,
     thead,
     tr,
     th,
     td {
         @apply border-gray-300 border border-collapse text-[0.5rem];
+    } */
+    /* thead {
+        @apply border-b-2 border-gray-300;
     }
     table {
-        @apply w-full;
-    }
+        @apply w-full text-[0.5rem];
+    } */
     /* td {
         @apply h-full;
     } */

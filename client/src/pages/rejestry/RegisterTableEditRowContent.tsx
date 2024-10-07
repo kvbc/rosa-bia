@@ -142,7 +142,7 @@ export default function RegisterTableEditRowContent({
         <td className="p-1">
             <div className="bg-gray-100">
                 
-            <table>
+            <table className="w-full">
                 <thead>
                     <tr>
                         <th>Typ Rejestru</th>
@@ -156,7 +156,7 @@ export default function RegisterTableEditRowContent({
             </table>
 
             <div className="flex flex-row">
-                <table>
+                <table className="w-full">
                     <thead>
                         <tr>
                             <th colSpan={2}>Dane Wniosku</th>
@@ -173,7 +173,7 @@ export default function RegisterTableEditRowContent({
                         </tr>
                     </tbody>
                 </table>
-                <table>
+                <table className="w-full">
                     <thead>
                         <tr>
                             <th colSpan={2}>Dane dot. obiektu</th>
@@ -204,7 +204,7 @@ export default function RegisterTableEditRowContent({
                         </tr>
                     </tbody>
                 </table>
-                <table>
+                <table className="w-full">
                     <thead>
                         <tr>
                             <th colSpan={2}>Postępowanie administracyjne</th>

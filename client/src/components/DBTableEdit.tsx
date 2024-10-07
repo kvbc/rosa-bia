@@ -5,9 +5,12 @@ import { DBEntry } from "../../../server/src/types";
 
 export default function DBTableEdit<TEntry extends DBEntry>({
     dbEntries,
+    // emptyEntry,
+    showFooter,
     ...props
-}: { dbEntries: DBEntries<TEntry> } & ComponentProps<
-    typeof TableEdit<TEntry>
+}: { dbEntries: DBEntries<TEntry>; showFooter?: boolean } & Omit<
+    ComponentProps<typeof TableEdit<TEntry>>,
+    "totalEntryCount"
 >) {
     return (
         <TableEdit
@@ -17,6 +20,11 @@ export default function DBTableEdit<TEntry extends DBEntry>({
                 onEntryDeleteClicked: dbEntries.deleteEntry,
                 onEntrySaveClicked: dbEntries.saveEntry,
             }}
+            totalEntryCount={dbEntries.entryCount}
+            onUpdateEntries={
+                showFooter === false ? undefined : dbEntries.fetchEntries
+            }
+            // emptyEntry={{ ...emptyEntry, id: dbEntries.entryCount + 1 }}
             {...props}
         />
     );

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaHome, FaGlobe } from "react-icons/fa";
+import { FaHome, FaGlobe, FaUser } from "react-icons/fa";
 import { FaGear, FaMoneyBill1Wave, FaHelmetSafety } from "react-icons/fa6";
 import { BiSolidNotepad } from "react-icons/bi";
 
@@ -40,6 +40,13 @@ function Navbar() {
                 >
                     <FaHelmetSafety />
                     PKOB
+                </Link>
+                <Link
+                    to="/pracownicy"
+                    className="flex flex-row items-center gap-0.5 hover:underline"
+                >
+                    <FaUser />
+                    Pracownicy
                 </Link>
                 <Link
                     to="/konfiguracja"

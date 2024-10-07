@@ -3,6 +3,24 @@ import DBTableEdit from "../../components/DBTableEdit";
 import { MyInputSelectOption } from "../../components/MyInput";
 import Wyszukiwarka from "../../components/Wyszukiwarka";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import Tabs from "@mui/joy/Tabs";
+import TabList from "@mui/joy/TabList";
+import Tab from "@mui/joy/Tab";
+import TabPanel from "@mui/joy/TabPanel";
+import Box from "@mui/joy/Box";
+import { FaGear, FaHouse } from "react-icons/fa6";
+import { FaBuilding } from "react-icons/fa6";
+import { FaCity } from "react-icons/fa";
+import { MdVilla } from "react-icons/md";
+import { IoIosConstruct } from "react-icons/io";
+import { LuConstruction } from "react-icons/lu";
+import { GrPlan } from "react-icons/gr";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { FaDatabase } from "react-icons/fa6";
+import ConstructionSectionTableEditRowContent from "./ConstructionSectionTableEditRowContent";
 
 export default function PKOBStrona() {
     const constructionSectionDBEntries =
@@ -26,311 +44,145 @@ export default function PKOBStrona() {
 
     return (
         <>
-            <div className="[&>table>tbody>tr]:h-full [&>table>tbody>tr>td]:h-full">
-                <table className="w-full">
-                    <thead>
-                        <tr>
-                            <th>Sekcje Budowlane</th>
-                            <th>Działy Budowlane</th>
-                            <th>Zamierzenia Budowlane</th>
-                            <th>Klasy Budowlane</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <Wyszukiwarka
-                                    fetchWyniki={
-                                        constructionSectionDBEntries.fetchEntries
-                                    }
-                                    liczbaWynikow={
-                                        constructionSectionDBEntries.entryCount
-                                    }
-                                >
-                                    <DBTableEdit
-                                        dbEntries={constructionSectionDBEntries}
-                                        headers={["ID", "Sekcja"]}
-                                        emptyEntry={{
-                                            id: 0,
-                                            sekcja: "",
-                                        }}
-                                        rowInputsProps={[
-                                            {
-                                                type: "number",
-                                                entryKey: "id",
-                                                uneditable: true,
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "sekcja",
-                                            },
-                                        ]}
-                                    />
-                                </Wyszukiwarka>
-                            </td>
-                            <td>
-                                <Wyszukiwarka
-                                    fetchWyniki={
-                                        constructionDivisionDBEntries.fetchEntries
-                                    }
-                                    liczbaWynikow={
-                                        constructionDivisionDBEntries.entryCount
-                                    }
-                                >
-                                    <DBTableEdit
-                                        dbEntries={
-                                            constructionDivisionDBEntries
-                                        }
-                                        headers={["ID", "Dział", "Sekcja"]}
-                                        emptyEntry={{
-                                            id: 0,
-                                            dzial: "",
-                                            sekcja_id: 0,
-                                        }}
-                                        rowInputsProps={[
-                                            {
-                                                type: "number",
-                                                entryKey: "id",
-                                                uneditable: true,
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "dzial",
-                                            },
-                                            {
-                                                type: "select",
-                                                entryKey: "sekcja_id",
-                                                selectOptions:
-                                                    constructionSectionDBEntries.entries.map<MyInputSelectOption>(
-                                                        (entry) => ({
-                                                            value: entry.id,
-                                                            name: entry.sekcja,
-                                                        })
-                                                    ),
-                                            },
-                                        ]}
-                                    />
-                                </Wyszukiwarka>
-                            </td>
-                            <td>
-                                <Wyszukiwarka
-                                    fetchWyniki={
-                                        constructionIntentionDBEntries.fetchEntries
-                                    }
-                                    liczbaWynikow={
-                                        constructionIntentionDBEntries.entryCount
-                                    }
-                                >
-                                    <DBTableEdit
-                                        dbEntries={
-                                            constructionIntentionDBEntries
-                                        }
-                                        headers={[
-                                            "ID",
-                                            "Zamierzenie",
-                                            "Dział",
-                                            "PKOB",
-                                            "Kat. OB",
-                                            "Klasa ZL.",
-                                        ]}
-                                        emptyEntry={{
-                                            id: 0,
-                                            zamierzenie: "",
-                                            dzial_id: 0,
-                                            pkob: 0,
-                                            kat_ob: "",
-                                            klasa_zl: "",
-                                        }}
-                                        rowInputsProps={[
-                                            {
-                                                type: "number",
-                                                entryKey: "id",
-                                                uneditable: true,
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "zamierzenie",
-                                            },
-                                            {
-                                                type: "select",
-                                                entryKey: "dzial_id",
-                                                selectOptions:
-                                                    constructionDivisionDBEntries.entries.map<MyInputSelectOption>(
-                                                        (entry) => ({
-                                                            value: entry.id,
-                                                            name: entry.dzial,
-                                                        })
-                                                    ),
-                                            },
-                                            {
-                                                type: "number",
-                                                entryKey: "pkob",
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "kat_ob",
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "klasa_zl",
-                                            },
-                                        ]}
-                                    />
-                                </Wyszukiwarka>
-                            </td>
-                            <td>
-                                <Wyszukiwarka
-                                    fetchWyniki={
-                                        constructionClassDBEntries.fetchEntries
-                                    }
-                                    liczbaWynikow={
-                                        constructionClassDBEntries.entryCount
-                                    }
-                                >
-                                    <DBTableEdit
-                                        dbEntries={constructionClassDBEntries}
-                                        headers={["ID", "Klasa", "Zamierzenie"]}
-                                        emptyEntry={{
-                                            id: 0,
-                                            klasa: "",
-                                            zamierzenie_id: 0,
-                                        }}
-                                        rowInputsProps={[
-                                            {
-                                                type: "number",
-                                                entryKey: "id",
-                                                uneditable: true,
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "klasa",
-                                            },
-                                            {
-                                                type: "select",
-                                                entryKey: "zamierzenie_id",
-                                                selectOptions:
-                                                    constructionIntentionDBEntries.entries.map<MyInputSelectOption>(
-                                                        (entry) => ({
-                                                            value: entry.id,
-                                                            name: entry.zamierzenie,
-                                                        })
-                                                    ),
-                                            },
-                                        ]}
-                                    />
-                                </Wyszukiwarka>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br />
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Typy Budowy</th>
-                            <th>Formy Budownictwa</th>
-                            <th>Planowania Przestrzenne</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <Wyszukiwarka
-                                    fetchWyniki={
-                                        buildTypeDBEntries.fetchEntries
-                                    }
-                                    liczbaWynikow={
-                                        buildTypeDBEntries.entryCount
-                                    }
-                                >
-                                    <DBTableEdit
-                                        dbEntries={buildTypeDBEntries}
-                                        headers={["ID", "Typ Budowy"]}
-                                        emptyEntry={{
-                                            id: 0,
-                                            typ: "",
-                                        }}
-                                        rowInputsProps={[
-                                            {
-                                                type: "number",
-                                                entryKey: "id",
-                                                uneditable: true,
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "typ",
-                                            },
-                                        ]}
-                                    />
-                                </Wyszukiwarka>
-                            </td>
-                            <td>
-                                <Wyszukiwarka
-                                    fetchWyniki={
-                                        constructionFormDBEntries.fetchEntries
-                                    }
-                                    liczbaWynikow={
-                                        constructionFormDBEntries.entryCount
-                                    }
-                                >
-                                    <DBTableEdit
-                                        dbEntries={constructionFormDBEntries}
-                                        headers={["ID", "Forma Budownictwa"]}
-                                        emptyEntry={{
-                                            id: 0,
-                                            forma: "",
-                                        }}
-                                        rowInputsProps={[
-                                            {
-                                                type: "number",
-                                                entryKey: "id",
-                                                uneditable: true,
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "forma",
-                                            },
-                                        ]}
-                                    />
-                                </Wyszukiwarka>
-                            </td>
-                            <td>
-                                <Wyszukiwarka
-                                    fetchWyniki={
-                                        spatialPlanDBEntries.fetchEntries
-                                    }
-                                    liczbaWynikow={
-                                        spatialPlanDBEntries.entryCount
-                                    }
-                                >
-                                    <DBTableEdit
-                                        dbEntries={spatialPlanDBEntries}
-                                        headers={[
-                                            "ID",
-                                            "Planowanie Przestrzenne",
-                                        ]}
-                                        emptyEntry={{
-                                            id: 0,
-                                            planowanie: "",
-                                        }}
-                                        rowInputsProps={[
-                                            {
-                                                type: "number",
-                                                entryKey: "id",
-                                                uneditable: true,
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "planowanie",
-                                            },
-                                        ]}
-                                    />
-                                </Wyszukiwarka>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <Accordion defaultExpanded>
+                <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 1,
+                            alignItems: "center",
+                        }}
+                    >
+                        <FaDatabase />
+                        Dane
+                    </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <DBTableEdit
+                        dbEntries={constructionSectionDBEntries}
+                        headers={[
+                            {
+                                name: "Sekcja Budowlana",
+                                width: "10%",
+                            },
+                            "Działy",
+                        ]}
+                        emptyEntry={{
+                            id: constructionSectionDBEntries.entryCount + 1,
+                            sekcja: "",
+                        }}
+                        rowInputsProps={[
+                            {
+                                type: "number",
+                                entryKey: "id",
+                                uneditable: true,
+                            },
+                            {
+                                type: "text",
+                                entryKey: "sekcja",
+                            },
+                        ]}
+                        RowContentComponent={
+                            ConstructionSectionTableEditRowContent
+                        }
+                    />
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 1,
+                            alignItems: "center",
+                        }}
+                    >
+                        <FaGear />
+                        Konfiguracja
+                    </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Tabs size="sm">
+                        <TabList>
+                            <Tab>
+                                <LuConstruction />
+                                Stany Budowy
+                            </Tab>
+                            <Tab>
+                                <IoIosConstruct />
+                                Formy Budownictwa
+                            </Tab>
+                            <Tab>
+                                <GrPlan />
+                                Planowania przestrzenne
+                            </Tab>
+                        </TabList>
+                        <TabPanel value={0}>
+                            <DBTableEdit
+                                dbEntries={buildTypeDBEntries}
+                                headers={["ID", "Typ Budowy"]}
+                                emptyEntry={{
+                                    id: 0,
+                                    typ: "",
+                                }}
+                                rowInputsProps={[
+                                    {
+                                        type: "number",
+                                        entryKey: "id",
+                                        uneditable: true,
+                                    },
+                                    {
+                                        type: "text",
+                                        entryKey: "typ",
+                                    },
+                                ]}
+                            />
+                        </TabPanel>
+                        <TabPanel value={1}>
+                            <DBTableEdit
+                                dbEntries={constructionFormDBEntries}
+                                headers={["ID", "Forma Budownictwa"]}
+                                emptyEntry={{
+                                    id: 0,
+                                    forma: "",
+                                }}
+                                rowInputsProps={[
+                                    {
+                                        type: "number",
+                                        entryKey: "id",
+                                        uneditable: true,
+                                    },
+                                    {
+                                        type: "text",
+                                        entryKey: "forma",
+                                    },
+                                ]}
+                            />
+                        </TabPanel>
+                        <TabPanel value={2}>
+                            <DBTableEdit
+                                dbEntries={spatialPlanDBEntries}
+                                headers={["ID", "Planowanie Przestrzenne"]}
+                                emptyEntry={{
+                                    id: 0,
+                                    planowanie: "",
+                                }}
+                                rowInputsProps={[
+                                    {
+                                        type: "number",
+                                        entryKey: "id",
+                                        uneditable: true,
+                                    },
+                                    {
+                                        type: "text",
+                                        entryKey: "planowanie",
+                                    },
+                                ]}
+                            />
+                        </TabPanel>
+                    </Tabs>
+                </AccordionDetails>
+            </Accordion>
         </>
     );
 }

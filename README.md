@@ -8,3 +8,4 @@ Tech Stack:
 -   Zustand
 -   Express
 -   MySQL
+-   MUI Joy UI

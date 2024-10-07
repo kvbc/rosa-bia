@@ -9,6 +9,7 @@ import PKOBStrona from "./pages/pkob/PKOBStrona";
 import KonfiguracjaStrona from "./pages/config/KonfiguracjaStrona";
 import WebSocketContext from "./contexts/WebSocketContext";
 import { useState } from "react";
+import EmployeesPage from "./pages/employees/EmployeesPage";
 
 export const DB_ENTRY_ENDPOINTS = [
     "inwestorzy",
@@ -60,6 +61,10 @@ function App() {
                             <Route
                                 path="/konfiguracja"
                                 element={<KonfiguracjaStrona />}
+                            />
+                            <Route
+                                path="/pracownicy"
+                                element={<EmployeesPage />}
                             />
                         </Routes>
                     </WebSocketContext.Provider>

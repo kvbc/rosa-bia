@@ -2,6 +2,16 @@ import Wyszukiwarka from "../../components/Wyszukiwarka";
 import useDBEntriesStore, { DBEntries } from "../../hooks/useDBEntriesStore";
 import { TypeEntry } from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
+import Tabs from "@mui/joy/Tabs";
+import TabList from "@mui/joy/TabList";
+import Tab from "@mui/joy/Tab";
+import TabPanel from "@mui/joy/TabPanel";
+import { FaStamp } from "react-icons/fa";
+import { AiOutlineSolution } from "react-icons/ai";
+import { Scale } from "@mui/icons-material";
+import { MdPendingActions } from "react-icons/md";
+import { MdOutlineLocalPostOffice } from "react-icons/md";
+import { FaFileAlt } from "react-icons/fa";
 
 export default function KonfiguracjaStrona() {
     const mayorDecisionTypeDBEntries = useDBEntriesStore<TypeEntry>(
@@ -40,50 +50,45 @@ export default function KonfiguracjaStrona() {
 
     return (
         <>
-            <div>
-                <table className="w-full">
-                    <thead>
-                        <tr>
-                            <th>Decyzje Starosty</th>
-                            <th>Rozstrzygnięcia</th>
-                            <th>Czynności admin.</th>
-                            <th>Typy Rejestrów</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr className="[&>td]:h-full h-full">
-                            {entries.map((entry) => (
-                                <td>
-                                    <Wyszukiwarka
-                                        fetchWyniki={
-                                            entry.dbEntries.fetchEntries
-                                        }
-                                        liczbaWynikow={
-                                            entry.dbEntries.entryCount
-                                        }
-                                    >
-                                        <DBTableEdit
-                                            dbEntries={entry.dbEntries}
-                                            headers={[entry.name]}
-                                            emptyEntry={{
-                                                id: 0,
-                                                typ: "",
-                                            }}
-                                            rowInputsProps={[
-                                                {
-                                                    type: "text",
-                                                    entryKey: "typ",
-                                                    placeholder: "Typ",
-                                                },
-                                            ]}
-                                        />
-                                    </Wyszukiwarka>
-                                </td>
-                            ))}
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <Tabs size="sm">
+                <TabList>
+                    <Tab>
+                        <AiOutlineSolution fontSize={20} />
+                        Decyzje Starosty
+                    </Tab>
+                    <Tab>
+                        <FaStamp />
+                        Rozstrzygnięcia Wniosku
+                    </Tab>
+                    <Tab>
+                        <MdPendingActions fontSize={20} />
+                        Czynności administracyjne
+                    </Tab>
+                    <Tab>
+                        <FaFileAlt />
+                        Typy Rejestrów
+                    </Tab>
+                </TabList>
+                {entries.map((entry, entryIndex) => (
+                    <TabPanel value={entryIndex}>
+                        <DBTableEdit
+                            dbEntries={entry.dbEntries}
+                            headers={[entry.name]}
+                            emptyEntry={{
+                                id: 0,
+                                typ: "",
+                            }}
+                            rowInputsProps={[
+                                {
+                                    type: "text",
+                                    entryKey: "typ",
+                                    placeholder: "Typ",
+                                },
+                            ]}
+                        />
+                    </TabPanel>
+                ))}
+            </Tabs>
         </>
     );
 }
