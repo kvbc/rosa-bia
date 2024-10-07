@@ -252,10 +252,10 @@ export default function TableEdit<TEntry extends TableEditEntry>({
                         })}
                         {showActionsHeader && (
                             <th
+                                className={headersClassName}
                                 style={{
                                     width: "70px",
                                 }}
-                                className={headersClassName}
                             >
                                 Akcje
                             </th>

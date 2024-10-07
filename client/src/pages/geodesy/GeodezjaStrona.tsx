@@ -3,6 +3,13 @@ import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import { Gmina, Miejscowosc, Ulica } from "../../../../server/src/types";
 import { MyInputSelectOption } from "../../components/MyInput";
 import DBTableEdit from "../../components/DBTableEdit";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { Box } from "@mui/joy";
+import { FaDatabase } from "react-icons/fa";
+import CommuneTableEditRowContent from "./CommuneTableEditRowContext";
 
 export default function GeodezjaStrona() {
     const communeDBEntries = useDBEntriesStore<Gmina>("gminy")();
@@ -11,227 +18,21 @@ export default function GeodezjaStrona() {
 
     return (
         <>
-            <div className="flex gap-2 items-start w-full">
-                <DBTableEdit
-                    title="Gminy"
-                    dbEntries={communeDBEntries}
-                    headers={["ID", "Gmina"]}
-                    emptyEntry={{
-                        id: 0,
-                        nazwa: "",
-                    }}
-                    rowInputsProps={[
-                        {
-                            type: "number",
-                            entryKey: "id",
-                            uneditable: true,
-                        },
-                        {
-                            type: "text",
-                            entryKey: "nazwa",
-                        },
-                    ]}
-                />
-            </div>
-            <br />
-            <div className="flex gap-2 items-start w-full">
-                <DBTableEdit
-                    title="Miejscowości"
-                    dbEntries={placeDBEntries}
-                    headers={[
-                        "ID",
-                        "Miejscowość",
-                        "Gmina",
-                        "Obręb",
-                        "Jedn. ewid.",
-                    ]}
-                    emptyEntry={{
-                        id: 0,
-                        gmina_id: 0,
-                        jedn_ewid: "",
-                        nazwa: "",
-                        obreb_id: 0,
-                    }}
-                    rowInputsProps={[
-                        {
-                            type: "number",
-                            entryKey: "id",
-                            uneditable: true,
-                        },
-                        {
-                            type: "text",
-                            entryKey: "nazwa",
-                        },
-                        {
-                            type: "select",
-                            entryKey: "gmina_id",
-                            selectOptions:
-                                communeDBEntries.entries.map<MyInputSelectOption>(
-                                    (entry) => ({
-                                        value: entry.id,
-                                        name: entry.nazwa,
-                                    })
-                                ),
-                        },
-                        {
-                            type: "select",
-                            entryKey: "obreb_id",
-                            selectOptions:
-                                placeDBEntries.entries.map<MyInputSelectOption>(
-                                    (entry) => ({
-                                        value: entry.id,
-                                        name: entry.nazwa,
-                                    })
-                                ),
-                        },
-                        {
-                            type: "text",
-                            entryKey: "jedn_ewid",
-                        },
-                    ]}
-                />
-            </div>
-
-            <div className="[&>table>tbody>tr]:h-full [&>table>tbody>tr>td]:h-full">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Gminy</th>
-                            <th>Miejscowosci</th>
-                            <th>Ulice</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <Wyszukiwarka
-                                    fetchWyniki={communeDBEntries.fetchEntries}
-                                    liczbaWynikow={communeDBEntries.entryCount}
-                                >
-                                    <DBTableEdit
-                                        dbEntries={communeDBEntries}
-                                        headers={["ID", "Gmina"]}
-                                        emptyEntry={{
-                                            id: 0,
-                                            nazwa: "",
-                                        }}
-                                        rowInputsProps={[
-                                            {
-                                                type: "number",
-                                                entryKey: "id",
-                                                uneditable: true,
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "nazwa",
-                                            },
-                                        ]}
-                                    />
-                                </Wyszukiwarka>
-                            </td>
-                            <td>
-                                <Wyszukiwarka
-                                    fetchWyniki={placeDBEntries.fetchEntries}
-                                    liczbaWynikow={placeDBEntries.entryCount}
-                                >
-                                    <DBTableEdit
-                                        dbEntries={placeDBEntries}
-                                        headers={[
-                                            "ID",
-                                            "Miejscowość",
-                                            "Gmina",
-                                            "Obręb",
-                                            "Jedn. ewid.",
-                                        ]}
-                                        emptyEntry={{
-                                            id: 0,
-                                            gmina_id: 0,
-                                            jedn_ewid: "",
-                                            nazwa: "",
-                                            obreb_id: 0,
-                                        }}
-                                        rowInputsProps={[
-                                            {
-                                                type: "number",
-                                                entryKey: "id",
-                                                uneditable: true,
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "nazwa",
-                                            },
-                                            {
-                                                type: "select",
-                                                entryKey: "gmina_id",
-                                                selectOptions:
-                                                    communeDBEntries.entries.map<MyInputSelectOption>(
-                                                        (entry) => ({
-                                                            value: entry.id,
-                                                            name: entry.nazwa,
-                                                        })
-                                                    ),
-                                            },
-                                            {
-                                                type: "select",
-                                                entryKey: "obreb_id",
-                                                selectOptions:
-                                                    placeDBEntries.entries.map<MyInputSelectOption>(
-                                                        (entry) => ({
-                                                            value: entry.id,
-                                                            name: entry.nazwa,
-                                                        })
-                                                    ),
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "jedn_ewid",
-                                            },
-                                        ]}
-                                    />
-                                </Wyszukiwarka>
-                            </td>
-                            <td>
-                                <Wyszukiwarka
-                                    fetchWyniki={streetDBEntries.fetchEntries}
-                                    liczbaWynikow={streetDBEntries.entryCount}
-                                >
-                                    <DBTableEdit
-                                        dbEntries={streetDBEntries}
-                                        headers={["ID", "Ulica", "Miejscowosc"]}
-                                        emptyEntry={{
-                                            id: 0,
-                                            miejscowosc_id: 0,
-                                            nazwa: "",
-                                        }}
-                                        rowInputsProps={[
-                                            {
-                                                type: "number",
-                                                entryKey: "id",
-                                                uneditable: true,
-                                            },
-                                            {
-                                                type: "text",
-                                                entryKey: "nazwa",
-                                            },
-                                            {
-                                                type: "select",
-                                                entryKey: "miejscowosc_id",
-                                                selectOptions:
-                                                    placeDBEntries.entries.map<MyInputSelectOption>(
-                                                        (entry) => ({
-                                                            value: entry.id,
-                                                            name: entry.nazwa,
-                                                        })
-                                                    ),
-                                            },
-                                        ]}
-                                    />
-                                </Wyszukiwarka>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <DBTableEdit
+                dbEntries={communeDBEntries}
+                headers={["Gmina"]}
+                emptyEntry={{
+                    id: communeDBEntries.entryCount + 1,
+                    nazwa: "",
+                }}
+                rowInputsProps={[
+                    {
+                        type: "text",
+                        entryKey: "nazwa",
+                    },
+                ]}
+                RowContentComponent={CommuneTableEditRowContent}
+            />
         </>
     );
 }

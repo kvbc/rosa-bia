@@ -60,23 +60,12 @@ export default function PKOBStrona() {
                 <AccordionDetails>
                     <DBTableEdit
                         dbEntries={constructionSectionDBEntries}
-                        headers={[
-                            {
-                                name: "Sekcja Budowlana",
-                                width: "10%",
-                            },
-                            "Działy",
-                        ]}
+                        headers={["Sekcje Budowlane"]}
                         emptyEntry={{
                             id: constructionSectionDBEntries.entryCount + 1,
                             sekcja: "",
                         }}
                         rowInputsProps={[
-                            {
-                                type: "number",
-                                entryKey: "id",
-                                uneditable: true,
-                            },
                             {
                                 type: "text",
                                 entryKey: "sekcja",
