@@ -48,13 +48,6 @@ function Navbar() {
                     <FaUser />
                     Pracownicy
                 </Link>
-                <Link
-                    to="/konfiguracja"
-                    className="flex flex-row items-center gap-0.5 hover:underline"
-                >
-                    <FaGear />
-                    Konfiguracja
-                </Link>
             </div>
             <div className="flex flex-row w-1/12 justify-end">
                 <img src="logo.svg" width={24} />

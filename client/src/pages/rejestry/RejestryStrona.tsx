@@ -13,7 +13,23 @@ import {
 import { MyInputSelectOption } from "../../components/MyInput";
 import RegisterTableEditRowContent from "./RegisterTableEditRowContent";
 import { TableEditRowInputProps } from "../../components/TableEditRow";
+import Tabs from "@mui/joy/Tabs";
+import TabList from "@mui/joy/TabList";
+import Tab from "@mui/joy/Tab";
+import TabPanel from "@mui/joy/TabPanel";
+import { FaStamp } from "react-icons/fa";
+import { AiOutlineSolution } from "react-icons/ai";
+import { Scale } from "@mui/icons-material";
+import { MdPendingActions } from "react-icons/md";
+import { MdOutlineLocalPostOffice } from "react-icons/md";
+import { FaFileAlt } from "react-icons/fa";
 import DBTableEdit from "../../components/DBTableEdit";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { Box } from "@mui/joy";
+import { FaDatabase, FaGear } from "react-icons/fa6";
 
 export default function RejestryStrona() {
     const registerDBEntries = useDBEntriesStore<Register>("rejestry")(); // prettier-ignore
@@ -25,6 +41,9 @@ export default function RejestryStrona() {
     const spatialPlanDBEntries = useDBEntriesStore<PKOB.SpatialPlan>('planowania_przestrzenne')(); // prettier-ignore
     const streetDBEntries = useDBEntriesStore<Ulica>('ulice')(); // prettier-ignore
     const resolutionDBEntries = useDBEntriesStore<TypeEntry>('typy_rozstrzygniec')(); // prettier-ignore
+    const mayorDecisionTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_decyzji_starosty")(); // prettier-ignore
+    const resolutionTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_rozstrzygniec")(); // prettier-ignore
+    const adminActionTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_czynnosci_admin")(); // prettier-ignore
 
     const emptyEntry: Register = {
         id: registerDBEntries.entryCount + 1,
@@ -85,18 +104,101 @@ export default function RejestryStrona() {
 
     return (
         <div>
-            <Wyszukiwarka
-                fetchWyniki={registerDBEntries.fetchEntries}
-                liczbaWynikow={registerDBEntries.entryCount}
-            >
-                <DBTableEdit
-                    dbEntries={registerDBEntries}
-                    headers={["Rejestr"]}
-                    emptyEntry={emptyEntry}
-                    rowInputsProps={rowInputsProps}
-                    RowContentComponent={RegisterTableEditRowContent}
-                />
-            </Wyszukiwarka>
+            <Accordion defaultExpanded>
+                <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 1,
+                            alignItems: "center",
+                        }}
+                    >
+                        <FaDatabase />
+                        Dane
+                    </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <DBTableEdit
+                        dbEntries={registerDBEntries}
+                        headers={["Rejestr"]}
+                        emptyEntry={emptyEntry}
+                        rowInputsProps={rowInputsProps}
+                        RowContentComponent={RegisterTableEditRowContent}
+                    />
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 1,
+                            alignItems: "center",
+                        }}
+                    >
+                        <FaGear />
+                        Konfiguracja
+                    </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Tabs size="sm">
+                        <TabList>
+                            <Tab>
+                                <AiOutlineSolution fontSize={20} />
+                                Decyzje Starosty
+                            </Tab>
+                            <Tab>
+                                <FaStamp />
+                                Rozstrzygnięcia Wniosku
+                            </Tab>
+                            <Tab>
+                                <MdPendingActions fontSize={20} />
+                                Czynności administracyjne
+                            </Tab>
+                            <Tab>
+                                <FaFileAlt />
+                                Typy Rejestrów
+                            </Tab>
+                        </TabList>
+                        {[
+                            {
+                                dbEntries: mayorDecisionTypeDBEntries,
+                                name: "Decyzja Starosty",
+                            },
+                            {
+                                dbEntries: resolutionTypeDBEntries,
+                                name: "Rozstrzygnięcie",
+                            },
+                            {
+                                dbEntries: adminActionTypeDBEntries,
+                                name: "Czynność admin.",
+                            },
+                            {
+                                dbEntries: registerTypeDBEntries,
+                                name: "Typ Rejestru",
+                            },
+                        ].map((entry, entryIndex) => (
+                            <TabPanel value={entryIndex}>
+                                <DBTableEdit
+                                    dbEntries={entry.dbEntries}
+                                    headers={[entry.name]}
+                                    emptyEntry={{
+                                        id: 0,
+                                        typ: "",
+                                    }}
+                                    rowInputsProps={[
+                                        {
+                                            type: "text",
+                                            entryKey: "typ",
+                                            placeholder: "Typ",
+                                        },
+                                    ]}
+                                />
+                            </TabPanel>
+                        ))}
+                    </Tabs>
+                </AccordionDetails>
+            </Accordion>
         </div>
     );
 }

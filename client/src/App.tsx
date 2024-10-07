@@ -6,7 +6,6 @@ import InvestorsPage from "./pages/investors/InwestorzyStrona";
 import Navbar from "./components/Navbar";
 import "./App.css";
 import PKOBStrona from "./pages/pkob/PKOBStrona";
-import KonfiguracjaStrona from "./pages/config/KonfiguracjaStrona";
 import WebSocketContext from "./contexts/WebSocketContext";
 import { useState } from "react";
 import EmployeesPage from "./pages/employees/EmployeesPage";
@@ -58,10 +57,6 @@ function App() {
                                 element={<InvestorsPage />}
                             />
                             <Route path="/pkob" element={<PKOBStrona />} />
-                            <Route
-                                path="/konfiguracja"
-                                element={<KonfiguracjaStrona />}
-                            />
                             <Route
                                 path="/pracownicy"
                                 element={<EmployeesPage />}

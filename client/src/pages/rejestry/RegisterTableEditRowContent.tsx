@@ -14,6 +14,12 @@ import DBTableEdit from "../../components/DBTableEdit";
 import { MyInputSelectOption } from "../../components/MyInput";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import { Accordion, AccordionSummary, AccordionDetails, Box, Select, Table } from "@mui/joy";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { FaDatabase } from "react-icons/fa6";
+import { IoIosMore } from "react-icons/io";
+import { MdMore } from "react-icons/md";
+import { CiCircleMore } from "react-icons/ci";
 
 export default function RegisterTableEditRowContent({
     inputs,
@@ -141,52 +147,31 @@ export default function RegisterTableEditRowContent({
     return (
         <td className="p-1">
             <div className="bg-gray-100">
-                
-            <table className="w-full">
-                <thead>
+                <Table size="sm">
                     <tr>
-                        <th>Typ Rejestru</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
+                        <th className="w-[10%] bg-gray-100">Typ Rejestru</th>
                         <td>{inputs.typ_id}</td>
                     </tr>
-                </tbody>
-            </table>
+                </Table>
 
-            <div className="flex flex-row">
-                <table className="w-full">
+                <Table size="sm">
                     <thead>
                         <tr>
-                            <th colSpan={2}>Dane Wniosku</th>
+                            <th className="bg-gray-100" colSpan={2}>Dane Wniosku</th>
+                            <th className="bg-gray-100" colSpan={3}>Dane dot. obiektu</th>
+                            <th className="bg-gray-100" colSpan={2}>Postępowanie administracyjne</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Numer wniosku</td>
                             <td>{inputs.wniosek_numer}</td>
-                        </tr>
-                        <tr>
-                            <td>Złożony w dniu</td>
-                            <td>{inputs.wniosek_data_zlozenia}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table className="w-full">
-                    <thead>
-                        <tr>
-                            <th colSpan={2}>Dane dot. obiektu</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td>Nazwa zamierzenia budowlanego</td>
-                            <td>
-                                <select
+                            <td colSpan={2}>
+                                <Select
                                     value={constructionIntentID}
-                                    onChange={(e) =>
-                                        setConstructionIntentID(Number(e.target.value))
+                                    onChange={(e,value) =>
+                                        setConstructionIntentID(Number(value))
                                     }
                                     disabled={!editable}
                                 >
@@ -195,453 +180,349 @@ export default function RegisterTableEditRowContent({
                                             {entry.zamierzenie}
                                         </option>
                                     ))}
-                                </select>
+                                </Select>
                             </td>
-                        </tr>
-                        <tr>
-                            <td>Forma budownictwa</td>
-                            <td>{inputs.obiekt_forma_budownictwa_id}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table className="w-full">
-                    <thead>
-                        <tr>
-                            <th colSpan={2}>Postępowanie administracyjne</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td>Informacja o postępowaniu</td>
                             <td>...</td>
                         </tr>
                         <tr>
+                            <td>Złożony w dniu</td>
+                            <td>{inputs.wniosek_data_zlozenia}</td>
+                            <td>Forma budownictwa</td>
+                            <td colSpan={2}>{inputs.obiekt_forma_budownictwa_id}</td>
                             <td>Upływający czas (w dniach)</td>
                             <td>...</td>
                         </tr>
+                        <tr>
+                            <td colSpan={7} className="bg-gray-200">
+                                <Accordion>
+                                    <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                gap: 1,
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <MdMore />
+                                            <strong>Więcej</strong>
+                                        </Box>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Table size="sm">
+                                            <thead>
+                                                <tr>
+                                                    <th colSpan={2} className="bg-gray-200"></th>
+                                                    <th colSpan={3} className="bg-gray-200"></th>
+                                                    <th colSpan={2} className="bg-gray-200"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Inwestor</td>
+                                                    <td>{inputs.wniosek_inwestor_id}</td>
+                                                    <td>Planowanie przestrzenne</td>
+                                                    <td colSpan={2}>
+                                                        {inputs.obiekt_planowanie_przestrzenne_id}
+                                                    </td>
+                                                    <td colSpan={2} rowSpan={8}>
+                                                        <DBTableEdit
+                                                            dbEntries={registerAdminActionDBEntries}
+                                                            entries={registerAdminActionDBEntries.entries.filter(
+                                                                (fEntry) => fEntry.rejestr_id === entry.id
+                                                            )}
+                                                            headersClassName="bg-gray-200"
+                                                            editable={editable}
+                                                            emptyEntry={{
+                                                                data_odebrania: "",
+                                                                data_odpowiedzi: "",
+                                                                data_pisma: "",
+                                                                id: 0,
+                                                                rejestr_id: entry.id,
+                                                                termin: 0,
+                                                                typ_id: 0,
+                                                                wybor: false,
+                                                            }}
+                                                            headers={[
+                                                                "Czynność",
+                                                                "Termin [dni]",
+                                                                "Data pisma",
+                                                                "Data odebrania",
+                                                                "Data odpowiedzi",
+                                                            ]}
+                                                            rowInputsProps={[
+                                                                {
+                                                                    type: "select",
+                                                                    entryKey: "typ_id",
+                                                                    selectOptions:
+                                                                        adminActionTypeDBEntries.entries.map<MyInputSelectOption>(
+                                                                            (entry) => ({
+                                                                                value: entry.id,
+                                                                                name: entry.typ,
+                                                                            })
+                                                                        ),
+                                                                },
+                                                                {
+                                                                    type: "number",
+                                                                    entryKey: "termin",
+                                                                },
+                                                                {
+                                                                    type: "date",
+                                                                    entryKey: "data_pisma",
+                                                                },
+                                                                {
+                                                                    type: "date",
+                                                                    entryKey: "data_odebrania",
+                                                                },
+                                                                {
+                                                                    type: "date",
+                                                                    entryKey: "data_odpowiedzi",
+                                                                },
+                                                            ]} 
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan={2}>Informacje o inwestorze ...</td>
+                                                    <td colSpan={3}>
+                                                        <Table size="sm">
+                                                            <tr>
+                                                                <th className="bg-gray-200">PKOB</th>
+                                                                <th className="bg-gray-200">ZL</th>
+                                                                <th className="bg-gray-200">Kat.</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>{constructionIntent?.pkob}</td>
+                                                                <td>{constructionIntent?.klasa_zl}</td>
+                                                                <td>{constructionIntent?.kat_ob}</td>
+                                                            </tr>
+                                                        </Table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Decyzja Starosty Człuchowskiego</td>
+                                                    <td>{inputs.wniosek_decyzja_typ_id}</td>
+                                                    <td colSpan={3}>
+                                                        <Table size="sm">
+                                                            <tr>
+                                                                <th className="bg-gray-200">Sekcja</th>
+                                                                <th className="bg-gray-200">Dział</th>
+                                                                <th className="bg-gray-200">Klasa</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <Select
+                                                                        value={constructionSectionID}
+                                                                        onChange={(e, value) =>
+                                                                            setConstructionSectionID(Number(value))
+                                                                        }
+                                                                        disabled={!editable}
+                                                                    >
+                                                                        {constructionSections.map((entry) => (
+                                                                            <option value={entry.id}>
+                                                                                {entry.sekcja}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </td>
+                                                                <td>
+                                                                    <Select
+                                                                        value={constructionDivisionID}
+                                                                        onChange={(e, value) =>
+                                                                            setConstructionDivisionID(Number(value))
+                                                                        }
+                                                                        disabled={!editable}
+                                                                    >
+                                                                        {constructionDivisions.map((entry) => (
+                                                                            <option value={entry.id}>
+                                                                                {entry.dzial}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </td>
+                                                                <td>
+                                                                    <Select
+                                                                        value={entry.obiekt_klasa_id}
+                                                                        onChange={(e, value) =>
+                                                                            setEntry({
+                                                                                ...entry,
+                                                                                obiekt_klasa_id: Number(
+                                                                                    value
+                                                                                ),
+                                                                            })
+                                                                        }
+                                                                        disabled={!editable}
+                                                                    >
+                                                                        {constructionClasses.map((entry) => (
+                                                                            <option value={entry.id}>
+                                                                                {entry.klasa}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </td>
+                                                            </tr>
+                                                        </Table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Numer decyzji</td>
+                                                    <td>{inputs.wniosek_decyzja_numer}</td>
+                                                    <td colSpan={3} className="text-center"><strong>Dane Nieruchomości</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Wydana w dniu</td>
+                                                    <td>{inputs.wniosek_decyzja_data_wydania}</td>
+                                                    <td colSpan={3}>
+                                                        <Table size="sm">
+                                                            <tr>
+                                                                <th className="bg-gray-200">Gmina</th>
+                                                                <th className="bg-gray-200">Miejscowość</th>
+                                                                <th className="bg-gray-200">Obręb</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <Select
+                                                                        value={communeID}
+                                                                        onChange={(e, value) =>
+                                                                            setCommuneID(Number(value))
+                                                                        }
+                                                                        disabled={!editable}
+                                                                    >
+                                                                        {communeDBEntries.entries.map((entry) => (
+                                                                            <option value={entry.id}>
+                                                                                {entry.nazwa}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </td>
+                                                                <td>
+                                                                    <Select
+                                                                        value={placeID}
+                                                                        onChange={(e, value) =>
+                                                                            setPlaceID(Number(value))
+                                                                        }
+                                                                        disabled={!editable}
+                                                                    >
+                                                                        {places.map((entry) => (
+                                                                            <option value={entry.id}>
+                                                                                {entry.nazwa}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </td>
+                                                            </tr>
+                                                        </Table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Inne rozstrzygnięcia</td>
+                                                    <td>{inputs.wniosek_rozstrzygniecie_typ_id}</td>
+                                                    <td colSpan={3}>
+                                                        <Table size="sm">
+                                                            <tr>
+                                                                <th className="bg-gray-200">Jedn. ewid.</th>
+                                                                <th className="bg-gray-200">Ulica</th>
+                                                                <th className="bg-gray-200">Nr</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>{place?.jedn_ewid}</td>
+                                                                <td>
+                                                                    <Select
+                                                                        value={entry.obiekt_ulica_id}
+                                                                        onChange={(e, value) =>
+                                                                            setEntry({
+                                                                                ...entry,
+                                                                                obiekt_ulica_id: Number(
+                                                                                    value
+                                                                                ),
+                                                                            })
+                                                                        }
+                                                                        disabled={!editable}
+                                                                    >
+                                                                        {streets.map((entry) => (
+                                                                            <option value={entry.id}>
+                                                                                {entry.nazwa}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </td>
+                                                                <td>{inputs.obiekt_nr}</td>
+                                                            </tr>
+                                                        </Table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Numer pisma</td>
+                                                    <td>{inputs.wniosek_rozstrzygniecie_numer_pisma}</td>
+                                                    <td colSpan={3}>
+                                                        <DBTableEdit
+                                                            dbEntries={registerInvestPlotDBEntries}
+                                                            entries={registerInvestPlotDBEntries.entries.filter(
+                                                                (fEntry) =>
+                                                                    fEntry.rejestr_id === entry.id
+                                                            )}
+                                                            headersClassName="bg-gray-200"
+                                                            editable={editable}
+                                                            emptyEntry={{
+                                                                id: 0,
+                                                                rejestr_id: entry.id,
+                                                                dzialka: "",
+                                                            }}
+                                                            headers={["Działki objęte inwestycją"]}
+                                                            showActionsHeader={false}
+                                                            rowInputsProps={[
+                                                                {
+                                                                    type: "text",
+                                                                    entryKey: "dzialka",
+                                                                    placeholder: "Działka",
+                                                                },
+                                                            ]}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td rowSpan={2}>Wydana w dniu</td>
+                                                    <td rowSpan={2}>{inputs.wniosek_rozstrzygniecie_data_wydania}</td>
+                                                    <td colSpan={3}>
+                                                        <DBTableEdit
+                                                            dbEntries={registerBuildTypeDBEntries}
+                                                            entries={registerBuildTypeDBEntries.entries.filter(
+                                                                (fEntry) =>
+                                                                    fEntry.rejestr_id === entry.id
+                                                            )}
+                                                            headersClassName="bg-gray-200"
+                                                            editable={editable}
+                                                            emptyEntry={{
+                                                                id: 0,
+                                                                rejestr_id: entry.id,
+                                                                typ_id: 0,
+                                                            }}
+                                                            headers={["Stany Budowy"]}
+                                                            showActionsHeader={false}
+                                                            rowInputsProps={[
+                                                                {
+                                                                    type: "select",
+                                                                    entryKey: "typ_id",
+                                                                    selectOptions:
+                                                                        buildTypeDBEntries.entries.map<MyInputSelectOption>(
+                                                                            (typeEntry) => ({
+                                                                                value: typeEntry.id,
+                                                                                name: typeEntry.typ,
+                                                                            })
+                                                                        ),
+                                                                },
+                                                            ]}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </Table>
+                                    </AccordionDetails>
+                                </Accordion>
+                            </td>
+                        </tr>
                     </tbody>
-                </table>
-            </div>
-
-            <div className="flex flex-row items-stretch justify-around">
-                <table>
-                    <thead>
-                        <tr>
-                            <th colSpan={2}>Inwestor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colSpan={2}>{inputs.wniosek_inwestor_id}</td>
-                        </tr>
-                        <tr>
-                            <td colSpan={2}>Informacje ...</td>
-                        </tr>
-                    </tbody>
-
-                    <thead>
-                        <tr>
-                            <th colSpan={2}>Decyzja starosty Człuchowskiego</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colSpan={2}>{inputs.wniosek_decyzja_typ_id}</td>
-                        </tr>
-                        <tr>
-                            <td>Numer decyzji</td>
-                            <td>{inputs.wniosek_decyzja_numer}</td>
-                        </tr>
-                        <tr>
-                            <td>Wydana w dniu</td>
-                            <td>{inputs.wniosek_decyzja_data_wydania}</td>
-                        </tr>
-                    </tbody>
-
-                    <thead>
-                        <tr>
-                            <th colSpan={2}>Inne rozstrzygnięcia</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colSpan={2}>
-                                {inputs.wniosek_rozstrzygniecie_typ_id}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Numer pisma</td>
-                            <td>
-                                {inputs.wniosek_rozstrzygniecie_numer_pisma}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Wydane w dniu</td>
-                            <td>
-                                {inputs.wniosek_rozstrzygniecie_data_wydania}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <thead></thead>
-                    <tbody>
-                        <tr>
-                            <td colSpan={4}>Planowanie przestrzenne</td>
-                            <td colSpan={2}>
-                                {inputs.obiekt_planowanie_przestrzenne_id}
-                            </td>
-                        </tr>
-                    </tbody>
-
-                    <thead>
-                        <tr>
-                            <th colSpan={2}>PKOB</th>
-                            <th colSpan={2}>ZL</th>
-                            <th colSpan={2}>Kat.</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colSpan={2}>{constructionIntent?.pkob}</td>
-                            <td colSpan={2}>{constructionIntent?.klasa_zl}</td>
-                            <td colSpan={2}>{constructionIntent?.kat_ob}</td>
-                        </tr>
-                    </tbody>
-
-                    <thead>
-                        <tr>
-                            <th colSpan={2}>Sekcja</th>
-                            <th colSpan={2}>Dział</th>
-                            <th colSpan={2}>Klasa</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colSpan={2}>
-                                <select
-                                    value={constructionSectionID}
-                                    onChange={(e) =>
-                                        setConstructionSectionID(Number(e.target.value))
-                                    }
-                                    disabled={!editable}
-                                >
-                                    {constructionSections.map((entry) => (
-                                        <option value={entry.id}>
-                                            {entry.sekcja}
-                                        </option>
-                                    ))}
-                                </select>
-                            </td>
-                            <td colSpan={2}>
-                                <select
-                                    value={constructionDivisionID}
-                                    onChange={(e) =>
-                                        setConstructionDivisionID(Number(e.target.value))
-                                    }
-                                    disabled={!editable}
-                                >
-                                    {constructionDivisions.map((entry) => (
-                                        <option value={entry.id}>
-                                            {entry.dzial}
-                                        </option>
-                                    ))}
-                                </select>
-                            </td>
-                            <td colSpan={2}>
-                                <select
-                                    value={entry.obiekt_klasa_id}
-                                    onChange={(e) =>
-                                        setEntry({
-                                            ...entry,
-                                            obiekt_klasa_id: Number(
-                                                e.target.value
-                                            ),
-                                        })
-                                    }
-                                    disabled={!editable}
-                                >
-                                    {constructionClasses.map((entry) => (
-                                        <option value={entry.id}>
-                                            {entry.klasa}
-                                        </option>
-                                    ))}
-                                </select>
-                            </td>
-                        </tr>
-                    </tbody>
-
-                    <thead>
-                        <tr>
-                            <th colSpan={6}>Dane nieruchomości</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Gmina</td>
-                            <td>Miejscowość</td>
-                            <td>Obręb</td>
-                            <td>Jedn. ewid.</td>
-                            <td>Ulica</td>
-                            <td>Nr</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <select
-                                    value={communeID}
-                                    onChange={(e) =>
-                                        setCommuneID(Number(e.target.value))
-                                    }
-                                    disabled={!editable}
-                                >
-                                    {communeDBEntries.entries.map((entry) => (
-                                        <option value={entry.id}>
-                                            {entry.nazwa}
-                                        </option>
-                                    ))}
-                                </select>
-                            </td>
-                            <td>
-                                <select
-                                    value={placeID}
-                                    onChange={(e) =>
-                                        setPlaceID(Number(e.target.value))
-                                    }
-                                    disabled={!editable}
-                                >
-                                    {places.map((entry) => (
-                                        <option value={entry.id}>
-                                            {entry.nazwa}
-                                        </option>
-                                    ))}
-                                </select>
-                            </td>
-                            <td>{area?.nazwa}</td>
-                            <td>{place?.jedn_ewid}</td>
-                            <td>
-                                <select
-                                    value={entry.obiekt_ulica_id}
-                                    onChange={(e) =>
-                                        setEntry({
-                                            ...entry,
-                                            obiekt_ulica_id: Number(
-                                                e.target.value
-                                            ),
-                                        })
-                                    }
-                                    disabled={!editable}
-                                >
-                                    {streets.map((entry) => (
-                                        <option value={entry.id}>
-                                            {entry.nazwa}
-                                        </option>
-                                    ))}
-                                </select>
-                            </td>
-                            <td>{inputs.obiekt_nr}</td>
-                        </tr>
-                    </tbody>
-
-                    <tbody>
-                        <tr>
-                            <td colSpan={6}>
-                                <DBTableEdit
-                                    dbEntries={registerInvestPlotDBEntries}
-                                    entries={registerInvestPlotDBEntries.entries.filter(
-                                        (fEntry) =>
-                                            fEntry.rejestr_id === entry.id
-                                    )}
-                                    editable={editable}
-                                    emptyEntry={{
-                                        id: 0,
-                                        rejestr_id: entry.id,
-                                        dzialka: "",
-                                    }}
-                                    headers={["Działki objęte inwestycją"]}
-                                    showActionsHeader={false}
-                                    rowInputsProps={[
-                                        {
-                                            type: "text",
-                                            entryKey: "dzialka",
-                                            placeholder: "Działka",
-                                        },
-                                    ]}
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                    {/* <thead>
-                        <tr>
-                            <th colSpan={6}>Działki objęte inwestycją</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colSpan={6}>...</td>
-                        </tr>
-                    </tbody> */}
-
-                    <tbody>
-                        <tr>
-                            <td colSpan={6}>
-                                <DBTableEdit
-                                    dbEntries={registerBuildTypeDBEntries}
-                                    entries={registerBuildTypeDBEntries.entries.filter(
-                                        (fEntry) =>
-                                            fEntry.rejestr_id === entry.id
-                                    )}
-                                    editable={editable}
-                                    emptyEntry={{
-                                        id: 0,
-                                        rejestr_id: entry.id,
-                                        typ_id: 0,
-                                    }}
-                                    headers={["Stany Budowy"]}
-                                    showActionsHeader={false}
-                                    rowInputsProps={[
-                                        {
-                                            type: "select",
-                                            entryKey: "typ_id",
-                                            selectOptions:
-                                                buildTypeDBEntries.entries.map<MyInputSelectOption>(
-                                                    (typeEntry) => ({
-                                                        value: typeEntry.id,
-                                                        name: typeEntry.typ,
-                                                    })
-                                                ),
-                                        },
-                                    ]}
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                    {/* <thead>
-                        <tr>
-                            <th colSpan={6}>Stany Budowy</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colSpan={6}>...</td>
-                        </tr>
-                    </tbody> */}
-                </table>
-
-                {/* <table>
-                    <thead>
-                        <tr>
-                            <th>Czynność</th>
-                            <th>Wybór</th>
-                            <th>Termin [dni]</th>
-                            <th>Data pisma</th>
-                            <th>Data odebrania</th>
-                            <th>Data odpowiedzi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {registerAdminActionDBEntries.entries
-                            .filter((action) => action.rejestr_id === entry.id)
-                            .map((action) => (
-                                <tr>
-                                    <td>
-                                        {
-                                            adminActionTypeDBEntries.entries.find(
-                                                (actionType) =>
-                                                    actionType.id ===
-                                                    action.typ_id
-                                            )?.typ
-                                        }
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={action.wybor}
-                                            onChange={() =>
-                                                registerAdminActionDBEntries.saveEntry(
-                                                    {
-                                                        ...action,
-                                                        wybor: !action.wybor,
-                                                    }
-                                                )
-                                            }
-                                            // todo: give dbEntries functionality to save data on its own maybe
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
-                    </tbody>
-                </table> */}
-                <DBTableEdit
-                    dbEntries={registerAdminActionDBEntries}
-                    entries={registerAdminActionDBEntries.entries.filter(
-                        (fEntry) => fEntry.rejestr_id === entry.id
-                    )}
-                    editable={editable}
-                    emptyEntry={{
-                        data_odebrania: "",
-                        data_odpowiedzi: "",
-                        data_pisma: "",
-                        id: 0,
-                        rejestr_id: entry.id,
-                        termin: 0,
-                        typ_id: 0,
-                        wybor: false,
-                    }}
-                    headers={[
-                        "Czynność",
-                        "Termin [dni]",
-                        "Data pisma",
-                        "Data odebrania",
-                        "Data odpowiedzi",
-                    ]}
-                    rowInputsProps={[
-                        {
-                            type: "select",
-                            entryKey: "typ_id",
-                            selectOptions:
-                                adminActionTypeDBEntries.entries.map<MyInputSelectOption>(
-                                    (entry) => ({
-                                        value: entry.id,
-                                        name: entry.typ,
-                                    })
-                                ),
-                        },
-                        {
-                            type: "number",
-                            entryKey: "termin",
-                        },
-                        {
-                            type: "date",
-                            entryKey: "data_pisma",
-                        },
-                        {
-                            type: "date",
-                            entryKey: "data_odebrania",
-                        },
-                        {
-                            type: "date",
-                            entryKey: "data_odpowiedzi",
-                        },
-                    ]}
-                    // RowContentComponent={({ entry, inputs }) => {
-                    //     const actionName =
-                    //         adminActionTypeDBEntries.entries.find(
-                    //             (typeEntry) => typeEntry.id === entry.typ_id
-                    //         )?.typ;
-                    //     return (
-                    //         <>
-                    //             <td>{actionName}</td>
-                    //             <td>{inputs.wybor}</td>
-                    //             <td>{inputs.termin}</td>
-                    //             <td>{inputs.data_pisma}</td>
-                    //             <td>{inputs.data_odebrania}</td>
-                    //             <td>{inputs.data_odpowiedzi}</td>
-                    //         </>
-                    //     );
-                    // }}
-                />
-            </div>
+                </Table>
             </div>
         </td>
     );

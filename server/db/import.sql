@@ -232,8 +232,6 @@ insert into gminy values
     (null, 'Warszawa');
 
 insert into miejscowosci values
-    (null, 'Niggerowo', 1, 1, '1234'),
-    (null, 'Murzynowo', 1, 1, '1231114'),
     (null, 'Wejcherowo', 1, 1, '132334'),
     (null, 'Bukowo', 1, 1, '13423344'),
     (null, 'Dzuma', 1, 1, '3412334434'),
