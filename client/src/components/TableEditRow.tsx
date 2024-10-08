@@ -12,6 +12,7 @@ import IconButton from "@mui/joy/IconButton";
 import Button from "@mui/joy/Button";
 import ButtonGroup from "@mui/joy/ButtonGroup";
 import { MdEdit, MdDelete, MdAdd, MdCancel, MdSave } from "react-icons/md";
+import Emittery from "emittery";
 
 export enum TableEditRowState {
     Viewing,
@@ -30,6 +31,7 @@ export type TableEditRowContentProps<TEntry> = {
     entry: TEntry;
     editable: boolean;
     setEntry: (entry: TEntry) => void;
+    eventEmitter: Emittery;
 };
 
 export type TableEditRowInputProps<TEntry extends TableEditEntry> = Omit<
@@ -67,6 +69,7 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
             ? TableEditRowState.Adding
             : TableEditRowState.Viewing
     );
+    const [eventEmitter] = useState<Emittery>(new Emittery());
     const tableEditRowContext = useContext(TableEditRowContext);
 
     useEffect(() => {
@@ -92,6 +95,7 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
     const onSaveClicked = () => {
         setState(TableEditRowState.Viewing);
         if (events.onSaveClicked) events.onSaveClicked();
+        eventEmitter.emit("save");
     };
 
     const onCancelClicked = () => {
@@ -125,6 +129,7 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
                 entry={entry}
                 editable={editable && state != TableEditRowState.Viewing}
                 setEntry={setEntry}
+                eventEmitter={eventEmitter}
             />
         );
     } else {

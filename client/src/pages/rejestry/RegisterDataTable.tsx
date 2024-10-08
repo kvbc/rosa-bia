@@ -7,7 +7,7 @@
 import { Table } from "@mui/joy";
 import {
     Register,
-    REGISTER_TYPES_DECISION_TYPES,
+    REGISTER_TYPE_INFOS,
     RegisterType,
 } from "../../../../server/src/types";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
@@ -65,9 +65,8 @@ export default function RegisterDataTable({
                             <thead>
                                 <tr>
                                     <th colSpan={2}>
-                                        {REGISTER_TYPES_DECISION_TYPES[
-                                            entry.typ
-                                        ] === "Mayor"
+                                        {REGISTER_TYPE_INFOS[entry.typ]
+                                            .decisionType === "Mayor"
                                             ? "Decyzja starosty Człuchowskiego"
                                             : "Decyzja Zaświadczenie"}
                                     </th>

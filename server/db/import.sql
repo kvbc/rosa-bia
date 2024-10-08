@@ -68,10 +68,6 @@ create table wyszczegolnienia_budowlane(
     foreign key(klasa_id) references klasy_budowlane(id)
 );
 
-create table typy_budowy(
-    id integer primary key autoincrement,
-    typ text not null unique
-);
 create table formy_budownictwa(
     id integer primary key autoincrement,
     forma text not null unique
@@ -79,15 +75,6 @@ create table formy_budownictwa(
 create table planowania_przestrzenne(
     id integer primary key autoincrement,
     planowanie text not null unique
-);
-
--- 
--- Konfiguracja
--- 
-
-create table typy_czynnosci_admin(
-    id integer primary key autoincrement,
-    typ text not null unique
 );
 
 -- 
@@ -115,19 +102,19 @@ create table rejestry(
     obiekt_nr text not null,
     obiekt_pnb_infrastruktura_towarzyszaca boolean not null,
     obiekt_rozbiorka_objety_ochrona_konserwatorska boolean not null,
+    obiekt_rozbiorka_powierzchnia_zabudowy integer not null,
+    obiekt_rozbiorka_powierzchnia_uzytkowa integer not null,
+    obiekt_rozbiorka_kubatura integer not null,
+    obiekt_rozbiorka_ilosc_budynkow integer not null,
+
+    admin_dziennik_budowy_numer integer not null,
+    admin_dziennik_budowy_data date not null,
 
     foreign key(wniosek_inwestor_id) references inwestorzy(id),
     foreign key(obiekt_wyszczegolnienie_id) references wyszczegolnienia_budowlane(id),
     foreign key(obiekt_forma_budownictwa_id) references formy_budownictwa(id),
     foreign key(obiekt_planowanie_przestrzenne_id) references planowania_przestrzenne(id),
     foreign key(obiekt_ulica_id) references ulice(id)
-);
-create table rejestry_typy_budowy(
-    id integer primary key autoincrement,
-    typ_id integer not null,
-    rejestr_id integer not null,
-    foreign key(typ_id) references typy_budowy(id),
-    foreign key(rejestr_id) references rejestry(id)
 );
 create table rejestry_dzialki_objete_inwestycja(
     id integer primary key autoincrement,
@@ -137,14 +124,13 @@ create table rejestry_dzialki_objete_inwestycja(
 );
 create table rejestry_czynnosci_admin(
     id integer primary key autoincrement,
-    typ_id integer not null,
+    typ text not null,
     rejestr_id integer not null,
     wybor boolean not null,
     termin integer not null,
     data_pisma date not null,
     data_odebrania date,
     data_odpowiedzi date,
-    foreign key(typ_id) references typy_czynnosci_admin(id),
     foreign key(rejestr_id) references rejestry(id)
 );
 
@@ -328,7 +314,14 @@ insert into rejestry(
     obiekt_ulica_id,
     obiekt_nr,
     obiekt_pnb_infrastruktura_towarzyszaca,
-    obiekt_rozbiorka_objety_ochrona_konserwatorska
+    obiekt_rozbiorka_objety_ochrona_konserwatorska,
+    obiekt_rozbiorka_powierzchnia_zabudowy,
+    obiekt_rozbiorka_powierzchnia_uzytkowa,
+    obiekt_rozbiorka_kubatura,
+    obiekt_rozbiorka_ilosc_budynkow,
+
+    admin_dziennik_budowy_numer,
+    admin_dziennik_budowy_data
 ) values (
     null,
     'PnB (6740)',
@@ -345,7 +338,14 @@ insert into rejestry(
     1,
     34,
     1,
-    1
+    1,
+    69,
+    69,
+    69,
+    69,
+
+    420,
+    "1999-12-19"
 );
 
 insert into tablice_informacyjne values(null, 'testowa zawartosc');

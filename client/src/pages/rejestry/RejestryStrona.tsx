@@ -50,7 +50,6 @@ export default function RejestryStrona() {
     const investorDBEntries = useDBEntriesStore<Inwestor>("inwestorzy")(); // prettier-ignore
     const spatialPlanDBEntries = useDBEntriesStore<PKOB.SpatialPlan>('planowania_przestrzenne')(); // prettier-ignore
     const streetDBEntries = useDBEntriesStore<Ulica>('ulice')(); // prettier-ignore
-    const adminActionTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_czynnosci_admin")(); // prettier-ignore
 
     const emptyEntry: Register = {
         id: registerDBEntries.entryCount + 1,
@@ -65,6 +64,12 @@ export default function RejestryStrona() {
         _obiekt_sekcja_id: 0,
         _obiekt_gmina_id: 0,
         _obiekt_miejscowosc_id: 0,
+        admin_dziennik_budowy_data: "",
+        admin_dziennik_budowy_numer: 0,
+        obiekt_rozbiorka_ilosc_budynkow: 0,
+        obiekt_rozbiorka_kubatura: 0,
+        obiekt_rozbiorka_powierzchnia_uzytkowa: 0,
+        obiekt_rozbiorka_powierzchnia_zabudowy: 0,
         obiekt_rozbiorka_objety_ochrona_konserwatorska: false,
         obiekt_pnb_infrastruktura_towarzyszaca: false,
         typ: "PnB (6740)",
@@ -103,6 +108,12 @@ export default function RejestryStrona() {
     };
     addSelectInputProps('obiekt_forma_budownictwa_id', constructionFormDBEntries, 'forma') // prettier-ignore
     addInputProps('obiekt_nr', 'text') // prettier-ignore
+    addInputProps('obiekt_rozbiorka_ilosc_budynkow', 'number') // prettier-ignore
+    addInputProps('obiekt_rozbiorka_powierzchnia_uzytkowa', 'number') // prettier-ignore
+    addInputProps('obiekt_rozbiorka_powierzchnia_zabudowy', 'number') // prettier-ignore
+    addInputProps('obiekt_rozbiorka_kubatura', 'number') // prettier-ignore
+    addInputProps('admin_dziennik_budowy_data', 'date') // prettier-ignore
+    addInputProps('admin_dziennik_budowy_numer', 'number') // prettier-ignore
     addSelectInputProps("obiekt_planowanie_przestrzenne_id", spatialPlanDBEntries, 'planowanie'); // prettier-ignore
     // addSelectInputProps("obiekt_ulica_id", streetDBEntries, 'nazwa'); // prettier-ignore
     // addSelectInputProps("obiekt_klasa_id", constructionClassDBEntries, 'klasa'); // prettier-ignore
@@ -224,89 +235,13 @@ export default function RejestryStrona() {
 
     return (
         <div>
-            <Accordion defaultExpanded>
-                <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            gap: 1,
-                            alignItems: "center",
-                        }}
-                    >
-                        <FaDatabase />
-                        Dane
-                    </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <DBTableEdit
-                        dbEntries={registerDBEntries}
-                        headers={["Rejestr"]}
-                        emptyEntry={emptyEntry}
-                        rowInputsProps={rowInputsProps}
-                        RowContentComponent={RegisterTableEditRowContent}
-                    />
-                </AccordionDetails>
-            </Accordion>
-            <Accordion>
-                <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            gap: 1,
-                            alignItems: "center",
-                        }}
-                    >
-                        <FaGear />
-                        Konfiguracja
-                    </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Tabs size="sm">
-                        <TabList>
-                            <Tab>
-                                <AiOutlineSolution fontSize={20} />
-                                Decyzje Starosty
-                            </Tab>
-                            <Tab>
-                                <FaStamp />
-                                Rozstrzygnięcia Wniosku
-                            </Tab>
-                            <Tab>
-                                <MdPendingActions fontSize={20} />
-                                Czynności administracyjne
-                            </Tab>
-                            <Tab>
-                                <FaFileAlt />
-                                Typy Rejestrów
-                            </Tab>
-                        </TabList>
-                        {[
-                            {
-                                dbEntries: adminActionTypeDBEntries,
-                                name: "Czynność admin.",
-                            },
-                        ].map((entry, entryIndex) => (
-                            <TabPanel value={entryIndex}>
-                                <DBTableEdit
-                                    dbEntries={entry.dbEntries}
-                                    headers={[entry.name]}
-                                    emptyEntry={{
-                                        id: 0,
-                                        typ: "",
-                                    }}
-                                    rowInputsProps={[
-                                        {
-                                            type: "text",
-                                            entryKey: "typ",
-                                            placeholder: "Typ",
-                                        },
-                                    ]}
-                                />
-                            </TabPanel>
-                        ))}
-                    </Tabs>
-                </AccordionDetails>
-            </Accordion>
+            <DBTableEdit
+                dbEntries={registerDBEntries}
+                headers={["Rejestr"]}
+                emptyEntry={emptyEntry}
+                rowInputsProps={rowInputsProps}
+                RowContentComponent={RegisterTableEditRowContent}
+            />
         </div>
     );
 }

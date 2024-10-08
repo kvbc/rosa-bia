@@ -30,6 +30,7 @@ import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import DBTableEdit from "../../components/DBTableEdit";
 import RegisterPropertyDataTable from "./RegisterPropertyDataTable";
 import RegisterInvestPlotsDataTable from "./RegisterInvestPlotsTable";
+import RegisterCharParamsTable from "./RegisterCharParamsTable";
 
 export default function RegisterConstructionIntentTable(
     props: TableEditRowContentProps<Register>
@@ -74,7 +75,7 @@ export default function RegisterConstructionIntentTable(
     };
 
     return (
-        <Table size="sm">
+        <Table size="sm" sx={{ height: "100%" }}>
             <thead>
                 <tr>
                     <th colSpan={2}>Zamierzenie Budowlane</th>
@@ -125,159 +126,140 @@ export default function RegisterConstructionIntentTable(
                 Body (complex)
 
                 */}
-                <tr>
-                    {/* PnB, ZRiD */}
-                    {(entry.typ === "PnB (6740)" ||
-                        entry.typ === "ZRiD (7012)") && (
-                        <td colSpan={2}>
-                            <Table size="sm">
-                                <thead>
+                {/* Body :: PnB, ZRiD */}
+                {(entry.typ === "PnB (6740)" ||
+                    entry.typ === "ZRiD (7012)") && (
+                    <>
+                        <tr>
+                            <td>
+                                <Table
+                                    size="sm"
+                                    sx={{
+                                        backgroundColor: "rgb(243 244 246)",
+                                    }}
+                                >
                                     <tr>
-                                        <th colSpan={2}></th>
+                                        <th className="bg-gray-100">Sekcja</th>
+                                        <td>{inputs._obiekt_sekcja_id}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
                                     <tr>
+                                        <th className="bg-gray-100">Dział</th>
+                                        <td>{inputs._obiekt_dzial_id}</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="bg-gray-100">Grupa</th>
+                                        <td>{inputs._obiekt_grupa_id}</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="bg-gray-100">Klasa</th>
+                                        <td>{inputs._obiekt_klasa_id}</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="bg-gray-100">Wysz.</th>
                                         <td>
-                                            <Table
-                                                size="sm"
-                                                sx={{
-                                                    backgroundColor:
-                                                        "rgb(243 244 246)",
-                                                }}
-                                            >
-                                                <tr>
-                                                    <th className="bg-gray-100">
-                                                        Sekcja
-                                                    </th>
-                                                    <td>
-                                                        {
-                                                            inputs._obiekt_sekcja_id
-                                                        }
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="bg-gray-100">
-                                                        Dział
-                                                    </th>
-                                                    <td>
-                                                        {
-                                                            inputs._obiekt_dzial_id
-                                                        }
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="bg-gray-100">
-                                                        Grupa
-                                                    </th>
-                                                    <td>
-                                                        {
-                                                            inputs._obiekt_grupa_id
-                                                        }
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="bg-gray-100">
-                                                        Klasa
-                                                    </th>
-                                                    <td>
-                                                        {
-                                                            inputs._obiekt_klasa_id
-                                                        }
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="bg-gray-100">
-                                                        Wysz.
-                                                    </th>
-                                                    <td>
-                                                        {
-                                                            inputs.obiekt_wyszczegolnienie_id
-                                                        }
-                                                    </td>
-                                                </tr>
-                                            </Table>
+                                            {inputs.obiekt_wyszczegolnienie_id}
                                         </td>
+                                    </tr>
+                                </Table>
+                            </td>
+                            <td>
+                                <Table
+                                    size="sm"
+                                    sx={{
+                                        height: "100%",
+                                        backgroundColor: "rgb(243 244 246)",
+                                    }}
+                                >
+                                    <tr>
+                                        <th className="bg-gray-100">PKOB</th>
                                         <td>
-                                            <Table
-                                                size="sm"
-                                                sx={{
-                                                    height: "100%",
-                                                    backgroundColor:
-                                                        "rgb(243 244 246)",
-                                                }}
-                                            >
-                                                <tr>
-                                                    <th className="bg-gray-100">
-                                                        PKOB
-                                                    </th>
-                                                    <td>
-                                                        {constructionClass?.pkob ??
-                                                            "-"}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="bg-gray-100">
-                                                        Kat. Zag. Ludzi
-                                                    </th>
-                                                    <td>
-                                                        {constructionSpec?.klasa_zl ??
-                                                            "-"}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="bg-gray-100">
-                                                        Kat. Obiektu
-                                                    </th>
-                                                    <td>
-                                                        {constructionSpec?.kat_ob ??
-                                                            "-"}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="bg-gray-100">
-                                                        Forma budownictwa
-                                                    </th>
-                                                    <td>
-                                                        {
-                                                            inputs.obiekt_forma_budownictwa_id
-                                                        }
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="bg-gray-100">
-                                                        Planowanie przestrzenne
-                                                    </th>
-                                                    <td>
-                                                        {
-                                                            inputs.obiekt_planowanie_przestrzenne_id
-                                                        }
-                                                    </td>
-                                                </tr>
-                                            </Table>
+                                            {constructionClass?.pkob ?? "-"}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colSpan={2}>
-                                            <RegisterPropertyDataTable
-                                                {...props}
-                                                place={place}
-                                                area={area}
-                                            />
+                                        <th className="bg-gray-100">
+                                            Kat. Zag. Ludzi
+                                        </th>
+                                        <td>
+                                            {constructionSpec?.klasa_zl ?? "-"}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colSpan={2}>
-                                            <RegisterInvestPlotsDataTable
-                                                {...props}
-                                            />
+                                        <th className="bg-gray-100">
+                                            Kat. Obiektu
+                                        </th>
+                                        <td>
+                                            {constructionSpec?.kat_ob ?? "-"}
                                         </td>
                                     </tr>
-                                </tbody>
-                            </Table>
-                        </td>
-                    )}
-                </tr>
+                                    <tr>
+                                        <th className="bg-gray-100">
+                                            Forma budownictwa
+                                        </th>
+                                        <td>
+                                            {inputs.obiekt_forma_budownictwa_id}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th className="bg-gray-100">
+                                            Planowanie przestrzenne
+                                        </th>
+                                        <td>
+                                            {
+                                                inputs.obiekt_planowanie_przestrzenne_id
+                                            }
+                                        </td>
+                                    </tr>
+                                </Table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan={2}>
+                                <RegisterCharParamsTable {...props} />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan={2}>
+                                <RegisterPropertyDataTable
+                                    {...props}
+                                    place={place}
+                                    area={area}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan={2}>
+                                <RegisterInvestPlotsDataTable {...props} />
+                            </td>
+                        </tr>
+                    </>
+                )}
+                {/* Body :: PnRozb., Zg. Rozb. */}
+                {(entry.typ === "PnRozb. (6741)" ||
+                    entry.typ === "Zg. Rozb. (6743.1)" ||
+                    entry.typ === "BiP (6743.4)") && (
+                    <>
+                        <tr>
+                            <td colSpan={2}>
+                                <RegisterCharParamsTable {...props} />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan={2}>
+                                <RegisterPropertyDataTable
+                                    {...props}
+                                    place={place}
+                                    area={area}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan={2}>
+                                <RegisterInvestPlotsDataTable {...props} />
+                            </td>
+                        </tr>
+                    </>
+                )}
             </tbody>
         </Table>
     );

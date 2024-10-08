@@ -113,6 +113,98 @@ export namespace PKOB {
 
 export type RegisterDecisionType = "Mayor" | "Cert";
 
+export type RegisterTypeInfo = {
+    decisionType: RegisterDecisionType;
+    actionTypes: RegisterAdminActionType[];
+    showAdminConstructionJournal: boolean;
+};
+
+export const REGISTER_TYPE_INFOS: { [key in RegisterType]: RegisterTypeInfo } =
+    {
+        "PnB (6740)": {
+            decisionType: "Mayor",
+            actionTypes: [
+                "Wezwanie",
+                "Zawiadomienie",
+                "Postanowienie",
+                "Konserwator",
+                "Zawieszenie postępowania",
+                "Przedłużenie terminu",
+            ],
+            showAdminConstructionJournal: true,
+        },
+        "PnRozb. (6741)": {
+            decisionType: "Mayor",
+            actionTypes: [
+                "Wezwanie",
+                "Zawiadomienie",
+                "Postanowienie",
+                "Konserwator",
+                "Zawieszenie postępowania",
+                "Przedłużenie terminu",
+            ],
+            showAdminConstructionJournal: true,
+        },
+        "Zg. Rozb. (6743.1)": {
+            decisionType: "Cert",
+            actionTypes: ["Postanowienie", "Przedłużenie terminu"],
+            showAdminConstructionJournal: false,
+        },
+        "Zg. Zwykłe (6743.2)": {
+            decisionType: "Cert",
+            actionTypes: ["Postanowienie", "Przedłużenie terminu"],
+            showAdminConstructionJournal: false,
+        },
+        "Zm. Sp. Użytk. (6743.3)": {
+            decisionType: "Cert",
+            actionTypes: [],
+            showAdminConstructionJournal: false,
+        },
+        "BiP (6743.4)": {
+            decisionType: "Cert",
+            actionTypes: ["Postanowienie", "Przedłużenie terminu"],
+            showAdminConstructionJournal: true,
+        },
+        "ZRiD (7012)": {
+            decisionType: "Mayor",
+            actionTypes: [
+                "Wezwanie",
+                "Zawiadomienie",
+                "Postanowienie",
+                "Konserwator",
+                "Zawieszenie postępowania",
+                "Przedłużenie terminu",
+            ],
+            showAdminConstructionJournal: true,
+        },
+        "Pisma różne (670)": {
+            decisionType: "Mayor",
+            actionTypes: [],
+            showAdminConstructionJournal: false,
+        },
+        "Samodz. Lokali (705)": {
+            decisionType: "Mayor",
+            actionTypes: [],
+            showAdminConstructionJournal: false,
+        },
+        "Dz. bud": {
+            decisionType: "Mayor",
+            actionTypes: [],
+            showAdminConstructionJournal: false,
+        },
+    } as const;
+
+export const REGISTER_ADMIN_ACTION_TYPES = [
+    "Wezwanie",
+    "Zawiadomienie",
+    "Postanowienie",
+    "Konserwator",
+    "Zawieszenie postępowania",
+    "Przedłużenie terminu",
+] as const;
+export type RegisterAdminActionType =
+    (typeof REGISTER_ADMIN_ACTION_TYPES)[number];
+
 export const REGISTER_MAYOR_DECISIONS = [
     "Pozytywna",
     "Sprzeciwu",
@@ -141,21 +233,6 @@ export const REGISTER_TYPES = [
 ] as const;
 export type RegisterType = (typeof REGISTER_TYPES)[number];
 
-export const REGISTER_TYPES_DECISION_TYPES: {
-    [key in RegisterType]: RegisterDecisionType;
-} = {
-    "PnB (6740)": "Mayor",
-    "PnRozb. (6741)": "Mayor",
-    "Zg. Rozb. (6743.1)": "Cert",
-    "Zg. Zwykłe (6743.2)": "Cert",
-    "Zm. Sp. Użytk. (6743.3)": "Cert",
-    "BiP (6743.4)": "Cert",
-    "ZRiD (7012)": "Mayor",
-    "Pisma różne (670)": "Cert",
-    "Samodz. Lokali (705)": "Cert",
-    "Dz. bud": "Cert",
-};
-
 export const REGISTER_MAYOR_RESOLUTIONS = [
     "Wygaśnięcia",
     "Bez rozpatrzenia",
@@ -176,7 +253,7 @@ export type RegisterCertResolution = (typeof REGISTER_CERT_RESOLUTIONS)[number];
 export const getRegisterDecisionsFromType = (
     registerType: RegisterType
 ): readonly string[] => {
-    const decisionType = REGISTER_TYPES_DECISION_TYPES[registerType];
+    const decisionType = REGISTER_TYPE_INFOS[registerType].decisionType;
     switch (decisionType) {
         case "Mayor":
             return REGISTER_MAYOR_DECISIONS;
@@ -188,7 +265,7 @@ export const getRegisterDecisionsFromType = (
 export const getRegisterResolutionsFromType = (
     registerType: RegisterType
 ): readonly string[] => {
-    const decisionType = REGISTER_TYPES_DECISION_TYPES[registerType];
+    const decisionType = REGISTER_TYPE_INFOS[registerType].decisionType;
     switch (decisionType) {
         case "Mayor":
             return REGISTER_MAYOR_RESOLUTIONS;
@@ -226,6 +303,13 @@ export type Register = {
     obiekt_nr: string;
     obiekt_pnb_infrastruktura_towarzyszaca: boolean;
     obiekt_rozbiorka_objety_ochrona_konserwatorska: boolean;
+    obiekt_rozbiorka_powierzchnia_zabudowy: number;
+    obiekt_rozbiorka_powierzchnia_uzytkowa: number;
+    obiekt_rozbiorka_kubatura: number;
+    obiekt_rozbiorka_ilosc_budynkow: number;
+
+    admin_dziennik_budowy_numer: number;
+    admin_dziennik_budowy_data: string;
 };
 export type RegisterBuildTypes = {
     id: number;
@@ -239,7 +323,7 @@ export type RegisterInvestPlots = {
 };
 export type RegisterAdminActions = {
     id: number;
-    typ_id: number;
+    typ: RegisterAdminActionType;
     rejestr_id: number;
     wybor: boolean;
     termin: number;

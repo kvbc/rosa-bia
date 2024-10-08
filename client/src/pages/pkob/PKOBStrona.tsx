@@ -32,8 +32,6 @@ export default function PKOBStrona() {
     const constructionClassDBEntries =
         useDBEntriesStore<PKOB.ConstructionClass>("klasy_budowlane")();
 
-    const buildTypeDBEntries =
-        useDBEntriesStore<PKOB.BuildType>("typy_budowy")();
     const constructionFormDBEntries =
         useDBEntriesStore<PKOB.ConstructionForm>("formy_budownictwa")();
     const spatialPlanDBEntries = useDBEntriesStore<PKOB.SpatialPlan>(
@@ -92,10 +90,6 @@ export default function PKOBStrona() {
                     <Tabs size="sm">
                         <TabList>
                             <Tab>
-                                <LuConstruction />
-                                Stany Budowy
-                            </Tab>
-                            <Tab>
                                 <IoIosConstruct />
                                 Formy Budownictwa
                             </Tab>
@@ -105,27 +99,6 @@ export default function PKOBStrona() {
                             </Tab>
                         </TabList>
                         <TabPanel value={0}>
-                            <DBTableEdit
-                                dbEntries={buildTypeDBEntries}
-                                headers={["ID", "Typ Budowy"]}
-                                emptyEntry={{
-                                    id: 0,
-                                    typ: "",
-                                }}
-                                rowInputsProps={[
-                                    {
-                                        type: "number",
-                                        entryKey: "id",
-                                        uneditable: true,
-                                    },
-                                    {
-                                        type: "text",
-                                        entryKey: "typ",
-                                    },
-                                ]}
-                            />
-                        </TabPanel>
-                        <TabPanel value={1}>
                             <DBTableEdit
                                 dbEntries={constructionFormDBEntries}
                                 headers={["ID", "Forma Budownictwa"]}
@@ -146,7 +119,7 @@ export default function PKOBStrona() {
                                 ]}
                             />
                         </TabPanel>
-                        <TabPanel value={2}>
+                        <TabPanel value={1}>
                             <DBTableEdit
                                 dbEntries={spatialPlanDBEntries}
                                 headers={["ID", "Planowanie Przestrzenne"]}
