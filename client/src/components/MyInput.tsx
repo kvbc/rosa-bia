@@ -1,4 +1,4 @@
-import { HTMLInputTypeAttribute } from "react";
+import { HTMLInputTypeAttribute, useEffect, useReducer, useState } from "react";
 import Input from "@mui/joy/Input";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
@@ -15,6 +15,7 @@ export type MyInputProps<TEntry extends { [key: string]: any }> = {
     entryKey: keyof TEntry;
     uneditable?: boolean;
     selectOptions?: MyInputSelectOption[];
+    getSelectOptions?: (entry: TEntry) => MyInputSelectOption[];
     placeholder?: string;
     disabled?: boolean;
 };
@@ -22,6 +23,7 @@ export type MyInputProps<TEntry extends { [key: string]: any }> = {
 export default function MyInput<TEntry extends { [key: string]: any }>({
     entry,
     setEntry,
+    getSelectOptions,
     type,
     entryKey,
     uneditable,
@@ -29,12 +31,23 @@ export default function MyInput<TEntry extends { [key: string]: any }>({
     placeholder,
     disabled,
 }: MyInputProps<TEntry>) {
+    if (!selectOptions && getSelectOptions) {
+        selectOptions = getSelectOptions(entry);
+    }
+
+    // const [, rerender] = useReducer((x) => x + 1, 0);
+    // useEffect(() => {
+    //     if (getSelectOptions) rerender();
+    // }, [entry]);
+
     return (
         <>
             {type === "select" && (
                 <Select
                     value={entry[entryKey]}
                     onChange={(e, v) =>
+                        selectOptions &&
+                        selectOptions.length > 0 &&
                         setEntry({
                             ...entry,
                             [entryKey]: v,

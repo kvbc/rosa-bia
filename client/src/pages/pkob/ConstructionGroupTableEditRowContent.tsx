@@ -11,12 +11,12 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaCity, FaDatabase, FaHouse } from "react-icons/fa6";
 import { Box } from "@mui/joy";
 
-export default function ConstructionIntentTableEditRowContent({
+export default function ConstructionGroupTableEditRowContent({
     inputs,
     entry,
     editable,
     setEntry,
-}: TableEditRowContentProps<PKOB.ConstructionIntention>) {
+}: TableEditRowContentProps<PKOB.ConstructionGroup>) {
     const constructionClassDBEntries =
         useDBEntriesStore<PKOB.ConstructionClass>("klasy_budowlane")();
 
@@ -33,37 +33,14 @@ export default function ConstructionIntentTableEditRowContent({
                             }}
                         >
                             <FaHouse />
-                            {inputs.zamierzenie}
+                            {inputs.grupa}
                         </Box>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Table size="sm">
-                            <thead>
-                                <tr>
-                                    <th className="w-[10%] text-wrap bg-gray-200">
-                                        PKOB
-                                    </th>
-                                    <th className="w-[10%] text-wrap bg-gray-200">
-                                        Kat. OB
-                                    </th>
-                                    <th className="w-[10%] text-wrap bg-gray-200">
-                                        Klasa ZL.
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{inputs.pkob}</td>
-                                    <td>{inputs.kat_ob}</td>
-                                    <td>{inputs.klasa_zl}</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                        <br />
                         <DBTableEdit
                             dbEntries={constructionClassDBEntries}
                             entries={constructionClassDBEntries.entries.filter(
-                                (fEntry) => fEntry.zamierzenie_id === entry.id
+                                (fEntry) => fEntry.grupa_id === entry.id
                             )}
                             editable={editable}
                             showFooter={false}
@@ -73,12 +50,17 @@ export default function ConstructionIntentTableEditRowContent({
                             emptyEntry={{
                                 id: constructionClassDBEntries.entryCount + 1,
                                 klasa: "",
-                                zamierzenie_id: entry.id,
+                                pkob: 0,
+                                grupa_id: entry.id,
                             }}
                             rowInputsProps={[
                                 {
                                     type: "text",
                                     entryKey: "klasa",
+                                },
+                                {
+                                    type: "number",
+                                    entryKey: "pkob",
                                 },
                             ]}
                             RowContentComponent={

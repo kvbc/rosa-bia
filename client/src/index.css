@@ -13,6 +13,13 @@ body {
 }
 
 @layer base {
+    tr {
+        @apply h-1 !important;
+    }
+    td {
+        @apply h-[inherit] !important;
+    }
+
     tbody,
     thead,
     tr,

@@ -27,10 +27,8 @@ export default function PKOBStrona() {
         useDBEntriesStore<PKOB.ConstructionSection>("sekcje_budowlane")();
     const constructionDivisionDBEntries =
         useDBEntriesStore<PKOB.ConstructionDivision>("dzialy_budowlane")();
-    const constructionIntentionDBEntries =
-        useDBEntriesStore<PKOB.ConstructionIntention>(
-            "zamierzenia_budowlane"
-        )();
+    const constructionGroupDBEntries =
+        useDBEntriesStore<PKOB.ConstructionGroup>("grupy_budowlane")();
     const constructionClassDBEntries =
         useDBEntriesStore<PKOB.ConstructionClass>("klasy_budowlane")();
 

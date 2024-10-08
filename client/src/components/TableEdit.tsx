@@ -28,7 +28,7 @@ import { SxProps } from "@mui/material";
 
 export type TableEditEntry = {
     id: number;
-    [key: string]: InputHTMLAttributes<any>["value"];
+    [key: string]: InputHTMLAttributes<any>["value"] | boolean;
 };
 
 export type TableEditHeader = {
@@ -178,7 +178,7 @@ export default function TableEdit<TEntry extends TableEditEntry>({
     };
 
     const setEntry = (newEntry: TEntry) => {
-        setEntries(
+        setEntries((entries) =>
             entries.map((entry) =>
                 entry.id === newEntry.id ? newEntry : entry
             )

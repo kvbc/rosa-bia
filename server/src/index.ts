@@ -73,7 +73,7 @@ app.post("/:table", (req: Request, res: Response) => {
     let values = "null";
     const params: any[] = [];
     for (const key in req.body) {
-        if (key !== "id") {
+        if (key !== "id" && key[0] !== "_") {
             keys += ", " + key;
             values += ", ?";
             params.push(req.body[key]);
@@ -122,7 +122,7 @@ app.put("/:table", (req: Request, res: Response) => {
     let query = `update ${table} set `;
     const params = [];
     for (const key in req.body) {
-        if (key != "id") {
+        if (key != "id" && key[0] !== "_") {
             if (params.length > 0) query += ", ";
             query += `${key}=?`;
             params.push(req.body[key]);

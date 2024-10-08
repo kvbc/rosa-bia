@@ -4,11 +4,17 @@ import useDBEntriesStore, { DBEntries } from "../../hooks/useDBEntriesStore";
 import {
     DBEntry,
     Inwestor,
+    REGISTER_MAYOR_DECISIONS,
     Miejscowosc,
     PKOB,
     Register,
     TypeEntry,
     Ulica,
+    REGISTER_MAYOR_RESOLUTIONS,
+    getRegisterDecisionsFromType,
+    getRegisterResolutionsFromType,
+    REGISTER_TYPES,
+    Gmina,
 } from "../../../../server/src/types";
 import { MyInputSelectOption } from "../../components/MyInput";
 import RegisterTableEditRowContent from "./RegisterTableEditRowContent";
@@ -33,16 +39,17 @@ import { FaDatabase, FaGear } from "react-icons/fa6";
 
 export default function RejestryStrona() {
     const registerDBEntries = useDBEntriesStore<Register>("rejestry")(); // prettier-ignore
-    const registerTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_rejestrow")(); // prettier-ignore
+    const communeDBEntries = useDBEntriesStore<Gmina>("gminy")(); // prettier-ignore
+    const placeDBEntries = useDBEntriesStore<Miejscowosc>("miejscowosci")(); // prettier-ignore
     const constructionClassDBEntries = useDBEntriesStore<PKOB.ConstructionClass>("klasy_budowlane")(); // prettier-ignore
+    const constructionSectionDBEntries = useDBEntriesStore<PKOB.ConstructionSection>("sekcje_budowlane")(); // prettier-ignore
+    const constructionGroupDBEntries = useDBEntriesStore<PKOB.ConstructionGroup>("grupy_budowlane")(); // prettier-ignore
+    const constructionDivisionDBEntries = useDBEntriesStore<PKOB.ConstructionDivision>("dzialy_budowlane")(); // prettier-ignore
+    const constructionSpecDBEntries = useDBEntriesStore<PKOB.ConstructionSpec>("wyszczegolnienia_budowlane")(); // prettier-ignore
     const constructionFormDBEntries = useDBEntriesStore<PKOB.ConstructionForm>("formy_budownictwa")(); // prettier-ignore
     const investorDBEntries = useDBEntriesStore<Inwestor>("inwestorzy")(); // prettier-ignore
-    const mayorDecisionDBEntries = useDBEntriesStore<TypeEntry>("typy_decyzji_starosty")(); // prettier-ignore
     const spatialPlanDBEntries = useDBEntriesStore<PKOB.SpatialPlan>('planowania_przestrzenne')(); // prettier-ignore
     const streetDBEntries = useDBEntriesStore<Ulica>('ulice')(); // prettier-ignore
-    const resolutionDBEntries = useDBEntriesStore<TypeEntry>('typy_rozstrzygniec')(); // prettier-ignore
-    const mayorDecisionTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_decyzji_starosty")(); // prettier-ignore
-    const resolutionTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_rozstrzygniec")(); // prettier-ignore
     const adminActionTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_czynnosci_admin")(); // prettier-ignore
 
     const emptyEntry: Register = {
@@ -51,17 +58,25 @@ export default function RejestryStrona() {
         obiekt_nr: "",
         obiekt_planowanie_przestrzenne_id: 0,
         obiekt_ulica_id: 0,
-        obiekt_klasa_id: 0,
-        typ_id: 0,
+        obiekt_wyszczegolnienie_id: 0,
+        _obiekt_dzial_id: 0,
+        _obiekt_grupa_id: 0,
+        _obiekt_klasa_id: 0,
+        _obiekt_sekcja_id: 0,
+        _obiekt_gmina_id: 0,
+        _obiekt_miejscowosc_id: 0,
+        obiekt_rozbiorka_objety_ochrona_konserwatorska: false,
+        obiekt_pnb_infrastruktura_towarzyszaca: false,
+        typ: "PnB (6740)",
         wniosek_data_zlozenia: "",
         wniosek_decyzja_data_wydania: "",
         wniosek_decyzja_numer: 0,
-        wniosek_decyzja_typ_id: 0,
+        // wniosek_decyzja_typ: "",
         wniosek_inwestor_id: 0,
         wniosek_numer: 0,
         wniosek_rozstrzygniecie_data_wydania: "",
         wniosek_rozstrzygniecie_numer_pisma: 0,
-        wniosek_rozstrzygniecie_typ_id: 0,
+        // wniosek_rozstrzygniecie_typ: "",
     };
     const rowInputsProps: TableEditRowInputProps<Register>[] = [];
     const addInputProps = (
@@ -91,16 +106,121 @@ export default function RejestryStrona() {
     addSelectInputProps("obiekt_planowanie_przestrzenne_id", spatialPlanDBEntries, 'planowanie'); // prettier-ignore
     // addSelectInputProps("obiekt_ulica_id", streetDBEntries, 'nazwa'); // prettier-ignore
     // addSelectInputProps("obiekt_klasa_id", constructionClassDBEntries, 'klasa'); // prettier-ignore
-    addSelectInputProps("typ_id", registerTypeDBEntries, 'typ'); // prettier-ignore
+    addInputProps("obiekt_pnb_infrastruktura_towarzyszaca", "checkbox");
+    addInputProps("obiekt_rozbiorka_objety_ochrona_konserwatorska", "checkbox");
+    addSelectInputProps("_obiekt_gmina_id", communeDBEntries, 'nazwa'); // prettier-ignore
+    rowInputsProps.push({
+        type: "select",
+        entryKey: "_obiekt_miejscowosc_id",
+        getSelectOptions: (entry) =>
+            placeDBEntries.entries
+                .filter((fEntry) => fEntry.gmina_id === entry._obiekt_gmina_id)
+                .map<MyInputSelectOption>((entry) => ({
+                    value: entry.id,
+                    name: entry.nazwa,
+                })),
+    });
+    rowInputsProps.push({
+        type: "select",
+        entryKey: "obiekt_ulica_id",
+        getSelectOptions: (entry) =>
+            streetDBEntries.entries
+                .filter(
+                    (fEntry) =>
+                        fEntry.miejscowosc_id === entry._obiekt_miejscowosc_id
+                )
+                .map<MyInputSelectOption>((entry) => ({
+                    value: entry.id,
+                    name: entry.nazwa,
+                })),
+    });
+    addSelectInputProps("_obiekt_sekcja_id", constructionSectionDBEntries, 'sekcja'); // prettier-ignore
+    rowInputsProps.push({
+        type: "select",
+        entryKey: "_obiekt_dzial_id",
+        getSelectOptions: (entry) =>
+            constructionDivisionDBEntries.entries
+                .filter(
+                    (fEntry) => fEntry.sekcja_id === entry._obiekt_sekcja_id
+                )
+                .map<MyInputSelectOption>((entry) => ({
+                    value: entry.id,
+                    name: entry.dzial,
+                })),
+    });
+    rowInputsProps.push({
+        type: "select",
+        entryKey: "_obiekt_grupa_id",
+        getSelectOptions: (entry) =>
+            constructionGroupDBEntries.entries
+                .filter((fEntry) => fEntry.dzial_id === entry._obiekt_dzial_id)
+                .map<MyInputSelectOption>((entry) => ({
+                    value: entry.id,
+                    name: entry.grupa,
+                })),
+    });
+    rowInputsProps.push({
+        type: "select",
+        entryKey: "_obiekt_klasa_id",
+        getSelectOptions: (entry) =>
+            constructionClassDBEntries.entries
+                .filter((fEntry) => fEntry.grupa_id === entry._obiekt_grupa_id)
+                .map<MyInputSelectOption>((entry) => ({
+                    value: entry.id,
+                    name: entry.klasa,
+                })),
+    });
+    rowInputsProps.push({
+        type: "select",
+        entryKey: "obiekt_wyszczegolnienie_id",
+        getSelectOptions: (entry) =>
+            constructionSpecDBEntries.entries
+                .filter((fEntry) => fEntry.klasa_id === entry._obiekt_klasa_id)
+                .map<MyInputSelectOption>((entry) => ({
+                    value: entry.id,
+                    name: entry.nazwa,
+                })),
+    });
+    // addSelectInputProps("typ_id", registerTypeDBEntries, 'typ'); // prettier-ignore
+    rowInputsProps.push({
+        type: "select",
+        entryKey: "typ",
+        selectOptions: REGISTER_TYPES.map<MyInputSelectOption>(
+            (registerType) => ({
+                value: registerType,
+                name: registerType,
+            })
+        ),
+    });
     addInputProps('wniosek_data_zlozenia', 'date') // prettier-ignore
     addInputProps('wniosek_decyzja_data_wydania', 'date') // prettier-ignore
     addInputProps('wniosek_decyzja_numer', 'number') // prettier-ignore
-    addSelectInputProps("wniosek_decyzja_typ_id", mayorDecisionDBEntries, 'typ'); // prettier-ignore
+    rowInputsProps.push({
+        type: "select",
+        entryKey: "wniosek_decyzja_typ",
+        getSelectOptions: (entry) =>
+            getRegisterDecisionsFromType(entry.typ).map<MyInputSelectOption>(
+                (type) => ({
+                    value: type,
+                    name: type,
+                })
+            ),
+    });
     addSelectInputProps("wniosek_inwestor_id", investorDBEntries, 'nazwa'); // prettier-ignore
     addInputProps('wniosek_numer', 'number') // prettier-ignore
     addInputProps('wniosek_rozstrzygniecie_data_wydania', 'date') // prettier-ignore
     addInputProps('wniosek_rozstrzygniecie_numer_pisma', 'number') // prettier-ignore
-    addSelectInputProps("wniosek_rozstrzygniecie_typ_id", resolutionDBEntries, 'typ'); // prettier-ignore
+    rowInputsProps.push({
+        type: "select",
+        entryKey: "wniosek_rozstrzygniecie_typ",
+        getSelectOptions: (entry) =>
+            getRegisterResolutionsFromType(entry.typ).map<MyInputSelectOption>(
+                (type) => ({
+                    value: type,
+                    name: type,
+                })
+            ),
+    });
 
     return (
         <div>
@@ -162,20 +282,8 @@ export default function RejestryStrona() {
                         </TabList>
                         {[
                             {
-                                dbEntries: mayorDecisionTypeDBEntries,
-                                name: "Decyzja Starosty",
-                            },
-                            {
-                                dbEntries: resolutionTypeDBEntries,
-                                name: "Rozstrzygnięcie",
-                            },
-                            {
                                 dbEntries: adminActionTypeDBEntries,
                                 name: "Czynność admin.",
-                            },
-                            {
-                                dbEntries: registerTypeDBEntries,
-                                name: "Typ Rejestru",
                             },
                         ].map((entry, entryIndex) => (
                             <TabPanel value={entryIndex}>

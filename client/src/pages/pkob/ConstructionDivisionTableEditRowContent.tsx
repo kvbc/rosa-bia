@@ -3,7 +3,7 @@ import { PKOB } from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
-import ConstructionIntentTableEditRowContent from "./ConstructionIntentTableEditRowContent";
+import ConstructionGroupTableEditRowContent from "./ConstructionGroupTableEditRowContent";
 import Table from "@mui/joy/Table";
 import Accordion from "@mui/material/Accordion";
 import Box from "@mui/material/Box";
@@ -17,7 +17,7 @@ export default function ConstructionDivisionTableEditRowContent({
     editable,
     setEntry,
 }: TableEditRowContentProps<PKOB.ConstructionDivision>) {
-    const constructionIntentionDBEntries = useDBEntriesStore<PKOB.ConstructionIntention>("zamierzenia_budowlane")(); // prettier-ignore
+    const constructionGroupDBEntries = useDBEntriesStore<PKOB.ConstructionGroup>("grupy_budowlane")(); // prettier-ignore
 
     return (
         <>
@@ -37,45 +37,28 @@ export default function ConstructionDivisionTableEditRowContent({
                     </AccordionSummary>
                     <AccordionDetails>
                         <DBTableEdit
-                            dbEntries={constructionIntentionDBEntries}
-                            entries={constructionIntentionDBEntries.entries.filter(
+                            dbEntries={constructionGroupDBEntries}
+                            entries={constructionGroupDBEntries.entries.filter(
                                 (fEntry) => fEntry.dzial_id === entry.id
                             )}
                             editable={editable}
                             showFooter={false}
                             headersClassName="bg-gray-200"
                             rowActionTDClassName="bg-gray-200"
-                            headers={["Zamierzenia Budowlane"]}
+                            headers={["Grupy Budowlane"]}
                             emptyEntry={{
-                                id:
-                                    constructionIntentionDBEntries.entryCount +
-                                    1,
-                                zamierzenie: "",
+                                id: constructionGroupDBEntries.entryCount + 1,
+                                grupa: "",
                                 dzial_id: entry.id,
-                                pkob: 0,
-                                kat_ob: "",
-                                klasa_zl: "",
                             }}
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "zamierzenie",
-                                },
-                                {
-                                    type: "number",
-                                    entryKey: "pkob",
-                                },
-                                {
-                                    type: "text",
-                                    entryKey: "kat_ob",
-                                },
-                                {
-                                    type: "text",
-                                    entryKey: "klasa_zl",
+                                    entryKey: "grupa",
                                 },
                             ]}
                             RowContentComponent={
-                                ConstructionIntentTableEditRowContent
+                                ConstructionGroupTableEditRowContent
                             }
                         />
                     </AccordionDetails>

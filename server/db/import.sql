@@ -46,20 +46,26 @@ create table dzialy_budowlane(
     sekcja_id integer not null,
     foreign key(sekcja_id) references sekcje_budowlane(id)
 );
-create table zamierzenia_budowlane(
+create table grupy_budowlane(
     id integer primary key autoincrement,
-    zamierzenie text not null unique,
-    pkob integer not null unique,
-    klasa_zl text not null, /* klasa zagrozenia ludzi */
-    kat_ob text not null, /* kat. obiektu budowy */
+    grupa text not null unique,
     dzial_id integer not null,
     foreign key(dzial_id) references dzialy_budowlane(id)
 );
 create table klasy_budowlane(
     id integer primary key autoincrement,
     klasa text not null unique,
-    zamierzenie_id integer not null,
-    foreign key(zamierzenie_id) references zamierzenia_budowlane(id)
+    grupa_id integer not null,
+    pkob integer not null unique,
+    foreign key(grupa_id) references grupy_budowlane(id)
+);
+create table wyszczegolnienia_budowlane(
+    id integer primary key autoincrement,
+    nazwa text not null unique,
+    klasa_id integer not null,
+    klasa_zl text not null, /* klasa zagrozenia ludzi */
+    kat_ob text not null, /* kat. obiektu budowy */
+    foreign key(klasa_id) references klasy_budowlane(id)
 );
 
 create table typy_budowy(
@@ -79,19 +85,7 @@ create table planowania_przestrzenne(
 -- Konfiguracja
 -- 
 
-create table typy_decyzji_starosty(
-    id integer primary key autoincrement,
-    typ text not null unique
-);
-create table typy_rozstrzygniec(
-    id integer primary key autoincrement,
-    typ text not null unique
-);
 create table typy_czynnosci_admin(
-    id integer primary key autoincrement,
-    typ text not null unique
-);
-create table typy_rejestrow(
     id integer primary key autoincrement,
     typ text not null unique
 );
@@ -102,29 +96,28 @@ create table typy_rejestrow(
 
 create table rejestry(
     id integer primary key autoincrement,
-    typ_id integer not null,
+    typ text not null,
 
     wniosek_numer integer not null unique,
     wniosek_data_zlozenia date not null,
     wniosek_inwestor_id integer not null,
-    wniosek_decyzja_typ_id integer not null,
+    wniosek_decyzja_typ text,
     wniosek_decyzja_numer integer not null,
     wniosek_decyzja_data_wydania date not null,
-    wniosek_rozstrzygniecie_typ_id integer not null,
+    wniosek_rozstrzygniecie_typ text,
     wniosek_rozstrzygniecie_numer_pisma integer not null,
     wniosek_rozstrzygniecie_data_wydania date not null,
 
-    obiekt_klasa_id integer not null,
+    obiekt_wyszczegolnienie_id integer not null,
     obiekt_forma_budownictwa_id integer not null,
     obiekt_planowanie_przestrzenne_id integer not null,
     obiekt_ulica_id integer not null,
     obiekt_nr text not null,
+    obiekt_pnb_infrastruktura_towarzyszaca boolean not null,
+    obiekt_rozbiorka_objety_ochrona_konserwatorska boolean not null,
 
     foreign key(wniosek_inwestor_id) references inwestorzy(id),
-    foreign key(wniosek_decyzja_typ_id) references typy_decyzji_starosty(id),
-    foreign key(wniosek_rozstrzygniecie_typ_id) references typy_rozstrzygniec(id),
-
-    foreign key(obiekt_klasa_id) references klasy_budowlane(id),
+    foreign key(obiekt_wyszczegolnienie_id) references wyszczegolnienia_budowlane(id),
     foreign key(obiekt_forma_budownictwa_id) references formy_budownictwa(id),
     foreign key(obiekt_planowanie_przestrzenne_id) references planowania_przestrzenne(id),
     foreign key(obiekt_ulica_id) references ulice(id)
@@ -153,6 +146,15 @@ create table rejestry_czynnosci_admin(
     data_odpowiedzi date,
     foreign key(typ_id) references typy_czynnosci_admin(id),
     foreign key(rejestr_id) references rejestry(id)
+);
+
+-- 
+-- Glowna
+-- 
+
+create table tablice_informacyjne(
+    id integer primary key autoincrement,
+    zawartosc text not null
 );
 
 -- 
@@ -244,18 +246,6 @@ insert into ulice values
     (null, 'Zygmunta', 2),
     (null, 'Tadeusza', 4);
 
-insert into typy_decyzji_starosty values
-    (null, 'Sprzeciwu'),
-    (null, 'Pozytywna'),
-    (null, 'Umarzająca'),
-    (null, 'Inne rozstrzygnięcie');
-
-insert into typy_rozstrzygniec values
-    (null, 'Wygaśnięcia'),
-    (null, 'Bez rozpatrzenia'),
-    (null, 'Uchylająca'),
-    (null, 'Utrzymana w mocy');
-
 insert into typy_czynnosci_admin values
     (null, 'Wezwanie'),
     (null, 'Zawiadomienie'),
@@ -263,18 +253,6 @@ insert into typy_czynnosci_admin values
     (null, 'Konserwator'),
     (null, 'Zawieszenie postępowania'),
     (null, 'Przedłużenie terminu');
-
-insert into typy_rejestrow values 
-    (null, 'PnB (6740)'),
-    (null, 'O Rozbiórkę (6741)'),
-    (null, 'Zgłoszenie Rozbiórki (6743.1)'),
-    (null, 'Zgłoszenie „zwykłe” (6743.2)'),
-    (null, 'Zgłoszenie ZSU (6743.3)'),
-    (null, 'Zgłoszenie BiP (6743.4)'),
-    (null, 'Zaświadczenie (705)'),
-    (null, 'Sprawy Różne (670)'),
-    (null, 'ZRiD (7012)'),
-    (null, 'Rejestr do Budowy');
 
 insert into sekcje_budowlane values
     (null, 'Budynki'),
@@ -291,17 +269,24 @@ insert into dzialy_budowlane values
     (null, 'sztuki', 3),
     (null, 'nauki', 3);
 
-insert into zamierzenia_budowlane values
-    (null, 'jednorodzinne', 1110, 'WR', 'XVI', 1),
-    (null, 'wielorodzinne', 1112, 'FF', 'DOS', 1),
-    (null, 'udekorowane', 4554, 'DE', 'LOS', 2),
-    (null, 'nieudekorowane', 4551, 'DE', 'LOS', 2),
-    (null, 'malarnej', 1337, 'DAE', 'TROS', 3),
-    (null, 'digitalnej', 420, 'FAE', 'DES', 3);
+insert into grupy_budowlane values
+    (null, 'jednorodzinne', 1),
+    (null, 'wielorodzinne', 1),
+    (null, 'udekorowane', 2),
+    (null, 'nieudekorowane', 2),
+    (null, 'malarnej', 3),
+    (null, 'digitalnej', 3);
 
 insert into klasy_budowlane values
-    (null, 'pawilon', 1),
-    (null, 'willa', 1);
+    (null, 'pawilon', 1, 1110),
+    (null, 'willa', 1, 1112);
+
+insert into wyszczegolnienia_budowlane values
+    (null, 'abc', 1, 'WR', 'XVI'),
+    (null, 'def', 2, 'FF', 'DOS'),
+    (null, 'ghi', 3, 'DE', 'LOS'),
+    (null, 'jkl', 4, 'DE', 'FAE');
+
 
 insert into typy_budowy values
     (null, 'Budowa'),
@@ -325,36 +310,42 @@ insert into planowania_przestrzenne values
 
 insert into rejestry(
     id,
-    typ_id,
+    typ,
 
     wniosek_numer,
     wniosek_data_zlozenia,
     wniosek_inwestor_id,
-    wniosek_decyzja_typ_id,
+    wniosek_decyzja_typ,
     wniosek_decyzja_numer,
     wniosek_decyzja_data_wydania,
-    wniosek_rozstrzygniecie_typ_id,
+    wniosek_rozstrzygniecie_typ,
     wniosek_rozstrzygniecie_numer_pisma,
     wniosek_rozstrzygniecie_data_wydania,
 
-    obiekt_klasa_id,
+    obiekt_wyszczegolnienie_id,
     obiekt_forma_budownictwa_id,
     obiekt_planowanie_przestrzenne_id,
     obiekt_ulica_id,
-    obiekt_nr
+    obiekt_nr,
+    obiekt_pnb_infrastruktura_towarzyszaca,
+    obiekt_rozbiorka_objety_ochrona_konserwatorska
 ) values (
     null,
-    1,
+    'PnB (6740)',
 
     69,
     '2006-12-19',
     1,
-    1, 420, '2019-02-05',
-    1, 2137, '2011-07-23',
+    null, 420, '2019-02-05',
+    null, 2137, '2011-07-23',
 
     1,
     1,
     1,
     1,
-    34
+    34,
+    1,
+    1
 );
+
+insert into tablice_informacyjne values(null, 'testowa zawartosc');

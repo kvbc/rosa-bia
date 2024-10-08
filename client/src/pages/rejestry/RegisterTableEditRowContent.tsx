@@ -20,13 +20,12 @@ import { FaDatabase } from "react-icons/fa6";
 import { IoIosMore } from "react-icons/io";
 import { MdMore } from "react-icons/md";
 import { CiCircleMore } from "react-icons/ci";
+import RegisterDataTable from "./RegisterDataTable";
+import RegisterConstructionIntentTable from "./RegisterConstructionIntentTable";
 
-export default function RegisterTableEditRowContent({
-    inputs,
-    entry,
-    editable,
-    setEntry,
-}: TableEditRowContentProps<Register>) {
+export default function RegisterTableEditRowContent(props: TableEditRowContentProps<Register>) {
+    const { inputs, entry, editable, setEntry } = props;
+
     const communeDBEntries = useDBEntriesStore<Gmina>('gminy')(); // prettier-ignore
     const streetDBEntries = useDBEntriesStore<Ulica>('ulice')(); // prettier-ignore
     const placeDBEntries = useDBEntriesStore<Miejscowosc>('miejscowosci')(); // prettier-ignore
@@ -37,14 +36,14 @@ export default function RegisterTableEditRowContent({
     const buildTypeDBEntries = useDBEntriesStore<TypeEntry>("typy_budowy")(); // prettier-ignore
     const constructionSectionDBEntries = useDBEntriesStore<PKOB.ConstructionSection>("sekcje_budowlane")(); // prettier-ignore
     const constructionDivisionDBEntries = useDBEntriesStore<PKOB.ConstructionDivision>("dzialy_budowlane")(); // prettier-ignore
-    const constructionIntentDBEntries = useDBEntriesStore<PKOB.ConstructionIntention>("zamierzenia_budowlane")(); // prettier-ignore
+    const constructionGroupDBEntries = useDBEntriesStore<PKOB.ConstructionGroup>("grupy_budowlane")(); // prettier-ignore
     const constructionClassDBEntries = useDBEntriesStore<PKOB.ConstructionClass>("klasy_budowlane")(); // prettier-ignore
 
     const [communeID, setCommuneID] = useState<number>(0);
     const [placeID, setPlaceID] = useState<number>(0);
     const [constructionSectionID, setConstructionSectionID] = useState<number>(0); // prettier-ignore
     const [constructionDivisionID, setConstructionDivisionID] = useState<number>(0); // prettier-ignore
-    const [constructionIntentID, setConstructionIntentID] = useState<number>(0); // prettier-ignore
+    const [constructionGroupID, setConstructionGroupID] = useState<number>(0); // prettier-ignore
 
     const places  = placeDBEntries.entries.filter((entry) => entry.gmina_id === communeID); // prettier-ignore
     const streets = streetDBEntries.entries.filter((entry) => entry.miejscowosc_id === placeID); // prettier-ignore
@@ -53,12 +52,12 @@ export default function RegisterTableEditRowContent({
     const street  = streets.find(fEntry => fEntry.id === entry.obiekt_ulica_id) // prettier-ignore
     const constructionSections  = constructionSectionDBEntries.entries; // prettier-ignore
     const constructionDivisions = constructionDivisionDBEntries.entries.filter(entry => entry.sekcja_id === constructionSectionID) // prettier-ignore
-    const constructionIntents   = constructionIntentDBEntries.entries.filter(entry => entry.dzial_id === constructionDivisionID) // prettier-ignore
-    const constructionClasses   = constructionClassDBEntries.entries.filter(entry => entry.zamierzenie_id === constructionIntentID) // prettier-ignore
-    const constructionClass    = constructionClasses.find(fEntry => fEntry.id === entry.obiekt_klasa_id) // prettier-ignore
+    const constructionGroups   = constructionGroupDBEntries.entries.filter(entry => entry.dzial_id === constructionDivisionID) // prettier-ignore
+    const constructionClasses   = constructionClassDBEntries.entries.filter(entry => entry.grupa_id === constructionGroupID) // prettier-ignore
+    const constructionClass    = constructionClasses.find(fEntry => fEntry.id === entry._obiekt_klasa_id) // prettier-ignore
     const constructionDivision = constructionDivisions.find(fEntry => fEntry.id === constructionDivisionID) // prettier-ignore
     const constructionSection  = constructionSections.find(fEntry => fEntry.id === constructionSectionID) // prettier-ignore
-    const constructionIntent   = constructionIntents.find(fEntry => fEntry.id === constructionIntentID) // prettier-ignore
+    const constructionGroup   = constructionGroups.find(fEntry => fEntry.id === constructionGroupID) // prettier-ignore
 
     const handleStreetUpdated = () => {
         const street = streetDBEntries.entries.find((fEntry) => fEntry.id === entry.obiekt_ulica_id); // prettier-ignore
@@ -97,9 +96,9 @@ export default function RegisterTableEditRowContent({
     useEffect(updateStreet, [street, placeID]);
 
     const handleConstructionClassUpdated = () => {
-        const constructionClass = constructionClassDBEntries.entries.find(fEntry => fEntry.id === entry.obiekt_klasa_id) // prettier-ignore
-        const constructionIntent = constructionIntentDBEntries.entries.find(fEntry => fEntry.id === constructionClass?.zamierzenie_id) // prettier-ignore
-        const constructionDivision = constructionDivisionDBEntries.entries.find(fEntry => fEntry.id === constructionIntent?.dzial_id) // prettier-ignore
+        const constructionClass = constructionClassDBEntries.entries.find(fEntry => fEntry.id === entry._obiekt_klasa_id) // prettier-ignore
+        const constructionGroup = constructionGroupDBEntries.entries.find(fEntry => fEntry.id === constructionClass?.grupa_id) // prettier-ignore
+        const constructionDivision = constructionDivisionDBEntries.entries.find(fEntry => fEntry.id === constructionGroup?.dzial_id) // prettier-ignore
         const constructionSection = constructionSectionDBEntries.entries.find(fEntry => fEntry.id === constructionDivision?.sekcja_id) // prettier-ignore
 
         if (constructionSection?.id)
@@ -109,19 +108,19 @@ export default function RegisterTableEditRowContent({
                 constructionSections.length > 0 ? constructionSections[0].id : 0
             );
 
-        if(constructionIntent?.id) setConstructionIntentID(constructionIntent.id) // prettier-ignore
+        if(constructionGroup?.id) setConstructionGroupID(constructionGroup.id) // prettier-ignore
         if(constructionDivision?.id) setConstructionDivisionID(constructionDivision.id) // prettier-ignore
     };
     const updateConstructionClass = () => {
-        if (!constructionClass && constructionIntentID > 0) {
-            if (constructionClasses.length > 0) setEntry({...entry, obiekt_klasa_id: constructionClasses[0].id }) // prettier-ignore
-            else setEntry({...entry, obiekt_klasa_id: 0})
+        if (!constructionClass && constructionGroupID > 0) {
+            if (constructionClasses.length > 0) setEntry({...entry, _obiekt_klasa_id: constructionClasses[0].id }) // prettier-ignore
+            else setEntry({...entry, _obiekt_klasa_id: 0})
         }
     };
-    const updateConstructionIntent = () => {
-        if(!constructionIntent && constructionDivisionID > 0) {
-            if(constructionIntents.length > 0) setConstructionIntentID(constructionIntents[0].id)
-            else setConstructionIntentID(0)
+    const updateConstructionGroup = () => {
+        if(!constructionGroup && constructionDivisionID > 0) {
+            if(constructionGroups.length > 0) setConstructionGroupID(constructionGroups[0].id)
+            else setConstructionGroupID(0)
         }
     }
     const updateConstructionDivision = () => {
@@ -130,19 +129,32 @@ export default function RegisterTableEditRowContent({
             else setConstructionDivisionID(0)
         }
     }
-    // 
-    // todo add more see above
-    // 
     useEffect(() => {
         handleConstructionClassUpdated();
         updateConstructionDivision()
-        updateConstructionIntent()
+        updateConstructionGroup()
         updateConstructionClass();
     }, []);
-    useEffect(handleConstructionClassUpdated, [entry.obiekt_klasa_id]);
-    useEffect(updateConstructionClass, [constructionClass, constructionIntentID])
+    useEffect(handleConstructionClassUpdated, [entry._obiekt_klasa_id]);
+    useEffect(updateConstructionClass, [constructionClass, constructionGroupID])
     useEffect(updateConstructionDivision, [constructionDivision, constructionSectionID])
-    useEffect(updateConstructionIntent, [constructionIntent, constructionDivisionID])
+    useEffect(updateConstructionGroup, [constructionGroup, constructionDivisionID])
+
+    return <td >
+        <Table size="sm">
+            <tr>
+                <th className="w-[10%] bg-gray-100">Typ Rejestru</th>
+                <td>{inputs.typ}</td>
+            </tr>
+        </Table>
+
+        <div className="flex">
+        <RegisterDataTable {...props} />
+        <RegisterConstructionIntentTable {...props} />
+
+        </div>
+
+    </td>
 
     return (
         <td className="p-1">
@@ -150,7 +162,7 @@ export default function RegisterTableEditRowContent({
                 <Table size="sm">
                     <tr>
                         <th className="w-[10%] bg-gray-100">Typ Rejestru</th>
-                        <td>{inputs.typ_id}</td>
+                        <td>{inputs.typ}</td>
                     </tr>
                 </Table>
 
@@ -169,15 +181,15 @@ export default function RegisterTableEditRowContent({
                             <td>Nazwa zamierzenia budowlanego</td>
                             <td colSpan={2}>
                                 <Select
-                                    value={constructionIntentID}
+                                    value={constructionGroupID}
                                     onChange={(e,value) =>
-                                        setConstructionIntentID(Number(value))
+                                        setConstructionGroupID(Number(value))
                                     }
                                     disabled={!editable}
                                 >
-                                    {constructionIntents.map((entry) => (
+                                    {constructionGroups.map((entry) => (
                                         <option value={entry.id}>
-                                            {entry.zamierzenie}
+                                            {entry.grupa}
                                         </option>
                                     ))}
                                 </Select>
@@ -292,16 +304,16 @@ export default function RegisterTableEditRowContent({
                                                                 <th className="bg-gray-200">Kat.</th>
                                                             </tr>
                                                             <tr>
-                                                                <td>{constructionIntent?.pkob}</td>
-                                                                <td>{constructionIntent?.klasa_zl}</td>
-                                                                <td>{constructionIntent?.kat_ob}</td>
+                                                                <td>{constructionGroup?.pkob}</td>
+                                                                <td>{constructionGroup?.klasa_zl}</td>
+                                                                <td>{constructionGroup?.kat_ob}</td>
                                                             </tr>
                                                         </Table>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Decyzja Starosty Człuchowskiego</td>
-                                                    <td>{inputs.wniosek_decyzja_typ_id}</td>
+                                                    <td>{inputs.wniosek_decyzja_typ}</td>
                                                     <td colSpan={3}>
                                                         <Table size="sm">
                                                             <tr>
@@ -416,7 +428,7 @@ export default function RegisterTableEditRowContent({
                                                 </tr>
                                                 <tr>
                                                     <td>Inne rozstrzygnięcia</td>
-                                                    <td>{inputs.wniosek_rozstrzygniecie_typ_id}</td>
+                                                    <td>{inputs.wniosek_rozstrzygniecie_typ}</td>
                                                     <td colSpan={3}>
                                                         <Table size="sm">
                                                             <tr>
