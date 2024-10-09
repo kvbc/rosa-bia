@@ -75,7 +75,7 @@ app.post("/:table", (req: Request, res: Response) => {
     const params: any[] = [];
     for (const key in req.body) {
         if (key !== "id" && key[0] !== "_") {
-            keys += ", " + key;
+            keys += `, \`${key}\``;
             values += ", ?";
             params.push(req.body[key]);
         }
@@ -125,7 +125,7 @@ app.put("/:table", (req: Request, res: Response) => {
     for (const key in req.body) {
         if (key != "id" && key[0] !== "_") {
             if (params.length > 0) query += ", ";
-            query += `${key}=?`;
+            query += `\`${key}\`=?`;
             params.push(req.body[key]);
         }
     }

@@ -104,12 +104,16 @@ function Navbar() {
                     onChange={(_, value) => setEmployeeID(value ?? 0)}
                 >
                     {employeeDBEntries.entries.map((entry) => (
-                        <Option key={entry.id} value={entry.id}>
+                        <Option
+                            key={entry.id}
+                            value={entry.id}
+                            color={entry.admin ? "danger" : "neutral"}
+                        >
                             {entry.name}
                         </Option>
                     ))}
                 </Select>
-                <img src="logo.svg" width={24} />
+                {/* <img src="logo.svg" width={24} /> */}
             </div>
         </nav>
     );

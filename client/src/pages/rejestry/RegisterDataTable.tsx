@@ -7,6 +7,7 @@
 import { Table } from "@mui/joy";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import { DB } from "../../../../server/src/dbTypes";
+import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 
 export default function RegisterDataTable({
     inputs,
@@ -14,6 +15,9 @@ export default function RegisterDataTable({
     editable,
     setEntry,
 }: TableEditRowContentProps<DB.Register>) {
+    const investorDBEntries = useDBEntriesStore<DB.Investor>("investors")(); // prettier-ignore
+    const investor = investorDBEntries.entries.find(fEntry => fEntry.id === entry.app_investor_id); // prettier-ignore
+
     return (
         <Table size="sm">
             <thead>
@@ -46,7 +50,7 @@ export default function RegisterDataTable({
                                     <td>{inputs.app_investor_id}</td>
                                 </tr>
                                 <tr>
-                                    <td>Informacje o inwestorze ...</td>
+                                    <td>{investor?.info}</td>
                                 </tr>
                             </tbody>
                         </Table>

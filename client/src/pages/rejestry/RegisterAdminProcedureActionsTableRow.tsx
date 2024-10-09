@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
-import { Input } from "@mui/joy";
+import { Checkbox, Input } from "@mui/joy";
 import { DB } from "../../../../server/src/dbTypes";
 
 export default function RegisterAdminProcedureActionsTableRow({
@@ -38,7 +38,7 @@ export default function RegisterAdminProcedureActionsTableRow({
         return eventEmitter.on("save", () => {
             registerAdminActionsDBEntries.saveEntry(action);
         });
-    }, [eventEmitter]);
+    }, [eventEmitter, action]);
 
     useEffect(() => {
         if (dbAction) {
@@ -50,13 +50,13 @@ export default function RegisterAdminProcedureActionsTableRow({
         <tr>
             <td>{actionType}</td>
             <td>
-                <Input
-                    type="checkbox"
-                    value={action.select ? "yes" : "no"}
+                <Checkbox
+                    checked={action.select}
+                    disabled={!editable}
                     onChange={(e) =>
                         setAction((action) => ({
                             ...action,
-                            select: e.target.value === "yes",
+                            select: e.target.checked,
                         }))
                     }
                 />
@@ -65,6 +65,7 @@ export default function RegisterAdminProcedureActionsTableRow({
                 <Input
                     type="number"
                     value={action.deadline}
+                    disabled={!editable}
                     onChange={(e) =>
                         setAction((action) => ({
                             ...action,
@@ -77,6 +78,7 @@ export default function RegisterAdminProcedureActionsTableRow({
                 <Input
                     type="date"
                     value={action.letter_date}
+                    disabled={!editable}
                     onChange={(e) =>
                         setAction((action) => ({
                             ...action,
@@ -89,6 +91,7 @@ export default function RegisterAdminProcedureActionsTableRow({
                 <Input
                     type="date"
                     value={action.receipt_date}
+                    disabled={!editable}
                     onChange={(e) =>
                         setAction((action) => ({
                             ...action,
@@ -101,6 +104,7 @@ export default function RegisterAdminProcedureActionsTableRow({
                 <Input
                     type="date"
                     value={action.reply_date}
+                    disabled={!editable}
                     onChange={(e) =>
                         setAction((action) => ({
                             ...action,
