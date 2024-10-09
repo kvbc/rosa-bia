@@ -15,15 +15,6 @@
  */
 
 import { Table } from "@mui/joy";
-import {
-    Gmina,
-    Miejscowosc,
-    PKOB,
-    Register,
-    RegisterInvestPlots,
-    RegisterType,
-    Ulica,
-} from "../../../../server/src/types";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import { ReactNode, useEffect, useMemo } from "react";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
@@ -31,38 +22,39 @@ import DBTableEdit from "../../components/DBTableEdit";
 import RegisterPropertyDataTable from "./RegisterPropertyDataTable";
 import RegisterInvestPlotsDataTable from "./RegisterInvestPlotsTable";
 import RegisterCharParamsTable from "./RegisterCharParamsTable";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function RegisterConstructionIntentTable(
-    props: TableEditRowContentProps<Register>
+    props: TableEditRowContentProps<DB.Register>
 ) {
     const { inputs, entry, editable, setEntry } = props;
 
-    const constructionSpecDBEntries = useDBEntriesStore<PKOB.ConstructionSpec>("wyszczegolnienia_budowlane")(); // prettier-ignore
-    const constructionClassDBEntries = useDBEntriesStore<PKOB.ConstructionClass>("klasy_budowlane")(); // prettier-ignore
-    const constructionGroupDBEntries = useDBEntriesStore<PKOB.ConstructionGroup>("grupy_budowlane")(); // prettier-ignore
-    const constructionDivisionDBEntries = useDBEntriesStore<PKOB.ConstructionDivision>("dzialy_budowlane")(); // prettier-ignore
-    const placeDBEntries = useDBEntriesStore<Miejscowosc>("miejscowosci")(); // prettier-ignore
-    const communeDBEntries = useDBEntriesStore<Gmina>("gminy")(); // prettier-ignore
-    const streetDBEntries = useDBEntriesStore<Ulica>("ulice")(); // prettier-ignore
+    const constructionSpecDBEntries = useDBEntriesStore<DB.ConstructionSpec>("construction_specs")(); // prettier-ignore
+    const constructionClassDBEntries = useDBEntriesStore<DB.ConstructionClass>("construction_classes")(); // prettier-ignore
+    const constructionGroupDBEntries = useDBEntriesStore<DB.ConstructionGroup>("construction_groups")(); // prettier-ignore
+    const constructionDivisionDBEntries = useDBEntriesStore<DB.ConstructionDivision>("construction_divisions")(); // prettier-ignore
+    const placeDBEntries = useDBEntriesStore<DB.Place>("places")(); // prettier-ignore
+    const communeDBEntries = useDBEntriesStore<DB.Commune>("communes")(); // prettier-ignore
+    const streetDBEntries = useDBEntriesStore<DB.Street>("streets")(); // prettier-ignore
 
-    const constructionSpec = useMemo(() => constructionSpecDBEntries.entries.find((fEntry) => fEntry.id === entry.obiekt_wyszczegolnienie_id), [entry.obiekt_wyszczegolnienie_id]); // prettier-ignore
-    const constructionClass = useMemo(() => constructionClassDBEntries.entries.find((fEntry) => fEntry.id === constructionSpec?.klasa_id), [constructionSpec]); // prettier-ignore
-    const constructionGroup = useMemo(() => constructionGroupDBEntries.entries.find(fEntry => fEntry.id === constructionClass?.grupa_id), [constructionClass]); // prettier-ignore
-    const constructionDivision = useMemo(() => constructionDivisionDBEntries.entries.find(fEntry => fEntry.id === constructionGroup?.dzial_id), [constructionGroup]); // prettier-ignore
-    const street = useMemo(() => streetDBEntries.entries.find(fEntry => fEntry.id === entry.obiekt_ulica_id), [entry.obiekt_ulica_id]) // prettier-ignore
-    const place = useMemo(() => placeDBEntries.entries.find(fEntry => fEntry.id === street?.miejscowosc_id), [street]) // prettier-ignore
-    const commune = useMemo(() => communeDBEntries.entries.find(fEntry => fEntry.id === place?.gmina_id), [place]) // prettier-ignore
-    const area = useMemo(() => placeDBEntries.entries.find(fEntry => fEntry.id === place?.obreb_id), [place]) // prettier-ignore
+    const constructionSpec = useMemo(() => constructionSpecDBEntries.entries.find((fEntry) => fEntry.id === entry.object_construction_spec_id), [entry.object_construction_spec_id]); // prettier-ignore
+    const constructionClass = useMemo(() => constructionClassDBEntries.entries.find((fEntry) => fEntry.id === constructionSpec?.class_id), [constructionSpec]); // prettier-ignore
+    const constructionGroup = useMemo(() => constructionGroupDBEntries.entries.find(fEntry => fEntry.id === constructionClass?.group_id), [constructionClass]); // prettier-ignore
+    const constructionDivision = useMemo(() => constructionDivisionDBEntries.entries.find(fEntry => fEntry.id === constructionGroup?.division_id), [constructionGroup]); // prettier-ignore
+    const street = useMemo(() => streetDBEntries.entries.find(fEntry => fEntry.id === entry.object_street_id), [entry.object_street_id]) // prettier-ignore
+    const place = useMemo(() => placeDBEntries.entries.find(fEntry => fEntry.id === street?.place_id), [street]) // prettier-ignore
+    const commune = useMemo(() => communeDBEntries.entries.find(fEntry => fEntry.id === place?.commune_id), [place]) // prettier-ignore
+    const area = useMemo(() => placeDBEntries.entries.find(fEntry => fEntry.id === place?.area_place_id), [place]) // prettier-ignore
 
-    useEffect(() => setEntry({...entry, _obiekt_klasa_id: constructionSpec?.klasa_id ?? 0}), [constructionSpec]); // prettier-ignore
-    useEffect(() => setEntry({...entry, _obiekt_grupa_id: constructionClass?.grupa_id ?? 0}), [constructionClass]); // prettier-ignore
-    useEffect(() => setEntry({...entry, _obiekt_dzial_id: constructionGroup?.dzial_id ?? 0}), [constructionGroup]); // prettier-ignore
-    useEffect(() => setEntry({...entry, _obiekt_sekcja_id: constructionDivision?.sekcja_id ?? 0}), [constructionDivision]); // prettier-ignore
-    useEffect(() => setEntry({...entry, _obiekt_miejscowosc_id: street?.miejscowosc_id ?? 0}), [street]) // prettier-ignore
-    useEffect(() => setEntry({...entry, _obiekt_gmina_id: place?.gmina_id ?? 0}), [place]) // prettier-ignore
+    useEffect(() => setEntry({...entry, _object_construction_class_id: constructionSpec?.class_id ?? 0}), [constructionSpec]); // prettier-ignore
+    useEffect(() => setEntry({...entry, _object_construction_group_id: constructionClass?.group_id ?? 0}), [constructionClass]); // prettier-ignore
+    useEffect(() => setEntry({...entry, _object_construction_division_id: constructionGroup?.division_id ?? 0}), [constructionGroup]); // prettier-ignore
+    useEffect(() => setEntry({...entry, _object_construction_section_id: constructionDivision?.section_id ?? 0}), [constructionDivision]); // prettier-ignore
+    useEffect(() => setEntry({...entry, _object_place_id: street?.place_id ?? 0}), [street]) // prettier-ignore
+    useEffect(() => setEntry({...entry, _object_commune_id: place?.commune_id ?? 0}), [place]) // prettier-ignore
 
-    const constructionIntentNode: { [key in RegisterType]: ReactNode } = {
-        "PnB (6740)": inputs._obiekt_grupa_id,
+    const constructionIntentNode: { [key in DB.RegisterType]: ReactNode } = {
+        "PnB (6740)": inputs._object_construction_group_id,
         "PnRozb. (6741)": "Rozbiórka budynku",
         "Zg. Rozb. (6743.1)": "Rozbiórka budynku",
         "Zg. Zwykłe (6743.2)": "???",
@@ -88,33 +80,29 @@ export default function RegisterConstructionIntentTable(
 
                 */}
                 <tr>
-                    <td rowSpan={entry.typ === "BiP (6743.4)" ? 2 : 1}>
+                    <td rowSpan={entry.type === "BiP (6743.4)" ? 2 : 1}>
                         Nazwa zamierzenia budowlanego
                     </td>
-                    <td rowSpan={entry.typ === "BiP (6743.4)" ? 2 : 1}>
-                        {constructionIntentNode[entry.typ]}
+                    <td rowSpan={entry.type === "BiP (6743.4)" ? 2 : 1}>
+                        {constructionIntentNode[entry.type]}
                     </td>
                 </tr>
-                {entry.typ !== "BiP (6743.4)" && (
+                {entry.type !== "BiP (6743.4)" && (
                     <tr>
-                        {(entry.typ === "PnB (6740)" ||
-                            entry.typ === "ZRiD (7012)") && (
+                        {(entry.type === "PnB (6740)" ||
+                            entry.type === "ZRiD (7012)") && (
                             <>
                                 <td>Infrastruktura towarzysząca</td>
-                                <td>
-                                    {
-                                        inputs.obiekt_pnb_infrastruktura_towarzyszaca
-                                    }
-                                </td>
+                                <td>{inputs.object_pnb_acc_infra}</td>
                             </>
                         )}
-                        {(entry.typ === "PnRozb. (6741)" ||
-                            entry.typ === "Zg. Rozb. (6743.1)") && (
+                        {(entry.type === "PnRozb. (6741)" ||
+                            entry.type === "Zg. Rozb. (6743.1)") && (
                             <>
                                 <td>Obiekt objęty ochroną konserwatorską</td>
                                 <td>
                                     {
-                                        inputs.obiekt_rozbiorka_objety_ochrona_konserwatorska
+                                        inputs.object_demo_under_conservation_protection
                                     }
                                 </td>
                             </>
@@ -127,8 +115,8 @@ export default function RegisterConstructionIntentTable(
 
                 */}
                 {/* Body :: PnB, ZRiD */}
-                {(entry.typ === "PnB (6740)" ||
-                    entry.typ === "ZRiD (7012)") && (
+                {(entry.type === "PnB (6740)" ||
+                    entry.type === "ZRiD (7012)") && (
                     <>
                         <tr>
                             <td>
@@ -140,24 +128,40 @@ export default function RegisterConstructionIntentTable(
                                 >
                                     <tr>
                                         <th className="bg-gray-100">Sekcja</th>
-                                        <td>{inputs._obiekt_sekcja_id}</td>
+                                        <td>
+                                            {
+                                                inputs._object_construction_section_id
+                                            }
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th className="bg-gray-100">Dział</th>
-                                        <td>{inputs._obiekt_dzial_id}</td>
+                                        <td>
+                                            {
+                                                inputs._object_construction_division_id
+                                            }
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th className="bg-gray-100">Grupa</th>
-                                        <td>{inputs._obiekt_grupa_id}</td>
+                                        <td>
+                                            {
+                                                inputs._object_construction_group_id
+                                            }
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th className="bg-gray-100">Klasa</th>
-                                        <td>{inputs._obiekt_klasa_id}</td>
+                                        <td>
+                                            {
+                                                inputs._object_construction_class_id
+                                            }
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th className="bg-gray-100">Wysz.</th>
                                         <td>
-                                            {inputs.obiekt_wyszczegolnienie_id}
+                                            {inputs.object_construction_spec_id}
                                         </td>
                                     </tr>
                                 </Table>
@@ -181,7 +185,7 @@ export default function RegisterConstructionIntentTable(
                                             Kat. Zag. Ludzi
                                         </th>
                                         <td>
-                                            {constructionSpec?.klasa_zl ?? "-"}
+                                            {constructionSpec?.zl_class ?? "-"}
                                         </td>
                                     </tr>
                                     <tr>
@@ -189,7 +193,7 @@ export default function RegisterConstructionIntentTable(
                                             Kat. Obiektu
                                         </th>
                                         <td>
-                                            {constructionSpec?.kat_ob ?? "-"}
+                                            {constructionSpec?.ob_cat ?? "-"}
                                         </td>
                                     </tr>
                                     <tr>
@@ -197,7 +201,9 @@ export default function RegisterConstructionIntentTable(
                                             Forma budownictwa
                                         </th>
                                         <td>
-                                            {inputs.obiekt_forma_budownictwa_id}
+                                            {
+                                                inputs.object_construction_form_type
+                                            }
                                         </td>
                                     </tr>
                                     <tr>
@@ -205,9 +211,7 @@ export default function RegisterConstructionIntentTable(
                                             Planowanie przestrzenne
                                         </th>
                                         <td>
-                                            {
-                                                inputs.obiekt_planowanie_przestrzenne_id
-                                            }
+                                            {inputs.object_spatial_plan_type}
                                         </td>
                                     </tr>
                                 </Table>
@@ -235,9 +239,9 @@ export default function RegisterConstructionIntentTable(
                     </>
                 )}
                 {/* Body :: PnRozb., Zg. Rozb. */}
-                {(entry.typ === "PnRozb. (6741)" ||
-                    entry.typ === "Zg. Rozb. (6743.1)" ||
-                    entry.typ === "BiP (6743.4)") && (
+                {(entry.type === "PnRozb. (6741)" ||
+                    entry.type === "Zg. Rozb. (6743.1)" ||
+                    entry.type === "BiP (6743.4)") && (
                     <>
                         <tr>
                             <td colSpan={2}>

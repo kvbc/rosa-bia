@@ -1,5 +1,4 @@
 import { FaBuilding } from "react-icons/fa6";
-import { PKOB } from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
@@ -10,14 +9,15 @@ import Box from "@mui/material/Box";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function ConstructionDivisionTableEditRowContent({
     inputs,
     entry,
     editable,
     setEntry,
-}: TableEditRowContentProps<PKOB.ConstructionDivision>) {
-    const constructionGroupDBEntries = useDBEntriesStore<PKOB.ConstructionGroup>("grupy_budowlane")(); // prettier-ignore
+}: TableEditRowContentProps<DB.ConstructionDivision>) {
+    const constructionGroupDBEntries = useDBEntriesStore<DB.ConstructionGroup>("construction_groups")(); // prettier-ignore
 
     return (
         <>
@@ -32,14 +32,14 @@ export default function ConstructionDivisionTableEditRowContent({
                             }}
                         >
                             <FaBuilding />
-                            {inputs.dzial}
+                            {inputs.name}
                         </Box>
                     </AccordionSummary>
                     <AccordionDetails>
                         <DBTableEdit
                             dbEntries={constructionGroupDBEntries}
                             entries={constructionGroupDBEntries.entries.filter(
-                                (fEntry) => fEntry.dzial_id === entry.id
+                                (fEntry) => fEntry.division_id === entry.id
                             )}
                             editable={editable}
                             showFooter={false}
@@ -48,13 +48,13 @@ export default function ConstructionDivisionTableEditRowContent({
                             headers={["Grupy Budowlane"]}
                             emptyEntry={{
                                 id: constructionGroupDBEntries.entryCount + 1,
-                                grupa: "",
-                                dzial_id: entry.id,
+                                name: "",
+                                division_id: entry.id,
                             }}
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "grupa",
+                                    entryKey: "name",
                                 },
                             ]}
                             RowContentComponent={

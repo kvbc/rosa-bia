@@ -5,21 +5,21 @@ import {
     Box,
     Table,
 } from "@mui/joy";
-import { PKOB } from "../../../../server/src/types";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaHouse } from "react-icons/fa6";
 import DBTableEdit from "../../components/DBTableEdit";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import ConstructionSpecTableEditRowContent from "./ConstructionSpecTableEditRowContent";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function ConstructionClassTableEditRowContent({
     inputs,
     entry,
     editable,
     setEntry,
-}: TableEditRowContentProps<PKOB.ConstructionClass>) {
-    const constructionSpecDBEntries = useDBEntriesStore<PKOB.ConstructionSpec>("wyszczegolnienia_budowlane")(); // prettier-ignore
+}: TableEditRowContentProps<DB.ConstructionClass>) {
+    const constructionSpecDBEntries = useDBEntriesStore<DB.ConstructionSpec>("construction_specs")(); // prettier-ignore
 
     return (
         <>
@@ -34,7 +34,7 @@ export default function ConstructionClassTableEditRowContent({
                             }}
                         >
                             <FaHouse />
-                            {inputs.klasa}
+                            {inputs.name}
                         </Box>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -56,7 +56,7 @@ export default function ConstructionClassTableEditRowContent({
                         <DBTableEdit
                             dbEntries={constructionSpecDBEntries}
                             entries={constructionSpecDBEntries.entries.filter(
-                                (fEntry) => fEntry.klasa_id === entry.id
+                                (fEntry) => fEntry.class_id === entry.id
                             )}
                             editable={editable}
                             showFooter={false}
@@ -65,23 +65,23 @@ export default function ConstructionClassTableEditRowContent({
                             headers={["Wyszczególnienia Budowlane"]}
                             emptyEntry={{
                                 id: constructionSpecDBEntries.entryCount + 1,
-                                nazwa: "",
-                                klasa_id: entry.id,
-                                kat_ob: "",
-                                klasa_zl: "",
+                                name: "",
+                                class_id: entry.id,
+                                ob_cat: "",
+                                zl_class: "",
                             }}
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "nazwa",
+                                    entryKey: "name",
                                 },
                                 {
                                     type: "text",
-                                    entryKey: "kat_ob",
+                                    entryKey: "ob_cat",
                                 },
                                 {
                                     type: "text",
-                                    entryKey: "klasa_zl",
+                                    entryKey: "zl_class",
                                 },
                             ]}
                             RowContentComponent={

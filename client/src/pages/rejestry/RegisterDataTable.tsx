@@ -5,19 +5,15 @@
  */
 
 import { Table } from "@mui/joy";
-import {
-    Register,
-    REGISTER_TYPE_INFOS,
-    RegisterType,
-} from "../../../../server/src/types";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function RegisterDataTable({
     inputs,
     entry,
     editable,
     setEntry,
-}: TableEditRowContentProps<Register>) {
+}: TableEditRowContentProps<DB.Register>) {
     return (
         <Table size="sm">
             <thead>
@@ -28,11 +24,11 @@ export default function RegisterDataTable({
             <tbody>
                 <tr>
                     <td>Numer zgłoszenia</td>
-                    <td>{inputs.wniosek_numer}</td>
+                    <td>{inputs.app_number}</td>
                 </tr>
                 <tr>
                     <td>Data złozenia</td>
-                    <td>{inputs.wniosek_data_zlozenia}</td>
+                    <td>{inputs.app_submission_date}</td>
                 </tr>
                 <tr>
                     <td colSpan={2}>
@@ -47,7 +43,7 @@ export default function RegisterDataTable({
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{inputs.wniosek_inwestor_id}</td>
+                                    <td>{inputs.app_investor_id}</td>
                                 </tr>
                                 <tr>
                                     <td>Informacje o inwestorze ...</td>
@@ -65,8 +61,8 @@ export default function RegisterDataTable({
                             <thead>
                                 <tr>
                                     <th colSpan={2}>
-                                        {REGISTER_TYPE_INFOS[entry.typ]
-                                            .decisionType === "Mayor"
+                                        {DB.REGISTER_TYPE_INFOS[entry.type]
+                                            .subtype === "Mayor"
                                             ? "Decyzja starosty Człuchowskiego"
                                             : "Decyzja Zaświadczenie"}
                                     </th>
@@ -75,18 +71,16 @@ export default function RegisterDataTable({
                             <tbody>
                                 <tr>
                                     <td colSpan={2}>
-                                        {inputs.wniosek_decyzja_typ}
+                                        {inputs.app_decision_type}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Numer decyzji</td>
-                                    <td>{inputs.wniosek_decyzja_numer}</td>
+                                    <td>{inputs.app_decision_number}</td>
                                 </tr>
                                 <tr>
                                     <td>Data wydania</td>
-                                    <td>
-                                        {inputs.wniosek_decyzja_data_wydania}
-                                    </td>
+                                    <td>{inputs.app_decision_issue_date}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -106,24 +100,16 @@ export default function RegisterDataTable({
                             <tbody>
                                 <tr>
                                     <td colSpan={2}>
-                                        {inputs.wniosek_rozstrzygniecie_typ}
+                                        {inputs.app_resolution_type}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Numer pisma</td>
-                                    <td>
-                                        {
-                                            inputs.wniosek_rozstrzygniecie_numer_pisma
-                                        }
-                                    </td>
+                                    <td>{inputs.app_resolution_number}</td>
                                 </tr>
                                 <tr>
                                     <td>Data wydania</td>
-                                    <td>
-                                        {
-                                            inputs.wniosek_rozstrzygniecie_data_wydania
-                                        }
-                                    </td>
+                                    <td>{inputs.app_resolution_issue_date}</td>
                                 </tr>
                             </tbody>
                         </Table>

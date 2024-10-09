@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import {
-    DBEntry,
     HTTPFetchResponse,
     WSSBCMessage,
     WSSBCMessageType,
@@ -9,8 +8,9 @@ import WebSocketContext from "../contexts/WebSocketContext";
 import axios from "axios";
 import { create, StoreApi, UseBoundStore } from "zustand";
 import { DBEntryEndpoint } from "../App";
+import { DBRow } from "../../../server/src/dbTypes";
 
-export type DBEntries<T extends DBEntry> = {
+export type DBEntries<T extends DBRow> = {
     entries: T[];
     setEntries: (entries: T[]) => void;
     entryCount: number;
@@ -21,7 +21,7 @@ export type DBEntries<T extends DBEntry> = {
     fetchEntries: (startIndex: number, endIndex: number) => () => void;
 };
 
-function createDBEntriesStore<T extends DBEntry>(endpoint: DBEntryEndpoint) {
+function createDBEntriesStore<T extends DBRow>(endpoint: DBEntryEndpoint) {
     return create<DBEntries<T>>((set, get) => {
         const webSocket = useContext(WebSocketContext);
         if (!webSocket) throw "Error";
@@ -129,7 +129,7 @@ function createDBEntriesStore<T extends DBEntry>(endpoint: DBEntryEndpoint) {
 
 const stores: { [key: string]: any } = {};
 
-export default function useDBEntriesStore<TEntry extends DBEntry>(
+export default function useDBEntriesStore<TEntry extends DBRow>(
     endpoint: DBEntryEndpoint
 ): UseBoundStore<StoreApi<DBEntries<TEntry>>> {
     if (!stores[endpoint]) {

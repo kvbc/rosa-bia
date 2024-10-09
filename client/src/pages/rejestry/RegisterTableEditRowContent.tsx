@@ -1,15 +1,4 @@
 import { useEffect, useState } from "react";
-import {
-    Gmina,
-    Miejscowosc,
-    PKOB,
-    Register,
-    RegisterAdminActions,
-    RegisterBuildTypes,
-    RegisterInvestPlots,
-    TypeEntry,
-    Ulica,
-} from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
 import { MyInputSelectOption } from "../../components/MyInput";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
@@ -31,9 +20,10 @@ import RegisterDataTable from "./RegisterDataTable";
 import RegisterConstructionIntentTable from "./RegisterConstructionIntentTable";
 import RegisterAdminProcedureActionsTable from "./RegisterAdminProcedureActionsTable";
 import RegisterAdminProcedureTable from "./RegisterAdminProcedureTable";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function RegisterTableEditRowContent(
-    props: TableEditRowContentProps<Register>
+    props: TableEditRowContentProps<DB.Register>
 ) {
     const { inputs, entry, editable, setEntry } = props;
 
@@ -42,10 +32,9 @@ export default function RegisterTableEditRowContent(
             <Table size="sm">
                 <tr>
                     <th className="w-[10%] bg-gray-100">Typ Rejestru</th>
-                    <td>{inputs.typ}</td>
+                    <td>{inputs.type}</td>
                 </tr>
             </Table>
-
             <div className="flex">
                 <RegisterDataTable {...props} />
                 <RegisterConstructionIntentTable {...props} />

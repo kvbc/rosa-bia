@@ -1,27 +1,27 @@
 import { Table } from "@mui/joy";
-import { PKOB } from "../../../../server/src/types";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function ConstructionSpecTableEditRowContent({
     inputs,
     entry,
     editable,
     setEntry,
-}: TableEditRowContentProps<PKOB.ConstructionSpec>) {
+}: TableEditRowContentProps<DB.ConstructionSpec>) {
     return (
         <td className="bg-gray-400">
             <Table size="sm">
                 <tr>
                     <th>Nazwa</th>
-                    <td>{inputs.nazwa}</td>
+                    <td>{inputs.name}</td>
                 </tr>
                 <tr>
                     <th>Kat. OB</th>
-                    <td>{inputs.kat_ob}</td>
+                    <td>{inputs.ob_cat}</td>
                 </tr>
                 <tr>
                     <th>Klasa ZL.</th>
-                    <td>{inputs.klasa_zl}</td>
+                    <td>{inputs.zl_class}</td>
                 </tr>
             </Table>
         </td>

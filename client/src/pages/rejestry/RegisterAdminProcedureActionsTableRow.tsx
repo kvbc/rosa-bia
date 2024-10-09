@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-    Register,
-    RegisterAdminActions,
-    RegisterAdminActionType,
-} from "../../../../server/src/types";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import { Input } from "@mui/joy";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function RegisterAdminProcedureActionsTableRow({
     inputs,
@@ -16,24 +12,25 @@ export default function RegisterAdminProcedureActionsTableRow({
     actionType,
     eventEmitter,
 }: {
-    actionType: RegisterAdminActionType;
-} & TableEditRowContentProps<Register>) {
-    const registerAdminActionsDBEntries = useDBEntriesStore<RegisterAdminActions>('rejestry_czynnosci_admin')(); // prettier-ignore
+    actionType: DB.RegisterAdminActionType;
+} & TableEditRowContentProps<DB.Register>) {
+    const registerAdminActionsDBEntries = useDBEntriesStore<DB.RegisterAdminAction>('registers_admin_actions')(); // prettier-ignore
     const dbAction = registerAdminActionsDBEntries.entries.find(
-        (fEntry) => fEntry.rejestr_id === entry.id && fEntry.typ === actionType
+        (fEntry) =>
+            fEntry.register_id === entry.id && fEntry.type === actionType
     );
-    const [action, setAction] = useState<RegisterAdminActions>(
+    const [action, setAction] = useState<DB.RegisterAdminAction>(
         dbAction
             ? { ...dbAction }
             : {
                   id: registerAdminActionsDBEntries.entryCount + 1,
-                  data_odebrania: "",
-                  data_odpowiedzi: "",
-                  data_pisma: "",
-                  rejestr_id: entry.id,
-                  termin: 0,
-                  typ: actionType,
-                  wybor: false,
+                  receipt_date: "",
+                  reply_date: "",
+                  letter_date: "",
+                  register_id: entry.id,
+                  deadline: 0,
+                  type: actionType,
+                  select: false,
               }
     );
 
@@ -55,11 +52,11 @@ export default function RegisterAdminProcedureActionsTableRow({
             <td>
                 <Input
                     type="checkbox"
-                    value={action.wybor ? "yes" : "no"}
+                    value={action.select ? "yes" : "no"}
                     onChange={(e) =>
                         setAction((action) => ({
                             ...action,
-                            wybor: e.target.value === "yes",
+                            select: e.target.value === "yes",
                         }))
                     }
                 />
@@ -67,11 +64,11 @@ export default function RegisterAdminProcedureActionsTableRow({
             <td>
                 <Input
                     type="number"
-                    value={action.termin}
+                    value={action.deadline}
                     onChange={(e) =>
                         setAction((action) => ({
                             ...action,
-                            termin: e.target.valueAsNumber,
+                            deadline: e.target.valueAsNumber,
                         }))
                     }
                 />
@@ -79,11 +76,11 @@ export default function RegisterAdminProcedureActionsTableRow({
             <td>
                 <Input
                     type="date"
-                    value={action.data_pisma}
+                    value={action.letter_date}
                     onChange={(e) =>
                         setAction((action) => ({
                             ...action,
-                            data_pisma: e.target.value,
+                            letter_date: e.target.value,
                         }))
                     }
                 />
@@ -91,11 +88,11 @@ export default function RegisterAdminProcedureActionsTableRow({
             <td>
                 <Input
                     type="date"
-                    value={action.data_odebrania}
+                    value={action.receipt_date}
                     onChange={(e) =>
                         setAction((action) => ({
                             ...action,
-                            data_odebrania: e.target.value,
+                            receipt_date: e.target.value,
                         }))
                     }
                 />
@@ -103,11 +100,11 @@ export default function RegisterAdminProcedureActionsTableRow({
             <td>
                 <Input
                     type="date"
-                    value={action.data_odpowiedzi}
+                    value={action.reply_date}
                     onChange={(e) =>
                         setAction((action) => ({
                             ...action,
-                            data_odpowiedzi: e.target.value,
+                            reply_date: e.target.value,
                         }))
                     }
                 />

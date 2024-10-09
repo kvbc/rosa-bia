@@ -1,7 +1,5 @@
-import { PKOB } from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
 import { MyInputSelectOption } from "../../components/MyInput";
-import Wyszukiwarka from "../../components/Wyszukiwarka";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import Tabs from "@mui/joy/Tabs";
 import TabList from "@mui/joy/TabList";
@@ -21,128 +19,29 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaDatabase } from "react-icons/fa6";
 import ConstructionSectionTableEditRowContent from "./ConstructionSectionTableEditRowContent";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function PKOBStrona() {
-    const constructionSectionDBEntries =
-        useDBEntriesStore<PKOB.ConstructionSection>("sekcje_budowlane")();
-    const constructionDivisionDBEntries =
-        useDBEntriesStore<PKOB.ConstructionDivision>("dzialy_budowlane")();
-    const constructionGroupDBEntries =
-        useDBEntriesStore<PKOB.ConstructionGroup>("grupy_budowlane")();
-    const constructionClassDBEntries =
-        useDBEntriesStore<PKOB.ConstructionClass>("klasy_budowlane")();
-
-    const constructionFormDBEntries =
-        useDBEntriesStore<PKOB.ConstructionForm>("formy_budownictwa")();
-    const spatialPlanDBEntries = useDBEntriesStore<PKOB.SpatialPlan>(
-        "planowania_przestrzenne"
-    )();
+    const constructionSectionDBEntries = useDBEntriesStore<DB.ConstructionSection>("construction_sections")(); // prettier-ignore
+    const constructionDivisionDBEntries = useDBEntriesStore<DB.ConstructionDivision>("construction_divisions")(); // prettier-ignore
+    const constructionGroupDBEntries = useDBEntriesStore<DB.ConstructionGroup>("construction_groups")(); // prettier-ignore
+    const constructionClassDBEntries = useDBEntriesStore<DB.ConstructionClass>("construction_classes")(); // prettier-ignore
 
     return (
-        <>
-            <Accordion defaultExpanded>
-                <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            gap: 1,
-                            alignItems: "center",
-                        }}
-                    >
-                        <FaDatabase />
-                        Dane
-                    </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <DBTableEdit
-                        dbEntries={constructionSectionDBEntries}
-                        headers={["Sekcje Budowlane"]}
-                        emptyEntry={{
-                            id: constructionSectionDBEntries.entryCount + 1,
-                            sekcja: "",
-                        }}
-                        rowInputsProps={[
-                            {
-                                type: "text",
-                                entryKey: "sekcja",
-                            },
-                        ]}
-                        RowContentComponent={
-                            ConstructionSectionTableEditRowContent
-                        }
-                    />
-                </AccordionDetails>
-            </Accordion>
-            <Accordion>
-                <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            gap: 1,
-                            alignItems: "center",
-                        }}
-                    >
-                        <FaGear />
-                        Konfiguracja
-                    </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Tabs size="sm">
-                        <TabList>
-                            <Tab>
-                                <IoIosConstruct />
-                                Formy Budownictwa
-                            </Tab>
-                            <Tab>
-                                <GrPlan />
-                                Planowania przestrzenne
-                            </Tab>
-                        </TabList>
-                        <TabPanel value={0}>
-                            <DBTableEdit
-                                dbEntries={constructionFormDBEntries}
-                                headers={["ID", "Forma Budownictwa"]}
-                                emptyEntry={{
-                                    id: 0,
-                                    forma: "",
-                                }}
-                                rowInputsProps={[
-                                    {
-                                        type: "number",
-                                        entryKey: "id",
-                                        uneditable: true,
-                                    },
-                                    {
-                                        type: "text",
-                                        entryKey: "forma",
-                                    },
-                                ]}
-                            />
-                        </TabPanel>
-                        <TabPanel value={1}>
-                            <DBTableEdit
-                                dbEntries={spatialPlanDBEntries}
-                                headers={["ID", "Planowanie Przestrzenne"]}
-                                emptyEntry={{
-                                    id: 0,
-                                    planowanie: "",
-                                }}
-                                rowInputsProps={[
-                                    {
-                                        type: "number",
-                                        entryKey: "id",
-                                        uneditable: true,
-                                    },
-                                    {
-                                        type: "text",
-                                        entryKey: "planowanie",
-                                    },
-                                ]}
-                            />
-                        </TabPanel>
-                    </Tabs>
-                </AccordionDetails>
-            </Accordion>
-        </>
+        <DBTableEdit
+            dbEntries={constructionSectionDBEntries}
+            headers={["Sekcje Budowlane"]}
+            emptyEntry={{
+                id: constructionSectionDBEntries.entryCount + 1,
+                name: "",
+            }}
+            rowInputsProps={[
+                {
+                    type: "text",
+                    entryKey: "name",
+                },
+            ]}
+            RowContentComponent={ConstructionSectionTableEditRowContent}
+        />
     );
 }

@@ -1,10 +1,10 @@
 import { Table } from "@mui/joy";
-import { Register, REGISTER_TYPE_INFOS } from "../../../../server/src/types";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import RegisterAdminProcedureActionsTable from "./RegisterAdminProcedureActionsTable";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function RegisterAdminProcedureTable(
-    props: TableEditRowContentProps<Register>
+    props: TableEditRowContentProps<DB.Register>
 ) {
     const { inputs, entry, editable, setEntry } = props;
 
@@ -29,7 +29,7 @@ export default function RegisterAdminProcedureTable(
                         <RegisterAdminProcedureActionsTable {...props} />
                     </td>
                 </tr>
-                {REGISTER_TYPE_INFOS[entry.typ]
+                {DB.REGISTER_TYPE_INFOS[entry.type]
                     .showAdminConstructionJournal && (
                     <tr>
                         <td colSpan={2}>
@@ -43,13 +43,17 @@ export default function RegisterAdminProcedureTable(
                                     <tr>
                                         <td>Numer</td>
                                         <td>
-                                            {inputs.admin_dziennik_budowy_numer}
+                                            {
+                                                inputs.admin_construction_journal_number
+                                            }
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Z dnia</td>
                                         <td>
-                                            {inputs.admin_dziennik_budowy_data}
+                                            {
+                                                inputs.admin_construction_journal_date
+                                            }
                                         </td>
                                     </tr>
                                 </tbody>

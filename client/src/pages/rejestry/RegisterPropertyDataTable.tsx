@@ -1,12 +1,8 @@
 import { Table } from "@mui/joy";
-import {
-    Miejscowosc,
-    Register,
-    RegisterInvestPlots,
-} from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function RegisterPropertyDataTable({
     inputs,
@@ -16,10 +12,10 @@ export default function RegisterPropertyDataTable({
     area,
     setEntry,
 }: {
-    place?: Miejscowosc;
-    area?: Miejscowosc;
-} & TableEditRowContentProps<Register>) {
-    const registerInvestPlotDBEntries = useDBEntriesStore<RegisterInvestPlots>("rejestry_dzialki_objete_inwestycja")() // prettier-ignore
+    place?: DB.Place;
+    area?: DB.Place;
+} & TableEditRowContentProps<DB.Register>) {
+    const registerInvestPlotDBEntries = useDBEntriesStore<DB.RegisterInvestPlot>("registers_invest_plots")() // prettier-ignore
 
     return (
         <Table
@@ -40,15 +36,15 @@ export default function RegisterPropertyDataTable({
                             <tbody>
                                 <tr>
                                     <th className="bg-gray-100">Gmina</th>
-                                    <td>{inputs._obiekt_gmina_id}</td>
+                                    <td>{inputs._object_commune_id}</td>
                                 </tr>
                                 <tr>
                                     <th className="bg-gray-100">Miejscowość</th>
-                                    <td>{inputs._obiekt_miejscowosc_id}</td>
+                                    <td>{inputs._object_place_id}</td>
                                 </tr>
                                 <tr>
                                     <th className="bg-gray-100">Ulica</th>
-                                    <td>{inputs.obiekt_ulica_id}</td>
+                                    <td>{inputs.object_street_id}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -63,15 +59,15 @@ export default function RegisterPropertyDataTable({
                             <tbody>
                                 <tr>
                                     <th className="bg-gray-100">Jedn. ewid.</th>
-                                    <td>{place?.jedn_ewid}</td>
+                                    <td>{place?.cad_unit}</td>
                                 </tr>
                                 <tr>
                                     <th className="bg-gray-100">Obręb</th>
-                                    <td>{area?.nazwa}</td>
+                                    <td>{area?.name}</td>
                                 </tr>
                                 <tr>
                                     <th className="bg-gray-100">Nr</th>
-                                    <td>{entry.obiekt_nr}</td>
+                                    <td>{entry.object_number}</td>
                                 </tr>
                             </tbody>
                         </Table>

@@ -1,4 +1,3 @@
-import { PKOB } from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import Table from "@mui/joy/Table";
@@ -10,14 +9,15 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaCity, FaDatabase } from "react-icons/fa6";
 import { Box } from "@mui/joy";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function ConstructionSectionTableEditRowContent({
     inputs,
     entry,
     editable,
     setEntry,
-}: TableEditRowContentProps<PKOB.ConstructionSection>) {
-    const constructionDivisionDBEntries = useDBEntriesStore<PKOB.ConstructionDivision>("dzialy_budowlane")(); // prettier-ignore
+}: TableEditRowContentProps<DB.ConstructionSection>) {
+    const constructionDivisionDBEntries = useDBEntriesStore<DB.ConstructionDivision>("construction_divisions")(); // prettier-ignore
 
     return (
         <>
@@ -32,14 +32,14 @@ export default function ConstructionSectionTableEditRowContent({
                             }}
                         >
                             <FaCity />
-                            {inputs.sekcja}
+                            {inputs.name}
                         </Box>
                     </AccordionSummary>
                     <AccordionDetails>
                         <DBTableEdit
                             dbEntries={constructionDivisionDBEntries}
                             entries={constructionDivisionDBEntries.entries.filter(
-                                (fEntry) => fEntry.sekcja_id === entry.id
+                                (fEntry) => fEntry.section_id === entry.id
                             )}
                             editable={editable}
                             headersClassName="bg-gray-100"
@@ -50,13 +50,13 @@ export default function ConstructionSectionTableEditRowContent({
                                 id:
                                     constructionDivisionDBEntries.entryCount +
                                     1,
-                                dzial: "",
-                                sekcja_id: entry.id,
+                                name: "",
+                                section_id: entry.id,
                             }}
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "dzial",
+                                    entryKey: "name",
                                 },
                             ]}
                             RowContentComponent={

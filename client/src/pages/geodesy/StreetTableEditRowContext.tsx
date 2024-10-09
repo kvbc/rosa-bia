@@ -1,4 +1,4 @@
-import { PKOB, Ulica } from "../../../../server/src/types";
+import { DB } from "../../../../server/src/dbTypes";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 
 export default function StreetTableEditRowContent({
@@ -6,10 +6,10 @@ export default function StreetTableEditRowContent({
     entry,
     editable,
     setEntry,
-}: TableEditRowContentProps<Ulica>) {
+}: TableEditRowContentProps<DB.Street>) {
     return (
         <>
-            <td className="bg-gray-200">{inputs.nazwa}</td>
+            <td className="bg-gray-200">{inputs.name}</td>
         </>
     );
 }

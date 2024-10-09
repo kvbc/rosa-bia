@@ -1,9 +1,9 @@
 import { ComponentProps } from "react";
 import TableEdit from "./TableEdit";
 import { DBEntries } from "../hooks/useDBEntriesStore";
-import { DBEntry } from "../../../server/src/types";
+import { DBRow } from "../../../server/src/dbTypes";
 
-export default function DBTableEdit<TEntry extends DBEntry>({
+export default function DBTableEdit<TEntry extends DBRow>({
     dbEntries,
     // emptyEntry,
     showFooter,

@@ -2,7 +2,7 @@ import { ButtonGroup, IconButton, Textarea } from "@mui/joy";
 import { useEffect, useMemo, useState } from "react";
 import { MdCancel, MdEdit, MdSave } from "react-icons/md";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
-import { DBInfoBoard } from "../../../../server/src/types";
+import { DB } from "../../../../server/src/dbTypes";
 
 export enum InfoBoardState {
     Editing,
@@ -11,16 +11,16 @@ export enum InfoBoardState {
 
 export default function InfoBoard() {
     const [state, setState] = useState<InfoBoardState>(InfoBoardState.Viewing);
-    const infoBoardDBEntries = useDBEntriesStore<DBInfoBoard>('tablice_informacyjne')(); // prettier-ignore
-    const infoBoard = useMemo<DBInfoBoard | undefined>(
+    const infoBoardDBEntries = useDBEntriesStore<DB.InfoBoard>('info_boards')(); // prettier-ignore
+    const infoBoard = useMemo<DB.InfoBoard | undefined>(
         () => infoBoardDBEntries.entries[0],
         [infoBoardDBEntries.entries]
     );
     const [contents, setContents] = useState<string>("");
 
     useEffect(() => {
-        if (infoBoard) setContents(infoBoard.zawartosc);
-    }, [infoBoard?.zawartosc]);
+        if (infoBoard) setContents(infoBoard.contents);
+    }, [infoBoard?.contents]);
 
     const handleEditClicked = () => {
         setState(InfoBoardState.Editing);
@@ -31,7 +31,7 @@ export default function InfoBoard() {
         if (infoBoard) {
             infoBoardDBEntries.saveEntry({
                 ...infoBoard,
-                zawartosc: contents,
+                contents,
             });
         }
     };

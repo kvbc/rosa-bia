@@ -9,23 +9,28 @@ import PKOBStrona from "./pages/pkob/PKOBStrona";
 import WebSocketContext from "./contexts/WebSocketContext";
 import { useState } from "react";
 import EmployeesPage from "./pages/employees/EmployeesPage";
+import PageFormsB05 from "./pages/forms/PageFormsB05";
+import PageFormsB06 from "./pages/forms/PageFormsB06";
 
 export const DB_ENTRY_ENDPOINTS = [
-    "inwestorzy",
-    "gminy",
-    "miejscowosci",
-    "ulice",
-    "sekcje_budowlane",
-    "dzialy_budowlane",
-    "grupy_budowlane",
-    "klasy_budowlane",
-    "formy_budownictwa",
-    "planowania_przestrzenne",
-    "rejestry",
-    "rejestry_dzialki_objete_inwestycja",
-    "rejestry_czynnosci_admin",
-    "tablice_informacyjne",
-    "wyszczegolnienia_budowlane",
+    "investors",
+
+    "communes",
+    "places",
+    "streets",
+
+    "construction_sections",
+    "construction_divisions",
+    "construction_groups",
+    "construction_classes",
+    "construction_specs",
+
+    "registers",
+    "registers_invest_plots",
+    "registers_admin_actions",
+
+    "employees",
+    "info_boards",
 ] as const;
 export type DBEntryEndpoint = (typeof DB_ENTRY_ENDPOINTS)[number];
 
@@ -36,11 +41,11 @@ function App() {
 
     return (
         <BrowserRouter>
-            <div className="flex flex-col justify-stretch h-full">
-                <Navbar />
-                <br />
-                <main className="flex-1 p-4">
-                    <WebSocketContext.Provider value={webSocket}>
+            <WebSocketContext.Provider value={webSocket}>
+                <div className="flex flex-col justify-stretch h-full">
+                    <Navbar />
+                    <br />
+                    <main className="flex-1 p-4">
                         <Routes>
                             <Route path="/" element={<HomePage />} />
                             <Route
@@ -57,10 +62,18 @@ function App() {
                                 path="/pracownicy"
                                 element={<EmployeesPage />}
                             />
+                            <Route
+                                path="/formularze/b05"
+                                element={<PageFormsB05 />}
+                            />
+                            <Route
+                                path="/formularze/b06"
+                                element={<PageFormsB06 />}
+                            />
                         </Routes>
-                    </WebSocketContext.Provider>
-                </main>
-            </div>
+                    </main>
+                </div>
+            </WebSocketContext.Provider>
         </BrowserRouter>
     );
 }

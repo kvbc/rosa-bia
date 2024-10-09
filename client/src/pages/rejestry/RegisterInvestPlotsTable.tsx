@@ -1,4 +1,4 @@
-import { Register, RegisterInvestPlots } from "../../../../server/src/types";
+import { DB } from "../../../../server/src/dbTypes";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
@@ -8,28 +8,28 @@ export default function RegisterInvestPlotsDataTable({
     entry,
     editable,
     setEntry,
-}: TableEditRowContentProps<Register>) {
-    const registerInvestPlotDBEntries = useDBEntriesStore<RegisterInvestPlots>("rejestry_dzialki_objete_inwestycja")() // prettier-ignore
+}: TableEditRowContentProps<DB.Register>) {
+    const registerInvestPlotDBEntries = useDBEntriesStore<DB.RegisterInvestPlot>("registers_invest_plots")() // prettier-ignore
 
     return (
         <DBTableEdit
             dbEntries={registerInvestPlotDBEntries}
             entries={registerInvestPlotDBEntries.entries.filter(
-                (fEntry) => fEntry.rejestr_id === entry.id
+                (fEntry) => fEntry.register_id === entry.id
             )}
             headersClassName="bg-gray-100"
             editable={editable}
             emptyEntry={{
                 id: 0,
-                rejestr_id: entry.id,
-                dzialka: "",
+                register_id: entry.id,
+                plot: "",
             }}
             headers={["Działki objęte inwestycją"]}
             showActionsHeader={false}
             rowInputsProps={[
                 {
                     type: "text",
-                    entryKey: "dzialka",
+                    entryKey: "plot",
                     placeholder: "Działka",
                 },
             ]}

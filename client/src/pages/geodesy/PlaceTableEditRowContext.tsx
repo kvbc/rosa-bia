@@ -1,4 +1,3 @@
-import { Gmina, Miejscowosc, PKOB, Ulica } from "../../../../server/src/types";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -12,14 +11,15 @@ import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import { GiVillage } from "react-icons/gi";
 import Table from "@mui/joy/Table";
 import StreetTableEditRowContent from "./StreetTableEditRowContext";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function PlaceTableEditRowContent({
     inputs,
     entry,
     editable,
     setEntry,
-}: TableEditRowContentProps<Miejscowosc>) {
-    const streetDBEntries = useDBEntriesStore<Ulica>("ulice")();
+}: TableEditRowContentProps<DB.Place>) {
+    const streetDBEntries = useDBEntriesStore<DB.Street>("streets")();
 
     return (
         <>
@@ -34,7 +34,7 @@ export default function PlaceTableEditRowContent({
                             }}
                         >
                             <GiVillage />
-                            {inputs.nazwa}
+                            {inputs.name}
                         </Box>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -47,8 +47,8 @@ export default function PlaceTableEditRowContent({
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{inputs.jedn_ewid}</td>
-                                    <td>{inputs.obreb_id}</td>
+                                    <td>{inputs.cad_unit}</td>
+                                    <td>{inputs.area_place_id}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -56,7 +56,7 @@ export default function PlaceTableEditRowContent({
                         <DBTableEdit
                             dbEntries={streetDBEntries}
                             entries={streetDBEntries.entries.filter(
-                                (fEntry) => fEntry.miejscowosc_id === entry.id
+                                (fEntry) => fEntry.place_id === entry.id
                             )}
                             editable={editable}
                             headersClassName="bg-gray-200"
@@ -65,13 +65,13 @@ export default function PlaceTableEditRowContent({
                             headers={["Ulice"]}
                             emptyEntry={{
                                 id: streetDBEntries.entryCount + 1,
-                                miejscowosc_id: entry.id,
-                                nazwa: "",
+                                place_id: entry.id,
+                                name: "",
                             }}
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "nazwa",
+                                    entryKey: "name",
                                 },
                             ]}
                             RowContentComponent={StreetTableEditRowContent}

@@ -1,19 +1,19 @@
-import Wyszukiwarka from "../../components/Wyszukiwarka";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
-import { Inwestor } from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function InwestorzyStrona() {
-    const investorDBEntries = useDBEntriesStore<Inwestor>("inwestorzy")();
+    const investorDBEntries = useDBEntriesStore<DB.Investor>("investors")();
 
     return (
         <DBTableEdit
             dbEntries={investorDBEntries}
-            headers={["ID", "Inwestor", "Adres"]}
+            headers={["ID", "Inwestor", "Adres", "Informacje"]}
             emptyEntry={{
                 id: 0,
-                adres: "",
-                nazwa: "",
+                address: "",
+                name: "",
+                info: "",
             }}
             rowInputsProps={[
                 {
@@ -23,11 +23,15 @@ export default function InwestorzyStrona() {
                 },
                 {
                     type: "text",
-                    entryKey: "nazwa",
+                    entryKey: "name",
                 },
                 {
                     type: "text",
-                    entryKey: "adres",
+                    entryKey: "address",
+                },
+                {
+                    type: "text",
+                    entryKey: "info",
                 },
             ]}
         />

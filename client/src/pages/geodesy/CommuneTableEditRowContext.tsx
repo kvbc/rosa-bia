@@ -1,4 +1,3 @@
-import { Gmina, Miejscowosc, PKOB } from "../../../../server/src/types";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -10,14 +9,15 @@ import DBTableEdit from "../../components/DBTableEdit";
 import { MyInputSelectOption } from "../../components/MyInput";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import PlaceTableEditRowContent from "./PlaceTableEditRowContext";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function CommuneTableEditRowContent({
     inputs,
     entry,
     editable,
     setEntry,
-}: TableEditRowContentProps<Gmina>) {
-    const placeDBEntries = useDBEntriesStore<Miejscowosc>("miejscowosci")();
+}: TableEditRowContentProps<DB.Commune>) {
+    const placeDBEntries = useDBEntriesStore<DB.Place>("places")();
 
     return (
         <>
@@ -32,14 +32,14 @@ export default function CommuneTableEditRowContent({
                             }}
                         >
                             <FaCity />
-                            {inputs.nazwa}
+                            {inputs.name}
                         </Box>
                     </AccordionSummary>
                     <AccordionDetails>
                         <DBTableEdit
                             dbEntries={placeDBEntries}
                             entries={placeDBEntries.entries.filter(
-                                (fEntry) => fEntry.gmina_id === entry.id
+                                (fEntry) => fEntry.commune_id === entry.id
                             )}
                             editable={editable}
                             headersClassName="bg-gray-100"
@@ -48,30 +48,30 @@ export default function CommuneTableEditRowContent({
                             headers={["Miejscowości"]}
                             emptyEntry={{
                                 id: placeDBEntries.entryCount + 1,
-                                gmina_id: entry.id,
-                                jedn_ewid: "",
-                                nazwa: "",
-                                obreb_id: 0,
+                                commune_id: entry.id,
+                                cad_unit: "",
+                                name: "",
+                                area_place_id: 0,
                             }}
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "nazwa",
+                                    entryKey: "name",
                                 },
                                 {
                                     type: "select",
-                                    entryKey: "obreb_id",
+                                    entryKey: "area_place_id",
                                     selectOptions:
                                         placeDBEntries.entries.map<MyInputSelectOption>(
                                             (entry) => ({
                                                 value: entry.id,
-                                                name: entry.nazwa,
+                                                name: entry.name,
                                             })
                                         ),
                                 },
                                 {
                                     type: "text",
-                                    entryKey: "jedn_ewid",
+                                    entryKey: "cad_unit",
                                 },
                             ]}
                             RowContentComponent={PlaceTableEditRowContent}

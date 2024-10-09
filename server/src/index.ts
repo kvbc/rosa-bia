@@ -1,11 +1,12 @@
+/*
+ *
+ * TODO: Work on the backend when done with the frontend
+ *
+ */
+
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import {
-    HTTPFetchResponse,
-    Inwestor,
-    WSSBCMessage,
-    WSSBCMessageType,
-} from "./types";
+import { HTTPFetchResponse, WSSBCMessage, WSSBCMessageType } from "./types";
 import { Database } from "sqlite3";
 import cors from "cors";
 import WebSocket from "ws";

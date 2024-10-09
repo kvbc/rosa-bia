@@ -1,6 +1,4 @@
-import Wyszukiwarka from "../../components/Wyszukiwarka";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
-import { Gmina, Miejscowosc, Ulica } from "../../../../server/src/types";
 import { MyInputSelectOption } from "../../components/MyInput";
 import DBTableEdit from "../../components/DBTableEdit";
 import Accordion from "@mui/material/Accordion";
@@ -10,11 +8,12 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { Box } from "@mui/joy";
 import { FaDatabase } from "react-icons/fa";
 import CommuneTableEditRowContent from "./CommuneTableEditRowContext";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function GeodezjaStrona() {
-    const communeDBEntries = useDBEntriesStore<Gmina>("gminy")();
-    const placeDBEntries = useDBEntriesStore<Miejscowosc>("miejscowosci")();
-    const streetDBEntries = useDBEntriesStore<Ulica>("ulice")();
+    const communeDBEntries = useDBEntriesStore<DB.Commune>("communes")();
+    const placeDBEntries = useDBEntriesStore<DB.Place>("places")();
+    const streetDBEntries = useDBEntriesStore<DB.Street>("streets")();
 
     return (
         <>
@@ -23,12 +22,12 @@ export default function GeodezjaStrona() {
                 headers={["Gmina"]}
                 emptyEntry={{
                     id: communeDBEntries.entryCount + 1,
-                    nazwa: "",
+                    name: "",
                 }}
                 rowInputsProps={[
                     {
                         type: "text",
-                        entryKey: "nazwa",
+                        entryKey: "name",
                     },
                 ]}
                 RowContentComponent={CommuneTableEditRowContent}

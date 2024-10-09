@@ -1,4 +1,3 @@
-import { PKOB } from "../../../../server/src/types";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
@@ -10,15 +9,15 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaCity, FaDatabase, FaHouse } from "react-icons/fa6";
 import { Box } from "@mui/joy";
+import { DB } from "../../../../server/src/dbTypes";
 
 export default function ConstructionGroupTableEditRowContent({
     inputs,
     entry,
     editable,
     setEntry,
-}: TableEditRowContentProps<PKOB.ConstructionGroup>) {
-    const constructionClassDBEntries =
-        useDBEntriesStore<PKOB.ConstructionClass>("klasy_budowlane")();
+}: TableEditRowContentProps<DB.ConstructionGroup>) {
+    const constructionClassDBEntries = useDBEntriesStore<DB.ConstructionClass>("construction_classes")(); // prettier-ignore
 
     return (
         <>
@@ -33,14 +32,14 @@ export default function ConstructionGroupTableEditRowContent({
                             }}
                         >
                             <FaHouse />
-                            {inputs.grupa}
+                            {inputs.name}
                         </Box>
                     </AccordionSummary>
                     <AccordionDetails>
                         <DBTableEdit
                             dbEntries={constructionClassDBEntries}
                             entries={constructionClassDBEntries.entries.filter(
-                                (fEntry) => fEntry.grupa_id === entry.id
+                                (fEntry) => fEntry.group_id === entry.id
                             )}
                             editable={editable}
                             showFooter={false}
@@ -49,14 +48,14 @@ export default function ConstructionGroupTableEditRowContent({
                             headers={["Klasy Budowlane"]}
                             emptyEntry={{
                                 id: constructionClassDBEntries.entryCount + 1,
-                                klasa: "",
+                                name: "",
                                 pkob: 0,
-                                grupa_id: entry.id,
+                                group_id: entry.id,
                             }}
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "klasa",
+                                    entryKey: "name",
                                 },
                                 {
                                     type: "number",
