@@ -6,9 +6,8 @@
 
 import { useContext } from "react";
 import {
-    HTTPFetchResponse,
-    WSSBCMessage,
-    WSSBCMessageType,
+    HTTPResponseFetchTableRows,
+    WSMessage,
 } from "../../../server/src/types";
 import WebSocketContext from "../contexts/WebSocketContext";
 import axios from "axios";
@@ -33,10 +32,10 @@ function createDBEntriesStore<T extends DBRow>(endpoint: DBEntryEndpoint) {
         const webSocket = useContext(WebSocketContext);
         if (!webSocket) throw "Error";
         const onMessage: WebSocket["onmessage"] = (event) => {
-            const message: WSSBCMessage<T> = JSON.parse(event.data);
+            const message: WSMessage<T> = JSON.parse(event.data);
             if (message.endpoint !== endpoint) return;
             switch (message.type) {
-                case WSSBCMessageType.EntryAdded: {
+                case "entry added": {
                     const newEntry = message.entry;
                     get().setEntries([...get().entries, newEntry]);
                     set((state) => ({
@@ -45,7 +44,7 @@ function createDBEntriesStore<T extends DBRow>(endpoint: DBEntryEndpoint) {
                     }));
                     break;
                 }
-                case WSSBCMessageType.EntryDeleted: {
+                case "entry deleted": {
                     const deletedEntry = message.entry;
                     get().setEntries(
                         get().entries.filter(
@@ -58,7 +57,7 @@ function createDBEntriesStore<T extends DBRow>(endpoint: DBEntryEndpoint) {
                     }));
                     break;
                 }
-                case WSSBCMessageType.EntryUpdated: {
+                case "entry updated": {
                     const updatedEntry = message.entry;
                     get().setEntries(
                         get().entries.map((entry) =>
@@ -82,13 +81,15 @@ function createDBEntriesStore<T extends DBRow>(endpoint: DBEntryEndpoint) {
             endpoint,
             addEntry: (entry) => {
                 // get().setEntries([...get().entries, entry]);
-                axios.post(HTTP_SERVER_URL + "/" + endpoint, entry);
+                axios.post(HTTP_SERVER_URL + "/table/" + endpoint, entry);
             },
             deleteEntry: (entry) => {
                 get().setEntries(
                     get().entries.filter((fEntry) => fEntry.id !== entry.id)
                 );
-                axios.delete(HTTP_SERVER_URL + `/${endpoint}/${entry.id}`);
+                axios.delete(
+                    HTTP_SERVER_URL + `/table/${endpoint}/${entry.id}`
+                );
             },
             saveEntry: (entry) => {
                 get().setEntries(
@@ -96,24 +97,24 @@ function createDBEntriesStore<T extends DBRow>(endpoint: DBEntryEndpoint) {
                         fEntry.id === entry.id ? entry : fEntry
                     )
                 );
-                axios.put(HTTP_SERVER_URL + "/" + endpoint, entry);
+                axios.put(HTTP_SERVER_URL + "/table/" + endpoint, entry);
             },
             fetchEntries: (startIndex: number, endIndex: number) => {
                 const abortController = new AbortController();
                 axios
-                    .get<HTTPFetchResponse<T>>(
+                    .get<HTTPResponseFetchTableRows<T>>(
                         HTTP_SERVER_URL +
-                            `/${endpoint}/${startIndex}-${endIndex}`,
+                            `/table/${endpoint}/${startIndex}/${endIndex}`,
                         {
                             signal: abortController.signal,
                         }
                     )
                     .then((res) => {
                         console.log(startIndex, endIndex, res.data);
-                        get().setEntries(res.data.results);
+                        get().setEntries(res.data.rows);
                         set((state) => ({
                             ...state,
-                            entryCount: res.data.liczba,
+                            entryCount: res.data.totalCount,
                         }));
                     });
 

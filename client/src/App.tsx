@@ -21,21 +21,17 @@ import { WS_SERVER_URL } from "../../config";
 
 export const DB_ENTRY_ENDPOINTS = [
     "investors",
-
     "communes",
     "places",
     "streets",
-
     "construction_sections",
     "construction_divisions",
     "construction_groups",
     "construction_classes",
     "construction_specs",
-
     "registers",
     "registers_invest_plots",
     "registers_admin_actions",
-
     "employees",
     "info_boards",
 ] as const;

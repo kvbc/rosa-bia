@@ -3,75 +3,104 @@
 // 1:1 database table typings
 //
 
+import { z, ZodObject } from "zod";
+
 export type DBRow = {
     id: number;
     [key: string]: any;
 };
+
+export const DB_TABLE_NAMES = [
+    "investors",
+    "communes",
+    "places",
+    "streets",
+    "construction_sections",
+    "construction_divisions",
+    "construction_groups",
+    "construction_classes",
+    "construction_specs",
+    "registers",
+    "registers_invest_plots",
+    "registers_admin_actions",
+    "employees",
+    "info_boards",
+] as const;
+export type DBTableName = (typeof DB_TABLE_NAMES)[number];
 
 export namespace DB {
     //
     // Investors
     //
 
-    export type Investor = {
-        id: number;
-        name: string;
-        address: string;
-        info: string;
-    };
+    export const ZInvestor = z.object({
+        id: z.number(),
+        name: z.string(),
+        address: z.string(),
+        info: z.string(),
+    });
+    export type Investor = z.infer<typeof ZInvestor>;
 
     //
     // Geodesy
     //
 
-    export type Commune = {
-        id: number;
-        name: string;
-    };
-    export type Place = {
-        id: number;
-        name: string;
-        commune_id: number;
-        area_place_id: number;
-        cad_unit: string;
-    };
-    export type Street = {
-        id: number;
-        name: string;
-        place_id: number;
-    };
+    export const ZCommune = z.object({
+        id: z.number(),
+        name: z.string(),
+    });
+    export type Commune = z.infer<typeof ZCommune>;
+    export const ZPlace = z.object({
+        id: z.number(),
+        name: z.string(),
+        commune_id: z.number(),
+        area_place_id: z.number(),
+        cad_unit: z.string(),
+    });
+    export type Place = z.infer<typeof ZPlace>;
+    export const ZStreet = z.object({
+        id: z.number(),
+        name: z.string(),
+        place_id: z.number(),
+    });
+    export type Street = z.infer<typeof ZStreet>;
 
     //
     // PKOB
     //
 
-    export type ConstructionSection = {
-        id: number;
-        name: string;
-    };
-    export type ConstructionDivision = {
-        id: number;
-        name: string;
-        section_id: number;
-    };
-    export type ConstructionGroup = {
-        id: number;
-        name: string;
-        division_id: number;
-    };
-    export type ConstructionClass = {
-        id: number;
-        name: string;
-        group_id: number;
-        pkob: number;
-    };
-    export type ConstructionSpec = {
-        id: number;
-        name: string;
-        class_id: number;
-        zl_class: string;
-        ob_cat: string;
-    };
+    export const ZConstructionSection = z.object({
+        id: z.number(),
+        name: z.string(),
+    });
+    export type ConstructionSection = z.infer<typeof ZConstructionSection>;
+    export const ZConstructionDivision = z.object({
+        id: z.number(),
+        name: z.string(),
+        section_id: z.number(),
+    });
+    export type ConstructionDivision = z.infer<typeof ZConstructionDivision>;
+    export const ZConstructionGroup = z.object({
+        id: z.number(),
+        name: z.string(),
+        division_id: z.number(),
+    });
+    export type ConstructionGroup = z.infer<typeof ZConstructionGroup>;
+    export const ZConstructionClass = z.object({
+        id: z.number(),
+        name: z.string(),
+        group_id: z.number(),
+        pkob: z.number(),
+    });
+    export type ConstructionClass = z.infer<typeof ZConstructionClass>;
+    export const ZConstructionSpec = z.object({
+        id: z.number(),
+        name: z.string(),
+        class_id: z.number(),
+        zl_class: z.string(),
+        ob_cat: z.string(),
+    });
+    export type ConstructionSpec = z.infer<typeof ZConstructionSpec>;
 
     //
     // Registers
@@ -237,32 +266,37 @@ export namespace DB {
     export const REGISTER_SPATIAL_PLANS = ["MPZP", "WZ"] as const;
     export type RegisterSpatialPlan = (typeof REGISTER_SPATIAL_PLANS)[number];
 
-    export type Register = {
-        id: number;
-        type: RegisterType;
+    // prettier-ignore
+    export const ZRegister = z.object({
+        id: z.number(),
+        type: z.enum(REGISTER_TYPES),
 
-        app_number: number;
-        app_submission_date: string;
-        app_investor_id: number;
-        app_decision_type?: RegisterDecision;
-        app_decision_number: number;
-        app_decision_issue_date: string;
-        app_resolution_type?: RegisterResolution;
-        app_resolution_number: number;
-        app_resolution_issue_date: string;
+        app_number: z.number(),
+        app_submission_date: z.string(),
+        app_investor_id: z.number(),
+        app_decision_type: z.enum(REGISTER_SUBTYPE_INFOS.Mayor.decisions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.decisions)).optional(),
+        app_decision_number: z.number(),
+        app_decision_issue_date: z.string(),
+        app_resolution_type: z.enum(REGISTER_SUBTYPE_INFOS.Mayor.resolutions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.resolutions)).optional(),
+        app_resolution_number: z.number(),
+        app_resolution_issue_date: z.string(),
 
-        object_construction_spec_id: number;
-        object_construction_form_type?: RegisterConstructionForm;
-        object_spatial_plan_type?: RegisterSpatialPlan;
-        object_street_id: number;
-        object_number: string;
-        object_pnb_acc_infra: boolean;
-        object_demo_under_conservation_protection: boolean;
-        object_demo_building_area: number;
-        object_demo_usable_area: number;
-        object_demo_volume: number;
-        object_demo_building_count: number;
+        object_construction_spec_id: z.number(),
+        object_construction_form_type: z.enum(REGISTER_CONSTRUCTION_FORMS).optional(),
+        object_spatial_plan_type: z.enum(REGISTER_SPATIAL_PLANS).optional(),
+        object_street_id: z.number(),
+        object_number: z.string(),
+        object_pnb_acc_infra: z.boolean(),
+        object_demo_under_conservation_protection: z.boolean(),
+        object_demo_building_area: z.number(),
+        object_demo_usable_area: z.number(),
+        object_demo_volume: z.number(),
+        object_demo_building_count: z.number(),
 
+        admin_construction_journal_number: z.number(),
+        admin_construction_journal_date: z.string(),
+    });
+    export type Register = z.infer<typeof ZRegister> & {
         // client-only helpers
         _object_construction_section_id: number;
         _object_construction_division_id: number;
@@ -270,43 +304,61 @@ export namespace DB {
         _object_construction_class_id: number;
         _object_commune_id: number;
         _object_place_id: number;
-
-        admin_construction_journal_number: number;
-        admin_construction_journal_date: string;
     };
-    export type RegisterInvestPlot = {
-        id: number;
-        plot: string;
-        register_id: number;
-    };
-    export type RegisterAdminAction = {
-        id: number;
-        type: RegisterAdminActionType;
-        register_id: number;
-        select: boolean;
-        deadline: number;
-        letter_date: string;
-        receipt_date: string;
-        reply_date: string;
-    };
+    export const ZRegisterInvestPlot = z.object({
+        id: z.number(),
+        plot: z.string(),
+        register_id: z.number(),
+    });
+    export type RegisterInvestPlot = z.infer<typeof ZRegisterInvestPlot>;
+    export const ZRegisterAdminAction = z.object({
+        id: z.number(),
+        type: z.enum(REGISTER_ADMIN_ACTION_TYPES),
+        register_id: z.number(),
+        select: z.boolean(),
+        deadline: z.number(),
+        letter_date: z.string(),
+        receipt_date: z.string(),
+        reply_date: z.string(),
+    });
+    export type RegisterAdminAction = z.infer<typeof ZRegisterAdminAction>;
 
     //
     // Employee
     //
 
-    export type Employee = {
-        id: number;
-        name: string;
-        password: string;
-        admin: boolean;
-    };
+    export const ZEmployee = z.object({
+        id: z.number(),
+        name: z.string(),
+        password: z.string(),
+        admin: z.boolean(),
+    });
+    export type Employee = z.infer<typeof ZEmployee>;
 
     //
     // Home
     //
 
-    export type InfoBoard = {
-        id: number;
-        contents: string;
-    };
+    export const ZInfoBoard = z.object({
+        id: z.number(),
+        contents: z.string(),
+    });
+    export type InfoBoard = z.infer<typeof ZInfoBoard>;
 }
+
+export const DB_TABLE_ROW_ZOBJECTS: { [key in DBTableName]: ZodObject<any> } = {
+    investors: DB.ZInvestor,
+    communes: DB.ZCommune,
+    places: DB.ZPlace,
+    streets: DB.ZStreet,
+    construction_sections: DB.ZConstructionSection,
+    construction_divisions: DB.ZConstructionDivision,
+    construction_groups: DB.ZConstructionGroup,
+    construction_classes: DB.ZConstructionClass,
+    construction_specs: DB.ZConstructionSpec,
+    registers: DB.ZRegister,
+    registers_invest_plots: DB.ZRegisterInvestPlot,
+    registers_admin_actions: DB.ZRegisterAdminAction,
+    employees: DB.ZEmployee,
+    info_boards: DB.ZInfoBoard,
+};
