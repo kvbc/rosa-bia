@@ -246,10 +246,8 @@ export namespace DB {
         RegisterSubtype,
         Record<string, readonly string[]>
     >;
-    export type RegisterDecision =
-        (typeof REGISTER_SUBTYPE_INFOS)[RegisterSubtype]["decisions"];
-    export type RegisterResolution =
-        (typeof REGISTER_SUBTYPE_INFOS)[RegisterSubtype]["resolutions"];
+    export type RegisterDecision = (typeof REGISTER_SUBTYPE_INFOS)[RegisterSubtype]["decisions"][number]; // prettier-ignore
+    export type RegisterResolution = (typeof REGISTER_SUBTYPE_INFOS)[RegisterSubtype]["resolutions"][number]; // prettier-ignore
 
     export const REGISTER_CONSTRUCTION_FORMS = [
         "Indywidualne",
@@ -266,6 +264,9 @@ export namespace DB {
     export const REGISTER_SPATIAL_PLANS = ["MPZP", "WZ"] as const;
     export type RegisterSpatialPlan = (typeof REGISTER_SPATIAL_PLANS)[number];
 
+    const zRegisterDecision = z.enum(REGISTER_SUBTYPE_INFOS.Mayor.decisions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.decisions)) // prettier-ignore
+    const zRegisterResolution = z.enum(REGISTER_SUBTYPE_INFOS.Mayor.resolutions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.resolutions)) // prettier-ignore
+
     // prettier-ignore
     export const ZRegister = z.object({
         id: z.number(),
@@ -274,10 +275,10 @@ export namespace DB {
         app_number: z.number(),
         app_submission_date: z.string(),
         app_investor_id: z.number(),
-        app_decision_type: z.enum(REGISTER_SUBTYPE_INFOS.Mayor.decisions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.decisions)).optional(),
+        app_decision_type: zRegisterDecision.optional(),
         app_decision_number: z.number(),
         app_decision_issue_date: z.string(),
-        app_resolution_type: z.enum(REGISTER_SUBTYPE_INFOS.Mayor.resolutions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.resolutions)).optional(),
+        app_resolution_type: zRegisterResolution.optional(),
         app_resolution_number: z.number(),
         app_resolution_issue_date: z.string(),
 
