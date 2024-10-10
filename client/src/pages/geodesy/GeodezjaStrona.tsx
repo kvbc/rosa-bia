@@ -1,5 +1,5 @@
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
-import { MyInputSelectOption } from "../../components/MyInput";
+import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import DBTableEdit from "../../components/DBTableEdit";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";

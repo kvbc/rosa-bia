@@ -1,3 +1,10 @@
+//
+// TableEditRow.tsx
+// Row component for the TableEdit component
+//
+// TODO: Review
+//
+
 import {
     ComponentType,
     createContext,
@@ -7,7 +14,7 @@ import {
     useState,
 } from "react";
 import { TableEditEntry } from "./TableEdit";
-import MyInput, { MyInputProps } from "./MyInput";
+import TableEditRowInput, { TableEditRowInputProps } from "./TableEditRowInput";
 import IconButton from "@mui/joy/IconButton";
 import Button from "@mui/joy/Button";
 import ButtonGroup from "@mui/joy/ButtonGroup";
@@ -34,11 +41,6 @@ export type TableEditRowContentProps<TEntry> = {
     eventEmitter: Emittery;
 };
 
-export type TableEditRowInputProps<TEntry extends TableEditEntry> = Omit<
-    MyInputProps<TEntry>,
-    "entry" | "setEntry"
->;
-
 export type TableEditRowContentComponentType<TEntry> = ComponentType<
     TableEditRowContentProps<TEntry>
 >;
@@ -46,6 +48,16 @@ export type TableEditRowContentComponentType<TEntry> = ComponentType<
 export const TableEditRowContext = createContext<{
     rowState: TableEditRowState;
 } | null>(null);
+
+export type TableEditRowProps<TEntry extends TableEditEntry> = {
+    events: TableEditRowEvents;
+    entry: TEntry;
+    editable: boolean;
+    actionTDClassName?: string;
+    setEntry: (entry: TEntry) => void;
+    inputsProps: Omit<TableEditRowInputProps<TEntry>, "entry" | "setEntry">[];
+    ContentComponent?: TableEditRowContentComponentType<TEntry>;
+};
 
 export default function TableEditRow<TEntry extends TableEditEntry>({
     events,
@@ -55,15 +67,7 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
     inputsProps,
     actionTDClassName,
     ContentComponent,
-}: {
-    events: TableEditRowEvents;
-    entry: TEntry;
-    editable: boolean;
-    actionTDClassName?: string;
-    setEntry: (entry: TEntry) => void;
-    inputsProps: TableEditRowInputProps<TEntry>[];
-    ContentComponent?: TableEditRowContentComponentType<TEntry>;
-}) {
+}: TableEditRowProps<TEntry>) {
     const [state, setState] = useState<TableEditRowState>(
         events.onAddClicked
             ? TableEditRowState.Adding
@@ -115,7 +119,7 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
         const inputs: TableEditRowContentProps<TEntry>["inputs"] = {};
         inputsProps.forEach((inputProps) => {
             inputs[inputProps.entryKey] = (
-                <MyInput
+                <TableEditRowInput
                     entry={entry}
                     setEntry={setEntry}
                     {...inputProps}
@@ -135,7 +139,7 @@ export default function TableEditRow<TEntry extends TableEditEntry>({
     } else {
         content = inputsProps.map((inputProps) => (
             <td>
-                <MyInput
+                <TableEditRowInput
                     entry={entry}
                     setEntry={setEntry}
                     {...inputProps}

@@ -1,3 +1,10 @@
+//
+// AppNavbar.tsx
+// Application navigation bar
+//
+// TODO: Review
+//
+
 import { Link } from "react-router-dom";
 import { FaHome, FaGlobe, FaUser } from "react-icons/fa";
 import { FaGear, FaMoneyBill1Wave, FaHelmetSafety } from "react-icons/fa6";
@@ -8,17 +15,18 @@ import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import { SiGoogleforms } from "react-icons/si";
 import { Option, Select, Tooltip } from "@mui/joy";
-import useDBEntriesStore from "../hooks/useDBEntriesStore";
+import useDBEntriesStore from "./hooks/useDBEntriesStore";
 import { useState } from "react";
-import { DB } from "../../../server/src/dbTypes";
+import { DB } from "../../server/src/dbTypes";
 
-function Navbar() {
+function AppNavbar() {
     const employeeDBEntries = useDBEntriesStore<DB.Employee>('employees')(); // prettier-ignore
     const [employeeID, setEmployeeID] = useState<number>(0);
 
     return (
         <nav className="w-full flex flex-row p-2 bg-blue-600 text-white font-semibold text-xs">
             <div className="gap-4 w-8/12 flex flex-row">
+                <img src="logo.svg" width={24} />
                 <Link
                     to="/"
                     className="flex flex-row items-center gap-0.5 hover:underline"
@@ -99,24 +107,26 @@ function Navbar() {
             <div className="flex flex-row w-4/12 justify-end gap-2">
                 <Select
                     size="sm"
+                    variant="solid"
+                    color="primary"
                     value={employeeID}
                     placeholder="... Pracownik"
                     onChange={(_, value) => setEmployeeID(value ?? 0)}
                 >
                     {employeeDBEntries.entries.map((entry) => (
                         <Option
+                            variant="soft"
                             key={entry.id}
                             value={entry.id}
-                            color={entry.admin ? "danger" : "neutral"}
+                            color={entry.admin ? "danger" : "primary"}
                         >
                             {entry.name}
                         </Option>
                     ))}
                 </Select>
-                {/* <img src="logo.svg" width={24} /> */}
             </div>
         </nav>
     );
 }
 
-export default Navbar;
+export default AppNavbar;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import DBTableEdit from "../../components/DBTableEdit";
-import { MyInputSelectOption } from "../../components/MyInput";
+import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import {

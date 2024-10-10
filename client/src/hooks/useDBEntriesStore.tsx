@@ -1,3 +1,9 @@
+//
+// useDBEntriesStore.tsx
+//
+// TODO: Review
+//
+
 import { useContext } from "react";
 import {
     HTTPFetchResponse,

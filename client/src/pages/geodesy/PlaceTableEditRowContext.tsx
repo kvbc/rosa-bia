@@ -6,7 +6,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { Box } from "@mui/joy";
 import { FaCity } from "react-icons/fa6";
 import DBTableEdit from "../../components/DBTableEdit";
-import { MyInputSelectOption } from "../../components/MyInput";
+import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import { GiVillage } from "react-icons/gi";
 import Table from "@mui/joy/Table";

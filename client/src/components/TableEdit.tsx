@@ -1,3 +1,10 @@
+//
+// TableEdit.tsx
+// Flexible table component displaying, allowing edition and providing pagination for many provided rows.
+//
+// TODO: Review
+//
+
 import {
     createContext,
     InputHTMLAttributes,
@@ -10,7 +17,7 @@ import TableEditRow, {
     TableEditRowContentComponentType,
     TableEditRowContext,
     TableEditRowEvents,
-    TableEditRowInputProps,
+    TableEditRowProps,
     TableEditRowState,
 } from "./TableEditRow";
 import Table from "@mui/joy/Table";
@@ -76,7 +83,7 @@ export default function TableEdit<TEntry extends TableEditEntry>({
     onUpdateEntries?: (startRowIndex: number, endRowIndex: number) => void;
     showActionsHeader?: boolean;
     events?: TableEditEvents<TEntry>;
-    rowInputsProps: TableEditRowInputProps<TEntry>[];
+    rowInputsProps: TableEditRowProps<TEntry>["inputsProps"];
     RowContentComponent?: TableEditRowContentComponentType<TEntry>;
 }) {
     if (!_entries) throw "Error";

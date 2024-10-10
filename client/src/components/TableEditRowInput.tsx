@@ -1,27 +1,36 @@
+//
+// TableEditRowInput.tsx
+// Input component to be used inside of a TableEditRow
+//
+// TODO: Review
+//
+
 import { HTMLInputTypeAttribute, useEffect, useReducer, useState } from "react";
 import Input from "@mui/joy/Input";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import { Checkbox } from "@mui/joy";
 
-export type MyInputSelectOption = {
+export type TableEditRowInputSelectOption = {
     value: string | number;
     name: string;
 };
 
-export type MyInputProps<TEntry extends { [key: string]: any }> = {
+export type TableEditRowInputProps<TEntry extends { [key: string]: any }> = {
     entry: TEntry;
     setEntry: (entry: TEntry) => void;
     type: HTMLInputTypeAttribute | "select";
     entryKey: keyof TEntry;
     uneditable?: boolean;
-    selectOptions?: MyInputSelectOption[];
-    getSelectOptions?: (entry: TEntry) => MyInputSelectOption[];
+    selectOptions?: TableEditRowInputSelectOption[];
+    getSelectOptions?: (entry: TEntry) => TableEditRowInputSelectOption[];
     placeholder?: string;
     disabled?: boolean;
 };
 
-export default function MyInput<TEntry extends { [key: string]: any }>({
+export default function TableEditRowInput<
+    TEntry extends { [key: string]: any }
+>({
     entry,
     setEntry,
     getSelectOptions,
@@ -31,7 +40,7 @@ export default function MyInput<TEntry extends { [key: string]: any }>({
     selectOptions,
     placeholder,
     disabled,
-}: MyInputProps<TEntry>) {
+}: TableEditRowInputProps<TEntry>) {
     if (!selectOptions && getSelectOptions) {
         selectOptions = getSelectOptions(entry);
     }

@@ -6,7 +6,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { Box } from "@mui/joy";
 import { FaCity } from "react-icons/fa6";
 import DBTableEdit from "../../components/DBTableEdit";
-import { MyInputSelectOption } from "../../components/MyInput";
+import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import useDBEntriesStore from "../../hooks/useDBEntriesStore";
 import PlaceTableEditRowContent from "./PlaceTableEditRowContext";
 import { DB } from "../../../../server/src/dbTypes";
@@ -62,7 +62,7 @@ export default function CommuneTableEditRowContent({
                                     type: "select",
                                     entryKey: "area_place_id",
                                     selectOptions:
-                                        placeDBEntries.entries.map<MyInputSelectOption>(
+                                        placeDBEntries.entries.map<TableEditRowInputSelectOption>(
                                             (entry) => ({
                                                 value: entry.id,
                                                 name: entry.name,

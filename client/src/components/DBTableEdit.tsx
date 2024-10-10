@@ -1,3 +1,10 @@
+//
+// DBTableEdit.tsx
+// TableEdit component connected to update database rows
+//
+// TODO: Review
+//
+
 import { ComponentProps } from "react";
 import TableEdit from "./TableEdit";
 import { DBEntries } from "../hooks/useDBEntriesStore";

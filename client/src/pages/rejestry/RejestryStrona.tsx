@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useDBEntriesStore, { DBEntries } from "../../hooks/useDBEntriesStore";
-import { MyInputSelectOption } from "../../components/MyInput";
+import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import RegisterTableEditRowContent from "./RegisterTableEditRowContent";
 import { TableEditRowInputProps } from "../../components/TableEditRow";
 import Tabs from "@mui/joy/Tabs";
@@ -81,7 +81,7 @@ export default function RejestryStrona() {
         rowInputsProps.push({
             type: "select",
             entryKey: entryKey,
-            selectOptions: dbEntries.entries.map<MyInputSelectOption>(
+            selectOptions: dbEntries.entries.map<TableEditRowInputSelectOption>(
                 (entry) => ({
                     value: entry.id,
                     name: entry[selectEntryNameKey],
@@ -92,22 +92,24 @@ export default function RejestryStrona() {
     rowInputsProps.push({
         type: "select",
         entryKey: "object_construction_form_type",
-        selectOptions: DB.REGISTER_CONSTRUCTION_FORMS.map<MyInputSelectOption>(
-            (constructionForm) => ({
-                value: constructionForm,
-                name: constructionForm,
-            })
-        ),
+        selectOptions:
+            DB.REGISTER_CONSTRUCTION_FORMS.map<TableEditRowInputSelectOption>(
+                (constructionForm) => ({
+                    value: constructionForm,
+                    name: constructionForm,
+                })
+            ),
     });
     rowInputsProps.push({
         type: "select",
         entryKey: "object_spatial_plan_type",
-        selectOptions: DB.REGISTER_SPATIAL_PLANS.map<MyInputSelectOption>(
-            (spatialPlan) => ({
-                value: spatialPlan,
-                name: spatialPlan,
-            })
-        ),
+        selectOptions:
+            DB.REGISTER_SPATIAL_PLANS.map<TableEditRowInputSelectOption>(
+                (spatialPlan) => ({
+                    value: spatialPlan,
+                    name: spatialPlan,
+                })
+            ),
     });
     // addSelectInputProps('objec', constructionFormDBEntries, 'forma') // prettier-ignore
     addInputProps('object_number', 'text') // prettier-ignore
@@ -131,7 +133,7 @@ export default function RejestryStrona() {
                 .filter(
                     (fEntry) => fEntry.commune_id === entry._object_commune_id
                 )
-                .map<MyInputSelectOption>((entry) => ({
+                .map<TableEditRowInputSelectOption>((entry) => ({
                     value: entry.id,
                     name: entry.name,
                 })),
@@ -142,7 +144,7 @@ export default function RejestryStrona() {
         getSelectOptions: (entry) =>
             streetDBEntries.entries
                 .filter((fEntry) => fEntry.place_id === entry._object_place_id)
-                .map<MyInputSelectOption>((entry) => ({
+                .map<TableEditRowInputSelectOption>((entry) => ({
                     value: entry.id,
                     name: entry.name,
                 })),
@@ -158,7 +160,7 @@ export default function RejestryStrona() {
                         fEntry.section_id ===
                         entry._object_construction_section_id
                 )
-                .map<MyInputSelectOption>((entry) => ({
+                .map<TableEditRowInputSelectOption>((entry) => ({
                     value: entry.id,
                     name: entry.name,
                 })),
@@ -173,7 +175,7 @@ export default function RejestryStrona() {
                         fEntry.division_id ===
                         entry._object_construction_division_id
                 )
-                .map<MyInputSelectOption>((entry) => ({
+                .map<TableEditRowInputSelectOption>((entry) => ({
                     value: entry.id,
                     name: entry.name,
                 })),
@@ -187,7 +189,7 @@ export default function RejestryStrona() {
                     (fEntry) =>
                         fEntry.group_id === entry._object_construction_group_id
                 )
-                .map<MyInputSelectOption>((entry) => ({
+                .map<TableEditRowInputSelectOption>((entry) => ({
                     value: entry.id,
                     name: entry.name,
                 })),
@@ -201,7 +203,7 @@ export default function RejestryStrona() {
                     (fEntry) =>
                         fEntry.class_id === entry._object_construction_class_id
                 )
-                .map<MyInputSelectOption>((entry) => ({
+                .map<TableEditRowInputSelectOption>((entry) => ({
                     value: entry.id,
                     name: entry.name,
                 })),
@@ -210,7 +212,7 @@ export default function RejestryStrona() {
     rowInputsProps.push({
         type: "select",
         entryKey: "type",
-        selectOptions: DB.REGISTER_TYPES.map<MyInputSelectOption>(
+        selectOptions: DB.REGISTER_TYPES.map<TableEditRowInputSelectOption>(
             (registerType) => ({
                 value: registerType,
                 name: registerType,
@@ -226,7 +228,7 @@ export default function RejestryStrona() {
         getSelectOptions: (entry) =>
             DB.REGISTER_SUBTYPE_INFOS[
                 DB.REGISTER_TYPE_INFOS[entry.type].subtype
-            ].decisions.map<MyInputSelectOption>((type) => ({
+            ].decisions.map<TableEditRowInputSelectOption>((type) => ({
                 value: type,
                 name: type,
             })),
@@ -241,7 +243,7 @@ export default function RejestryStrona() {
         getSelectOptions: (entry) =>
             DB.REGISTER_SUBTYPE_INFOS[
                 DB.REGISTER_TYPE_INFOS[entry.type].subtype
-            ].resolutions.map<MyInputSelectOption>((type) => ({
+            ].resolutions.map<TableEditRowInputSelectOption>((type) => ({
                 value: type,
                 name: type,
             })),

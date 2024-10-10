@@ -1,10 +1,16 @@
+//
+// App.tsx
+// Application entry component
+//
+// TODO: Review
+//
+
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/glowna/GlownaStrona";
 import RegistersPage from "./pages/rejestry/RejestryStrona";
 import GeodesyPage from "./pages/geodesy/GeodezjaStrona";
 import InvestorsPage from "./pages/investors/InwestorzyStrona";
-import Navbar from "./components/Navbar";
-import "./App.css";
+import AppNavbar from "./AppNavbar";
 import PKOBStrona from "./pages/pkob/PKOBStrona";
 import WebSocketContext from "./contexts/WebSocketContext";
 import { useState } from "react";
@@ -43,7 +49,7 @@ function App() {
         <BrowserRouter>
             <WebSocketContext.Provider value={webSocket}>
                 <div className="flex flex-col justify-stretch h-full">
-                    <Navbar />
+                    <AppNavbar />
                     <br />
                     <main className="flex-1 p-4">
                         <Routes>
