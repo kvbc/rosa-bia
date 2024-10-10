@@ -1,17 +1,18 @@
-/*
- *
- * TODO: Work on the backend when done with the frontend
- *
- */
+//
+// index.ts
+// HTML and WebSocket server entry point
+//
 
 import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
 import { HTTPFetchResponse, WSSBCMessage, WSSBCMessageType } from "./types";
 import { Database } from "sqlite3";
 import cors from "cors";
 import WebSocket from "ws";
-
-dotenv.config();
+import {
+    HTTP_SERVER_PORT,
+    HTTP_SERVER_URL,
+    WS_SERVER_PORT,
+} from "../../config";
 
 /*
  *
@@ -19,7 +20,7 @@ dotenv.config();
  *
  */
 
-const wss = new WebSocket.Server({ port: Number(process.env.WS_PORT!) });
+const wss = new WebSocket.Server({ port: WS_SERVER_PORT });
 
 const wsBroadcast = (message: WSSBCMessage): void => {
     wss.clients.forEach((ws) => ws.send(JSON.stringify(message)));
@@ -32,7 +33,6 @@ const wsBroadcast = (message: WSSBCMessage): void => {
  */
 
 const app: Express = express();
-const port = process.env.HTTP_PORT!;
 const db = new Database("db/db.db");
 
 app.use(express.json());
@@ -142,6 +142,6 @@ app.put("/:table", (req: Request, res: Response) => {
     wsBroadcast(bcastMsg);
 });
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+app.listen(HTTP_SERVER_PORT, () => {
+    console.log(`Server is running at ${HTTP_SERVER_URL}`);
 });

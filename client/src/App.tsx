@@ -17,6 +17,7 @@ import { useState } from "react";
 import EmployeesPage from "./pages/employees/EmployeesPage";
 import PageFormsB05 from "./pages/forms/PageFormsB05";
 import PageFormsB06 from "./pages/forms/PageFormsB06";
+import { WS_SERVER_URL } from "../../config";
 
 export const DB_ENTRY_ENDPOINTS = [
     "investors",
@@ -41,9 +42,7 @@ export const DB_ENTRY_ENDPOINTS = [
 export type DBEntryEndpoint = (typeof DB_ENTRY_ENDPOINTS)[number];
 
 function App() {
-    const [webSocket, _] = useState<WebSocket>(
-        new WebSocket(import.meta.env.VITE_WEBSOCKET_SERVER_HOSTNAME)
-    );
+    const [webSocket, _] = useState<WebSocket>(new WebSocket(WS_SERVER_URL));
 
     return (
         <BrowserRouter>

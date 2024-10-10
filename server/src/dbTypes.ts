@@ -1,3 +1,8 @@
+//
+// dbTypes.ts
+// 1:1 database table typings
+//
+
 export type DBRow = {
     id: number;
     [key: string]: any;

@@ -1,4 +1,9 @@
 -- 
+-- data.sql
+-- Sample data for the database
+-- 
+
+-- 
 -- Investors
 -- 
 

@@ -15,6 +15,7 @@ import axios from "axios";
 import { create, StoreApi, UseBoundStore } from "zustand";
 import { DBEntryEndpoint } from "../App";
 import { DBRow } from "../../../server/src/dbTypes";
+import { HTTP_SERVER_HOSTNAME, HTTP_SERVER_URL } from "../../../config";
 
 export type DBEntries<T extends DBRow> = {
     entries: T[];
@@ -81,19 +82,13 @@ function createDBEntriesStore<T extends DBRow>(endpoint: DBEntryEndpoint) {
             endpoint,
             addEntry: (entry) => {
                 // get().setEntries([...get().entries, entry]);
-                axios.post(
-                    import.meta.env.VITE_HTTP_SERVER_HOSTNAME + "/" + endpoint,
-                    entry
-                );
+                axios.post(HTTP_SERVER_URL + "/" + endpoint, entry);
             },
             deleteEntry: (entry) => {
                 get().setEntries(
                     get().entries.filter((fEntry) => fEntry.id !== entry.id)
                 );
-                axios.delete(
-                    import.meta.env.VITE_HTTP_SERVER_HOSTNAME +
-                        `/${endpoint}/${entry.id}`
-                );
+                axios.delete(HTTP_SERVER_URL + `/${endpoint}/${entry.id}`);
             },
             saveEntry: (entry) => {
                 get().setEntries(
@@ -101,16 +96,13 @@ function createDBEntriesStore<T extends DBRow>(endpoint: DBEntryEndpoint) {
                         fEntry.id === entry.id ? entry : fEntry
                     )
                 );
-                axios.put(
-                    import.meta.env.VITE_HTTP_SERVER_HOSTNAME + "/" + endpoint,
-                    entry
-                );
+                axios.put(HTTP_SERVER_URL + "/" + endpoint, entry);
             },
             fetchEntries: (startIndex: number, endIndex: number) => {
                 const abortController = new AbortController();
                 axios
                     .get<HTTPFetchResponse<T>>(
-                        import.meta.env.VITE_HTTP_SERVER_HOSTNAME +
+                        HTTP_SERVER_URL +
                             `/${endpoint}/${startIndex}-${endIndex}`,
                         {
                             signal: abortController.signal,

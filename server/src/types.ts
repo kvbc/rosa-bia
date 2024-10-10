@@ -1,3 +1,8 @@
+//
+// types.ts
+// HTTP and WebSocket server types
+//
+
 import internal from "stream";
 import { DBRow } from "./dbTypes";
 
