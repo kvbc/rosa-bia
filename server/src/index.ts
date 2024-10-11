@@ -5,10 +5,11 @@
 
 import express, { Express, Request, Response } from "express";
 import {
-    HTTPResponseFetchTableRows,
-    HTTPResponseError,
+    HTTPResponse,
     WSMessage,
-    DB_TABLES_WITH_ADMIN_ACCESS,
+    DB_ADMIN_MODIFY_TABLES,
+    HTTPRequestLogin,
+    ZHTTPRequestLogin,
 } from "./types";
 import { Database } from "sqlite3";
 import cors from "cors";
@@ -19,11 +20,18 @@ import {
     WS_SERVER_PORT,
 } from "../../config";
 import {
+    DB,
     DB_TABLE_NAMES,
-    DB_TABLE_ROW_ZOBJECTS,
+    DB_TABLE_ROW_INFOS,
     DBRow,
     DBTableName,
 } from "./dbTypes";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const JWT_SECRET_KEY: string = process.env.JWT_SECRET!;
 
 /*
  *
@@ -49,6 +57,12 @@ const db = new Database("db/db.db");
 app.use(express.json());
 app.use(cors());
 
+app.listen(HTTP_SERVER_PORT, () => {
+    console.log(`Server is running at ${HTTP_SERVER_URL}`);
+});
+
+//
+// Response
 //
 
 const resErrorMessage = (
@@ -56,24 +70,38 @@ const resErrorMessage = (
     statusCode: number,
     errorMessage: string
 ) => {
-    const errorResponse: HTTPResponseError = {
+    const errorResponse: HTTPResponse = {
+        responseType: "error",
         message: errorMessage,
     };
     res.status(statusCode).json(errorResponse);
 };
 
-const resError = (res: Response, statusCode: number, error: Error) => {
-    resErrorMessage(res, statusCode, `[${error.name}]: ${error.message}`);
+const resError = (res: Response, statusCode: number, error: any) => {
+    if (error instanceof Error) {
+        resErrorMessage(res, statusCode, `[${error.name}]: ${error.message}`);
+    } else {
+        resErrorMessage(res, statusCode, String(error));
+    }
 };
 
-const resVerifyTableName = (res: Response, tableName: string): boolean => {
-    const admin: boolean = true;
+const resVerifyTableName = (
+    req: Request,
+    res: Response,
+    tableName: string,
+    isAdmin: boolean
+): boolean => {
     if (!DB_TABLE_NAMES.includes(tableName as DBTableName)) {
-        resErrorMessage(res, 401, `Invalid table name "${tableName}"`);
+        resErrorMessage(res, 400, `Invalid table name "${tableName}"`);
         return false;
     }
-    if (tableName in DB_TABLES_WITH_ADMIN_ACCESS && !admin) {
-        resErrorMessage(res, 402, `Insufficient permissions for table "${tableName}"`) // prettier-ignore
+    const modifyMethods = ["POST", "PUT", "DELETE"];
+    if (
+        DB_ADMIN_MODIFY_TABLES.includes(tableName as DBTableName) &&
+        !isAdmin &&
+        modifyMethods.includes(req.method)
+    ) {
+        resErrorMessage(res, 401, `Insufficient permissions for table "${tableName}"`) // prettier-ignore
         return false;
     }
     return true;
@@ -84,10 +112,53 @@ const resVerifyTableRow = (
     tableName: DBTableName,
     row: any
 ): boolean => {
-    const ret = DB_TABLE_ROW_ZOBJECTS[tableName].safeParse(row);
-    if (!ret.success) resErrorMessage(res, 401, ret.error.message);
+    const ret = DB_TABLE_ROW_INFOS[tableName].zod.safeParse(row);
+    if (!ret.success) resErrorMessage(res, 400, ret.error.message);
     return ret.success;
 };
+
+const getAuthorizedEmployee = async (
+    req: Request,
+    res: Response
+): Promise<DB.Employee | null> => {
+    return new Promise((resolve) => {
+        const authorization = req.headers["authorization"];
+        if (authorization && authorization.startsWith("Bearer ")) {
+            const jwtToken = authorization.replace("Bearer ", "");
+            try {
+                const employeeName = jwt.verify(jwtToken, JWT_SECRET_KEY);
+                db.get<DB.Employee | undefined>(
+                    "select * from employees where name = ?",
+                    [employeeName],
+                    (error, row) => {
+                        if (error) {
+                            resError(res, 500, error);
+                            resolve(null);
+                            return;
+                        }
+                        if (row === undefined) {
+                            resErrorMessage(res, 500, "Employee not found");
+                            resolve(null);
+                            return;
+                        }
+                        resolve(row);
+                    }
+                );
+                return;
+            } catch (error) {
+                resError(res, 401, error);
+                resolve(null);
+                return;
+            }
+        }
+        resolve(null);
+        resError(res, 401, "Authorization required");
+    });
+};
+
+//
+// Helpers
+//
 
 const stringToInteger = (str: string | undefined): number | undefined => {
     if (str === undefined) return undefined;
@@ -96,6 +167,12 @@ const stringToInteger = (str: string | undefined): number | undefined => {
     if (Number.isInteger(f)) return f;
     return undefined;
 };
+
+/*
+ *
+ * HTTP Server :: Tables
+ *
+ */
 
 //
 // Fetch rows from index [startIndex: inclusive] to [endIndex: exclusive]
@@ -111,56 +188,89 @@ app.get(
         }>,
         res: Response
     ) => {
-        // get params
-        const tableName: string = req.params.tableName;
-        const startIndex: number | undefined = stringToInteger(req.params.startIndex) // prettier-ignore
-        const endIndex: number | undefined = stringToInteger(req.params.endIndex); // prettier-ignore
-        const admin: boolean = true;
+        getAuthorizedEmployee(req, res).then((employee) => {
+            if (employee === null) {
+                return;
+            }
 
-        // verify params
-        if (!resVerifyTableName(res, tableName)) {
-            return;
-        }
-        if (typeof startIndex === "number" && startIndex < 0) {
-            return resErrorMessage(res, 401, "Start index cannot be negative");
-        }
-        if (typeof endIndex === "number") {
-            if (endIndex < 0) {
-                return resErrorMessage(
+            // get params
+            const startIndex: number | undefined = stringToInteger(req.params.startIndex) // prettier-ignore
+            const endIndex: number | undefined = stringToInteger(req.params.endIndex); // prettier-ignore
+
+            // verify params
+            if (
+                !resVerifyTableName(
+                    req,
                     res,
-                    401,
-                    "End index cannot be negative"
-                );
+                    req.params.tableName,
+                    employee.admin
+                )
+            ) {
+                return;
             }
-            if (endIndex <= startIndex!) {
-                return resErrorMessage(res, 401, 'End index must be higher than start index') // prettier-ignore
-            }
-        }
-
-        let sqlQuery = `select * from ${tableName}`;
-        if (typeof startIndex === "number") sqlQuery += " limit " + startIndex;
-        if (typeof endIndex === "number") sqlQuery += ", " + (endIndex - startIndex!); // prettier-ignore
-
-        console.log(`[GET /table/${tableName}]`);
-
-        db.all(sqlQuery, (error, rows) => {
-            if (error) {
-                return resError(res, 500, error);
-            }
-            db.get<{ "count(*)": number }>(
-                `select count(*) from ${tableName}`,
-                (error, row) => {
-                    if (error) {
-                        return resError(res, 500, error);
-                    }
-                    const totalCount = row["count(*)"];
-                    const response: HTTPResponseFetchTableRows<any> = {
-                        totalCount,
-                        rows,
-                    };
-                    res.status(200).json(response);
+            const tableName = req.params.tableName as DBTableName;
+            if (typeof startIndex === "number") {
+                if (startIndex < 0) {
+                    return resErrorMessage(
+                        res,
+                        400,
+                        "Start index cannot be negative"
+                    );
                 }
-            );
+                if (endIndex === undefined) {
+                    return resErrorMessage(
+                        res,
+                        400,
+                        "End index must be specified"
+                    );
+                }
+                if (endIndex < 0) {
+                    return resErrorMessage(
+                        res,
+                        400,
+                        "End index cannot be negative"
+                    );
+                }
+                if (endIndex <= startIndex) {
+                    return resErrorMessage(res, 400, 'End index must be higher than start index') // prettier-ignore
+                }
+            }
+
+            const sqlKeys: string[] = [
+                ...DB_TABLE_ROW_INFOS[tableName].zod.keyof().options,
+            ].filter((key) => {
+                const adminProps = DB_TABLE_ROW_INFOS[tableName].adminProps;
+                if (adminProps && !employee.admin && adminProps.includes(key))
+                    return false;
+                return true;
+            });
+            let sqlQuery = `select ${sqlKeys.join(", ")} from ${tableName}`;
+            if (typeof startIndex === "number") {
+                sqlQuery += " limit " + startIndex + ", " + (endIndex! - startIndex); // prettier-ignore
+            }
+
+            console.log(`[GET /table/${tableName}] ${sqlQuery}`);
+
+            db.all(sqlQuery, (error, rows) => {
+                if (error) {
+                    return resError(res, 500, error);
+                }
+                db.get<{ "count(*)": number }>(
+                    `select count(*) from ${tableName}`,
+                    (error, row) => {
+                        if (error) {
+                            return resError(res, 500, error);
+                        }
+                        const totalCount = row["count(*)"];
+                        const response: HTTPResponse<any> = {
+                            responseType: "fetch table rows",
+                            totalCount,
+                            rows,
+                        };
+                        res.status(200).json(response);
+                    }
+                );
+            });
         });
     }
 );
@@ -171,96 +281,214 @@ app.get(
 app.post(
     "/table/:tableName",
     (req: Request<{ tableName: string }>, res: Response) => {
-        // verify params
-        if (!resVerifyTableName(res, req.params.tableName)) {
-            return;
-        }
-        const tableName = req.params.tableName as DBTableName;
-
-        // verify body
-        if (!resVerifyTableRow(res, tableName, req.body)) {
-            return;
-        }
-        const row: DBRow = req.body;
-
-        console.log(`[POST /table/${tableName}] ${row}`);
-
-        // TODO: continue ...
-
-        let keys = "id";
-        let values = "null";
-        const params: any[] = [];
-        for (const key in req.body) {
-            if (key !== "id" && key[0] !== "_") {
-                keys += `, \`${key}\``;
-                values += ", ?";
-                params.push(req.body[key]);
+        getAuthorizedEmployee(req, res).then((employee) => {
+            if (employee === null) {
+                return;
             }
-        }
 
-        db.run(
-            `insert into ${tableName}(${keys}) values(${values})`,
-            params,
-            (err) => {
-                if (err) throw err;
+            // verify params
+            if (
+                !resVerifyTableName(
+                    req,
+                    res,
+                    req.params.tableName,
+                    employee.admin
+                )
+            ) {
+                return;
+            }
+            const tableName = req.params.tableName as DBTableName;
+
+            // verify body
+            if (!resVerifyTableRow(res, tableName, req.body)) {
+                return;
+            }
+            const newRow: DBRow = req.body;
+
+            let sqlKeys = "id";
+            let sqlValues = "null";
+            const sqlParams: any[] = [];
+            for (const key in newRow) {
+                if (key !== "id") {
+                    sqlKeys += `, \`${key}\``;
+                    sqlValues += ", ?";
+                    sqlParams.push(newRow[key]);
+                }
+            }
+            const sqlQuery = `insert into ${tableName}(${sqlKeys}) values(${sqlValues})`;
+
+            console.log(`[POST /table/${tableName}] ${sqlQuery} ${sqlParams}`);
+
+            db.run(sqlQuery, sqlParams, (err) => {
+                if (err) {
+                    return resError(res, 500, err);
+                }
                 db.get<{ "last_insert_rowid()": number }>(
                     "select last_insert_rowid()",
                     (err, row) => {
-                        if (err) throw err;
-                        const insert_id = row["last_insert_rowid()"];
+                        if (err) {
+                            return resError(res, 500, err);
+                        }
+                        const insertID = row["last_insert_rowid()"];
                         wsBroadcastMessage({
-                            type: "entry added",
-                            entry: { ...req.body, id: insert_id },
-                            endpoint: tableName,
+                            messageType: "table row added",
+                            tableRow: { ...newRow, id: insertID },
+                            tableName,
                         });
+                        res.sendStatus(200);
                     }
                 );
-            }
-        );
+            });
+        });
     }
 );
 
-app.delete("/table/:table/:id", (req: Request, res: Response) => {
-    const table = req.params.table;
-    const entryID = Number(req.params.id);
+//
+// Delete an entry of the specified id from the given table
+//
+app.delete(
+    "/table/:tableName/:entryID",
+    (req: Request<{ tableName: string; entryID: string }>, res: Response) => {
+        getAuthorizedEmployee(req, res).then((employee) => {
+            if (employee === null) {
+                return;
+            }
 
-    db.run(`delete from ${table} where id = ?`, [entryID]);
+            // verify params
+            if (
+                !resVerifyTableName(
+                    req,
+                    res,
+                    req.params.tableName,
+                    employee.admin
+                )
+            ) {
+                return;
+            }
+            const tableName = req.params.tableName as DBTableName;
+            const entryID: number | undefined = stringToInteger(req.params.entryID) // prettier-ignore
+            if (entryID === undefined) {
+                return resErrorMessage(res, 400, "Invalid entry id");
+            } else if (entryID < 0) {
+                return resErrorMessage(
+                    res,
+                    400,
+                    "Start index cannot be negative"
+                );
+            }
 
-    wsBroadcastMessage({
-        type: "entry deleted",
-        entry: {
-            id: entryID,
-            nazwa: "",
-            adres: "",
-        },
-        endpoint: table,
-    });
-});
+            const sqlQuery = `delete from ${tableName} where id = ?`;
+            const sqlParams = [entryID];
 
-app.put("/table/:table", (req: Request, res: Response) => {
-    const table = req.params.table;
+            console.log(
+                `[DELETE /table/${tableName}] ${sqlQuery} ${sqlParams}`
+            );
 
-    let query = `update ${table} set `;
-    const params = [];
-    for (const key in req.body) {
-        if (key != "id" && key[0] !== "_") {
-            if (params.length > 0) query += ", ";
-            query += `\`${key}\`=?`;
-            params.push(req.body[key]);
-        }
+            db.run(sqlQuery, sqlParams, (err) => {
+                if (err) {
+                    return resError(res, 500, err);
+                }
+                wsBroadcastMessage({
+                    messageType: "table row deleted",
+                    tableRow: { id: entryID },
+                    tableName,
+                });
+                res.sendStatus(200);
+            });
+        });
     }
-    query += "where id=?";
-    params.push(req.body.id);
+);
 
-    db.run(query, params);
+//
+// Update the given entry with a new specified entry
+//
+app.put(
+    "/table/:tableName",
+    (req: Request<{ tableName: string }>, res: Response) => {
+        getAuthorizedEmployee(req, res).then((employee) => {
+            if (employee === null) {
+                return;
+            }
 
-    wsBroadcastMessage({
-        type: "entry updated",
-        entry: req.body,
-        endpoint: table,
+            // verify params
+            if (
+                !resVerifyTableName(
+                    req,
+                    res,
+                    req.params.tableName,
+                    employee.admin
+                )
+            ) {
+                return;
+            }
+            const tableName = req.params.tableName as DBTableName;
+
+            // verify body
+            if (!resVerifyTableRow(res, tableName, req.body)) {
+                return;
+            }
+            const newRow: DBRow = req.body;
+
+            let sqlQuery = `update ${tableName} set `;
+            const sqlParams = [];
+            for (const key in newRow) {
+                if (key !== "id") {
+                    if (sqlParams.length > 0) sqlQuery += ", ";
+                    sqlQuery += `\`${key}\`=?`;
+                    sqlParams.push(newRow[key]);
+                }
+            }
+            sqlQuery += "where id=?";
+            sqlParams.push(newRow.id);
+
+            console.log(`[PUT /table/${tableName}] ${sqlParams} ${sqlParams}`);
+
+            db.run(sqlQuery, sqlParams, (error) => {
+                if (error) {
+                    return resError(res, 500, error);
+                }
+                wsBroadcastMessage({
+                    messageType: "table row updated",
+                    tableRow: newRow,
+                    tableName,
+                });
+                res.sendStatus(200);
+            });
+        });
+    }
+);
+
+/*
+ *
+ * HTTP Server :: Login
+ *
+ */
+
+app.post("/login", (req: Request<HTTPRequestLogin>, res: Response) => {
+    // verify body
+    const ret = ZHTTPRequestLogin.safeParse(req.body);
+    if (!ret.success) {
+        return resErrorMessage(res, 400, ret.error.message);
+    }
+    const body = ret.data;
+
+    const sqlQuery = "select * from employees where name = ? and password = ?";
+    const sqlParams = [body.employeeName, body.employeePassword];
+
+    console.log(`[POST /login] ${sqlQuery} ${sqlParams}`);
+
+    db.get<DB.Employee | undefined>(sqlQuery, sqlParams, (error, row) => {
+        if (error) {
+            return resError(res, 500, error);
+        }
+        if (row === undefined) {
+            return resErrorMessage(res, 400, "Invalid username or password");
+        }
+        const jwtToken = jwt.sign(row.name, JWT_SECRET_KEY);
+        const response: HTTPResponse = {
+            responseType: "login",
+            jwtToken,
+        };
+        res.status(200).json(response);
     });
-});
-
-app.listen(HTTP_SERVER_PORT, () => {
-    console.log(`Server is running at ${HTTP_SERVER_URL}`);
 });

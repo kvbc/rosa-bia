@@ -334,6 +334,7 @@ export namespace DB {
         password: z.string(),
         admin: z.boolean(),
     });
+    export const EMPLOYEE_ADMIN_PROPS: readonly (keyof Employee)[] = ['password'] // prettier-ignore
     export type Employee = z.infer<typeof ZEmployee>;
 
     //
@@ -347,19 +348,24 @@ export namespace DB {
     export type InfoBoard = z.infer<typeof ZInfoBoard>;
 }
 
-export const DB_TABLE_ROW_ZOBJECTS: { [key in DBTableName]: ZodObject<any> } = {
-    investors: DB.ZInvestor,
-    communes: DB.ZCommune,
-    places: DB.ZPlace,
-    streets: DB.ZStreet,
-    construction_sections: DB.ZConstructionSection,
-    construction_divisions: DB.ZConstructionDivision,
-    construction_groups: DB.ZConstructionGroup,
-    construction_classes: DB.ZConstructionClass,
-    construction_specs: DB.ZConstructionSpec,
-    registers: DB.ZRegister,
-    registers_invest_plots: DB.ZRegisterInvestPlot,
-    registers_admin_actions: DB.ZRegisterAdminAction,
-    employees: DB.ZEmployee,
-    info_boards: DB.ZInfoBoard,
+export const DB_TABLE_ROW_INFOS: {
+    [key in DBTableName]: {
+        zod: ZodObject<any>;
+        adminProps?: readonly string[];
+    };
+} = {
+    investors: { zod: DB.ZInvestor },
+    communes: { zod: DB.ZCommune },
+    places: { zod: DB.ZPlace },
+    streets: { zod: DB.ZStreet },
+    construction_sections: { zod: DB.ZConstructionSection },
+    construction_divisions: { zod: DB.ZConstructionDivision },
+    construction_groups: { zod: DB.ZConstructionGroup },
+    construction_classes: { zod: DB.ZConstructionClass },
+    construction_specs: { zod: DB.ZConstructionSpec },
+    registers: { zod: DB.ZRegister },
+    registers_invest_plots: { zod: DB.ZRegisterInvestPlot },
+    registers_admin_actions: { zod: DB.ZRegisterAdminAction },
+    employees: { zod: DB.ZEmployee, adminProps: DB.EMPLOYEE_ADMIN_PROPS },
+    info_boards: { zod: DB.ZInfoBoard },
 };

@@ -11,4 +11,5 @@ Tech Stack:
 -   Express
 -   MySQL
 -   Zod
+-   JWT
 -   MUI Joy UI

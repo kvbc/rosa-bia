@@ -4,23 +4,36 @@
 //
 
 import { DBRow, DBTableName } from "./dbTypes";
+import { z } from "zod";
 
 export type WSMessage<TRow extends DBRow = DBRow> = {
-    type: "entry added" | "entry updated" | "entry deleted";
-    entry: TRow;
-    endpoint: string;
+    messageType: "table row added" | "table row updated" | "table row deleted";
+    tableRow: TRow;
+    tableName: DBTableName;
 };
 
-export type HTTPResponseFetchTableRows<TRow extends DBRow> = {
-    totalCount: number;
-    rows: TRow[];
-};
+export const ZHTTPRequestLogin = z.object({
+    employeeName: z.string(),
+    employeePassword: z.string(),
+});
+export type HTTPRequestLogin = z.infer<typeof ZHTTPRequestLogin>;
 
-export type HTTPResponseError = {
-    message: string;
-};
+export type HTTPResponse<TRow extends DBRow = DBRow> =
+    | {
+          responseType: "fetch table rows";
+          totalCount: number;
+          rows: TRow[];
+      }
+    | {
+          responseType: "error";
+          message: string;
+      }
+    | {
+          responseType: "login";
+          jwtToken: string;
+      };
 
-export const DB_TABLES_WITH_ADMIN_ACCESS: readonly DBTableName[] = [
+export const DB_ADMIN_MODIFY_TABLES: readonly DBTableName[] = [
     "construction_sections",
     "construction_divisions",
     "construction_groups",
