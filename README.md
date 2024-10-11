@@ -3,6 +3,7 @@
 Tech Stack:
 
 -   React
+-   React Query
 -   TypeScript
 -   Tailwind
 -   Vite
