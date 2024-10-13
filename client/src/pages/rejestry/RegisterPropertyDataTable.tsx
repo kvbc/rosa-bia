@@ -1,21 +1,21 @@
 import { Table } from "@mui/joy";
 import DBTableEdit from "../../components/DBTableEdit";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBTableStore";
-import { DB } from "../../../../server/src/dbTypes";
+import { DBRows } from "../../../../server/src/dbTypes";
 
 export default function RegisterPropertyDataTable({
     inputs,
-    entry,
+    row: entry,
     editable,
     place,
     area,
-    setEntry,
+    setRow: setEntry,
 }: {
-    place?: DB.Place;
-    area?: DB.Place;
-} & TableEditRowContentProps<DB.Register>) {
-    const registerInvestPlotDBEntries = useDBEntriesStore<DB.RegisterInvestPlot>("registers_invest_plots")() // prettier-ignore
+    place?: DBRows.Place;
+    area?: DBRows.Place;
+} & TableEditRowContentComponentProps<DBRows.Register>) {
+    const registerInvestPlotDBEntries = useDBEntriesStore<DBRows.RegisterInvestPlot>("registers_invest_plots")() // prettier-ignore
 
     return (
         <Table

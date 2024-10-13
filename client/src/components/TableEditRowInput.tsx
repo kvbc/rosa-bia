@@ -5,61 +5,51 @@
 // FIXME: todo
 //
 
-import React, {
-    Dispatch,
-    HTMLInputTypeAttribute,
-    SetStateAction,
-    useEffect,
-    useReducer,
-    useState,
-} from "react";
+import React, { Dispatch, HTMLInputTypeAttribute, SetStateAction } from "react";
 import Input from "@mui/joy/Input";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import { Checkbox } from "@mui/joy";
+import { TableEditRowType } from "./TableEdit";
 
 export type TableEditRowInputSelectOption = {
     value: string | number;
     name: string;
 };
 
-export type TableEditRowInputProps<TEntry extends { [key: string]: any }> = {
-    entry: TEntry;
-    setEntry: Dispatch<SetStateAction<TEntry>>;
+export type TableEditRowInputProps<TRow extends TableEditRowType> = {
+    row: TRow;
+    setRow: Dispatch<SetStateAction<TRow>>;
     type: HTMLInputTypeAttribute | "select";
-    entryKey: keyof TEntry;
-    uneditable?: boolean;
+    rowKey: keyof TRow & string;
     selectOptions?: TableEditRowInputSelectOption[];
     placeholder?: string;
     disabled?: boolean;
 };
 
-export default function TableEditRowInput<
-    TEntry extends { [key: string]: any }
->({
-    entry,
-    setEntry,
+export default function TableEditRowInput<TRow extends TableEditRowType>({
+    row,
+    setRow,
     type,
-    entryKey,
-    uneditable,
+    rowKey,
     selectOptions,
     placeholder,
     disabled,
-}: TableEditRowInputProps<TEntry>) {
+}: TableEditRowInputProps<TRow>) {
     return (
         <>
             {type === "select" && (
                 <Select
-                    value={entry[entryKey]}
+                    value={row[rowKey]}
                     onChange={(_, value) =>
                         selectOptions &&
                         selectOptions.length > 0 &&
-                        setEntry((entry) => ({
+                        setRow((entry) => ({
                             ...entry,
-                            [entryKey]: value,
+                            [rowKey]: value,
                         }))
                     }
-                    disabled={uneditable ? true : disabled}
+                    disabled={disabled}
                 >
                     {selectOptions &&
                         selectOptions.map((selectOption) => (
@@ -76,27 +66,27 @@ export default function TableEditRowInput<
                 (type === "checkbox" ? (
                     <Checkbox
                         size="sm"
-                        checked={entry[entryKey]}
+                        checked={row[rowKey] as boolean}
                         onChange={(e) => {
-                            setEntry((entry) => ({
+                            setRow((entry) => ({
                                 ...entry,
-                                [entryKey]: e.target.checked,
+                                [rowKey]: e.target.checked,
                             }));
                         }}
-                        disabled={uneditable ? true : disabled}
+                        disabled={disabled}
                     />
                 ) : (
                     <Input
                         size="sm"
                         type={type}
-                        value={entry[entryKey]}
+                        value={row[rowKey] as string | number}
                         onChange={(e) => {
-                            setEntry((entry) => ({
+                            setRow((entry) => ({
                                 ...entry,
-                                [entryKey]: e.target.value,
+                                [rowKey]: e.target.value,
                             }));
                         }}
-                        disabled={uneditable ? true : disabled}
+                        disabled={disabled}
                         placeholder={placeholder}
                     />
                 ))}

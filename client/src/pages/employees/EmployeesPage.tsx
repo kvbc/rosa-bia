@@ -9,7 +9,7 @@ export default function EmployeesPage() {
         <DBTableEdit
             dbEntries={employeeDBEntries}
             headers={["Nazwa", "Hasło", "Administrator"]}
-            emptyEntry={{
+            emptyRow={{
                 id: employeeDBEntries.totalRowCount + 1,
                 name: "",
                 password: "",
@@ -18,15 +18,15 @@ export default function EmployeesPage() {
             rowInputsProps={[
                 {
                     type: "text",
-                    entryKey: "name",
+                    rowKey: "name",
                 },
                 {
                     type: "text",
-                    entryKey: "password",
+                    rowKey: "password",
                 },
                 {
                     type: "checkbox",
-                    entryKey: "admin",
+                    rowKey: "admin",
                 },
             ]}
         />

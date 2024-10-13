@@ -1,12 +1,12 @@
 import { DB } from "../../../../server/src/dbTypes";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 
 export default function StreetTableEditRowContent({
     inputs,
-    entry,
+    row: entry,
     editable,
-    setEntry,
-}: TableEditRowContentProps<DB.Street>) {
+    setRow: setEntry,
+}: TableEditRowContentComponentProps<DB.Street>) {
     return (
         <>
             <td className="bg-gray-200">{inputs.name}</td>

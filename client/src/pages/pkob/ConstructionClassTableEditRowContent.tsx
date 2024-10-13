@@ -5,7 +5,7 @@ import {
     Box,
     Table,
 } from "@mui/joy";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaHouse } from "react-icons/fa6";
 import DBTableEdit from "../../components/DBTableEdit";
@@ -15,10 +15,10 @@ import { DB } from "../../../../server/src/dbTypes";
 
 export default function ConstructionClassTableEditRowContent({
     inputs,
-    entry,
+    row: entry,
     editable,
-    setEntry,
-}: TableEditRowContentProps<DB.ConstructionClass>) {
+    setRow: setEntry,
+}: TableEditRowContentComponentProps<DB.ConstructionClass>) {
     const constructionSpecDBEntries = useDBEntriesStore<DB.ConstructionSpec>("construction_specs")(); // prettier-ignore
 
     return (
@@ -55,7 +55,7 @@ export default function ConstructionClassTableEditRowContent({
                         <br />
                         <DBTableEdit
                             dbEntries={constructionSpecDBEntries}
-                            entries={constructionSpecDBEntries.rows.filter(
+                            rows={constructionSpecDBEntries.rows.filter(
                                 (fEntry) => fEntry.class_id === entry.id
                             )}
                             editable={editable}
@@ -63,7 +63,7 @@ export default function ConstructionClassTableEditRowContent({
                             headersClassName="bg-gray-400"
                             rowActionTDClassName="bg-gray-400"
                             headers={["Wyszczególnienia Budowlane"]}
-                            emptyEntry={{
+                            emptyRow={{
                                 id: constructionSpecDBEntries.totalRowCount + 1,
                                 name: "",
                                 class_id: entry.id,
@@ -73,15 +73,15 @@ export default function ConstructionClassTableEditRowContent({
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "name",
+                                    rowKey: "name",
                                 },
                                 {
                                     type: "text",
-                                    entryKey: "ob_cat",
+                                    rowKey: "ob_cat",
                                 },
                                 {
                                     type: "text",
-                                    entryKey: "zl_class",
+                                    rowKey: "zl_class",
                                 },
                             ]}
                             RowContentComponent={

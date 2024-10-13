@@ -1,25 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBTableStore";
 import { Checkbox, Input } from "@mui/joy";
-import { DB } from "../../../../server/src/dbTypes";
+import { DBRows } from "../../../../server/src/dbTypes";
 
 export default function RegisterAdminProcedureActionsTableRow({
     inputs,
-    entry,
+    row: entry,
     editable,
-    setEntry,
+    setRow: setEntry,
     actionType,
     eventEmitter,
 }: {
-    actionType: DB.RegisterAdminActionType;
-} & TableEditRowContentProps<DB.Register>) {
-    const registerAdminActionsDBEntries = useDBEntriesStore<DB.RegisterAdminAction>('registers_admin_actions')(); // prettier-ignore
+    actionType: DBRows.RegisterAdminActionType;
+} & TableEditRowContentComponentProps<DBRows.Register>) {
+    const registerAdminActionsDBEntries = useDBEntriesStore<DBRows.RegisterAdminAction>('registers_admin_actions')(); // prettier-ignore
     const dbAction = registerAdminActionsDBEntries.rows.find(
         (fEntry) =>
             fEntry.register_id === entry.id && fEntry.type === actionType
     );
-    const [action, setAction] = useState<DB.RegisterAdminAction>(
+    const [action, setAction] = useState<DBRows.RegisterAdminAction>(
         dbAction
             ? { ...dbAction }
             : {

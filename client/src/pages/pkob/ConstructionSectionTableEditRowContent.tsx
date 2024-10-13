@@ -1,5 +1,5 @@
 import DBTableEdit from "../../components/DBTableEdit";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import Table from "@mui/joy/Table";
 import useDBEntriesStore from "../../hooks/useDBTableStore";
 import ConstructionDivisionTableEditRowContent from "./ConstructionDivisionTableEditRowContent";
@@ -9,15 +9,15 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaCity, FaDatabase } from "react-icons/fa6";
 import { Box } from "@mui/joy";
-import { DB } from "../../../../server/src/dbTypes";
+import { DBRows } from "../../../../server/src/dbTypes";
 
 export default function ConstructionSectionTableEditRowContent({
     inputs,
-    entry,
+    row: entry,
     editable,
-    setEntry,
-}: TableEditRowContentProps<DB.ConstructionSection>) {
-    const constructionDivisionDBEntries = useDBEntriesStore<DB.ConstructionDivision>("construction_divisions")(); // prettier-ignore
+    setRow: setEntry,
+}: TableEditRowContentComponentProps<DBRows.ConstructionSection>) {
+    const constructionDivisionDBEntries = useDBEntriesStore<DBRows.ConstructionDivision>("construction_divisions")(); // prettier-ignore
 
     return (
         <>
@@ -38,7 +38,7 @@ export default function ConstructionSectionTableEditRowContent({
                     <AccordionDetails>
                         <DBTableEdit
                             dbEntries={constructionDivisionDBEntries}
-                            entries={constructionDivisionDBEntries.rows.filter(
+                            rows={constructionDivisionDBEntries.rows.filter(
                                 (fEntry) => fEntry.section_id === entry.id
                             )}
                             editable={editable}
@@ -46,7 +46,7 @@ export default function ConstructionSectionTableEditRowContent({
                             rowActionTDClassName="bg-gray-100"
                             headers={["Działy Budowlane"]}
                             showFooter={false}
-                            emptyEntry={{
+                            emptyRow={{
                                 id:
                                     constructionDivisionDBEntries.totalRowCount +
                                     1,
@@ -56,7 +56,7 @@ export default function ConstructionSectionTableEditRowContent({
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "name",
+                                    rowKey: "name",
                                 },
                             ]}
                             RowContentComponent={

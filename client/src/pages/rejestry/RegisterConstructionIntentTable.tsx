@@ -15,27 +15,27 @@
  */
 
 import { Table } from "@mui/joy";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import { ReactNode, useEffect, useMemo } from "react";
 import useDBEntriesStore from "../../hooks/useDBTableStore";
 import DBTableEdit from "../../components/DBTableEdit";
 import RegisterPropertyDataTable from "./RegisterPropertyDataTable";
 import RegisterInvestPlotsDataTable from "./RegisterInvestPlotsTable";
 import RegisterCharParamsTable from "./RegisterCharParamsTable";
-import { DB } from "../../../../server/src/dbTypes";
+import { DBRows } from "../../../../server/src/dbTypes";
 
 export default function RegisterConstructionIntentTable(
-    props: TableEditRowContentProps<DB.Register>
+    props: TableEditRowContentComponentProps<DBRows.Register>
 ) {
-    const { inputs, entry, editable, setEntry } = props;
+    const { inputs, row: entry, editable, setRow: setEntry } = props;
 
-    const constructionSpecDBEntries = useDBEntriesStore<DB.ConstructionSpec>("construction_specs")(); // prettier-ignore
-    const constructionClassDBEntries = useDBEntriesStore<DB.ConstructionClass>("construction_classes")(); // prettier-ignore
-    const constructionGroupDBEntries = useDBEntriesStore<DB.ConstructionGroup>("construction_groups")(); // prettier-ignore
-    const constructionDivisionDBEntries = useDBEntriesStore<DB.ConstructionDivision>("construction_divisions")(); // prettier-ignore
-    const placeDBEntries = useDBEntriesStore<DB.Place>("places")(); // prettier-ignore
-    const communeDBEntries = useDBEntriesStore<DB.Commune>("communes")(); // prettier-ignore
-    const streetDBEntries = useDBEntriesStore<DB.Street>("streets")(); // prettier-ignore
+    const constructionSpecDBEntries = useDBEntriesStore<DBRows.ConstructionSpec>("construction_specs")(); // prettier-ignore
+    const constructionClassDBEntries = useDBEntriesStore<DBRows.ConstructionClass>("construction_classes")(); // prettier-ignore
+    const constructionGroupDBEntries = useDBEntriesStore<DBRows.ConstructionGroup>("construction_groups")(); // prettier-ignore
+    const constructionDivisionDBEntries = useDBEntriesStore<DBRows.ConstructionDivision>("construction_divisions")(); // prettier-ignore
+    const placeDBEntries = useDBEntriesStore<DBRows.Place>("places")(); // prettier-ignore
+    const communeDBEntries = useDBEntriesStore<DBRows.Commune>("communes")(); // prettier-ignore
+    const streetDBEntries = useDBEntriesStore<DBRows.Street>("streets")(); // prettier-ignore
 
     const constructionSpec = useMemo(() => constructionSpecDBEntries.rows.find((fEntry) => fEntry.id === entry.object_construction_spec_id), [entry.object_construction_spec_id]); // prettier-ignore
     const constructionClass = useMemo(() => constructionClassDBEntries.rows.find((fEntry) => fEntry.id === constructionSpec?.class_id), [constructionSpec]); // prettier-ignore
@@ -53,18 +53,19 @@ export default function RegisterConstructionIntentTable(
     useEffect(() => setEntry({...entry, _object_place_id: street?.place_id ?? 0}), [street]) // prettier-ignore
     useEffect(() => setEntry({...entry, _object_commune_id: place?.commune_id ?? 0}), [place]) // prettier-ignore
 
-    const constructionIntentNode: { [key in DB.RegisterType]: ReactNode } = {
-        "PnB (6740)": inputs._object_construction_group_id,
-        "PnRozb. (6741)": "Rozbiórka budynku",
-        "Zg. Rozb. (6743.1)": "Rozbiórka budynku",
-        "Zg. Zwykłe (6743.2)": "???",
-        "Zm. Sp. Użytk. (6743.3)": "???",
-        "BiP (6743.4)": "Budowa",
-        "ZRiD (7012)": "???",
-        "Pisma różne (670)": "???",
-        "Samodz. Lokali (705)": "???",
-        "Dz. bud": "???",
-    };
+    const constructionIntentNode: { [key in DBRows.RegisterType]: ReactNode } =
+        {
+            "PnB (6740)": inputs._object_construction_group_id,
+            "PnRozb. (6741)": "Rozbiórka budynku",
+            "Zg. Rozb. (6743.1)": "Rozbiórka budynku",
+            "Zg. Zwykłe (6743.2)": "???",
+            "Zm. Sp. Użytk. (6743.3)": "???",
+            "BiP (6743.4)": "Budowa",
+            "ZRiD (7012)": "???",
+            "Pisma różne (670)": "???",
+            "Samodz. Lokali (705)": "???",
+            "Dz. bud": "???",
+        };
 
     return (
         <Table size="sm" sx={{ height: "100%" }}>

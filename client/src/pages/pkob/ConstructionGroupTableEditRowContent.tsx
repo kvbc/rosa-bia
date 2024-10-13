@@ -1,5 +1,5 @@
 import DBTableEdit from "../../components/DBTableEdit";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBTableStore";
 import ConstructionClassTableEditRowContent from "./ConstructionClassTableEditRowContent";
 import Table from "@mui/joy/Table";
@@ -9,15 +9,15 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaCity, FaDatabase, FaHouse } from "react-icons/fa6";
 import { Box } from "@mui/joy";
-import { DB } from "../../../../server/src/dbTypes";
+import { DBRows } from "../../../../server/src/dbTypes";
 
 export default function ConstructionGroupTableEditRowContent({
     inputs,
-    entry,
+    row: entry,
     editable,
-    setEntry,
-}: TableEditRowContentProps<DB.ConstructionGroup>) {
-    const constructionClassDBEntries = useDBEntriesStore<DB.ConstructionClass>("construction_classes")(); // prettier-ignore
+    setRow: setEntry,
+}: TableEditRowContentComponentProps<DBRows.ConstructionGroup>) {
+    const constructionClassDBEntries = useDBEntriesStore<DBRows.ConstructionClass>("construction_classes")(); // prettier-ignore
 
     return (
         <>
@@ -38,7 +38,7 @@ export default function ConstructionGroupTableEditRowContent({
                     <AccordionDetails>
                         <DBTableEdit
                             dbEntries={constructionClassDBEntries}
-                            entries={constructionClassDBEntries.rows.filter(
+                            rows={constructionClassDBEntries.rows.filter(
                                 (fEntry) => fEntry.group_id === entry.id
                             )}
                             editable={editable}
@@ -46,7 +46,7 @@ export default function ConstructionGroupTableEditRowContent({
                             headersClassName="bg-gray-300"
                             rowActionTDClassName="bg-gray-300"
                             headers={["Klasy Budowlane"]}
-                            emptyEntry={{
+                            emptyRow={{
                                 id:
                                     constructionClassDBEntries.totalRowCount +
                                     1,
@@ -57,11 +57,11 @@ export default function ConstructionGroupTableEditRowContent({
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "name",
+                                    rowKey: "name",
                                 },
                                 {
                                     type: "number",
-                                    entryKey: "pkob",
+                                    rowKey: "pkob",
                                 },
                             ]}
                             RowContentComponent={

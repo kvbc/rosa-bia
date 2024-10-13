@@ -1,4 +1,4 @@
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -13,10 +13,10 @@ import { DB } from "../../../../server/src/dbTypes";
 
 export default function CommuneTableEditRowContent({
     inputs,
-    entry,
+    row: entry,
     editable,
-    setEntry,
-}: TableEditRowContentProps<DB.Commune>) {
+    setRow: setEntry,
+}: TableEditRowContentComponentProps<DB.Commune>) {
     const placeDBEntries = useDBEntriesStore<DB.Place>("places")();
 
     return (
@@ -38,7 +38,7 @@ export default function CommuneTableEditRowContent({
                     <AccordionDetails>
                         <DBTableEdit
                             dbEntries={placeDBEntries}
-                            entries={placeDBEntries.rows.filter(
+                            rows={placeDBEntries.rows.filter(
                                 (fEntry) => fEntry.commune_id === entry.id
                             )}
                             editable={editable}
@@ -46,7 +46,7 @@ export default function CommuneTableEditRowContent({
                             rowActionTDClassName="bg-gray-100"
                             showFooter={false}
                             headers={["Miejscowości"]}
-                            emptyEntry={{
+                            emptyRow={{
                                 id: placeDBEntries.totalRowCount + 1,
                                 commune_id: entry.id,
                                 cad_unit: "",
@@ -56,11 +56,11 @@ export default function CommuneTableEditRowContent({
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "name",
+                                    rowKey: "name",
                                 },
                                 {
                                     type: "select",
-                                    entryKey: "area_place_id",
+                                    rowKey: "area_place_id",
                                     selectOptions:
                                         placeDBEntries.rows.map<TableEditRowInputSelectOption>(
                                             (entry) => ({
@@ -71,7 +71,7 @@ export default function CommuneTableEditRowContent({
                                 },
                                 {
                                     type: "text",
-                                    entryKey: "cad_unit",
+                                    rowKey: "cad_unit",
                                 },
                             ]}
                             RowContentComponent={PlaceTableEditRowContent}

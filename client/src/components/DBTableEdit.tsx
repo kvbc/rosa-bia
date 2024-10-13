@@ -5,33 +5,29 @@
 // TODO: Review
 //
 
-import { ComponentProps } from "react";
+import React, { ComponentProps } from "react";
 import TableEdit from "./TableEdit";
-import { DBTableStore } from "../hooks/useDBTableStore";
 import { DBRow, DBTableName } from "../../../server/src/dbTypes";
+import useDBTable from "../hooks/useDBTable";
 
-export default function DBTableEdit<TEntry extends DBRow>({
+export default function DBTableEdit<TRow extends DBRow>({
     dbTableName,
-    // emptyEntry,
-    showFooter,
     ...props
-}: { dbTableName: DBTableName; showFooter?: boolean } & Omit<
-    ComponentProps<typeof TableEdit<TEntry>>,
-    "totalEntryCount"
+}: { dbTableName: DBTableName } & Omit<
+    ComponentProps<typeof TableEdit<TRow>>,
+    "totalRowCount" | "rows" | "onUpdateEntries"
 >) {
+    const dbTable = useDBTable<TRow>(dbTableName);
     return (
         <TableEdit
-            entries={dbEntries.rows}
-            events={{
-                onEntryAddClicked: dbEntries.addRow,
-                onEntryDeleteClicked: dbEntries.deleteRow,
-                onEntrySaveClicked: dbEntries.saveRow,
-            }}
-            totalEntryCount={dbEntries.totalRowCount}
-            onUpdateEntries={
-                showFooter === false ? undefined : dbEntries.fetchRows
+            rows={dbTable.rows}
+            onRowAddClicked={dbTable.store.addRow}
+            onRowDeleteClicked={dbTable.store.deleteRow}
+            onRowSaveClicked={dbTable.store.updateRow}
+            onRowsRangeChanged={(startIndex, endIndex) =>
+                dbTable.setRowRange({ startIndex, endIndex })
             }
-            // emptyEntry={{ ...emptyEntry, id: dbEntries.entryCount + 1 }}
+            totalRowCount={dbTable.store.totalRowCount}
             {...props}
         />
     );

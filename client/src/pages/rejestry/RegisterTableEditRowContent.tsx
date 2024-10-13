@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBTableStore";
 import {
     Accordion,
@@ -20,12 +20,12 @@ import RegisterDataTable from "./RegisterDataTable";
 import RegisterConstructionIntentTable from "./RegisterConstructionIntentTable";
 import RegisterAdminProcedureActionsTable from "./RegisterAdminProcedureActionsTable";
 import RegisterAdminProcedureTable from "./RegisterAdminProcedureTable";
-import { DB } from "../../../../server/src/dbTypes";
+import { DBRows } from "../../../../server/src/dbTypes";
 
 export default function RegisterTableEditRowContent(
-    props: TableEditRowContentProps<DB.Register>
+    props: TableEditRowContentComponentProps<DBRows.Register>
 ) {
-    const { inputs, entry, editable, setEntry } = props;
+    const { inputs, row: entry, editable, setRow: setEntry } = props;
 
     return (
         <td>

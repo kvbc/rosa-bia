@@ -5,17 +5,17 @@
  */
 
 import { Table } from "@mui/joy";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
-import { DB } from "../../../../server/src/dbTypes";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
+import { DBRows } from "../../../../server/src/dbTypes";
 import useDBEntriesStore from "../../hooks/useDBTableStore";
 
 export default function RegisterDataTable({
     inputs,
-    entry,
+    row: entry,
     editable,
-    setEntry,
-}: TableEditRowContentProps<DB.Register>) {
-    const investorDBEntries = useDBEntriesStore<DB.Investor>("investors")(); // prettier-ignore
+    setRow: setEntry,
+}: TableEditRowContentComponentProps<DBRows.Register>) {
+    const investorDBEntries = useDBEntriesStore<DBRows.Investor>("investors")(); // prettier-ignore
     const investor = investorDBEntries.rows.find(fEntry => fEntry.id === entry.app_investor_id); // prettier-ignore
 
     return (
@@ -65,7 +65,7 @@ export default function RegisterDataTable({
                             <thead>
                                 <tr>
                                     <th colSpan={2}>
-                                        {DB.REGISTER_TYPE_INFOS[entry.type]
+                                        {DBRows.REGISTER_TYPE_INFOS[entry.type]
                                             .subtype === "Mayor"
                                             ? "Decyzja starosty Człuchowskiego"
                                             : "Decyzja Zaświadczenie"}

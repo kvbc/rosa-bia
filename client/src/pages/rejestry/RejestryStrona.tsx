@@ -20,7 +20,6 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { Box } from "@mui/joy";
 import { FaDatabase, FaGear } from "react-icons/fa6";
-import { DB, DBRow } from "../../../../server/src/dbTypes";
 
 export default function RejestryStrona() {
     const registerDBEntries = useDBEntriesStore<DB.Register>("registers")(); // prettier-ignore
@@ -254,7 +253,7 @@ export default function RejestryStrona() {
             <DBTableEdit
                 dbEntries={registerDBEntries}
                 headers={["Rejestr"]}
-                emptyEntry={emptyEntry}
+                emptyRow={emptyEntry}
                 rowInputsProps={rowInputsProps}
                 RowContentComponent={RegisterTableEditRowContent}
             />

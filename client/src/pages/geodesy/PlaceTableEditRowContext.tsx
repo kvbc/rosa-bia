@@ -1,4 +1,4 @@
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -15,10 +15,10 @@ import { DB } from "../../../../server/src/dbTypes";
 
 export default function PlaceTableEditRowContent({
     inputs,
-    entry,
+    row: entry,
     editable,
-    setEntry,
-}: TableEditRowContentProps<DB.Place>) {
+    setRow: setEntry,
+}: TableEditRowContentComponentProps<DB.Place>) {
     const streetDBEntries = useDBEntriesStore<DB.Street>("streets")();
 
     return (
@@ -55,7 +55,7 @@ export default function PlaceTableEditRowContent({
                         <br />
                         <DBTableEdit
                             dbEntries={streetDBEntries}
-                            entries={streetDBEntries.rows.filter(
+                            rows={streetDBEntries.rows.filter(
                                 (fEntry) => fEntry.place_id === entry.id
                             )}
                             editable={editable}
@@ -63,7 +63,7 @@ export default function PlaceTableEditRowContent({
                             rowActionTDClassName="bg-gray-200"
                             showFooter={false}
                             headers={["Ulice"]}
-                            emptyEntry={{
+                            emptyRow={{
                                 id: streetDBEntries.totalRowCount + 1,
                                 place_id: entry.id,
                                 name: "",
@@ -71,7 +71,7 @@ export default function PlaceTableEditRowContent({
                             rowInputsProps={[
                                 {
                                     type: "text",
-                                    entryKey: "name",
+                                    rowKey: "name",
                                 },
                             ]}
                             RowContentComponent={StreetTableEditRowContent}

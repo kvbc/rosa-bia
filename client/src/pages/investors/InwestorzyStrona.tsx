@@ -1,15 +1,12 @@
-import useDBEntriesStore from "../../hooks/useDBTableStore";
 import DBTableEdit from "../../components/DBTableEdit";
-import { DB } from "../../../../server/src/dbTypes";
+import React from "react";
 
 export default function InwestorzyStrona() {
-    const investorDBEntries = useDBEntriesStore<DB.Investor>("investors")();
-
     return (
         <DBTableEdit
-            dbEntries={investorDBEntries}
+            dbTableName="investors"
             headers={["ID", "Inwestor", "Adres", "Informacje"]}
-            emptyEntry={{
+            emptyRow={{
                 id: 0,
                 address: "",
                 name: "",
@@ -18,20 +15,19 @@ export default function InwestorzyStrona() {
             rowInputsProps={[
                 {
                     type: "number",
-                    entryKey: "id",
-                    uneditable: true,
+                    rowKey: "id",
                 },
                 {
                     type: "text",
-                    entryKey: "name",
+                    rowKey: "name",
                 },
                 {
                     type: "text",
-                    entryKey: "address",
+                    rowKey: "address",
                 },
                 {
                     type: "text",
-                    entryKey: "info",
+                    rowKey: "info",
                 },
             ]}
         />

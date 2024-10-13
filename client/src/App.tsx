@@ -17,8 +17,15 @@ import { useState } from "react";
 import EmployeesPage from "./pages/employees/EmployeesPage";
 import PageFormsB05 from "./pages/forms/PageFormsB05";
 import PageFormsB06 from "./pages/forms/PageFormsB06";
-import { HTTP_SERVER_HOSTNAME, WS_SERVER_URL } from "../../config";
+import { WS_SERVER_URL } from "../../config";
 import axios from "axios";
+import React from "react";
+
+axios.interceptors.request.use((req) => {
+    req.headers.Authorization =
+        "Bearer eyJhbGciOiJIUzI1NiJ9.VG9tYXN6IERvbWFzeg.SHErRrON-bZmfsPgA50P19c2IFLESGmU3k5S_OEQj2o";
+    return req;
+});
 
 axios.interceptors.response.use(
     (res) => {
@@ -32,7 +39,7 @@ axios.interceptors.response.use(
 );
 
 function App() {
-    const [webSocket, _] = useState<WebSocket>(new WebSocket(WS_SERVER_URL));
+    const [webSocket] = useState<WebSocket>(new WebSocket(WS_SERVER_URL));
 
     return (
         <BrowserRouter>

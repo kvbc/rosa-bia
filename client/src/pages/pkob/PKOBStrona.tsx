@@ -19,26 +19,26 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaDatabase } from "react-icons/fa6";
 import ConstructionSectionTableEditRowContent from "./ConstructionSectionTableEditRowContent";
-import { DB } from "../../../../server/src/dbTypes";
+import { DBRows } from "../../../../server/src/dbTypes";
 
 export default function PKOBStrona() {
-    const constructionSectionDBEntries = useDBEntriesStore<DB.ConstructionSection>("construction_sections")(); // prettier-ignore
-    const constructionDivisionDBEntries = useDBEntriesStore<DB.ConstructionDivision>("construction_divisions")(); // prettier-ignore
-    const constructionGroupDBEntries = useDBEntriesStore<DB.ConstructionGroup>("construction_groups")(); // prettier-ignore
-    const constructionClassDBEntries = useDBEntriesStore<DB.ConstructionClass>("construction_classes")(); // prettier-ignore
+    const constructionSectionDBEntries = useDBEntriesStore<DBRows.ConstructionSection>("construction_sections")(); // prettier-ignore
+    const constructionDivisionDBEntries = useDBEntriesStore<DBRows.ConstructionDivision>("construction_divisions")(); // prettier-ignore
+    const constructionGroupDBEntries = useDBEntriesStore<DBRows.ConstructionGroup>("construction_groups")(); // prettier-ignore
+    const constructionClassDBEntries = useDBEntriesStore<DBRows.ConstructionClass>("construction_classes")(); // prettier-ignore
 
     return (
         <DBTableEdit
             dbEntries={constructionSectionDBEntries}
             headers={["Sekcje Budowlane"]}
-            emptyEntry={{
+            emptyRow={{
                 id: constructionSectionDBEntries.totalRowCount + 1,
                 name: "",
             }}
             rowInputsProps={[
                 {
                     type: "text",
-                    entryKey: "name",
+                    rowKey: "name",
                 },
             ]}
             RowContentComponent={ConstructionSectionTableEditRowContent}

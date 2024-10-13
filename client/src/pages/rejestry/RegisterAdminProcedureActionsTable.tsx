@@ -1,14 +1,14 @@
 import { Input, Table } from "@mui/joy";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBTableStore";
 import { useEffect } from "react";
 import RegisterAdminProcedureActionsTableRow from "./RegisterAdminProcedureActionsTableRow";
-import { DB } from "../../../../server/src/dbTypes";
+import { DBRows } from "../../../../server/src/dbTypes";
 
 export default function RegisterAdminProcedureActionsTable(
-    props: TableEditRowContentProps<DB.Register>
+    props: TableEditRowContentComponentProps<DBRows.Register>
 ) {
-    const { inputs, entry, editable, setEntry } = props;
+    const { inputs, row: entry, editable, setRow: setEntry } = props;
 
     return (
         <Table size="sm">
@@ -23,7 +23,7 @@ export default function RegisterAdminProcedureActionsTable(
                 </tr>
             </thead>
             <tbody>
-                {DB.REGISTER_TYPE_INFOS[entry.type].actionTypes.map(
+                {DBRows.REGISTER_TYPE_INFOS[entry.type].actionTypes.map(
                     (actionType) => (
                         <RegisterAdminProcedureActionsTableRow
                             {...props}

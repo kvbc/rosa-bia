@@ -1,13 +1,13 @@
 import { Table } from "@mui/joy";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
-import { DB } from "../../../../server/src/dbTypes";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
+import { DBRows } from "../../../../server/src/dbTypes";
 
 export default function ConstructionSpecTableEditRowContent({
     inputs,
-    entry,
+    row: entry,
     editable,
-    setEntry,
-}: TableEditRowContentProps<DB.ConstructionSpec>) {
+    setRow: setEntry,
+}: TableEditRowContentComponentProps<DBRows.ConstructionSpec>) {
     return (
         <td className="bg-gray-400">
             <Table size="sm">

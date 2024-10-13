@@ -1,25 +1,25 @@
-import { DB } from "../../../../server/src/dbTypes";
+import { DBRows } from "../../../../server/src/dbTypes";
 import DBTableEdit from "../../components/DBTableEdit";
-import { TableEditRowContentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import useDBEntriesStore from "../../hooks/useDBTableStore";
 
 export default function RegisterInvestPlotsDataTable({
     inputs,
-    entry,
+    row: entry,
     editable,
-    setEntry,
-}: TableEditRowContentProps<DB.Register>) {
-    const registerInvestPlotDBEntries = useDBEntriesStore<DB.RegisterInvestPlot>("registers_invest_plots")() // prettier-ignore
+    setRow: setEntry,
+}: TableEditRowContentComponentProps<DBRows.Register>) {
+    const registerInvestPlotDBEntries = useDBEntriesStore<DBRows.RegisterInvestPlot>("registers_invest_plots")() // prettier-ignore
 
     return (
         <DBTableEdit
             dbEntries={registerInvestPlotDBEntries}
-            entries={registerInvestPlotDBEntries.rows.filter(
+            rows={registerInvestPlotDBEntries.rows.filter(
                 (fEntry) => fEntry.register_id === entry.id
             )}
             headersClassName="bg-gray-100"
             editable={editable}
-            emptyEntry={{
+            emptyRow={{
                 id: 0,
                 register_id: entry.id,
                 plot: "",
@@ -29,7 +29,7 @@ export default function RegisterInvestPlotsDataTable({
             rowInputsProps={[
                 {
                     type: "text",
-                    entryKey: "plot",
+                    rowKey: "plot",
                     placeholder: "Działka",
                 },
             ]}

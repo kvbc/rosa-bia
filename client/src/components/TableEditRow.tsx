@@ -2,242 +2,225 @@
 // TableEditRow.tsx
 // Row component for the TableEdit component
 //
-// TODO: Review
-//
 
-import {
-    ComponentType,
+import React, {
     createContext,
+    Dispatch,
     ReactNode,
+    SetStateAction,
     useContext,
     useEffect,
     useState,
 } from "react";
-import { TableEditEntry } from "./TableEdit";
+import { TableEditRowType } from "./TableEdit";
 import TableEditRowInput, { TableEditRowInputProps } from "./TableEditRowInput";
 import IconButton from "@mui/joy/IconButton";
-import Button from "@mui/joy/Button";
 import ButtonGroup from "@mui/joy/ButtonGroup";
 import { MdEdit, MdDelete, MdAdd, MdCancel, MdSave } from "react-icons/md";
 import Emittery from "emittery";
+import { Stack } from "@mui/joy";
+import {
+    TableEditRowContentComponent,
+    TableEditRowContentComponentProps,
+} from "./TableEditRowContentComponent";
 
-export enum TableEditRowState {
-    Viewing,
-    Editing,
-    Adding,
-}
+export type TableEditRowState = "viewing" | "editing" | "adding";
 
-export type TableEditRowEvents = {
+const newEmittery = () =>
+    new Emittery<{
+        rowSaved: undefined;
+        rowAdded: undefined;
+        rowDeleted: undefined;
+        rowCanceled: undefined;
+    }>();
+
+export const TableEditRowContext = createContext<{
+    state: TableEditRowState;
+    eventEmitter: ReturnType<typeof newEmittery>;
+} | null>(null);
+
+export default function TableEditRow<TRow extends TableEditRowType>({
+    row,
+    setRow,
+    onDeleteClicked,
+    onAddClicked,
+    onSaveClicked,
+    editable,
+    inputsProps,
+    ContentComponent,
+}: {
+    row: TRow;
+    setRow: Dispatch<SetStateAction<TRow>>;
     onDeleteClicked?: () => void;
     onAddClicked?: () => void;
     onSaveClicked?: () => void;
-};
-
-export type TableEditRowContentProps<TEntry> = {
-    inputs: { [key in keyof TEntry]?: ReactNode };
-    entry: TEntry;
     editable: boolean;
-    setEntry: (entry: TEntry) => void;
-    eventEmitter: Emittery;
-};
-
-export type TableEditRowContentComponentType<TEntry> = ComponentType<
-    TableEditRowContentProps<TEntry>
->;
-
-export const TableEditRowContext = createContext<{
-    rowState: TableEditRowState;
-} | null>(null);
-
-export type TableEditRowProps<TEntry extends TableEditEntry> = {
-    events: TableEditRowEvents;
-    entry: TEntry;
-    editable: boolean;
-    actionTDClassName?: string;
-    setEntry: (entry: TEntry) => void;
-    inputsProps: Omit<TableEditRowInputProps<TEntry>, "entry" | "setEntry">[];
-    ContentComponent?: TableEditRowContentComponentType<TEntry>;
-};
-
-export default function TableEditRow<TEntry extends TableEditEntry>({
-    events,
-    entry,
-    editable,
-    setEntry,
-    inputsProps,
-    actionTDClassName,
-    ContentComponent,
-}: TableEditRowProps<TEntry>) {
+    inputsProps: Omit<TableEditRowInputProps<TRow>, "row" | "setRow">[];
+    ContentComponent?: TableEditRowContentComponent<TRow>;
+}) {
     const [state, setState] = useState<TableEditRowState>(
-        events.onAddClicked
-            ? TableEditRowState.Adding
-            : TableEditRowState.Viewing
+        onAddClicked ? "adding" : "viewing"
     );
-    const [eventEmitter] = useState<Emittery>(new Emittery());
-    const tableEditRowContext = useContext(TableEditRowContext);
+    const [eventEmitter] = useState(newEmittery()); // event emitter used to propagate events to components lower in the tree
+    const upperTableEditRowContext = useContext(TableEditRowContext);
 
     useEffect(() => {
-        if (
-            tableEditRowContext &&
-            tableEditRowContext.rowState !== TableEditRowState.Adding
-        )
-            setState(tableEditRowContext.rowState);
-    }, [tableEditRowContext?.rowState]);
+        setState(onAddClicked ? "adding" : "viewing");
+    }, [onAddClicked]);
 
-    useEffect(() => {
-        setState(
-            events.onAddClicked
-                ? TableEditRowState.Adding
-                : TableEditRowState.Viewing
-        );
-    }, [events.onAddClicked]);
-
-    const onEditClicked = () => {
-        setState(TableEditRowState.Editing);
-    };
-
-    const onSaveClicked = () => {
-        setState(TableEditRowState.Viewing);
-        if (events.onSaveClicked) events.onSaveClicked();
-        eventEmitter.emit("save");
-    };
-
-    const onCancelClicked = () => {
-        setState(TableEditRowState.Viewing);
-    };
-
-    const onAddClicked = () => {
-        if (events.onAddClicked) events.onAddClicked();
-    };
-
-    const onDeleteClicked = () => {
-        if (events.onDeleteClicked) events.onDeleteClicked();
-    };
+    /*
+     *
+     * Content
+     *
+     */
 
     let content: ReactNode = "";
+
+    const getInputNode = (inputProps: (typeof inputsProps)[number]) => (
+        <TableEditRowInput
+            row={row}
+            setRow={setRow}
+            {...inputProps}
+            disabled={!editable || state == "viewing"}
+        />
+    );
+
     if (ContentComponent) {
-        const inputs: TableEditRowContentProps<TEntry>["inputs"] = {};
+        const inputs: TableEditRowContentComponentProps<TRow>["inputs"] = {};
         inputsProps.forEach((inputProps) => {
-            inputs[inputProps.entryKey] = (
-                <TableEditRowInput
-                    entry={entry}
-                    setEntry={setEntry}
-                    {...inputProps}
-                    disabled={!editable || state == TableEditRowState.Viewing}
-                />
-            );
+            inputs[inputProps.rowKey] = getInputNode(inputProps);
         });
-        content = (
-            <ContentComponent
-                inputs={inputs}
-                entry={entry}
-                editable={editable && state != TableEditRowState.Viewing}
-                setEntry={setEntry}
-                eventEmitter={eventEmitter}
-            />
-        );
+        content = <ContentComponent inputs={inputs} />;
     } else {
         content = inputsProps.map((inputProps) => (
-            <td>
-                <TableEditRowInput
-                    entry={entry}
-                    setEntry={setEntry}
-                    {...inputProps}
-                    disabled={!editable || state == TableEditRowState.Viewing}
-                />
-            </td>
+            <td key={inputProps.rowKey}>{getInputNode(inputProps)}</td>
         ));
     }
 
-    return (
-        <TableEditRowContext.Provider
-            value={{
-                rowState: state,
-            }}
+    /*
+     *
+     * Action handlers
+     *
+     */
+
+    const handleActionEditClicked = () => {
+        setState("editing");
+    };
+
+    const handleActionSaveClicked = () => {
+        setState("viewing");
+        if (onSaveClicked) onSaveClicked();
+        eventEmitter.emit("rowSaved");
+    };
+
+    const handleActionCancelClicked = () => {
+        setState("viewing");
+        eventEmitter.emit("rowCanceled");
+    };
+
+    const handleActionAddClicked = () => {
+        if (onAddClicked) onAddClicked();
+        eventEmitter.emit("rowAdded");
+    };
+
+    const handleActionDeleteClicked = () => {
+        if (onDeleteClicked) onDeleteClicked();
+        eventEmitter.emit("rowDeleted");
+    };
+
+    /*
+     *
+     * Action buttons
+     *
+     */
+
+    const actionAddButton = (
+        <IconButton
+            onClick={handleActionAddClicked}
+            size="sm"
+            variant="plain"
+            color="success"
         >
+            <MdAdd />
+        </IconButton>
+    );
+    const actionDeleteButton = (
+        <IconButton
+            onClick={handleActionDeleteClicked}
+            size="sm"
+            variant="plain"
+            color="danger"
+        >
+            <MdDelete />
+        </IconButton>
+    );
+    const actionEditButton = (
+        <IconButton
+            onClick={handleActionEditClicked}
+            size="sm"
+            variant="plain"
+            color="primary"
+        >
+            <MdEdit />
+        </IconButton>
+    );
+    const actionSaveButton = (
+        <IconButton
+            onClick={handleActionSaveClicked}
+            size="sm"
+            variant="plain"
+            color="success"
+        >
+            <MdSave />
+        </IconButton>
+    );
+    const actionCancelButton = (
+        <IconButton
+            onClick={handleActionCancelClicked}
+            size="sm"
+            variant="plain"
+            color="danger"
+        >
+            <MdCancel />
+        </IconButton>
+    );
+
+    /*
+     *
+     * TableEditRow
+     *
+     */
+
+    return (
+        <TableEditRowContext.Provider value={{ state, eventEmitter }}>
             <tr>
                 {content}
                 {editable && (
                     <>
-                        {tableEditRowContext && (
-                            <td className={actionTDClassName}>
-                                <div className="w-full h-full flex items-center justify-center">
-                                    {state !== TableEditRowState.Adding && (
-                                        <IconButton
-                                            onClick={onDeleteClicked}
-                                            size="sm"
-                                            variant="plain"
-                                            color="danger"
-                                        >
-                                            <MdDelete />
-                                        </IconButton>
-                                    )}
-                                    {state === TableEditRowState.Adding && (
-                                        <IconButton
-                                            onClick={onAddClicked}
-                                            size="sm"
-                                            variant="plain"
-                                            color="success"
-                                        >
-                                            <MdAdd />
-                                        </IconButton>
-                                    )}
-                                </div>
+                        {upperTableEditRowContext && (
+                            <td>
+                                <Stack>
+                                    {state !== "adding" && actionDeleteButton}
+                                    {state === "adding" && actionAddButton}
+                                </Stack>
                             </td>
                         )}
-                        {!tableEditRowContext && (
-                            <td className={actionTDClassName}>
-                                {state == TableEditRowState.Viewing && (
+                        {!upperTableEditRowContext && (
+                            <td>
+                                {state == "viewing" && (
                                     <ButtonGroup>
-                                        <IconButton
-                                            onClick={onEditClicked}
-                                            size="sm"
-                                            variant="plain"
-                                            color="primary"
-                                        >
-                                            <MdEdit />
-                                        </IconButton>
-                                        <IconButton
-                                            onClick={onDeleteClicked}
-                                            size="sm"
-                                            variant="plain"
-                                            color="danger"
-                                        >
-                                            <MdDelete />
-                                        </IconButton>
+                                        {actionEditButton}
+                                        {actionDeleteButton}
                                     </ButtonGroup>
                                 )}
-                                {state == TableEditRowState.Editing && (
+                                {state == "editing" && (
                                     <ButtonGroup>
-                                        <IconButton
-                                            onClick={onSaveClicked}
-                                            size="sm"
-                                            variant="plain"
-                                            color="success"
-                                        >
-                                            <MdSave />
-                                        </IconButton>
-                                        <IconButton
-                                            onClick={onCancelClicked}
-                                            size="sm"
-                                            variant="plain"
-                                            color="danger"
-                                        >
-                                            <MdCancel />
-                                        </IconButton>
+                                        {actionSaveButton}
+                                        {actionCancelButton}
                                     </ButtonGroup>
                                 )}
-                                {state == TableEditRowState.Adding && (
-                                    <div className="w-full h-full flex items-center justify-center">
-                                        <IconButton
-                                            onClick={onAddClicked}
-                                            size="sm"
-                                            variant="plain"
-                                            color="success"
-                                        >
-                                            <MdAdd />
-                                        </IconButton>
-                                    </div>
+                                {state == "adding" && (
+                                    <Stack>{actionAddButton}</Stack>
                                 )}
                             </td>
                         )}

@@ -2,26 +2,22 @@
 // AppNavbar.tsx
 // Application navigation bar
 //
-// TODO: Review
-//
 
 import { Link } from "react-router-dom";
 import { FaHome, FaGlobe, FaUser } from "react-icons/fa";
-import { FaGear, FaMoneyBill1Wave, FaHelmetSafety } from "react-icons/fa6";
+import { FaMoneyBill1Wave, FaHelmetSafety } from "react-icons/fa6";
 import { BiSolidNotepad } from "react-icons/bi";
 import Menu from "@mui/joy/Menu";
 import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import { SiGoogleforms } from "react-icons/si";
-import { Option, Select, Tooltip } from "@mui/joy";
-import useDBEntriesStore from "./hooks/useDBTableStore";
-import { useState } from "react";
-import { DB } from "../../server/src/dbTypes";
+import { Tooltip } from "@mui/joy";
+import React from "react";
 
 function AppNavbar() {
-    const employeeDBEntries = useDBEntriesStore<DB.Employee>('employees')(); // prettier-ignore
-    const [employeeID, setEmployeeID] = useState<number>(0);
+    // const employeeDBEntries = useDBEntriesStore<DB.Employee>('employees')(); // prettier-ignore
+    // const [employeeID, setEmployeeID] = useState<number>(0);
 
     return (
         <nav className="w-full flex flex-row p-2 bg-blue-600 text-white font-semibold text-xs">
@@ -105,7 +101,7 @@ function AppNavbar() {
                 </Dropdown>
             </div>
             <div className="flex flex-row w-4/12 justify-end gap-2">
-                <Select
+                {/* <Select
                     size="sm"
                     variant="solid"
                     color="primary"
@@ -123,7 +119,7 @@ function AppNavbar() {
                             {entry.name}
                         </Option>
                     ))}
-                </Select>
+                </Select> */}
             </div>
         </nav>
     );

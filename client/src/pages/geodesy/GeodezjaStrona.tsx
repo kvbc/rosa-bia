@@ -20,14 +20,14 @@ export default function GeodezjaStrona() {
             <DBTableEdit
                 dbEntries={communeDBEntries}
                 headers={["Gmina"]}
-                emptyEntry={{
+                emptyRow={{
                     id: communeDBEntries.totalRowCount + 1,
                     name: "",
                 }}
                 rowInputsProps={[
                     {
                         type: "text",
-                        entryKey: "name",
+                        rowKey: "name",
                     },
                 ]}
                 RowContentComponent={CommuneTableEditRowContent}
