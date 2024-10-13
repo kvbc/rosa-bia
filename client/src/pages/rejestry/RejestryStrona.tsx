@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useDBEntriesStore, { DBEntries } from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore, { DBTableStore } from "../../hooks/useDBTableStore";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import RegisterTableEditRowContent from "./RegisterTableEditRowContent";
 import { TableEditRowInputProps } from "../../components/TableEditRow";
@@ -35,7 +35,7 @@ export default function RejestryStrona() {
     const investorDBEntries = useDBEntriesStore<DB.Investor>("investors")(); // prettier-ignore
 
     const emptyEntry: DB.Register = {
-        id: registerDBEntries.entryCount + 1,
+        id: registerDBEntries.totalRowCount + 1,
         // object_construction_form_type: "",
         object_number: "",
         // object_spatial_plan_type: "",
@@ -75,13 +75,13 @@ export default function RejestryStrona() {
     };
     const addSelectInputProps = <T extends DBRow>(
         entryKey: keyof DB.Register,
-        dbEntries: DBEntries<T>,
+        dbEntries: DBTableStore<T>,
         selectEntryNameKey: keyof T
     ) => {
         rowInputsProps.push({
             type: "select",
             entryKey: entryKey,
-            selectOptions: dbEntries.entries.map<TableEditRowInputSelectOption>(
+            selectOptions: dbEntries.rows.map<TableEditRowInputSelectOption>(
                 (entry) => ({
                     value: entry.id,
                     name: entry[selectEntryNameKey],
@@ -129,7 +129,7 @@ export default function RejestryStrona() {
         type: "select",
         entryKey: "_object_place_id",
         getSelectOptions: (entry) =>
-            placeDBEntries.entries
+            placeDBEntries.rows
                 .filter(
                     (fEntry) => fEntry.commune_id === entry._object_commune_id
                 )
@@ -142,7 +142,7 @@ export default function RejestryStrona() {
         type: "select",
         entryKey: "object_street_id",
         getSelectOptions: (entry) =>
-            streetDBEntries.entries
+            streetDBEntries.rows
                 .filter((fEntry) => fEntry.place_id === entry._object_place_id)
                 .map<TableEditRowInputSelectOption>((entry) => ({
                     value: entry.id,
@@ -154,7 +154,7 @@ export default function RejestryStrona() {
         type: "select",
         entryKey: "_object_construction_division_id",
         getSelectOptions: (entry) =>
-            constructionDivisionDBEntries.entries
+            constructionDivisionDBEntries.rows
                 .filter(
                     (fEntry) =>
                         fEntry.section_id ===
@@ -169,7 +169,7 @@ export default function RejestryStrona() {
         type: "select",
         entryKey: "_object_construction_group_id",
         getSelectOptions: (entry) =>
-            constructionGroupDBEntries.entries
+            constructionGroupDBEntries.rows
                 .filter(
                     (fEntry) =>
                         fEntry.division_id ===
@@ -184,7 +184,7 @@ export default function RejestryStrona() {
         type: "select",
         entryKey: "_object_construction_class_id",
         getSelectOptions: (entry) =>
-            constructionClassDBEntries.entries
+            constructionClassDBEntries.rows
                 .filter(
                     (fEntry) =>
                         fEntry.group_id === entry._object_construction_group_id
@@ -198,7 +198,7 @@ export default function RejestryStrona() {
         type: "select",
         entryKey: "object_construction_spec_id",
         getSelectOptions: (entry) =>
-            constructionSpecDBEntries.entries
+            constructionSpecDBEntries.rows
                 .filter(
                     (fEntry) =>
                         fEntry.class_id === entry._object_construction_class_id

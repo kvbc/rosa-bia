@@ -7,29 +7,29 @@
 
 import { ComponentProps } from "react";
 import TableEdit from "./TableEdit";
-import { DBEntries } from "../hooks/useDBEntriesStore";
-import { DBRow } from "../../../server/src/dbTypes";
+import { DBTableStore } from "../hooks/useDBTableStore";
+import { DBRow, DBTableName } from "../../../server/src/dbTypes";
 
 export default function DBTableEdit<TEntry extends DBRow>({
-    dbEntries,
+    dbTableName,
     // emptyEntry,
     showFooter,
     ...props
-}: { dbEntries: DBEntries<TEntry>; showFooter?: boolean } & Omit<
+}: { dbTableName: DBTableName; showFooter?: boolean } & Omit<
     ComponentProps<typeof TableEdit<TEntry>>,
     "totalEntryCount"
 >) {
     return (
         <TableEdit
-            entries={dbEntries.entries}
+            entries={dbEntries.rows}
             events={{
-                onEntryAddClicked: dbEntries.addEntry,
-                onEntryDeleteClicked: dbEntries.deleteEntry,
-                onEntrySaveClicked: dbEntries.saveEntry,
+                onEntryAddClicked: dbEntries.addRow,
+                onEntryDeleteClicked: dbEntries.deleteRow,
+                onEntrySaveClicked: dbEntries.saveRow,
             }}
-            totalEntryCount={dbEntries.entryCount}
+            totalEntryCount={dbEntries.totalRowCount}
             onUpdateEntries={
-                showFooter === false ? undefined : dbEntries.fetchEntries
+                showFooter === false ? undefined : dbEntries.fetchRows
             }
             // emptyEntry={{ ...emptyEntry, id: dbEntries.entryCount + 1 }}
             {...props}

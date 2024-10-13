@@ -1,6 +1,6 @@
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import ConstructionClassTableEditRowContent from "./ConstructionClassTableEditRowContent";
 import Table from "@mui/joy/Table";
 import Accordion from "@mui/material/Accordion";
@@ -38,7 +38,7 @@ export default function ConstructionGroupTableEditRowContent({
                     <AccordionDetails>
                         <DBTableEdit
                             dbEntries={constructionClassDBEntries}
-                            entries={constructionClassDBEntries.entries.filter(
+                            entries={constructionClassDBEntries.rows.filter(
                                 (fEntry) => fEntry.group_id === entry.id
                             )}
                             editable={editable}
@@ -47,7 +47,9 @@ export default function ConstructionGroupTableEditRowContent({
                             rowActionTDClassName="bg-gray-300"
                             headers={["Klasy Budowlane"]}
                             emptyEntry={{
-                                id: constructionClassDBEntries.entryCount + 1,
+                                id:
+                                    constructionClassDBEntries.totalRowCount +
+                                    1,
                                 name: "",
                                 pkob: 0,
                                 group_id: entry.id,

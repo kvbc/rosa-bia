@@ -2,10 +2,17 @@
 // TableEditRowInput.tsx
 // Input component to be used inside of a TableEditRow
 //
-// TODO: Review
+// FIXME: todo
 //
 
-import { HTMLInputTypeAttribute, useEffect, useReducer, useState } from "react";
+import React, {
+    Dispatch,
+    HTMLInputTypeAttribute,
+    SetStateAction,
+    useEffect,
+    useReducer,
+    useState,
+} from "react";
 import Input from "@mui/joy/Input";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
@@ -18,12 +25,11 @@ export type TableEditRowInputSelectOption = {
 
 export type TableEditRowInputProps<TEntry extends { [key: string]: any }> = {
     entry: TEntry;
-    setEntry: (entry: TEntry) => void;
+    setEntry: Dispatch<SetStateAction<TEntry>>;
     type: HTMLInputTypeAttribute | "select";
     entryKey: keyof TEntry;
     uneditable?: boolean;
     selectOptions?: TableEditRowInputSelectOption[];
-    getSelectOptions?: (entry: TEntry) => TableEditRowInputSelectOption[];
     placeholder?: string;
     disabled?: boolean;
 };
@@ -33,7 +39,6 @@ export default function TableEditRowInput<
 >({
     entry,
     setEntry,
-    getSelectOptions,
     type,
     entryKey,
     uneditable,
@@ -41,27 +46,18 @@ export default function TableEditRowInput<
     placeholder,
     disabled,
 }: TableEditRowInputProps<TEntry>) {
-    if (!selectOptions && getSelectOptions) {
-        selectOptions = getSelectOptions(entry);
-    }
-
-    // const [, rerender] = useReducer((x) => x + 1, 0);
-    // useEffect(() => {
-    //     if (getSelectOptions) rerender();
-    // }, [entry]);
-
     return (
         <>
             {type === "select" && (
                 <Select
                     value={entry[entryKey]}
-                    onChange={(e, v) =>
+                    onChange={(_, value) =>
                         selectOptions &&
                         selectOptions.length > 0 &&
-                        setEntry({
+                        setEntry((entry) => ({
                             ...entry,
-                            [entryKey]: v,
-                        })
+                            [entryKey]: value,
+                        }))
                     }
                     disabled={uneditable ? true : disabled}
                 >
@@ -82,10 +78,10 @@ export default function TableEditRowInput<
                         size="sm"
                         checked={entry[entryKey]}
                         onChange={(e) => {
-                            setEntry({
+                            setEntry((entry) => ({
                                 ...entry,
                                 [entryKey]: e.target.checked,
-                            });
+                            }));
                         }}
                         disabled={uneditable ? true : disabled}
                     />
@@ -95,10 +91,10 @@ export default function TableEditRowInput<
                         type={type}
                         value={entry[entryKey]}
                         onChange={(e) => {
-                            setEntry({
+                            setEntry((entry) => ({
                                 ...entry,
                                 [entryKey]: e.target.value,
-                            });
+                            }));
                         }}
                         disabled={uneditable ? true : disabled}
                         placeholder={placeholder}

@@ -28,7 +28,7 @@ export const DB_TABLE_NAMES = [
 ] as const;
 export type DBTableName = (typeof DB_TABLE_NAMES)[number];
 
-export namespace DB {
+export namespace DBRows {
     //
     // Investors
     //
@@ -354,18 +354,21 @@ export const DB_TABLE_ROW_INFOS: {
         adminProps?: readonly string[];
     };
 } = {
-    investors: { zod: DB.ZInvestor },
-    communes: { zod: DB.ZCommune },
-    places: { zod: DB.ZPlace },
-    streets: { zod: DB.ZStreet },
-    construction_sections: { zod: DB.ZConstructionSection },
-    construction_divisions: { zod: DB.ZConstructionDivision },
-    construction_groups: { zod: DB.ZConstructionGroup },
-    construction_classes: { zod: DB.ZConstructionClass },
-    construction_specs: { zod: DB.ZConstructionSpec },
-    registers: { zod: DB.ZRegister },
-    registers_invest_plots: { zod: DB.ZRegisterInvestPlot },
-    registers_admin_actions: { zod: DB.ZRegisterAdminAction },
-    employees: { zod: DB.ZEmployee, adminProps: DB.EMPLOYEE_ADMIN_PROPS },
-    info_boards: { zod: DB.ZInfoBoard },
+    investors: { zod: DBRows.ZInvestor },
+    communes: { zod: DBRows.ZCommune },
+    places: { zod: DBRows.ZPlace },
+    streets: { zod: DBRows.ZStreet },
+    construction_sections: { zod: DBRows.ZConstructionSection },
+    construction_divisions: { zod: DBRows.ZConstructionDivision },
+    construction_groups: { zod: DBRows.ZConstructionGroup },
+    construction_classes: { zod: DBRows.ZConstructionClass },
+    construction_specs: { zod: DBRows.ZConstructionSpec },
+    registers: { zod: DBRows.ZRegister },
+    registers_invest_plots: { zod: DBRows.ZRegisterInvestPlot },
+    registers_admin_actions: { zod: DBRows.ZRegisterAdminAction },
+    employees: {
+        zod: DBRows.ZEmployee,
+        adminProps: DBRows.EMPLOYEE_ADMIN_PROPS,
+    },
+    info_boards: { zod: DBRows.ZInfoBoard },
 };

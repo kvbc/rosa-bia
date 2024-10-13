@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import {
     Accordion,
     AccordionSummary,

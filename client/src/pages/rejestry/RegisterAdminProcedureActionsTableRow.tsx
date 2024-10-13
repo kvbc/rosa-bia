@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import { Checkbox, Input } from "@mui/joy";
 import { DB } from "../../../../server/src/dbTypes";
 
@@ -15,7 +15,7 @@ export default function RegisterAdminProcedureActionsTableRow({
     actionType: DB.RegisterAdminActionType;
 } & TableEditRowContentProps<DB.Register>) {
     const registerAdminActionsDBEntries = useDBEntriesStore<DB.RegisterAdminAction>('registers_admin_actions')(); // prettier-ignore
-    const dbAction = registerAdminActionsDBEntries.entries.find(
+    const dbAction = registerAdminActionsDBEntries.rows.find(
         (fEntry) =>
             fEntry.register_id === entry.id && fEntry.type === actionType
     );
@@ -23,7 +23,7 @@ export default function RegisterAdminProcedureActionsTableRow({
         dbAction
             ? { ...dbAction }
             : {
-                  id: registerAdminActionsDBEntries.entryCount + 1,
+                  id: registerAdminActionsDBEntries.totalRowCount + 1,
                   receipt_date: "",
                   reply_date: "",
                   letter_date: "",
@@ -36,7 +36,7 @@ export default function RegisterAdminProcedureActionsTableRow({
 
     useEffect(() => {
         return eventEmitter.on("save", () => {
-            registerAdminActionsDBEntries.saveEntry(action);
+            registerAdminActionsDBEntries.saveRow(action);
         });
     }, [eventEmitter, action]);
 

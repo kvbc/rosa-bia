@@ -1,4 +1,4 @@
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import DBTableEdit from "../../components/DBTableEdit";
 import Accordion from "@mui/material/Accordion";
@@ -21,7 +21,7 @@ export default function GeodezjaStrona() {
                 dbEntries={communeDBEntries}
                 headers={["Gmina"]}
                 emptyEntry={{
-                    id: communeDBEntries.entryCount + 1,
+                    id: communeDBEntries.totalRowCount + 1,
                     name: "",
                 }}
                 rowInputsProps={[

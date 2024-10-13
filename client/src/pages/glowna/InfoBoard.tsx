@@ -1,7 +1,7 @@
 import { ButtonGroup, IconButton, Textarea } from "@mui/joy";
 import { useEffect, useMemo, useState } from "react";
 import { MdCancel, MdEdit, MdSave } from "react-icons/md";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import { DB } from "../../../../server/src/dbTypes";
 
 export enum InfoBoardState {
@@ -13,8 +13,8 @@ export default function InfoBoard() {
     const [state, setState] = useState<InfoBoardState>(InfoBoardState.Viewing);
     const infoBoardDBEntries = useDBEntriesStore<DB.InfoBoard>('info_boards')(); // prettier-ignore
     const infoBoard = useMemo<DB.InfoBoard | undefined>(
-        () => infoBoardDBEntries.entries[0],
-        [infoBoardDBEntries.entries]
+        () => infoBoardDBEntries.rows[0],
+        [infoBoardDBEntries.rows]
     );
     const [contents, setContents] = useState<string>("");
 
@@ -29,7 +29,7 @@ export default function InfoBoard() {
     const handleSaveClicked = () => {
         setState(InfoBoardState.Viewing);
         if (infoBoard) {
-            infoBoardDBEntries.saveEntry({
+            infoBoardDBEntries.saveRow({
                 ...infoBoard,
                 contents,
             });

@@ -1,4 +1,4 @@
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import DBTableEdit from "../../components/DBTableEdit";
 import { DB } from "../../../../server/src/dbTypes";
 

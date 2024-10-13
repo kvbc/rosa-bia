@@ -1,6 +1,6 @@
 import { DB } from "../../../../server/src/dbTypes";
 import DBTableEdit from "../../components/DBTableEdit";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 
 export default function EmployeesPage() {
     const employeeDBEntries = useDBEntriesStore<DB.Employee>('employees')(); // prettier-ignore
@@ -10,7 +10,7 @@ export default function EmployeesPage() {
             dbEntries={employeeDBEntries}
             headers={["Nazwa", "Hasło", "Administrator"]}
             emptyEntry={{
-                id: employeeDBEntries.entryCount + 1,
+                id: employeeDBEntries.totalRowCount + 1,
                 name: "",
                 password: "",
                 admin: false,

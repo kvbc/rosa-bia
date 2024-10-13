@@ -1,7 +1,7 @@
 import { DB } from "../../../../server/src/dbTypes";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 
 export default function RegisterInvestPlotsDataTable({
     inputs,
@@ -14,7 +14,7 @@ export default function RegisterInvestPlotsDataTable({
     return (
         <DBTableEdit
             dbEntries={registerInvestPlotDBEntries}
-            entries={registerInvestPlotDBEntries.entries.filter(
+            entries={registerInvestPlotDBEntries.rows.filter(
                 (fEntry) => fEntry.register_id === entry.id
             )}
             headersClassName="bg-gray-100"

@@ -15,7 +15,7 @@ import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import { SiGoogleforms } from "react-icons/si";
 import { Option, Select, Tooltip } from "@mui/joy";
-import useDBEntriesStore from "./hooks/useDBEntriesStore";
+import useDBEntriesStore from "./hooks/useDBTableStore";
 import { useState } from "react";
 import { DB } from "../../server/src/dbTypes";
 
@@ -113,7 +113,7 @@ function AppNavbar() {
                     placeholder="... Pracownik"
                     onChange={(_, value) => setEmployeeID(value ?? 0)}
                 >
-                    {employeeDBEntries.entries.map((entry) => (
+                    {employeeDBEntries.rows.map((entry) => (
                         <Option
                             variant="soft"
                             key={entry.id}

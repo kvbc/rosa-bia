@@ -17,25 +17,19 @@ import { useState } from "react";
 import EmployeesPage from "./pages/employees/EmployeesPage";
 import PageFormsB05 from "./pages/forms/PageFormsB05";
 import PageFormsB06 from "./pages/forms/PageFormsB06";
-import { WS_SERVER_URL } from "../../config";
+import { HTTP_SERVER_HOSTNAME, WS_SERVER_URL } from "../../config";
+import axios from "axios";
 
-export const DB_ENTRY_ENDPOINTS = [
-    "investors",
-    "communes",
-    "places",
-    "streets",
-    "construction_sections",
-    "construction_divisions",
-    "construction_groups",
-    "construction_classes",
-    "construction_specs",
-    "registers",
-    "registers_invest_plots",
-    "registers_admin_actions",
-    "employees",
-    "info_boards",
-] as const;
-export type DBEntryEndpoint = (typeof DB_ENTRY_ENDPOINTS)[number];
+axios.interceptors.response.use(
+    (res) => {
+        // TODO: Message error handling
+        return res;
+    },
+    (err) => {
+        // TODO: Error handling
+        throw err;
+    }
+);
 
 function App() {
     const [webSocket, _] = useState<WebSocket>(new WebSocket(WS_SERVER_URL));

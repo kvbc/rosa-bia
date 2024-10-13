@@ -7,7 +7,7 @@ import { Box } from "@mui/joy";
 import { FaCity } from "react-icons/fa6";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import { GiVillage } from "react-icons/gi";
 import Table from "@mui/joy/Table";
 import StreetTableEditRowContent from "./StreetTableEditRowContext";
@@ -55,7 +55,7 @@ export default function PlaceTableEditRowContent({
                         <br />
                         <DBTableEdit
                             dbEntries={streetDBEntries}
-                            entries={streetDBEntries.entries.filter(
+                            entries={streetDBEntries.rows.filter(
                                 (fEntry) => fEntry.place_id === entry.id
                             )}
                             editable={editable}
@@ -64,7 +64,7 @@ export default function PlaceTableEditRowContent({
                             showFooter={false}
                             headers={["Ulice"]}
                             emptyEntry={{
-                                id: streetDBEntries.entryCount + 1,
+                                id: streetDBEntries.totalRowCount + 1,
                                 place_id: entry.id,
                                 name: "",
                             }}

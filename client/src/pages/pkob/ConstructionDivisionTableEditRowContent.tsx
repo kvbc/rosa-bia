@@ -1,7 +1,7 @@
 import { FaBuilding } from "react-icons/fa6";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import ConstructionGroupTableEditRowContent from "./ConstructionGroupTableEditRowContent";
 import Table from "@mui/joy/Table";
 import Accordion from "@mui/material/Accordion";
@@ -38,7 +38,7 @@ export default function ConstructionDivisionTableEditRowContent({
                     <AccordionDetails>
                         <DBTableEdit
                             dbEntries={constructionGroupDBEntries}
-                            entries={constructionGroupDBEntries.entries.filter(
+                            entries={constructionGroupDBEntries.rows.filter(
                                 (fEntry) => fEntry.division_id === entry.id
                             )}
                             editable={editable}
@@ -47,7 +47,9 @@ export default function ConstructionDivisionTableEditRowContent({
                             rowActionTDClassName="bg-gray-200"
                             headers={["Grupy Budowlane"]}
                             emptyEntry={{
-                                id: constructionGroupDBEntries.entryCount + 1,
+                                id:
+                                    constructionGroupDBEntries.totalRowCount +
+                                    1,
                                 name: "",
                                 division_id: entry.id,
                             }}

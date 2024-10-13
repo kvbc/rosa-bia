@@ -1,7 +1,7 @@
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import Table from "@mui/joy/Table";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import ConstructionDivisionTableEditRowContent from "./ConstructionDivisionTableEditRowContent";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -38,7 +38,7 @@ export default function ConstructionSectionTableEditRowContent({
                     <AccordionDetails>
                         <DBTableEdit
                             dbEntries={constructionDivisionDBEntries}
-                            entries={constructionDivisionDBEntries.entries.filter(
+                            entries={constructionDivisionDBEntries.rows.filter(
                                 (fEntry) => fEntry.section_id === entry.id
                             )}
                             editable={editable}
@@ -48,7 +48,7 @@ export default function ConstructionSectionTableEditRowContent({
                             showFooter={false}
                             emptyEntry={{
                                 id:
-                                    constructionDivisionDBEntries.entryCount +
+                                    constructionDivisionDBEntries.totalRowCount +
                                     1,
                                 name: "",
                                 section_id: entry.id,

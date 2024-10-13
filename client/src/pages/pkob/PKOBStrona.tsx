@@ -1,6 +1,6 @@
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import Tabs from "@mui/joy/Tabs";
 import TabList from "@mui/joy/TabList";
 import Tab from "@mui/joy/Tab";
@@ -32,7 +32,7 @@ export default function PKOBStrona() {
             dbEntries={constructionSectionDBEntries}
             headers={["Sekcje Budowlane"]}
             emptyEntry={{
-                id: constructionSectionDBEntries.entryCount + 1,
+                id: constructionSectionDBEntries.totalRowCount + 1,
                 name: "",
             }}
             rowInputsProps={[

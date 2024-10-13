@@ -7,7 +7,7 @@ import { DBRow, DBTableName } from "./dbTypes";
 import { z } from "zod";
 
 export type WSMessage<TRow extends DBRow = DBRow> = {
-    messageType: "table row added" | "table row updated" | "table row deleted";
+    type: "table row added" | "table row updated" | "table row deleted";
     tableRow: TRow;
     tableName: DBTableName;
 };

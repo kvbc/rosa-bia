@@ -7,7 +7,7 @@ import { Box } from "@mui/joy";
 import { FaCity } from "react-icons/fa6";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import PlaceTableEditRowContent from "./PlaceTableEditRowContext";
 import { DB } from "../../../../server/src/dbTypes";
 
@@ -38,7 +38,7 @@ export default function CommuneTableEditRowContent({
                     <AccordionDetails>
                         <DBTableEdit
                             dbEntries={placeDBEntries}
-                            entries={placeDBEntries.entries.filter(
+                            entries={placeDBEntries.rows.filter(
                                 (fEntry) => fEntry.commune_id === entry.id
                             )}
                             editable={editable}
@@ -47,7 +47,7 @@ export default function CommuneTableEditRowContent({
                             showFooter={false}
                             headers={["Miejscowości"]}
                             emptyEntry={{
-                                id: placeDBEntries.entryCount + 1,
+                                id: placeDBEntries.totalRowCount + 1,
                                 commune_id: entry.id,
                                 cad_unit: "",
                                 name: "",
@@ -62,7 +62,7 @@ export default function CommuneTableEditRowContent({
                                     type: "select",
                                     entryKey: "area_place_id",
                                     selectOptions:
-                                        placeDBEntries.entries.map<TableEditRowInputSelectOption>(
+                                        placeDBEntries.rows.map<TableEditRowInputSelectOption>(
                                             (entry) => ({
                                                 value: entry.id,
                                                 name: entry.name,

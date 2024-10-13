@@ -17,7 +17,7 @@
 import { Table } from "@mui/joy";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
 import { ReactNode, useEffect, useMemo } from "react";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import DBTableEdit from "../../components/DBTableEdit";
 import RegisterPropertyDataTable from "./RegisterPropertyDataTable";
 import RegisterInvestPlotsDataTable from "./RegisterInvestPlotsTable";
@@ -37,14 +37,14 @@ export default function RegisterConstructionIntentTable(
     const communeDBEntries = useDBEntriesStore<DB.Commune>("communes")(); // prettier-ignore
     const streetDBEntries = useDBEntriesStore<DB.Street>("streets")(); // prettier-ignore
 
-    const constructionSpec = useMemo(() => constructionSpecDBEntries.entries.find((fEntry) => fEntry.id === entry.object_construction_spec_id), [entry.object_construction_spec_id]); // prettier-ignore
-    const constructionClass = useMemo(() => constructionClassDBEntries.entries.find((fEntry) => fEntry.id === constructionSpec?.class_id), [constructionSpec]); // prettier-ignore
-    const constructionGroup = useMemo(() => constructionGroupDBEntries.entries.find(fEntry => fEntry.id === constructionClass?.group_id), [constructionClass]); // prettier-ignore
-    const constructionDivision = useMemo(() => constructionDivisionDBEntries.entries.find(fEntry => fEntry.id === constructionGroup?.division_id), [constructionGroup]); // prettier-ignore
-    const street = useMemo(() => streetDBEntries.entries.find(fEntry => fEntry.id === entry.object_street_id), [entry.object_street_id]) // prettier-ignore
-    const place = useMemo(() => placeDBEntries.entries.find(fEntry => fEntry.id === street?.place_id), [street]) // prettier-ignore
-    const commune = useMemo(() => communeDBEntries.entries.find(fEntry => fEntry.id === place?.commune_id), [place]) // prettier-ignore
-    const area = useMemo(() => placeDBEntries.entries.find(fEntry => fEntry.id === place?.area_place_id), [place]) // prettier-ignore
+    const constructionSpec = useMemo(() => constructionSpecDBEntries.rows.find((fEntry) => fEntry.id === entry.object_construction_spec_id), [entry.object_construction_spec_id]); // prettier-ignore
+    const constructionClass = useMemo(() => constructionClassDBEntries.rows.find((fEntry) => fEntry.id === constructionSpec?.class_id), [constructionSpec]); // prettier-ignore
+    const constructionGroup = useMemo(() => constructionGroupDBEntries.rows.find(fEntry => fEntry.id === constructionClass?.group_id), [constructionClass]); // prettier-ignore
+    const constructionDivision = useMemo(() => constructionDivisionDBEntries.rows.find(fEntry => fEntry.id === constructionGroup?.division_id), [constructionGroup]); // prettier-ignore
+    const street = useMemo(() => streetDBEntries.rows.find(fEntry => fEntry.id === entry.object_street_id), [entry.object_street_id]) // prettier-ignore
+    const place = useMemo(() => placeDBEntries.rows.find(fEntry => fEntry.id === street?.place_id), [street]) // prettier-ignore
+    const commune = useMemo(() => communeDBEntries.rows.find(fEntry => fEntry.id === place?.commune_id), [place]) // prettier-ignore
+    const area = useMemo(() => placeDBEntries.rows.find(fEntry => fEntry.id === place?.area_place_id), [place]) // prettier-ignore
 
     useEffect(() => setEntry({...entry, _object_construction_class_id: constructionSpec?.class_id ?? 0}), [constructionSpec]); // prettier-ignore
     useEffect(() => setEntry({...entry, _object_construction_group_id: constructionClass?.group_id ?? 0}), [constructionClass]); // prettier-ignore

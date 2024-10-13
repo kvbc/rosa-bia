@@ -20,7 +20,7 @@ import {
     WS_SERVER_PORT,
 } from "../../config";
 import {
-    DB,
+    DBRows,
     DB_TABLE_NAMES,
     DB_TABLE_ROW_INFOS,
     DBRow,
@@ -120,14 +120,14 @@ const resVerifyTableRow = (
 const getAuthorizedEmployee = async (
     req: Request,
     res: Response
-): Promise<DB.Employee | null> => {
+): Promise<DBRows.Employee | null> => {
     return new Promise((resolve) => {
         const authorization = req.headers["authorization"];
         if (authorization && authorization.startsWith("Bearer ")) {
             const jwtToken = authorization.replace("Bearer ", "");
             try {
                 const employeeName = jwt.verify(jwtToken, JWT_SECRET_KEY);
-                db.get<DB.Employee | undefined>(
+                db.get<DBRows.Employee | undefined>(
                     "select * from employees where name = ?",
                     [employeeName],
                     (error, row) => {
@@ -331,7 +331,7 @@ app.post(
                         }
                         const insertID = row["last_insert_rowid()"];
                         wsBroadcastMessage({
-                            messageType: "table row added",
+                            type: "table row added",
                             tableRow: { ...newRow, id: insertID },
                             tableName,
                         });
@@ -389,7 +389,7 @@ app.delete(
                     return resError(res, 500, err);
                 }
                 wsBroadcastMessage({
-                    messageType: "table row deleted",
+                    type: "table row deleted",
                     tableRow: { id: entryID },
                     tableName,
                 });
@@ -448,7 +448,7 @@ app.put(
                     return resError(res, 500, error);
                 }
                 wsBroadcastMessage({
-                    messageType: "table row updated",
+                    type: "table row updated",
                     tableRow: newRow,
                     tableName,
                 });
@@ -477,7 +477,7 @@ app.post("/login", (req: Request<HTTPRequestLogin>, res: Response) => {
 
     console.log(`[POST /login] ${sqlQuery} ${sqlParams}`);
 
-    db.get<DB.Employee | undefined>(sqlQuery, sqlParams, (error, row) => {
+    db.get<DBRows.Employee | undefined>(sqlQuery, sqlParams, (error, row) => {
         if (error) {
             return resError(res, 500, error);
         }

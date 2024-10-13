@@ -9,7 +9,7 @@ import { TableEditRowContentProps } from "../../components/TableEditRow";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaHouse } from "react-icons/fa6";
 import DBTableEdit from "../../components/DBTableEdit";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import ConstructionSpecTableEditRowContent from "./ConstructionSpecTableEditRowContent";
 import { DB } from "../../../../server/src/dbTypes";
 
@@ -55,7 +55,7 @@ export default function ConstructionClassTableEditRowContent({
                         <br />
                         <DBTableEdit
                             dbEntries={constructionSpecDBEntries}
-                            entries={constructionSpecDBEntries.entries.filter(
+                            entries={constructionSpecDBEntries.rows.filter(
                                 (fEntry) => fEntry.class_id === entry.id
                             )}
                             editable={editable}
@@ -64,7 +64,7 @@ export default function ConstructionClassTableEditRowContent({
                             rowActionTDClassName="bg-gray-400"
                             headers={["Wyszczególnienia Budowlane"]}
                             emptyEntry={{
-                                id: constructionSpecDBEntries.entryCount + 1,
+                                id: constructionSpecDBEntries.totalRowCount + 1,
                                 name: "",
                                 class_id: entry.id,
                                 ob_cat: "",

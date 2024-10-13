@@ -1,6 +1,6 @@
 import { Input, Table } from "@mui/joy";
 import { TableEditRowContentProps } from "../../components/TableEditRow";
-import useDBEntriesStore from "../../hooks/useDBEntriesStore";
+import useDBEntriesStore from "../../hooks/useDBTableStore";
 import { useEffect } from "react";
 import RegisterAdminProcedureActionsTableRow from "./RegisterAdminProcedureActionsTableRow";
 import { DB } from "../../../../server/src/dbTypes";
