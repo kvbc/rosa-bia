@@ -7,7 +7,6 @@ import { Box } from "@mui/joy";
 import { FaCity } from "react-icons/fa6";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
-import useDBEntriesStore from "../../hooks/useDBTableStore";
 import PlaceTableEditRowContent from "./PlaceTableEditRowContext";
 import { DB } from "../../../../server/src/dbTypes";
 

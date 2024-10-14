@@ -7,7 +7,6 @@
 import { Table } from "@mui/joy";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import { DBRows } from "../../../../server/src/dbTypes";
-import useDBEntriesStore from "../../hooks/useDBTableStore";
 
 export default function RegisterDataTable({
     inputs,

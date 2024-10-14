@@ -1,14 +1,30 @@
+//
+// useDBTable.tsx
+//
+// TODO: Merge DBTableStore from App into this?
+//
+
 import { useEffect, useState } from "react";
-import useDBTableStore from "./useDBTableStore";
+import { getDBTableStore } from "../App";
 import { DBRow, DBTableName } from "../../../server/src/dbTypes";
 
-export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
-    const store = useDBTableStore<TRow>(tableName);
+export default function useDBTable<TRow extends DBRow>(
+    tableName: DBTableName,
+    fetchAllOnInit: boolean = false
+) {
+    const store = getDBTableStore<TRow>(tableName);
     const [rows, setRows] = useState<TRow[]>([]);
     const [rowRange, setRowRange] = useState<{
         startIndex: number;
         endIndex: number;
     } | null>(null);
+
+    useEffect(() => {
+        if (fetchAllOnInit) {
+            // FIXME: yeah... fix me
+            return store.fetchRows(0, 9999, setRows);
+        }
+    }, [store]);
 
     useEffect(() => {
         const isRowIDInRange = (rowID: number): boolean => {
@@ -50,10 +66,5 @@ export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
         return store.fetchRows(rowRange.startIndex, rowRange.endIndex, setRows);
     }, [rowRange, store]);
 
-    return {
-        store,
-        rows,
-        rowRange,
-        setRowRange,
-    };
+    return { store, rows, rowRange, setRowRange };
 }

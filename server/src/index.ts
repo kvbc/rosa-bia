@@ -119,8 +119,9 @@ const resVerifyTableRow = (
 
 const getAuthorizedEmployee = async (
     req: Request,
-    res: Response
-): Promise<DBRows.Employee | null> => {
+    res: Response,
+    optional?: boolean
+): Promise<{ employee?: DBRows.Employee; jwtToken?: string }> => {
     return new Promise((resolve) => {
         const authorization = req.headers["authorization"];
         if (authorization && authorization.startsWith("Bearer ")) {
@@ -133,26 +134,26 @@ const getAuthorizedEmployee = async (
                     (error, row) => {
                         if (error) {
                             resError(res, 500, error);
-                            resolve(null);
+                            resolve({ jwtToken });
                             return;
                         }
                         if (row === undefined) {
                             resErrorMessage(res, 500, "Employee not found");
-                            resolve(null);
+                            resolve({ jwtToken });
                             return;
                         }
-                        resolve(row);
+                        resolve({ employee: row, jwtToken });
                     }
                 );
                 return;
             } catch (error) {
                 resError(res, 401, error);
-                resolve(null);
+                resolve({ jwtToken });
                 return;
             }
         }
-        resolve(null);
-        resError(res, 401, "Authorization required");
+        resolve({});
+        if (!optional) resError(res, 401, "Authorization required");
     });
 };
 
@@ -188,8 +189,8 @@ app.get(
         }>,
         res: Response
     ) => {
-        getAuthorizedEmployee(req, res).then((employee) => {
-            if (employee === null) {
+        getAuthorizedEmployee(req, res).then(({ employee }) => {
+            if (!employee) {
                 return;
             }
 
@@ -281,8 +282,8 @@ app.get(
 app.post(
     "/table/:tableName",
     (req: Request<{ tableName: string }>, res: Response) => {
-        getAuthorizedEmployee(req, res).then((employee) => {
-            if (employee === null) {
+        getAuthorizedEmployee(req, res).then(({ employee }) => {
+            if (!employee) {
                 return;
             }
 
@@ -349,8 +350,8 @@ app.post(
 app.delete(
     "/table/:tableName/:entryID",
     (req: Request<{ tableName: string; entryID: string }>, res: Response) => {
-        getAuthorizedEmployee(req, res).then((employee) => {
-            if (employee === null) {
+        getAuthorizedEmployee(req, res).then(({ employee }) => {
+            if (!employee) {
                 return;
             }
 
@@ -405,8 +406,8 @@ app.delete(
 app.put(
     "/table/:tableName",
     (req: Request<{ tableName: string }>, res: Response) => {
-        getAuthorizedEmployee(req, res).then((employee) => {
-            if (employee === null) {
+        getAuthorizedEmployee(req, res).then(({ employee }) => {
+            if (!employee) {
                 return;
             }
 
@@ -465,30 +466,56 @@ app.put(
  */
 
 app.post("/login", (req: Request<HTTPRequestLogin>, res: Response) => {
-    // verify body
-    const ret = ZHTTPRequestLogin.safeParse(req.body);
-    if (!ret.success) {
-        return resErrorMessage(res, 400, ret.error.message);
-    }
-    const body = ret.data;
-
-    const sqlQuery = "select * from employees where name = ? and password = ?";
-    const sqlParams = [body.employeeName, body.employeePassword];
-
-    console.log(`[POST /login] ${sqlQuery} ${sqlParams}`);
-
-    db.get<DBRows.Employee | undefined>(sqlQuery, sqlParams, (error, row) => {
-        if (error) {
-            return resError(res, 500, error);
+    getAuthorizedEmployee(req, res, true).then(({ employee, jwtToken }) => {
+        const noBody =
+            !req.body ||
+            (typeof req.body === "object" &&
+                Object.keys(req.body).length === 0);
+        if (employee && noBody) {
+            const response: HTTPResponse = {
+                responseType: "login",
+                jwtToken: jwtToken!,
+                employee,
+            };
+            res.status(200).json(response);
+            return;
         }
-        if (row === undefined) {
-            return resErrorMessage(res, 400, "Invalid username or password");
+
+        // verify body
+        const ret = ZHTTPRequestLogin.safeParse(req.body);
+        if (!ret.success) {
+            return resErrorMessage(res, 400, ret.error.message);
         }
-        const jwtToken = jwt.sign(row.name, JWT_SECRET_KEY);
-        const response: HTTPResponse = {
-            responseType: "login",
-            jwtToken,
-        };
-        res.status(200).json(response);
+        const body = ret.data;
+
+        const sqlQuery =
+            "select * from employees where name = ? and password = ?";
+        const sqlParams = [body.employeeName, body.employeePassword];
+
+        console.log(`[POST /login] ${sqlQuery} ${sqlParams}`);
+
+        db.get<DBRows.Employee | undefined>(
+            sqlQuery,
+            sqlParams,
+            (error, row) => {
+                if (error) {
+                    return resError(res, 500, error);
+                }
+                if (row === undefined) {
+                    return resErrorMessage(
+                        res,
+                        400,
+                        "Invalid username or password"
+                    );
+                }
+                const jwtToken = jwt.sign(row.name, JWT_SECRET_KEY);
+                const response: HTTPResponse = {
+                    responseType: "login",
+                    jwtToken,
+                    employee: row,
+                };
+                res.status(200).json(response);
+            }
+        );
     });
 });

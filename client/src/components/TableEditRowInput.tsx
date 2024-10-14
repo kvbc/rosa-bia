@@ -2,8 +2,6 @@
 // TableEditRowInput.tsx
 // Input component to be used inside of a TableEditRow
 //
-// FIXME: todo
-//
 
 import React, { Dispatch, HTMLInputTypeAttribute, SetStateAction } from "react";
 import Input from "@mui/joy/Input";
@@ -44,8 +42,8 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
                     onChange={(_, value) =>
                         selectOptions &&
                         selectOptions.length > 0 &&
-                        setRow((entry) => ({
-                            ...entry,
+                        setRow((row) => ({
+                            ...row,
                             [rowKey]: value,
                         }))
                     }
@@ -68,8 +66,8 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
                         size="sm"
                         checked={row[rowKey] as boolean}
                         onChange={(e) => {
-                            setRow((entry) => ({
-                                ...entry,
+                            setRow((row) => ({
+                                ...row,
                                 [rowKey]: e.target.checked,
                             }));
                         }}
@@ -81,8 +79,8 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
                         type={type}
                         value={row[rowKey] as string | number}
                         onChange={(e) => {
-                            setRow((entry) => ({
-                                ...entry,
+                            setRow((row) => ({
+                                ...row,
                                 [rowKey]: e.target.value,
                             }));
                         }}

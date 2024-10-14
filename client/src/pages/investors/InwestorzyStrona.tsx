@@ -5,7 +5,7 @@ export default function InwestorzyStrona() {
     return (
         <DBTableEdit
             dbTableName="investors"
-            headers={["ID", "Inwestor", "Adres", "Informacje"]}
+            headers={["Inwestor", "Adres", "Informacje"]}
             emptyRow={{
                 id: 0,
                 address: "",
@@ -13,10 +13,6 @@ export default function InwestorzyStrona() {
                 info: "",
             }}
             rowInputsProps={[
-                {
-                    type: "number",
-                    rowKey: "id",
-                },
                 {
                     type: "text",
                     rowKey: "name",

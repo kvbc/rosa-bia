@@ -9,7 +9,6 @@ import { TableEditRowContentComponentProps } from "../../components/TableEditRow
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaHouse } from "react-icons/fa6";
 import DBTableEdit from "../../components/DBTableEdit";
-import useDBEntriesStore from "../../hooks/useDBTableStore";
 import ConstructionSpecTableEditRowContent from "./ConstructionSpecTableEditRowContent";
 import { DB } from "../../../../server/src/dbTypes";
 

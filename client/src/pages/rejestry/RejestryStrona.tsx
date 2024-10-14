@@ -1,5 +1,4 @@
 import { useState } from "react";
-import useDBEntriesStore, { DBTableStore } from "../../hooks/useDBTableStore";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import RegisterTableEditRowContent from "./RegisterTableEditRowContent";
 import { TableEditRowInputProps } from "../../components/TableEditRow";

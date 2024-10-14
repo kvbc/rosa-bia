@@ -1,4 +1,3 @@
-import useDBEntriesStore from "../../hooks/useDBTableStore";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import DBTableEdit from "../../components/DBTableEdit";
 import Accordion from "@mui/material/Accordion";

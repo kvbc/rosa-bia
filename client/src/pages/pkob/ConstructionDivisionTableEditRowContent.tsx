@@ -1,7 +1,6 @@
 import { FaBuilding } from "react-icons/fa6";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
-import useDBEntriesStore from "../../hooks/useDBTableStore";
 import ConstructionGroupTableEditRowContent from "./ConstructionGroupTableEditRowContent";
 import Table from "@mui/joy/Table";
 import Accordion from "@mui/material/Accordion";

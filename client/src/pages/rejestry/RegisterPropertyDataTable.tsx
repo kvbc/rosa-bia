@@ -1,7 +1,6 @@
 import { Table } from "@mui/joy";
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
-import useDBEntriesStore from "../../hooks/useDBTableStore";
 import { DBRows } from "../../../../server/src/dbTypes";
 
 export default function RegisterPropertyDataTable({

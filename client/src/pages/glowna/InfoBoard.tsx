@@ -1,7 +1,6 @@
 import { ButtonGroup, IconButton, Textarea } from "@mui/joy";
 import { useEffect, useMemo, useState } from "react";
 import { MdCancel, MdEdit, MdSave } from "react-icons/md";
-import useDBEntriesStore from "../../hooks/useDBTableStore";
 import { DB } from "../../../../server/src/dbTypes";
 
 export enum InfoBoardState {

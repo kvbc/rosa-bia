@@ -5,8 +5,7 @@
 
 import React, {
     ComponentProps,
-    Dispatch,
-    SetStateAction,
+    useCallback,
     useContext,
     useEffect,
     useState,
@@ -35,9 +34,9 @@ export default function TableEdit<TRow extends TableEditRowType>({
     headers,
     rowInputsProps,
     editable,
-    onRowDeleteClicked: _onRowDeleteClicked,
-    onRowAddClicked: _onRowAddClicked,
-    onRowSaveClicked: _onRowSaveClicked,
+    onRowDeleteClicked,
+    onRowAddClicked,
+    onRowSaveClicked,
     onRowsRangeChanged,
     totalRowCount,
     RowContentComponent,
@@ -67,8 +66,9 @@ export default function TableEdit<TRow extends TableEditRowType>({
     //
     const [page, setPage] = useState<number>(1);
     const [rowsPerPage, setRowsPerPage] = useState<number>(25);
-    const [rows, setRows] = useState<TRow[]>([..._rows, { ...emptyRow }]);
-    const [revertRows, setRevertRows] = useState<TRow[]>([ ..._rows, { ...emptyRow } ]); // prettier-ignore
+    const [rows, setRows] = useState<TRow[]>(_rows);
+    const [revertRows, setRevertRows] = useState<TRow[]>(_rows); // prettier-ignore
+    const [addRow, setAddRow] = useState<TRow>({ ...emptyRow });
 
     const upperTableEditRowContext = useContext(TableEditRowContext);
     const pageCount = Math.ceil(totalRowCount / rowsPerPage);
@@ -78,6 +78,10 @@ export default function TableEdit<TRow extends TableEditRowType>({
     useEffect(() => {
         onRowsRangeChanged?.(startRowIndex, endRowIndex);
     }, [onRowsRangeChanged, startRowIndex, endRowIndex]);
+
+    useEffect(() => {
+        setAddRow({ ...emptyRow });
+    }, [emptyRow]);
 
     //
     // If this TableEdit is inside of another TableEditRow,
@@ -90,49 +94,86 @@ export default function TableEdit<TRow extends TableEditRowType>({
     }
 
     useEffect(() => {
-        setRows([..._rows, { ...emptyRow }]);
-        setRevertRows([..._rows, { ...emptyRow }]);
-    }, [_rows, emptyRow]);
+        setRevertRows(_rows);
+        setRows(_rows);
+    }, [_rows]);
+
+    const commitChanges = useCallback(() => {
+        let anyChanges = false;
+        rows.forEach((row) => {
+            const rrow = revertRows.find((rrow) => rrow.id === row.id);
+            if (rrow) {
+                if (rrow !== row) {
+                    onRowSaveClicked?.(row);
+                    anyChanges = true;
+                }
+            } else {
+                onRowAddClicked?.(row);
+                anyChanges = true;
+            }
+        });
+        revertRows.forEach((rrow) => {
+            if (!rows.find((row) => row.id === rrow.id)) {
+                onRowDeleteClicked?.(rrow);
+                anyChanges = true;
+            }
+        });
+        if (anyChanges) {
+            setRevertRows([...rows]);
+        }
+    }, [
+        onRowAddClicked,
+        onRowSaveClicked,
+        onRowDeleteClicked,
+        rows,
+        revertRows,
+    ]);
+
+    const cancelChanges = useCallback(() => {
+        setRows([...revertRows]);
+    }, [revertRows]);
 
     useEffect(() => {
         if (upperTableEditRowContext) {
+            // prettier-ignore
             const offs = [
-                upperTableEditRowContext.eventEmitter.on("rowAdded", () => {
-                    // TODO: here compare and commit
-                    // events?.onRowAddClicked?.(row);
-                    // events?.onRowSaveClicked?.(row);
-                    // events?.onRowDeleteClicked?.(row);
-                    setRevertRows([...rows]);
-                }),
-                upperTableEditRowContext.eventEmitter.on("rowSaved", () => {
-                    // TODO: here compare and commit
-                    // events?.onRowAddClicked?.(row);
-                    // events?.onRowSaveClicked?.(row);
-                    // events?.onRowDeleteClicked?.(row);
-                    setRevertRows([...rows]);
-                }),
-                upperTableEditRowContext.eventEmitter.on("rowCanceled", () => {
-                    setRows([...revertRows]);
-                }),
+                upperTableEditRowContext.eventEmitter.on("rowAdded", commitChanges),
+                upperTableEditRowContext.eventEmitter.on("rowSaved", commitChanges),
+                upperTableEditRowContext.eventEmitter.on("rowCanceled", cancelChanges),
             ];
             return () => {
                 offs.forEach((off) => off());
             };
+        } else {
+            commitChanges();
         }
-    }, [upperTableEditRowContext, rows, revertRows]);
+    }, [upperTableEditRowContext, commitChanges, cancelChanges]);
 
-    const handleRowAdded = (_row: TRow) => {
-        setRows([...rows, { ...emptyRow }]);
-        // setRows([...rows, { ...emptyRow, id: rows.length + 100 }]);
+    const handleRowAdded = (newRow: TRow) => {
+        // if (isRowIDInRange(newRow.id, startRowIndex, endRowIndex)) {
+        setRows((rows) => [...rows, newRow]);
+        // onRowsRangeChanged?.(startRowIndex, endRowIndex);
+        // }
     };
 
-    const handleRowSaved = (_row: TRow) => {
-        // nothing
+    const handleRowSaved = (newRow: TRow) => {
+        setRows((rows) =>
+            rows.map((row) => (row.id === newRow.id ? newRow : row))
+        );
     };
 
     const handleRowDeleted = (deletedRow: TRow) => {
-        setRows(rows.filter((row) => row.id !== deletedRow.id));
+        setRows((rows) => rows.filter((row) => row.id !== deletedRow.id));
     };
+
+    const handleRowCanceled = useCallback(
+        (_canceledRow: TRow) => {
+            if (!upperTableEditRowContext) {
+                cancelChanges();
+            }
+        },
+        [upperTableEditRowContext, cancelChanges]
+    );
 
     const handleChangeRowsPerPage = (
         _event: unknown,
@@ -141,20 +182,6 @@ export default function TableEdit<TRow extends TableEditRowType>({
         setRowsPerPage(parseInt(newValue!.toString()));
         setPage(1);
     };
-
-    const getSetRowFunction =
-        (thisRowID: number): Dispatch<SetStateAction<TRow>> =>
-        (value: TRow | ((prevRow: TRow) => TRow)): void => {
-            setRows((rows) =>
-                rows.map((mapRow) =>
-                    mapRow.id === thisRowID
-                        ? typeof value === "function"
-                            ? value(mapRow)
-                            : value
-                        : mapRow
-                )
-            );
-        };
 
     return (
         <Table
@@ -185,25 +212,21 @@ export default function TableEdit<TRow extends TableEditRowType>({
                 </tr>
             </thead>
             <tbody>
-                {rows
-                    .slice(0, editable ? rows.length : -1) // dont show last (add) row if not editable
-                    .map((row, _rowIndex) => (
-                        <TableEditRow
-                            key={row.id}
-                            row={row}
-                            onAddClicked={
-                                row === rows.at(-1) // is last (add)
-                                    ? () => handleRowAdded(row)
-                                    : undefined
-                            }
-                            onSaveClicked={() => handleRowSaved(row)}
-                            onDeleteClicked={() => handleRowDeleted(row)}
-                            editable={editable}
-                            inputsProps={rowInputsProps}
-                            ContentComponent={RowContentComponent}
-                            setRow={getSetRowFunction(row.id)}
-                        />
-                    ))}
+                {[...rows, addRow].map((row) => (
+                    <TableEditRow
+                        key={row.id}
+                        row={row}
+                        onAddClicked={
+                            row === addRow ? handleRowAdded : undefined
+                        }
+                        onSaveClicked={handleRowSaved}
+                        onDeleteClicked={handleRowDeleted}
+                        onCancelClicked={handleRowCanceled}
+                        editable={editable}
+                        inputsProps={rowInputsProps}
+                        ContentComponent={RowContentComponent}
+                    />
+                ))}
             </tbody>
             <tfoot>
                 <tr>

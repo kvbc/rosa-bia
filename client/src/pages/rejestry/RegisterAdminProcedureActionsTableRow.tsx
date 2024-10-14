@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
-import useDBEntriesStore from "../../hooks/useDBTableStore";
 import { Checkbox, Input } from "@mui/joy";
 import { DBRows } from "../../../../server/src/dbTypes";
 

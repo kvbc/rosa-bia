@@ -3,7 +3,7 @@
 // HTTP and WebSocket server types
 //
 
-import { DBRow, DBTableName } from "./dbTypes";
+import { DBRow, DBRows, DBTableName } from "./dbTypes";
 import { z } from "zod";
 
 export type WSMessage<TRow extends DBRow = DBRow> = {
@@ -31,6 +31,7 @@ export type HTTPResponse<TRow extends DBRow = DBRow> =
     | {
           responseType: "login";
           jwtToken: string;
+          employee: DBRows.Employee;
       };
 
 export const DB_ADMIN_MODIFY_TABLES: readonly DBTableName[] = [

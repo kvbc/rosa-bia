@@ -2,32 +2,48 @@
 // DBTableEdit.tsx
 // TableEdit component connected to update database rows
 //
-// TODO: Review
-//
 
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, useCallback, useMemo } from "react";
 import TableEdit from "./TableEdit";
 import { DBRow, DBTableName } from "../../../server/src/dbTypes";
 import useDBTable from "../hooks/useDBTable";
 
 export default function DBTableEdit<TRow extends DBRow>({
     dbTableName,
+    emptyRow: _emptyRow,
     ...props
-}: { dbTableName: DBTableName } & Omit<
+}: { dbTableName: DBTableName; emptyRow: TRow } & Omit<
     ComponentProps<typeof TableEdit<TRow>>,
-    "totalRowCount" | "rows" | "onUpdateEntries"
+    "totalRowCount" | "rows" | "onUpdateEntries" | "emptyRow"
 >) {
-    const dbTable = useDBTable<TRow>(dbTableName);
+    const {
+        store,
+        rows,
+        rowRange: _rowRange,
+        setRowRange,
+    } = useDBTable<TRow>(dbTableName);
+
+    const handleRowsRangeChanged = useCallback(
+        (startIndex: number, endIndex: number) =>
+            setRowRange({ startIndex, endIndex }),
+        [setRowRange]
+    );
+
+    // FIXME: store doesnt change since its a constant
+    const emptyRow = useMemo(
+        () => ({ ..._emptyRow, id: store.totalRowCount + 1 }),
+        [_emptyRow, store]
+    );
+
     return (
         <TableEdit
-            rows={dbTable.rows}
-            onRowAddClicked={dbTable.store.addRow}
-            onRowDeleteClicked={dbTable.store.deleteRow}
-            onRowSaveClicked={dbTable.store.updateRow}
-            onRowsRangeChanged={(startIndex, endIndex) =>
-                dbTable.setRowRange({ startIndex, endIndex })
-            }
-            totalRowCount={dbTable.store.totalRowCount}
+            rows={rows}
+            emptyRow={emptyRow}
+            totalRowCount={store.totalRowCount}
+            onRowAddClicked={store.addRow}
+            onRowDeleteClicked={store.deleteRow}
+            onRowSaveClicked={store.updateRow}
+            onRowsRangeChanged={handleRowsRangeChanged}
             {...props}
         />
     );

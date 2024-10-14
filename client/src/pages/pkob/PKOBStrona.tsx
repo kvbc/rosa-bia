@@ -1,6 +1,5 @@
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
-import useDBEntriesStore from "../../hooks/useDBTableStore";
 import Tabs from "@mui/joy/Tabs";
 import TabList from "@mui/joy/TabList";
 import Tab from "@mui/joy/Tab";

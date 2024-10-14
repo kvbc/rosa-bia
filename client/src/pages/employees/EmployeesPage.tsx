@@ -1,16 +1,13 @@
-import { DB } from "../../../../server/src/dbTypes";
 import DBTableEdit from "../../components/DBTableEdit";
-import useDBEntriesStore from "../../hooks/useDBTableStore";
+import React from "react";
 
 export default function EmployeesPage() {
-    const employeeDBEntries = useDBEntriesStore<DB.Employee>('employees')(); // prettier-ignore
-
     return (
         <DBTableEdit
-            dbEntries={employeeDBEntries}
+            dbTableName="employees"
             headers={["Nazwa", "Hasło", "Administrator"]}
             emptyRow={{
-                id: employeeDBEntries.totalRowCount + 1,
+                id: 0,
                 name: "",
                 password: "",
                 admin: false,

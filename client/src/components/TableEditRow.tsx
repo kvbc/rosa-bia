@@ -5,11 +5,10 @@
 
 import React, {
     createContext,
-    Dispatch,
     ReactNode,
-    SetStateAction,
     useContext,
     useEffect,
+    useMemo,
     useState,
 } from "react";
 import { TableEditRowType } from "./TableEdit";
@@ -34,15 +33,17 @@ const newEmittery = () =>
         rowCanceled: undefined;
     }>();
 
-export const TableEditRowContext = createContext<{
+export type TableEditRowContextData = {
     state: TableEditRowState;
     eventEmitter: ReturnType<typeof newEmittery>;
-} | null>(null);
+};
+export const TableEditRowContext =
+    createContext<TableEditRowContextData | null>(null);
 
 export default function TableEditRow<TRow extends TableEditRowType>({
-    row,
-    setRow,
+    row: tableRow,
     onDeleteClicked,
+    onCancelClicked,
     onAddClicked,
     onSaveClicked,
     editable,
@@ -50,19 +51,31 @@ export default function TableEditRow<TRow extends TableEditRowType>({
     ContentComponent,
 }: {
     row: TRow;
-    setRow: Dispatch<SetStateAction<TRow>>;
-    onDeleteClicked?: () => void;
-    onAddClicked?: () => void;
-    onSaveClicked?: () => void;
+    onDeleteClicked?: (row: TRow) => void;
+    onCancelClicked?: (row: TRow) => void;
+    onAddClicked?: (row: TRow) => void;
+    onSaveClicked?: (row: TRow) => void;
     editable: boolean;
     inputsProps: Omit<TableEditRowInputProps<TRow>, "row" | "setRow">[];
     ContentComponent?: TableEditRowContentComponent<TRow>;
 }) {
+    const [row, setRow] = useState<TRow>(tableRow);
     const [state, setState] = useState<TableEditRowState>(
         onAddClicked ? "adding" : "viewing"
     );
     const [eventEmitter] = useState(newEmittery()); // event emitter used to propagate events to components lower in the tree
     const upperTableEditRowContext = useContext(TableEditRowContext);
+    const contextData = useMemo<TableEditRowContextData>(
+        () => ({
+            state,
+            eventEmitter,
+        }),
+        [state, eventEmitter]
+    );
+
+    useEffect(() => {
+        setRow(tableRow);
+    }, [tableRow]);
 
     useEffect(() => {
         setState(onAddClicked ? "adding" : "viewing");
@@ -109,22 +122,24 @@ export default function TableEditRow<TRow extends TableEditRowType>({
 
     const handleActionSaveClicked = () => {
         setState("viewing");
-        if (onSaveClicked) onSaveClicked();
+        onSaveClicked?.(row);
         eventEmitter.emit("rowSaved");
     };
 
     const handleActionCancelClicked = () => {
+        setRow(tableRow);
         setState("viewing");
+        onCancelClicked?.(row);
         eventEmitter.emit("rowCanceled");
     };
 
     const handleActionAddClicked = () => {
-        if (onAddClicked) onAddClicked();
+        onAddClicked?.(row);
         eventEmitter.emit("rowAdded");
     };
 
     const handleActionDeleteClicked = () => {
-        if (onDeleteClicked) onDeleteClicked();
+        onDeleteClicked?.(row);
         eventEmitter.emit("rowDeleted");
     };
 
@@ -192,7 +207,7 @@ export default function TableEditRow<TRow extends TableEditRowType>({
      */
 
     return (
-        <TableEditRowContext.Provider value={{ state, eventEmitter }}>
+        <TableEditRowContext.Provider value={contextData}>
             <tr>
                 {content}
                 {editable && (

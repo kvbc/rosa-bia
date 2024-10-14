@@ -12,16 +12,26 @@ import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import { SiGoogleforms } from "react-icons/si";
-import { Tooltip } from "@mui/joy";
-import React from "react";
+import { IconButton, Option, Select, Stack, Tooltip } from "@mui/joy";
+import React, { useMemo } from "react";
+import useEmployee from "./hooks/useEmployee";
+import { DBRows } from "../../server/src/dbTypes";
+import useDBTable from "./hooks/useDBTable";
+import { MdLogout } from "react-icons/md";
 
 function AppNavbar() {
-    // const employeeDBEntries = useDBEntriesStore<DB.Employee>('employees')(); // prettier-ignore
-    // const [employeeID, setEmployeeID] = useState<number>(0);
+    const employeeDBTable = useDBTable<DBRows.Employee>("employees", true);
+    const { employee, employeeLogin, employeeLogout } = useEmployee();
+    const employeeName = useMemo(() => employee?.name, [employee]);
 
+    // <nav className="w-full flex flex-row p-2 bg-blue-600 text-white font-semibold text-xs">
     return (
-        <nav className="w-full flex flex-row p-2 bg-blue-600 text-white font-semibold text-xs">
-            <div className="gap-4 w-8/12 flex flex-row">
+        <Stack
+            component="nav"
+            className="bg-blue-600 p-2 font-semibold text-xs text-white"
+            direction="row"
+        >
+            <Stack direction="row" spacing={2} className="w-full">
                 <img src="logo.svg" width={24} />
                 <Link
                     to="/"
@@ -99,29 +109,44 @@ function AppNavbar() {
                         </MenuItem>
                     </Menu>
                 </Dropdown>
-            </div>
-            <div className="flex flex-row w-4/12 justify-end gap-2">
-                {/* <Select
+            </Stack>
+            <Stack direction="row">
+                <Select
                     size="sm"
                     variant="solid"
                     color="primary"
-                    value={employeeID}
-                    placeholder="... Pracownik"
-                    onChange={(_, value) => setEmployeeID(value ?? 0)}
+                    value={employeeName ?? null}
+                    placeholder="Pracownik"
+                    onChange={(_, value) =>
+                        value === null
+                            ? employeeLogout()
+                            : employeeLogin({
+                                  employeeName: value,
+                                  employeePassword: "",
+                              })
+                    }
                 >
-                    {employeeDBEntries.rows.map((entry) => (
+                    {employeeDBTable.rows.map((employee) => (
                         <Option
                             variant="soft"
-                            key={entry.id}
-                            value={entry.id}
-                            color={entry.admin ? "danger" : "primary"}
+                            key={employee.id}
+                            value={employee.name}
+                            color={employee.admin ? "danger" : "primary"}
                         >
-                            {entry.name}
+                            {employee.name}
                         </Option>
                     ))}
-                </Select> */}
-            </div>
-        </nav>
+                </Select>
+                <IconButton
+                    onClick={employeeLogout}
+                    size="sm"
+                    variant="solid"
+                    color="danger"
+                >
+                    <MdLogout />
+                </IconButton>
+            </Stack>
+        </Stack>
     );
 }
 

@@ -1,7 +1,6 @@
 import DBTableEdit from "../../components/DBTableEdit";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import Table from "@mui/joy/Table";
-import useDBEntriesStore from "../../hooks/useDBTableStore";
 import ConstructionDivisionTableEditRowContent from "./ConstructionDivisionTableEditRowContent";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
