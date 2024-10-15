@@ -30,10 +30,9 @@ export type TableEditRowType = {
 
 export default function TableEdit<TRow extends TableEditRowType>({
     rows: _rows,
-    emptyRow,
+    defaultRow,
     headers,
     rowInputsProps,
-    editable,
     onRowDeleteClicked,
     onRowAddClicked,
     onRowSaveClicked,
@@ -50,8 +49,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
         | string
     )[];
     totalRowCount: number;
-    emptyRow: TRow;
-    editable?: boolean;
+    defaultRow: TRow;
     onRowDeleteClicked?: (row: TRow) => void;
     onRowAddClicked?: (row: TRow) => void;
     onRowSaveClicked?: (row: TRow) => void;
@@ -59,8 +57,6 @@ export default function TableEdit<TRow extends TableEditRowType>({
     rowInputsProps: ComponentProps<typeof TableEditRow<TRow>>["inputsProps"];
     RowContentComponent?: ComponentProps<typeof TableEditRow<TRow>>["ContentComponent"]; // prettier-ignore
 }) {
-    if (editable === undefined) editable = true;
-
     //
     // revertRows - rows used to revert the changes made to the table if this table is inside of any TableEditRow
     //
@@ -68,7 +64,8 @@ export default function TableEdit<TRow extends TableEditRowType>({
     const [rowsPerPage, setRowsPerPage] = useState<number>(25);
     const [rows, setRows] = useState<TRow[]>(_rows);
     const [revertRows, setRevertRows] = useState<TRow[]>(_rows); // prettier-ignore
-    const [addRow, setAddRow] = useState<TRow>({ ...emptyRow });
+    const [addRow, setAddRow] = useState<TRow>({ ...defaultRow });
+    const [editable, setEditable] = useState(true);
 
     const upperTableEditRowContext = useContext(TableEditRowContext);
     const pageCount = Math.ceil(totalRowCount / rowsPerPage);
@@ -80,17 +77,30 @@ export default function TableEdit<TRow extends TableEditRowType>({
     }, [onRowsRangeChanged, startRowIndex, endRowIndex]);
 
     useEffect(() => {
-        setAddRow({ ...emptyRow });
-    }, [emptyRow]);
+        setAddRow({ ...defaultRow });
+    }, [defaultRow]);
 
     //
     // If this TableEdit is inside of another TableEditRow,
     // depend it's 'editable' property on this row
     //
-    if (upperTableEditRowContext) {
-        editable =
-            upperTableEditRowContext.state === "editing" ||
-            upperTableEditRowContext.state === "adding";
+    useEffect(() => {
+        return upperTableEditRowContext?.eventEmitter.on(
+            "stateChanged",
+            (state) => {
+                setEditable(state === "editing" || state === "adding");
+            }
+        );
+    }, [upperTableEditRowContext]);
+
+    if (editable) {
+        headers = [
+            ...headers,
+            {
+                name: "Akcje",
+                width: "70px",
+            },
+        ];
     }
 
     useEffect(() => {
@@ -133,13 +143,23 @@ export default function TableEdit<TRow extends TableEditRowType>({
         setRows([...revertRows]);
     }, [revertRows]);
 
+    // FIXME: emittery not work on rerender :( (event emits when it just offed)
     useEffect(() => {
+        // console.log("noway");
         if (upperTableEditRowContext) {
+            const doIfHigher =
+                (callback: () => void) => (dir: "higher" | "lower") => {
+                    if (dir === "higher") {
+                        console.log("mhm");
+                        callback();
+                    }
+                };
             // prettier-ignore
             const offs = [
-                upperTableEditRowContext.eventEmitter.on("rowAdded", commitChanges),
-                upperTableEditRowContext.eventEmitter.on("rowSaved", commitChanges),
-                upperTableEditRowContext.eventEmitter.on("rowCanceled", cancelChanges),
+                upperTableEditRowContext.eventEmitter.on("add", doIfHigher(commitChanges)),
+                upperTableEditRowContext.eventEmitter.on("save", doIfHigher(commitChanges)),
+                upperTableEditRowContext.eventEmitter.on("delete", doIfHigher(commitChanges)),
+                upperTableEditRowContext.eventEmitter.on("cancel", doIfHigher(cancelChanges)),
             ];
             return () => {
                 offs.forEach((off) => off());
@@ -149,30 +169,28 @@ export default function TableEdit<TRow extends TableEditRowType>({
         }
     }, [upperTableEditRowContext, commitChanges, cancelChanges]);
 
-    const handleRowAdded = (newRow: TRow) => {
+    const handleRowAdded = useCallback((newRow: TRow) => {
         // if (isRowIDInRange(newRow.id, startRowIndex, endRowIndex)) {
         setRows((rows) => [...rows, newRow]);
         // onRowsRangeChanged?.(startRowIndex, endRowIndex);
         // }
-    };
+    }, []);
 
-    const handleRowSaved = (newRow: TRow) => {
+    const handleRowSaved = useCallback((newRow: TRow) => {
         setRows((rows) =>
             rows.map((row) => (row.id === newRow.id ? newRow : row))
         );
-    };
+    }, []);
 
-    const handleRowDeleted = (deletedRow: TRow) => {
+    const handleRowDeleted = useCallback((deletedRow: TRow) => {
         setRows((rows) => rows.filter((row) => row.id !== deletedRow.id));
-    };
+    }, []);
 
     const handleRowCanceled = useCallback(
         (_canceledRow: TRow) => {
-            if (!upperTableEditRowContext) {
-                cancelChanges();
-            }
+            cancelChanges();
         },
-        [upperTableEditRowContext, cancelChanges]
+        [cancelChanges]
     );
 
     const handleChangeRowsPerPage = (
@@ -193,22 +211,20 @@ export default function TableEdit<TRow extends TableEditRowType>({
         >
             <thead>
                 <tr>
-                    {[...headers, { name: "Akcje", width: "70px" }].map(
-                        (header) => {
-                            let name,
-                                width = "inherit";
-                            if (typeof header === "string") name = header;
-                            else {
-                                name = header.name;
-                                width = header.width ?? "inherit";
-                            }
-                            return (
-                                <Tooltip title={name} variant="soft" key={name}>
-                                    <th style={{ width }}>{name}</th>
-                                </Tooltip>
-                            );
+                    {headers.map((header) => {
+                        let name,
+                            width = "inherit";
+                        if (typeof header === "string") name = header;
+                        else {
+                            name = header.name;
+                            width = header.width ?? "inherit";
                         }
-                    )}
+                        return (
+                            <Tooltip title={name} variant="soft" key={name}>
+                                <th style={{ width }}>{name}</th>
+                            </Tooltip>
+                        );
+                    })}
                 </tr>
             </thead>
             <tbody>

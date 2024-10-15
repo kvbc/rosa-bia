@@ -45,7 +45,7 @@ export default function ConstructionSectionTableEditRowContent({
                             rowActionTDClassName="bg-gray-100"
                             headers={["Działy Budowlane"]}
                             showFooter={false}
-                            emptyRow={{
+                            defaultRow={{
                                 id:
                                     constructionDivisionDBEntries.totalRowCount +
                                     1,

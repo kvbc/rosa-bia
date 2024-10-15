@@ -252,7 +252,7 @@ export default function RejestryStrona() {
             <DBTableEdit
                 dbEntries={registerDBEntries}
                 headers={["Rejestr"]}
-                emptyRow={emptyEntry}
+                defaultRow={emptyEntry}
                 rowInputsProps={rowInputsProps}
                 RowContentComponent={RegisterTableEditRowContent}
             />

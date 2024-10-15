@@ -6,6 +6,7 @@
 import React, {
     createContext,
     ReactNode,
+    useCallback,
     useContext,
     useEffect,
     useMemo,
@@ -27,18 +28,21 @@ export type TableEditRowState = "viewing" | "editing" | "adding";
 
 const newEmittery = () =>
     new Emittery<{
-        rowSaved: undefined;
-        rowAdded: undefined;
-        rowDeleted: undefined;
-        rowCanceled: undefined;
+        save: "lower" | "higher";
+        add: "lower" | "higher";
+        delete: "lower" | "higher";
+        cancel: "lower" | "higher";
+        lowerRowRegistered: undefined;
+        stateChanged: TableEditRowState;
     }>();
 
-export type TableEditRowContextData = {
-    state: TableEditRowState;
+export type TableEditRowContextType = {
     eventEmitter: ReturnType<typeof newEmittery>;
+    depth: number;
 };
+
 export const TableEditRowContext =
-    createContext<TableEditRowContextData | null>(null);
+    createContext<TableEditRowContextType | null>(null);
 
 export default function TableEditRow<TRow extends TableEditRowType>({
     row: tableRow,
@@ -64,14 +68,26 @@ export default function TableEditRow<TRow extends TableEditRowType>({
         onAddClicked ? "adding" : "viewing"
     );
     const [eventEmitter] = useState(newEmittery()); // event emitter used to propagate events to components lower in the tree
-    const upperTableEditRowContext = useContext(TableEditRowContext);
-    const contextData = useMemo<TableEditRowContextData>(
+    const upperRowContext = useContext(TableEditRowContext);
+    const [maxRowDepth, setMaxRowDepth] = useState(1);
+    const contextData = useMemo<TableEditRowContextType>(
         () => ({
-            state,
             eventEmitter,
+            depth: upperRowContext ? upperRowContext.depth + 1 : 0,
         }),
-        [state, eventEmitter]
+        [eventEmitter, upperRowContext]
     );
+
+    useEffect(() => {
+        setMaxRowDepth(contextData.depth);
+        upperRowContext?.eventEmitter.emit("lowerRowRegistered");
+    }, []);
+    useEffect(() => {
+        eventEmitter.on("lowerRowRegistered", () => {
+            setMaxRowDepth((maxRowDepth) => maxRowDepth + 1);
+            upperRowContext?.eventEmitter.emit("lowerRowRegistered");
+        });
+    }, [eventEmitter, upperRowContext?.eventEmitter]);
 
     useEffect(() => {
         setRow(tableRow);
@@ -80,6 +96,10 @@ export default function TableEditRow<TRow extends TableEditRowType>({
     useEffect(() => {
         setState(onAddClicked ? "adding" : "viewing");
     }, [onAddClicked]);
+
+    useEffect(() => {
+        eventEmitter.emit("stateChanged", state);
+    }, [state, eventEmitter]);
 
     /*
      *
@@ -103,7 +123,9 @@ export default function TableEditRow<TRow extends TableEditRowType>({
         inputsProps.forEach((inputProps) => {
             inputs[inputProps.rowKey] = getInputNode(inputProps);
         });
-        content = <ContentComponent inputs={inputs} />;
+        content = (
+            <ContentComponent inputs={inputs} row={row} editable={editable} />
+        );
     } else {
         content = inputsProps.map((inputProps) => (
             <td key={inputProps.rowKey}>{getInputNode(inputProps)}</td>
@@ -120,28 +142,25 @@ export default function TableEditRow<TRow extends TableEditRowType>({
         setState("editing");
     };
 
-    const handleActionSaveClicked = () => {
+    const handleActionSaveClicked = useCallback(() => {
         setState("viewing");
-        onSaveClicked?.(row);
-        eventEmitter.emit("rowSaved");
-    };
+        eventEmitter.emit("save", "lower");
+        console.log("yes ok");
+    }, [eventEmitter]);
 
-    const handleActionCancelClicked = () => {
+    const handleActionCancelClicked = useCallback(() => {
         setRow(tableRow);
         setState("viewing");
-        onCancelClicked?.(row);
-        eventEmitter.emit("rowCanceled");
-    };
+        eventEmitter.emit("cancel", "lower");
+    }, [eventEmitter, tableRow]);
 
-    const handleActionAddClicked = () => {
-        onAddClicked?.(row);
-        eventEmitter.emit("rowAdded");
-    };
+    const handleActionAddClicked = useCallback(() => {
+        eventEmitter.emit("add", "lower");
+    }, [eventEmitter]);
 
-    const handleActionDeleteClicked = () => {
-        onDeleteClicked?.(row);
-        eventEmitter.emit("rowDeleted");
-    };
+    const handleActionDeleteClicked = useCallback(() => {
+        eventEmitter.emit("delete", "lower");
+    }, [eventEmitter]);
 
     /*
      *
@@ -202,6 +221,63 @@ export default function TableEditRow<TRow extends TableEditRowType>({
 
     /*
      *
+     *
+     *
+     */
+
+    useEffect(() => {
+        // console.log("update");
+        const connectAction = (
+            action: "add" | "cancel" | "save" | "delete",
+            callback?: (row: TRow) => void
+        ) => {
+            return upperRowContext?.eventEmitter.on(action, (dir) => {
+                if (dir === "lower") {
+                    console.log(">>>", action, dir);
+                    if (contextData.depth === maxRowDepth) {
+                        callback?.(row);
+                        // setRow((row) => {
+                        //     callback?.(row);
+                        //     return row;
+                        // });
+                        eventEmitter.emit(action, "higher");
+                    } else {
+                        eventEmitter.emit(action, "lower");
+                    }
+                } else if (dir === "higher") {
+                    callback?.(row);
+                    // setRow((row) => {
+                    //     callback?.(row);
+                    //     return row;
+                    // });
+                    upperRowContext.eventEmitter.emit(action, "higher");
+                }
+            });
+        };
+        const offs = [
+            upperRowContext?.eventEmitter.on("stateChanged", setState),
+            connectAction("add", onAddClicked),
+            connectAction("save", onSaveClicked),
+            connectAction("delete", onDeleteClicked),
+            connectAction("cancel", onCancelClicked),
+        ];
+        return () => {
+            offs.forEach((off) => off?.());
+        };
+    }, [
+        upperRowContext?.eventEmitter,
+        eventEmitter,
+        onAddClicked,
+        onCancelClicked,
+        onDeleteClicked,
+        onSaveClicked,
+        row,
+        contextData.depth,
+        maxRowDepth,
+    ]);
+
+    /*
+     *
      * TableEditRow
      *
      */
@@ -212,7 +288,7 @@ export default function TableEditRow<TRow extends TableEditRowType>({
                 {content}
                 {editable && (
                     <>
-                        {upperTableEditRowContext && (
+                        {upperRowContext && (
                             <td>
                                 <Stack>
                                     {state !== "adding" && actionDeleteButton}
@@ -220,7 +296,7 @@ export default function TableEditRow<TRow extends TableEditRowType>({
                                 </Stack>
                             </td>
                         )}
-                        {!upperTableEditRowContext && (
+                        {!upperRowContext && (
                             <td>
                                 {state == "viewing" && (
                                     <ButtonGroup>

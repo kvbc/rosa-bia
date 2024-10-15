@@ -1,13 +1,16 @@
 import DBTableEdit from "../../components/DBTableEdit";
 import React from "react";
+import useDBTable from "../../hooks/useDBTable";
+import { DBRows } from "../../../../server/src/dbTypes";
 
-export default function InwestorzyStrona() {
+export default function PageInvestors() {
+    const dbTable = useDBTable<DBRows.Investor>("investors");
+
     return (
         <DBTableEdit
-            dbTableName="investors"
+            dbTable={dbTable}
             headers={["Inwestor", "Adres", "Informacje"]}
-            emptyRow={{
-                id: 0,
+            defaultRow={{
                 address: "",
                 name: "",
                 info: "",

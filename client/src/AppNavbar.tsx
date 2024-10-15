@@ -20,7 +20,7 @@ import useDBTable from "./hooks/useDBTable";
 import { MdLogout } from "react-icons/md";
 
 function AppNavbar() {
-    const employeeDBTable = useDBTable<DBRows.Employee>("employees", true);
+    const employeeDBTable = useDBTable<DBRows.Employee>("employees");
     const { employee, employeeLogin, employeeLogout } = useEmployee();
     const employeeName = useMemo(() => employee?.name, [employee]);
 
@@ -107,6 +107,16 @@ function AppNavbar() {
                                 </Link>
                             </Tooltip>
                         </MenuItem>
+                        <MenuItem>
+                            <Tooltip variant="soft" title="nie wiem">
+                                <Link
+                                    to="/formularze/gunb3"
+                                    className="flex flex-row items-center gap-0.5 hover:underline"
+                                >
+                                    GUNB-3
+                                </Link>
+                            </Tooltip>
+                        </MenuItem>
                     </Menu>
                 </Dropdown>
             </Stack>
@@ -137,14 +147,16 @@ function AppNavbar() {
                         </Option>
                     ))}
                 </Select>
-                <IconButton
-                    onClick={employeeLogout}
-                    size="sm"
-                    variant="solid"
-                    color="danger"
-                >
-                    <MdLogout />
-                </IconButton>
+                {employeeName && (
+                    <IconButton
+                        onClick={employeeLogout}
+                        size="sm"
+                        variant="solid"
+                        color="danger"
+                    >
+                        <MdLogout />
+                    </IconButton>
+                )}
             </Stack>
         </Stack>
     );

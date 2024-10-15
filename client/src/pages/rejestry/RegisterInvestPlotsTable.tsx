@@ -18,7 +18,7 @@ export default function RegisterInvestPlotsDataTable({
             )}
             headersClassName="bg-gray-100"
             editable={editable}
-            emptyRow={{
+            defaultRow={{
                 id: 0,
                 register_id: entry.id,
                 plot: "",

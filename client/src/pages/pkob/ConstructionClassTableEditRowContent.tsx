@@ -62,7 +62,7 @@ export default function ConstructionClassTableEditRowContent({
                             headersClassName="bg-gray-400"
                             rowActionTDClassName="bg-gray-400"
                             headers={["Wyszczególnienia Budowlane"]}
-                            emptyRow={{
+                            defaultRow={{
                                 id: constructionSpecDBEntries.totalRowCount + 1,
                                 name: "",
                                 class_id: entry.id,

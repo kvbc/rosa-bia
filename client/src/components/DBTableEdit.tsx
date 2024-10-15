@@ -5,44 +5,54 @@
 
 import React, { ComponentProps, useCallback, useMemo } from "react";
 import TableEdit from "./TableEdit";
-import { DBRow, DBTableName } from "../../../server/src/dbTypes";
-import useDBTable from "../hooks/useDBTable";
+import { DBRow } from "../../../server/src/dbTypes";
+import { DBTable } from "../hooks/useDBTable";
 
 export default function DBTableEdit<TRow extends DBRow>({
-    dbTableName,
-    emptyRow: _emptyRow,
+    dbTable,
+    defaultRow: _defaultRow,
+    rows: customRows,
     ...props
-}: { dbTableName: DBTableName; emptyRow: TRow } & Omit<
+}: {
+    dbTable: DBTable<TRow>;
+    defaultRow: Omit<TRow, "id">;
+    rows?: TRow[];
+} & Omit<
     ComponentProps<typeof TableEdit<TRow>>,
-    "totalRowCount" | "rows" | "onUpdateEntries" | "emptyRow"
+    "totalRowCount" | "rows" | "defaultRow"
 >) {
     const {
-        store,
+        totalRowCount,
         rows,
-        rowRange: _rowRange,
-        setRowRange,
-    } = useDBTable<TRow>(dbTableName);
+        requestAddRow,
+        requestDeleteRow,
+        requestUpdateRow,
+        setStartRowIndex,
+        setEndRowIndex,
+    } = dbTable;
 
     const handleRowsRangeChanged = useCallback(
-        (startIndex: number, endIndex: number) =>
-            setRowRange({ startIndex, endIndex }),
-        [setRowRange]
+        (startIndex: number, endIndex: number) => {
+            setStartRowIndex(startIndex);
+            setEndRowIndex(endIndex);
+        },
+        [setStartRowIndex, setEndRowIndex]
     );
 
-    // FIXME: store doesnt change since its a constant
-    const emptyRow = useMemo(
-        () => ({ ..._emptyRow, id: store.totalRowCount + 1 }),
-        [_emptyRow, store]
+    const defaultRow = useMemo<TRow>(
+        // FIXME: as
+        () => ({ ..._defaultRow, id: totalRowCount + 1 } as TRow),
+        [_defaultRow, totalRowCount]
     );
 
     return (
         <TableEdit
-            rows={rows}
-            emptyRow={emptyRow}
-            totalRowCount={store.totalRowCount}
-            onRowAddClicked={store.addRow}
-            onRowDeleteClicked={store.deleteRow}
-            onRowSaveClicked={store.updateRow}
+            rows={customRows ?? rows}
+            defaultRow={defaultRow}
+            totalRowCount={totalRowCount}
+            onRowAddClicked={requestAddRow}
+            onRowDeleteClicked={requestDeleteRow}
+            onRowSaveClicked={requestUpdateRow}
             onRowsRangeChanged={handleRowsRangeChanged}
             {...props}
         />

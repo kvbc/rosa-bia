@@ -30,7 +30,7 @@ export default function PKOBStrona() {
         <DBTableEdit
             dbEntries={constructionSectionDBEntries}
             headers={["Sekcje Budowlane"]}
-            emptyRow={{
+            defaultRow={{
                 id: constructionSectionDBEntries.totalRowCount + 1,
                 name: "",
             }}

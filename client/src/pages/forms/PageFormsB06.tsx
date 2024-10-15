@@ -1,4 +1,5 @@
 import { Link } from "@mui/joy";
+import React from "react";
 
 export default function PageFormsB06() {
     return (

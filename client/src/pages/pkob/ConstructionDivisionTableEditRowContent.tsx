@@ -45,7 +45,7 @@ export default function ConstructionDivisionTableEditRowContent({
                             headersClassName="bg-gray-200"
                             rowActionTDClassName="bg-gray-200"
                             headers={["Grupy Budowlane"]}
-                            emptyRow={{
+                            defaultRow={{
                                 id:
                                     constructionGroupDBEntries.totalRowCount +
                                     1,
