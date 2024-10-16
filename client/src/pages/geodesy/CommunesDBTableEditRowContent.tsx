@@ -15,6 +15,7 @@ import { PageGeodesyContext } from "../../contexts/PageGeodesyContext";
 export default function CommunesDBTableEditRowContent({
     inputs,
     row,
+    editable,
 }: TableEditRowContentComponentProps<DBRows.Commune>) {
     const pageGeodesyContext = useContext(PageGeodesyContext);
     if (!pageGeodesyContext) {
@@ -79,6 +80,8 @@ export default function CommunesDBTableEditRowContent({
                             rows={pageGeodesyContext.placesDBTable.rows.filter(
                                 (fRow) => fRow.commune_id === row.id
                             )}
+                            rowActionButtonOrientation="vertical"
+                            editable={editable}
                             headers={["Miejscowości"]}
                             defaultRow={placesDefaultRow}
                             rowInputsProps={placesRowInputsProps}

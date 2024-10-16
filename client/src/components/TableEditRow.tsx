@@ -7,9 +7,7 @@ import React, {
     createContext,
     ReactNode,
     useCallback,
-    useContext,
     useEffect,
-    useMemo,
     useState,
 } from "react";
 import { TableEditRowType } from "./TableEdit";
@@ -17,7 +15,6 @@ import TableEditRowInput, { TableEditRowInputProps } from "./TableEditRowInput";
 import IconButton from "@mui/joy/IconButton";
 import ButtonGroup from "@mui/joy/ButtonGroup";
 import { MdEdit, MdDelete, MdAdd, MdCancel, MdSave } from "react-icons/md";
-import Emittery from "emittery";
 import { Stack } from "@mui/joy";
 import {
     TableEditRowContentComponent,
@@ -26,80 +23,52 @@ import {
 
 export type TableEditRowState = "viewing" | "editing" | "adding";
 
-const newEmittery = () =>
-    new Emittery<{
-        save: "lower" | "higher";
-        add: "lower" | "higher";
-        delete: "lower" | "higher";
-        cancel: "lower" | "higher";
-        lowerRowRegistered: undefined;
-        stateChanged: TableEditRowState;
-    }>();
-
-export type TableEditRowContextType = {
-    eventEmitter: ReturnType<typeof newEmittery>;
-    depth: number;
-};
-
-export const TableEditRowContext =
-    createContext<TableEditRowContextType | null>(null);
+export const TableEditRowStateContext = createContext<TableEditRowState | null>(
+    null
+);
 
 export default function TableEditRow<TRow extends TableEditRowType>({
     row: tableRow,
     onDeleteClicked,
-    onCancelClicked,
     onAddClicked,
+    stateProp,
     onSaveClicked,
     editable,
+    actionButtonOrientation = "horizontal",
+    showSaveAction,
     inputsProps,
     ContentComponent,
 }: {
     row: TRow;
     onDeleteClicked?: (row: TRow) => void;
-    onCancelClicked?: (row: TRow) => void;
     onAddClicked?: (row: TRow) => void;
     onSaveClicked?: (row: TRow) => void;
+    showSaveAction: boolean;
     editable: boolean;
-    inputsProps: Omit<TableEditRowInputProps<TRow>, "row" | "setRow">[];
+    stateProp: TableEditRowState;
+    actionButtonOrientation?: "horizontal" | "vertical";
+    inputsProps: Omit<
+        TableEditRowInputProps<TRow>,
+        "row" | "setRow" | "onBlur"
+    >[];
     ContentComponent?: TableEditRowContentComponent<TRow>;
 }) {
-    const [row, setRow] = useState<TRow>(tableRow);
-    const [state, setState] = useState<TableEditRowState>(
-        onAddClicked ? "adding" : "viewing"
-    );
-    const [eventEmitter] = useState(newEmittery()); // event emitter used to propagate events to components lower in the tree
-    const upperRowContext = useContext(TableEditRowContext);
-    const [maxRowDepth, setMaxRowDepth] = useState(1);
-    const contextData = useMemo<TableEditRowContextType>(
-        () => ({
-            eventEmitter,
-            depth: upperRowContext ? upperRowContext.depth + 1 : 0,
-        }),
-        [eventEmitter, upperRowContext]
-    );
+    const [row, setRow] = useState<TRow>({ ...tableRow });
+    const [state, setState] = useState<TableEditRowState>(stateProp);
 
     useEffect(() => {
-        setMaxRowDepth(contextData.depth);
-        upperRowContext?.eventEmitter.emit("lowerRowRegistered");
-    }, []);
-    useEffect(() => {
-        eventEmitter.on("lowerRowRegistered", () => {
-            setMaxRowDepth((maxRowDepth) => maxRowDepth + 1);
-            upperRowContext?.eventEmitter.emit("lowerRowRegistered");
-        });
-    }, [eventEmitter, upperRowContext?.eventEmitter]);
-
-    useEffect(() => {
-        setRow(tableRow);
+        setRow({ ...tableRow });
     }, [tableRow]);
 
     useEffect(() => {
-        setState(onAddClicked ? "adding" : "viewing");
-    }, [onAddClicked]);
+        setState(stateProp);
+    }, [stateProp]);
 
-    useEffect(() => {
-        eventEmitter.emit("stateChanged", state);
-    }, [state, eventEmitter]);
+    const isContentEditable = state === "editing" || state === "adding";
+
+    const handleInputBlur = useCallback(() => {
+        onSaveClicked?.(row);
+    }, [onSaveClicked, row]);
 
     /*
      *
@@ -114,7 +83,8 @@ export default function TableEditRow<TRow extends TableEditRowType>({
             row={row}
             setRow={setRow}
             {...inputProps}
-            disabled={!editable || state == "viewing"}
+            disabled={!isContentEditable}
+            onBlur={handleInputBlur}
         />
     );
 
@@ -124,7 +94,12 @@ export default function TableEditRow<TRow extends TableEditRowType>({
             inputs[inputProps.rowKey] = getInputNode(inputProps);
         });
         content = (
-            <ContentComponent inputs={inputs} row={row} editable={editable} />
+            <ContentComponent
+                inputs={inputs}
+                row={row}
+                editable={isContentEditable}
+                onInputBlur={handleInputBlur}
+            />
         );
     } else {
         content = inputsProps.map((inputProps) => (
@@ -144,23 +119,21 @@ export default function TableEditRow<TRow extends TableEditRowType>({
 
     const handleActionSaveClicked = useCallback(() => {
         setState("viewing");
-        eventEmitter.emit("save", "lower");
-        console.log("yes ok");
-    }, [eventEmitter]);
+        onSaveClicked?.(row);
+    }, [onSaveClicked, row]);
 
     const handleActionCancelClicked = useCallback(() => {
         setRow(tableRow);
         setState("viewing");
-        eventEmitter.emit("cancel", "lower");
-    }, [eventEmitter, tableRow]);
+    }, [tableRow]);
 
     const handleActionAddClicked = useCallback(() => {
-        eventEmitter.emit("add", "lower");
-    }, [eventEmitter]);
+        onAddClicked?.(row);
+    }, [row, onAddClicked]);
 
     const handleActionDeleteClicked = useCallback(() => {
-        eventEmitter.emit("delete", "lower");
-    }, [eventEmitter]);
+        onDeleteClicked?.(row);
+    }, [row, onDeleteClicked]);
 
     /*
      *
@@ -225,56 +198,56 @@ export default function TableEditRow<TRow extends TableEditRowType>({
      *
      */
 
-    useEffect(() => {
-        // console.log("update");
-        const connectAction = (
-            action: "add" | "cancel" | "save" | "delete",
-            callback?: (row: TRow) => void
-        ) => {
-            return upperRowContext?.eventEmitter.on(action, (dir) => {
-                if (dir === "lower") {
-                    console.log(">>>", action, dir);
-                    if (contextData.depth === maxRowDepth) {
-                        callback?.(row);
-                        // setRow((row) => {
-                        //     callback?.(row);
-                        //     return row;
-                        // });
-                        eventEmitter.emit(action, "higher");
-                    } else {
-                        eventEmitter.emit(action, "lower");
-                    }
-                } else if (dir === "higher") {
-                    callback?.(row);
-                    // setRow((row) => {
-                    //     callback?.(row);
-                    //     return row;
-                    // });
-                    upperRowContext.eventEmitter.emit(action, "higher");
-                }
-            });
-        };
-        const offs = [
-            upperRowContext?.eventEmitter.on("stateChanged", setState),
-            connectAction("add", onAddClicked),
-            connectAction("save", onSaveClicked),
-            connectAction("delete", onDeleteClicked),
-            connectAction("cancel", onCancelClicked),
-        ];
-        return () => {
-            offs.forEach((off) => off?.());
-        };
-    }, [
-        upperRowContext?.eventEmitter,
-        eventEmitter,
-        onAddClicked,
-        onCancelClicked,
-        onDeleteClicked,
-        onSaveClicked,
-        row,
-        contextData.depth,
-        maxRowDepth,
-    ]);
+    // useEffect(() => {
+    //     // console.log("update");
+    //     const connectAction = (
+    //         action: "add" | "cancel" | "save" | "delete",
+    //         callback?: (row: TRow) => void
+    //     ) => {
+    //         return upperRowContext?.eventEmitter.on(action, (dir) => {
+    //             if (dir === "lower") {
+    //                 console.log(">>>", action, dir);
+    //                 if (contextData.depth === maxRowDepth) {
+    //                     callback?.(row);
+    //                     // setRow((row) => {
+    //                     //     callback?.(row);
+    //                     //     return row;
+    //                     // });
+    //                     eventEmitter.emit(action, "higher");
+    //                 } else {
+    //                     eventEmitter.emit(action, "lower");
+    //                 }
+    //             } else if (dir === "higher") {
+    //                 callback?.(row);
+    //                 // setRow((row) => {
+    //                 //     callback?.(row);
+    //                 //     return row;
+    //                 // });
+    //                 upperRowContext.eventEmitter.emit(action, "higher");
+    //             }
+    //         });
+    //     };
+    //     const offs = [
+    //         upperRowContext?.eventEmitter.on("stateChanged", setState),
+    //         connectAction("add", onAddClicked),
+    //         connectAction("save", onSaveClicked),
+    //         connectAction("delete", onDeleteClicked),
+    //         connectAction("cancel", onCancelClicked),
+    //     ];
+    //     return () => {
+    //         offs.forEach((off) => off?.());
+    //     };
+    // }, [
+    //     upperRowContext?.eventEmitter,
+    //     eventEmitter,
+    //     onAddClicked,
+    //     onCancelClicked,
+    //     onDeleteClicked,
+    //     onSaveClicked,
+    //     row,
+    //     contextData.depth,
+    //     maxRowDepth,
+    // ]);
 
     /*
      *
@@ -283,41 +256,45 @@ export default function TableEditRow<TRow extends TableEditRowType>({
      */
 
     return (
-        <TableEditRowContext.Provider value={contextData}>
-            <tr>
+        <tr>
+            <TableEditRowStateContext.Provider value={state}>
                 {content}
-                {editable && (
-                    <>
-                        {upperRowContext && (
-                            <td>
-                                <Stack>
-                                    {state !== "adding" && actionDeleteButton}
-                                    {state === "adding" && actionAddButton}
-                                </Stack>
-                            </td>
-                        )}
-                        {!upperRowContext && (
-                            <td>
-                                {state == "viewing" && (
-                                    <ButtonGroup>
-                                        {actionEditButton}
-                                        {actionDeleteButton}
-                                    </ButtonGroup>
-                                )}
-                                {state == "editing" && (
-                                    <ButtonGroup>
-                                        {actionSaveButton}
-                                        {actionCancelButton}
-                                    </ButtonGroup>
-                                )}
-                                {state == "adding" && (
-                                    <Stack>{actionAddButton}</Stack>
-                                )}
-                            </td>
-                        )}
-                    </>
-                )}
-            </tr>
-        </TableEditRowContext.Provider>
+            </TableEditRowStateContext.Provider>
+            {editable && (
+                <>
+                    {!showSaveAction && (
+                        <td>
+                            <Stack>
+                                {state !== "adding" && actionDeleteButton}
+                                {state === "adding" && actionAddButton}
+                            </Stack>
+                        </td>
+                    )}
+                    {showSaveAction && (
+                        <td>
+                            {state == "viewing" && (
+                                <ButtonGroup
+                                    orientation={actionButtonOrientation}
+                                >
+                                    {actionEditButton}
+                                    {actionDeleteButton}
+                                </ButtonGroup>
+                            )}
+                            {state == "editing" && (
+                                <ButtonGroup
+                                    orientation={actionButtonOrientation}
+                                >
+                                    {actionSaveButton}
+                                    {actionCancelButton}
+                                </ButtonGroup>
+                            )}
+                            {state == "adding" && (
+                                <Stack>{actionAddButton}</Stack>
+                            )}
+                        </td>
+                    )}
+                </>
+            )}
+        </tr>
     );
 }

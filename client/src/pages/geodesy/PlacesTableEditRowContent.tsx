@@ -14,6 +14,7 @@ import { PageGeodesyContext } from "../../contexts/PageGeodesyContext";
 export default function PlacesTableEditRowContent({
     inputs,
     row,
+    editable,
 }: TableEditRowContentComponentProps<DBRows.Place>) {
     const pageGeodesyContext = useContext(PageGeodesyContext);
     if (!pageGeodesyContext) {
@@ -64,7 +65,9 @@ export default function PlacesTableEditRowContent({
                             rows={pageGeodesyContext.streetsDBTable.rows.filter(
                                 (fRow) => fRow.place_id === row.id
                             )}
+                            editable={editable}
                             headers={["Ulice"]}
+                            rowActionButtonOrientation="vertical"
                             defaultRow={streetsDefaultRow}
                             rowInputsProps={[
                                 {

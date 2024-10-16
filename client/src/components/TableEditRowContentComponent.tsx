@@ -4,6 +4,7 @@ import { TableEditRowType } from "./TableEdit";
 export type TableEditRowContentComponentProps<TRow extends TableEditRowType> = {
     inputs: { [key in keyof TRow]?: ReactNode };
     row: TRow;
+    onInputBlur: () => void;
     editable: boolean;
 };
 

@@ -2,15 +2,18 @@
 // TableEdit.tsx
 // Flexible table component displaying, allowing edition and providing pagination for many provided rows.
 //
+// TODO: Revisit this shit ong
+//
 
 import React, {
     ComponentProps,
+    createContext,
     useCallback,
     useContext,
     useEffect,
     useState,
 } from "react";
-import TableEditRow, { TableEditRowContext } from "./TableEditRow";
+import TableEditRow, { TableEditRowStateContext } from "./TableEditRow";
 import Table from "@mui/joy/Table";
 import Tooltip from "@mui/joy/Tooltip";
 import Box from "@mui/joy/Box";
@@ -28,6 +31,8 @@ export type TableEditRowType = {
     [key: string]: unknown;
 };
 
+const TableEditContext = createContext<EventTarget | null>(null);
+
 export default function TableEdit<TRow extends TableEditRowType>({
     rows: _rows,
     defaultRow,
@@ -38,6 +43,8 @@ export default function TableEdit<TRow extends TableEditRowType>({
     onRowSaveClicked,
     onRowsRangeChanged,
     totalRowCount,
+    editable,
+    rowActionButtonOrientation,
     RowContentComponent,
 }: {
     rows: TRow[];
@@ -50,24 +57,33 @@ export default function TableEdit<TRow extends TableEditRowType>({
     )[];
     totalRowCount: number;
     defaultRow: TRow;
+    editable?: boolean;
     onRowDeleteClicked?: (row: TRow) => void;
     onRowAddClicked?: (row: TRow) => void;
     onRowSaveClicked?: (row: TRow) => void;
     onRowsRangeChanged?: (startRowIndex: number, endRowIndex: number) => void;
+    rowActionButtonOrientation?: ComponentProps<typeof TableEditRow<TRow>>["actionButtonOrientation"]; // prettier-ignore
     rowInputsProps: ComponentProps<typeof TableEditRow<TRow>>["inputsProps"];
     RowContentComponent?: ComponentProps<typeof TableEditRow<TRow>>["ContentComponent"]; // prettier-ignore
 }) {
-    //
-    // revertRows - rows used to revert the changes made to the table if this table is inside of any TableEditRow
-    //
+    if (editable === undefined) {
+        editable = true;
+    }
+
+    // revertRows - rows used to revert the changes made to the table if this table is inside of any other table
     const [page, setPage] = useState<number>(1);
     const [rowsPerPage, setRowsPerPage] = useState<number>(25);
     const [rows, setRows] = useState<TRow[]>(_rows);
     const [revertRows, setRevertRows] = useState<TRow[]>(_rows); // prettier-ignore
-    const [addRow, setAddRow] = useState<TRow>({ ...defaultRow });
-    const [editable, setEditable] = useState(true);
+    const [addRow, setAddRow] = useState<TRow>({
+        ...defaultRow,
+        id: -1 - rows.length,
+    });
+    const [eventTarget] = useState(new EventTarget());
+    const upperTableEventTarget = useContext(TableEditContext);
+    const upperRowState = useContext(TableEditRowStateContext);
 
-    const upperTableEditRowContext = useContext(TableEditRowContext);
+    // const upperTableEditRowContext = useContext(TableEditRowContext);
     const pageCount = Math.ceil(totalRowCount / rowsPerPage);
     const startRowIndex = (page - 1) * rowsPerPage;
     const endRowIndex = page * rowsPerPage;
@@ -77,31 +93,31 @@ export default function TableEdit<TRow extends TableEditRowType>({
     }, [onRowsRangeChanged, startRowIndex, endRowIndex]);
 
     useEffect(() => {
-        setAddRow({ ...defaultRow });
-    }, [defaultRow]);
+        setAddRow({ ...defaultRow, id: -1 - rows.length }); // just so id is unique
+    }, [defaultRow, rows]);
 
     //
     // If this TableEdit is inside of another TableEditRow,
     // depend it's 'editable' property on this row
     //
-    useEffect(() => {
-        return upperTableEditRowContext?.eventEmitter.on(
-            "stateChanged",
-            (state) => {
-                setEditable(state === "editing" || state === "adding");
-            }
-        );
-    }, [upperTableEditRowContext]);
+    // useEffect(() => {
+    //     return upperTableEditRowContext?.eventEmitter.on(
+    //         "stateChanged",
+    //         (state) => {
+    //             setEditable(state === "editing" || state === "adding");
+    //         }
+    //     );
+    // }, [upperTableEditRowContext]);
 
-    if (editable) {
-        headers = [
-            ...headers,
-            {
-                name: "Akcje",
-                width: "70px",
-            },
-        ];
-    }
+    // if (editableProp) {
+    //     headers = [
+    //         ...headers,
+    //         {
+    //             name: "Akcje",
+    //             width: "70px",
+    //         },
+    //     ];
+    // }
 
     useEffect(() => {
         setRevertRows(_rows);
@@ -109,6 +125,9 @@ export default function TableEdit<TRow extends TableEditRowType>({
     }, [_rows]);
 
     const commitChanges = useCallback(() => {
+        // rowEventTarget.dispatchEvent(new Event("forceSave"));
+        // console.log("yes 2", rows);
+
         let anyChanges = false;
         rows.forEach((row) => {
             const rrow = revertRows.find((rrow) => rrow.id === row.id);
@@ -129,68 +148,101 @@ export default function TableEdit<TRow extends TableEditRowType>({
             }
         });
         if (anyChanges) {
+            // setRevertRows(rows);
             setRevertRows([...rows]);
         }
+        eventTarget.dispatchEvent(new Event("changesCommited"));
     }, [
         onRowAddClicked,
         onRowSaveClicked,
         onRowDeleteClicked,
-        rows,
         revertRows,
+        rows,
+        eventTarget,
     ]);
 
     const cancelChanges = useCallback(() => {
         setRows([...revertRows]);
-    }, [revertRows]);
+        // setRows(revertRows);
+        eventTarget.dispatchEvent(new Event("changesCanceled"));
+    }, [revertRows, eventTarget]);
+
+    // useEffect(() => {
+    //     commitChanges();
+    // }, [commitChanges, rows]);
+
+    useEffect(() => {
+        if (upperTableEventTarget) {
+            upperTableEventTarget.addEventListener('changesCommited', commitChanges); // prettier-ignore
+            upperTableEventTarget.addEventListener('changesCanceled', cancelChanges); // prettier-ignore
+            return () => {
+                upperTableEventTarget.removeEventListener('changesCommited', commitChanges); // prettier-ignore
+                upperTableEventTarget.removeEventListener('changesCanceled', cancelChanges); // prettier-ignore
+            };
+        }
+    }, [upperTableEventTarget, commitChanges, cancelChanges]);
 
     // FIXME: emittery not work on rerender :( (event emits when it just offed)
-    useEffect(() => {
-        // console.log("noway");
-        if (upperTableEditRowContext) {
-            const doIfHigher =
-                (callback: () => void) => (dir: "higher" | "lower") => {
-                    if (dir === "higher") {
-                        console.log("mhm");
-                        callback();
-                    }
-                };
-            // prettier-ignore
-            const offs = [
-                upperTableEditRowContext.eventEmitter.on("add", doIfHigher(commitChanges)),
-                upperTableEditRowContext.eventEmitter.on("save", doIfHigher(commitChanges)),
-                upperTableEditRowContext.eventEmitter.on("delete", doIfHigher(commitChanges)),
-                upperTableEditRowContext.eventEmitter.on("cancel", doIfHigher(cancelChanges)),
-            ];
-            return () => {
-                offs.forEach((off) => off());
-            };
-        } else {
-            commitChanges();
-        }
-    }, [upperTableEditRowContext, commitChanges, cancelChanges]);
+    // useEffect(() => {
+    //     // console.log("noway");
+    //     if (upperTableEditRowContext) {
+    //         const doIfHigher =
+    //             (callback: () => void) => (dir: "higher" | "lower") => {
+    //                 if (dir === "higher") {
+    //                     console.log("mhm");
+    //                     callback();
+    //                 }
+    //             };
+    //         // prettier-ignore
+    //         const offs = [
+    //             upperTableEditRowContext.eventEmitter.on("add", doIfHigher(commitChanges)),
+    //             upperTableEditRowContext.eventEmitter.on("save", doIfHigher(commitChanges)),
+    //             upperTableEditRowContext.eventEmitter.on("delete", doIfHigher(commitChanges)),
+    //             upperTableEditRowContext.eventEmitter.on("cancel", doIfHigher(cancelChanges)),
+    //         ];
+    //         return () => {
+    //             offs.forEach((off) => off());
+    //         };
+    //     } else {
+    //         commitChanges();
+    //     }
+    // }, [upperTableEditRowContext, commitChanges, cancelChanges]);
 
-    const handleRowAdded = useCallback((newRow: TRow) => {
-        // if (isRowIDInRange(newRow.id, startRowIndex, endRowIndex)) {
-        setRows((rows) => [...rows, newRow]);
-        // onRowsRangeChanged?.(startRowIndex, endRowIndex);
-        // }
-    }, []);
-
-    const handleRowSaved = useCallback((newRow: TRow) => {
-        setRows((rows) =>
-            rows.map((row) => (row.id === newRow.id ? newRow : row))
-        );
-    }, []);
-
-    const handleRowDeleted = useCallback((deletedRow: TRow) => {
-        setRows((rows) => rows.filter((row) => row.id !== deletedRow.id));
-    }, []);
-
-    const handleRowCanceled = useCallback(
-        (_canceledRow: TRow) => {
-            cancelChanges();
+    const handleRowAdded = useCallback(
+        (addedRow: TRow) => {
+            // if (isRowIDInRange(newRow.id, startRowIndex, endRowIndex)) {
+            setRows((rows) => [...rows, { ...addedRow }]);
+            // setAddRow({ ...defaultRow, id: defaultRow.id + 1 });
+            if (!upperTableEventTarget) {
+                commitChanges();
+            }
+            // onRowsRangeChanged?.(startRowIndex, endRowIndex);
+            // }
         },
-        [cancelChanges]
+        [upperTableEventTarget, commitChanges]
+    );
+
+    const handleRowSaved = useCallback(
+        (newRow: TRow) => {
+            console.log("saved mr", newRow);
+            setRows((rows) =>
+                rows.map((row) => (row.id === newRow.id ? newRow : row))
+            );
+            if (!upperTableEventTarget) {
+                commitChanges();
+            }
+        },
+        [upperTableEventTarget, commitChanges]
+    );
+
+    const handleRowDeleted = useCallback(
+        (deletedRow: TRow) => {
+            setRows((rows) => rows.filter((row) => row.id !== deletedRow.id));
+            if (!upperTableEventTarget) {
+                commitChanges();
+            }
+        },
+        [upperTableEventTarget, commitChanges]
     );
 
     const handleChangeRowsPerPage = (
@@ -201,7 +253,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
         setPage(1);
     };
 
-    return (
+    const content = (
         <Table
             variant="outlined"
             size="sm"
@@ -211,7 +263,16 @@ export default function TableEdit<TRow extends TableEditRowType>({
         >
             <thead>
                 <tr>
-                    {headers.map((header) => {
+                    {(editable
+                        ? [
+                              ...headers,
+                              {
+                                  name: "Akcje",
+                                  width: "70px",
+                              },
+                          ]
+                        : headers
+                    ).map((header) => {
                         let name,
                             width = "inherit";
                         if (typeof header === "string") name = header;
@@ -228,16 +289,22 @@ export default function TableEdit<TRow extends TableEditRowType>({
                 </tr>
             </thead>
             <tbody>
-                {[...rows, addRow].map((row) => (
+                {(editable ? [...rows, addRow] : rows).map((row) => (
                     <TableEditRow
                         key={row.id}
                         row={row}
                         onAddClicked={
                             row === addRow ? handleRowAdded : undefined
                         }
+                        showSaveAction={!upperTableEventTarget}
                         onSaveClicked={handleRowSaved}
                         onDeleteClicked={handleRowDeleted}
-                        onCancelClicked={handleRowCanceled}
+                        actionButtonOrientation={rowActionButtonOrientation}
+                        stateProp={
+                            row === addRow
+                                ? "adding"
+                                : upperRowState ?? "viewing"
+                        }
                         editable={editable}
                         inputsProps={rowInputsProps}
                         ContentComponent={RowContentComponent}
@@ -305,4 +372,14 @@ export default function TableEdit<TRow extends TableEditRowType>({
             </tfoot>
         </Table>
     );
+
+    // if (!upperTableEventTarget) {
+    return (
+        <TableEditContext.Provider value={eventTarget}>
+            {content}
+        </TableEditContext.Provider>
+    );
+    // }
+
+    // return content;
 }

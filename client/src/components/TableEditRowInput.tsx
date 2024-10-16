@@ -23,6 +23,7 @@ export type TableEditRowInputProps<TRow extends TableEditRowType> = {
     selectOptions?: TableEditRowInputSelectOption[];
     placeholder?: string;
     disabled?: boolean;
+    onBlur: () => void;
 };
 
 export default function TableEditRowInput<TRow extends TableEditRowType>({
@@ -33,6 +34,7 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
     selectOptions,
     placeholder,
     disabled,
+    onBlur,
 }: TableEditRowInputProps<TRow>) {
     return (
         <>
@@ -47,6 +49,7 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
                             [rowKey]: value,
                         }))
                     }
+                    onBlur={onBlur}
                     disabled={disabled}
                 >
                     {selectOptions &&
@@ -71,6 +74,7 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
                                 [rowKey]: e.target.checked,
                             }));
                         }}
+                        onBlur={onBlur}
                         disabled={disabled}
                     />
                 ) : (
@@ -84,6 +88,7 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
                                 [rowKey]: e.target.value,
                             }));
                         }}
+                        onBlur={onBlur}
                         disabled={disabled}
                         placeholder={placeholder}
                     />

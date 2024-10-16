@@ -26,6 +26,7 @@ export default function PageGeodesy() {
                 defaultRow={{
                     name: "",
                 }}
+                rowActionButtonOrientation="vertical"
                 rowInputsProps={[
                     {
                         type: "text",
