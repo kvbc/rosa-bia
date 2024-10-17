@@ -1,27 +1,54 @@
 import { FaBuilding } from "react-icons/fa6";
-import DBTableEdit from "../../components/DBTableEdit";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
+import DBTableEdit, {
+    DBTableEditDefaultRow,
+} from "../../components/DBTableEdit";
 import ConstructionGroupTableEditRowContent from "./ConstructionGroupTableEditRowContent";
-import Table from "@mui/joy/Table";
 import Accordion from "@mui/material/Accordion";
 import Box from "@mui/material/Box";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { DBRows } from "../../../../server/src/dbTypes";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
+import { useContext, useMemo } from "react";
+import { PagePKOBContext } from "../../contexts/PagePKOBContext";
+import React from "react";
+import { TableEditRowInputsProps } from "../../components/TableEditRow";
 
 export default function ConstructionDivisionTableEditRowContent({
     inputs,
-    row: entry,
+    row,
     editable,
-    setRow: setEntry,
 }: TableEditRowContentComponentProps<DBRows.ConstructionDivision>) {
-    const constructionGroupDBEntries = useDBEntriesStore<DBRows.ConstructionGroup>("construction_groups")(); // prettier-ignore
+    const pageContext = useContext(PagePKOBContext);
+    if (!pageContext) {
+        throw "Error";
+    }
+
+    const defaultRow = useMemo<DBTableEditDefaultRow<DBRows.ConstructionGroup>>(
+        () => ({
+            name: "",
+            division_id: row.id,
+        }),
+        [row.id]
+    );
+
+    const rowInputsProps = useMemo<
+        TableEditRowInputsProps<DBRows.ConstructionGroup>
+    >(
+        () => [
+            {
+                type: "text",
+                rowKey: "name",
+            },
+        ],
+        []
+    );
 
     return (
         <>
-            <td className="bg-gray-100">
-                <Accordion className="bg-gray-100 shadow-none">
+            <td>
+                <Accordion className="shadow-none">
                     <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
                         <Box
                             sx={{
@@ -36,28 +63,14 @@ export default function ConstructionDivisionTableEditRowContent({
                     </AccordionSummary>
                     <AccordionDetails>
                         <DBTableEdit
-                            dbEntries={constructionGroupDBEntries}
-                            rows={constructionGroupDBEntries.rows.filter(
-                                (fEntry) => fEntry.division_id === entry.id
+                            dbTable={pageContext.constructionGroupsDBTable}
+                            rows={pageContext.constructionGroupsDBTable.rows.filter(
+                                (fRow) => fRow.division_id === row.id
                             )}
                             editable={editable}
-                            showFooter={false}
-                            headersClassName="bg-gray-200"
-                            rowActionTDClassName="bg-gray-200"
                             headers={["Grupy Budowlane"]}
-                            defaultRow={{
-                                id:
-                                    constructionGroupDBEntries.totalRowCount +
-                                    1,
-                                name: "",
-                                division_id: entry.id,
-                            }}
-                            rowInputsProps={[
-                                {
-                                    type: "text",
-                                    rowKey: "name",
-                                },
-                            ]}
+                            defaultRow={defaultRow}
+                            rowInputsProps={rowInputsProps}
                             RowContentComponent={
                                 ConstructionGroupTableEditRowContent
                             }

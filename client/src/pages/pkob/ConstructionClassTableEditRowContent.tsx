@@ -5,25 +5,62 @@ import {
     Box,
     Table,
 } from "@mui/joy";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaHouse } from "react-icons/fa6";
-import DBTableEdit from "../../components/DBTableEdit";
+import DBTableEdit, {
+    DBTableEditDefaultRow,
+} from "../../components/DBTableEdit";
 import ConstructionSpecTableEditRowContent from "./ConstructionSpecTableEditRowContent";
-import { DB } from "../../../../server/src/dbTypes";
+import React, { useContext, useMemo } from "react";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
+import { DBRows } from "../../../../server/src/dbTypes";
+import { PagePKOBContext } from "../../contexts/PagePKOBContext";
+import { TableEditRowInputsProps } from "../../components/TableEditRow";
 
 export default function ConstructionClassTableEditRowContent({
     inputs,
-    row: entry,
+    row,
     editable,
-    setRow: setEntry,
-}: TableEditRowContentComponentProps<DB.ConstructionClass>) {
-    const constructionSpecDBEntries = useDBEntriesStore<DB.ConstructionSpec>("construction_specs")(); // prettier-ignore
+}: TableEditRowContentComponentProps<DBRows.ConstructionClass>) {
+    const pageContext = useContext(PagePKOBContext);
+    if (!pageContext) {
+        throw "Error";
+    }
+
+    const defaultRow = useMemo<DBTableEditDefaultRow<DBRows.ConstructionSpec>>(
+        () => ({
+            name: "",
+            class_id: row.id,
+            ob_cat: "",
+            zl_class: "",
+        }),
+        [row.id]
+    );
+
+    const rowInputsProps = useMemo<
+        TableEditRowInputsProps<DBRows.ConstructionSpec>
+    >(
+        () => [
+            {
+                type: "text",
+                rowKey: "name",
+            },
+            {
+                type: "text",
+                rowKey: "ob_cat",
+            },
+            {
+                type: "text",
+                rowKey: "zl_class",
+            },
+        ],
+        []
+    );
 
     return (
         <>
-            <td className="bg-gray-300">
-                <Accordion className="bg-gray-300 shadow-none">
+            <td>
+                <Accordion className="shadow-none">
                     <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
                         <Box
                             sx={{
@@ -53,36 +90,14 @@ export default function ConstructionClassTableEditRowContent({
                         </Table>
                         <br />
                         <DBTableEdit
-                            dbEntries={constructionSpecDBEntries}
-                            rows={constructionSpecDBEntries.rows.filter(
-                                (fEntry) => fEntry.class_id === entry.id
+                            dbTable={pageContext.constructionSpecsDBTable}
+                            rows={pageContext.constructionSpecsDBTable.rows.filter(
+                                (fRow) => fRow.class_id === row.id
                             )}
                             editable={editable}
-                            showFooter={false}
-                            headersClassName="bg-gray-400"
-                            rowActionTDClassName="bg-gray-400"
                             headers={["Wyszczególnienia Budowlane"]}
-                            defaultRow={{
-                                id: constructionSpecDBEntries.totalRowCount + 1,
-                                name: "",
-                                class_id: entry.id,
-                                ob_cat: "",
-                                zl_class: "",
-                            }}
-                            rowInputsProps={[
-                                {
-                                    type: "text",
-                                    rowKey: "name",
-                                },
-                                {
-                                    type: "text",
-                                    rowKey: "ob_cat",
-                                },
-                                {
-                                    type: "text",
-                                    rowKey: "zl_class",
-                                },
-                            ]}
+                            defaultRow={defaultRow}
+                            rowInputsProps={rowInputsProps}
                             RowContentComponent={
                                 ConstructionSpecTableEditRowContent
                             }

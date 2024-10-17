@@ -94,7 +94,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
 
     useEffect(() => {
         setAddRow({ ...defaultRow, id: -1 - rows.length }); // just so id is unique
-    }, [defaultRow, rows]);
+    }, [defaultRow, rows.length]);
 
     //
     // If this TableEdit is inside of another TableEditRow,

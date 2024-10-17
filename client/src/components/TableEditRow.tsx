@@ -27,6 +27,11 @@ export const TableEditRowStateContext = createContext<TableEditRowState | null>(
     null
 );
 
+export type TableEditRowInputsProps<TRow extends TableEditRowType> = Omit<
+    TableEditRowInputProps<TRow>,
+    "row" | "setRow" | "onBlur"
+>[];
+
 export default function TableEditRow<TRow extends TableEditRowType>({
     row: tableRow,
     onDeleteClicked,
@@ -47,10 +52,7 @@ export default function TableEditRow<TRow extends TableEditRowType>({
     editable: boolean;
     stateProp: TableEditRowState;
     actionButtonOrientation?: "horizontal" | "vertical";
-    inputsProps: Omit<
-        TableEditRowInputProps<TRow>,
-        "row" | "setRow" | "onBlur"
-    >[];
+    inputsProps: TableEditRowInputsProps<TRow>;
     ContentComponent?: TableEditRowContentComponent<TRow>;
 }) {
     const [row, setRow] = useState<TRow>({ ...tableRow });

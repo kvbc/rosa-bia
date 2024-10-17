@@ -2,14 +2,15 @@
 // App.tsx
 // Application entry component
 //
+// TODO: Move all contexts into the /contexts folder (not in same file as component)
+//
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/glowna/GlownaStrona";
 import RegistersPage from "./pages/rejestry/RejestryStrona";
 import GeodesyPage from "./pages/geodesy/PageGeodesy";
 import InvestorsPage from "./pages/investors/PageInvestors";
 import AppNavbar from "./AppNavbar";
-import PKOBStrona from "./pages/pkob/PKOBStrona";
+import PagePKOB from "./pages/pkob/PagePKOB";
 import PageEmployees from "./pages/employees/PageEmployees";
 import PageFormsB05 from "./pages/forms/PageFormsB05";
 import PageFormsB06 from "./pages/forms/PageFormsB06";
@@ -18,10 +19,12 @@ import axios from "axios";
 import React, { useState } from "react";
 import WebSocketContext from "./contexts/WebSocketContext";
 import PageFormsGUNB3 from "./pages/forms/PageFormsGUNB3";
+import PageHelp from "./pages/help/PageHelp";
+import PageHome from "./pages/glowna/PageHome";
 
 axios.interceptors.request.use((req) => {
     req.headers.Authorization =
-        "Bearer eyJhbGciOiJIUzI1NiJ9.VG9tYXN6IEpvbWFzeg.q_m8qen8Eo3NOzYp8JxFdjq-yNO8j6SQUHTBnG2pcs4";
+        "Bearer eyJhbGciOiJIUzI1NiJ9.QWRtaW4.vxfCzXinIrEvNkMl5TsrQ6K0X2aet0uJoKe7TSFRnp8";
     return req;
 });
 
@@ -55,7 +58,7 @@ export default function App() {
                     <br />
                     <main className="flex-1 p-4">
                         <Routes>
-                            <Route path="/" element={<HomePage />} />
+                            <Route path="/" element={<PageHome />} />
                             <Route
                                 path="/rejestry"
                                 element={<RegistersPage />}
@@ -65,7 +68,7 @@ export default function App() {
                                 path="/inwestorzy"
                                 element={<InvestorsPage />}
                             />
-                            <Route path="/pkob" element={<PKOBStrona />} />
+                            <Route path="/pkob" element={<PagePKOB />} />
                             <Route
                                 path="/pracownicy"
                                 element={<PageEmployees />}
@@ -82,6 +85,7 @@ export default function App() {
                                 path="/formularze/gunb3"
                                 element={<PageFormsGUNB3 />}
                             />
+                            <Route path="/help" element={<PageHelp />} />
                         </Routes>
                     </main>
                 </div>

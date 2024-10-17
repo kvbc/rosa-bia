@@ -1,27 +1,56 @@
-import DBTableEdit from "../../components/DBTableEdit";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
-import Table from "@mui/joy/Table";
+import DBTableEdit, {
+    DBTableEditDefaultRow,
+} from "../../components/DBTableEdit";
 import ConstructionDivisionTableEditRowContent from "./ConstructionDivisionTableEditRowContent";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { FaCity, FaDatabase } from "react-icons/fa6";
+import { FaCity } from "react-icons/fa6";
 import { Box } from "@mui/joy";
 import { DBRows } from "../../../../server/src/dbTypes";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
+import { useContext, useMemo } from "react";
+import { PagePKOBContext } from "../../contexts/PagePKOBContext";
+import React from "react";
+import { TableEditRowInputsProps } from "../../components/TableEditRow";
 
 export default function ConstructionSectionTableEditRowContent({
     inputs,
-    row: entry,
+    row,
     editable,
-    setRow: setEntry,
 }: TableEditRowContentComponentProps<DBRows.ConstructionSection>) {
-    const constructionDivisionDBEntries = useDBEntriesStore<DBRows.ConstructionDivision>("construction_divisions")(); // prettier-ignore
+    const pageContext = useContext(PagePKOBContext);
+    if (!pageContext) {
+        throw "Error";
+    }
+
+    const defaultRow = useMemo<
+        DBTableEditDefaultRow<DBRows.ConstructionDivision>
+    >(
+        () => ({
+            name: "",
+            section_id: row.id,
+        }),
+        [row.id]
+    );
+
+    const rowInputsProps = useMemo<
+        TableEditRowInputsProps<DBRows.ConstructionDivision>
+    >(
+        () => [
+            {
+                type: "text",
+                rowKey: "name",
+            },
+        ],
+        []
+    );
 
     return (
         <>
-            <td className="bg-gray-50">
-                <Accordion className="bg-gray-50 shadow-none">
+            <td>
+                <Accordion className="shadow-none">
                     <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
                         <Box
                             sx={{
@@ -36,28 +65,14 @@ export default function ConstructionSectionTableEditRowContent({
                     </AccordionSummary>
                     <AccordionDetails>
                         <DBTableEdit
-                            dbEntries={constructionDivisionDBEntries}
-                            rows={constructionDivisionDBEntries.rows.filter(
-                                (fEntry) => fEntry.section_id === entry.id
+                            dbTable={pageContext.constructionDivisionsDBTable}
+                            rows={pageContext.constructionDivisionsDBTable.rows.filter(
+                                (fRow) => fRow.section_id === row.id
                             )}
                             editable={editable}
-                            headersClassName="bg-gray-100"
-                            rowActionTDClassName="bg-gray-100"
                             headers={["Działy Budowlane"]}
-                            showFooter={false}
-                            defaultRow={{
-                                id:
-                                    constructionDivisionDBEntries.totalRowCount +
-                                    1,
-                                name: "",
-                                section_id: entry.id,
-                            }}
-                            rowInputsProps={[
-                                {
-                                    type: "text",
-                                    rowKey: "name",
-                                },
-                            ]}
+                            defaultRow={defaultRow}
+                            rowInputsProps={rowInputsProps}
                             RowContentComponent={
                                 ConstructionDivisionTableEditRowContent
                             }

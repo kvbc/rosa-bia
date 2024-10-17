@@ -4,13 +4,16 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { Stack } from "@mui/joy";
 import { FaCity } from "react-icons/fa6";
-import DBTableEdit from "../../components/DBTableEdit";
+import DBTableEdit, {
+    DBTableEditDefaultRow,
+} from "../../components/DBTableEdit";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
 import { DBRows } from "../../../../server/src/dbTypes";
-import React, { ComponentProps, useContext, useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import PlacesTableEditRowContent from "./PlacesTableEditRowContent";
 import { PageGeodesyContext } from "../../contexts/PageGeodesyContext";
+import { TableEditRowInputsProps } from "../../components/TableEditRow";
 
 export default function CommunesDBTableEditRowContent({
     inputs,
@@ -22,7 +25,7 @@ export default function CommunesDBTableEditRowContent({
         throw "Error";
     }
 
-    const placesDefaultRow = useMemo<Omit<DBRows.Place, "id">>(
+    const placesDefaultRow = useMemo<DBTableEditDefaultRow<DBRows.Place>>(
         () => ({
             commune_id: row.id,
             cad_unit: "",
@@ -32,9 +35,7 @@ export default function CommunesDBTableEditRowContent({
         [row.id]
     );
 
-    const placesRowInputsProps: ComponentProps<
-        typeof DBTableEdit<DBRows.Place>
-    >["rowInputsProps"] = useMemo(
+    const placesRowInputsProps = useMemo<TableEditRowInputsProps<DBRows.Place>>(
         () => [
             {
                 type: "text",

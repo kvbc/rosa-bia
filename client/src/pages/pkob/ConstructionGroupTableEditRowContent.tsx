@@ -1,27 +1,58 @@
-import DBTableEdit from "../../components/DBTableEdit";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
+import DBTableEdit, {
+    DBTableEditDefaultRow,
+} from "../../components/DBTableEdit";
 import ConstructionClassTableEditRowContent from "./ConstructionClassTableEditRowContent";
-import Table from "@mui/joy/Table";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { FaCity, FaDatabase, FaHouse } from "react-icons/fa6";
+import { FaHouse } from "react-icons/fa6";
 import { Box } from "@mui/joy";
 import { DBRows } from "../../../../server/src/dbTypes";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
+import React, { useContext, useMemo } from "react";
+import { PagePKOBContext } from "../../contexts/PagePKOBContext";
+import { TableEditRowInputsProps } from "../../components/TableEditRow";
 
 export default function ConstructionGroupTableEditRowContent({
     inputs,
-    row: entry,
+    row,
     editable,
-    setRow: setEntry,
 }: TableEditRowContentComponentProps<DBRows.ConstructionGroup>) {
-    const constructionClassDBEntries = useDBEntriesStore<DBRows.ConstructionClass>("construction_classes")(); // prettier-ignore
+    const pageContext = useContext(PagePKOBContext);
+    if (!pageContext) {
+        throw "Error";
+    }
+
+    const defaultRow = useMemo<DBTableEditDefaultRow<DBRows.ConstructionClass>>(
+        () => ({
+            name: "",
+            pkob: 0,
+            group_id: row.id,
+        }),
+        [row.id]
+    );
+
+    const rowInputsProps = useMemo<
+        TableEditRowInputsProps<DBRows.ConstructionClass>
+    >(
+        () => [
+            {
+                type: "text",
+                rowKey: "name",
+            },
+            {
+                type: "number",
+                rowKey: "pkob",
+            },
+        ],
+        []
+    );
 
     return (
         <>
-            <td className="bg-gray-200">
-                <Accordion className="bg-gray-200 shadow-none">
+            <td>
+                <Accordion className="shadow-none">
                     <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
                         <Box
                             sx={{
@@ -36,33 +67,14 @@ export default function ConstructionGroupTableEditRowContent({
                     </AccordionSummary>
                     <AccordionDetails>
                         <DBTableEdit
-                            dbEntries={constructionClassDBEntries}
-                            rows={constructionClassDBEntries.rows.filter(
-                                (fEntry) => fEntry.group_id === entry.id
+                            dbTable={pageContext.constructionClassesDBTable}
+                            rows={pageContext.constructionClassesDBTable.rows.filter(
+                                (fRow) => fRow.group_id === row.id
                             )}
                             editable={editable}
-                            showFooter={false}
-                            headersClassName="bg-gray-300"
-                            rowActionTDClassName="bg-gray-300"
                             headers={["Klasy Budowlane"]}
-                            defaultRow={{
-                                id:
-                                    constructionClassDBEntries.totalRowCount +
-                                    1,
-                                name: "",
-                                pkob: 0,
-                                group_id: entry.id,
-                            }}
-                            rowInputsProps={[
-                                {
-                                    type: "text",
-                                    rowKey: "name",
-                                },
-                                {
-                                    type: "number",
-                                    rowKey: "pkob",
-                                },
-                            ]}
+                            defaultRow={defaultRow}
+                            rowInputsProps={rowInputsProps}
                             RowContentComponent={
                                 ConstructionClassTableEditRowContent
                             }

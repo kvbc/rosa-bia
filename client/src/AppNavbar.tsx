@@ -4,7 +4,7 @@
 //
 
 import { Link } from "react-router-dom";
-import { FaHome, FaGlobe, FaUser } from "react-icons/fa";
+import { FaHome, FaGlobe, FaUser, FaQuestionCircle } from "react-icons/fa";
 import { FaMoneyBill1Wave, FaHelmetSafety } from "react-icons/fa6";
 import { BiSolidNotepad } from "react-icons/bi";
 import Menu from "@mui/joy/Menu";
@@ -119,6 +119,13 @@ function AppNavbar() {
                         </MenuItem>
                     </Menu>
                 </Dropdown>
+                <Link
+                    to="/help"
+                    className="flex flex-row items-center gap-0.5 hover:underline"
+                >
+                    <FaQuestionCircle />
+                    Pomoc
+                </Link>
             </Stack>
             <Stack direction="row">
                 <Select

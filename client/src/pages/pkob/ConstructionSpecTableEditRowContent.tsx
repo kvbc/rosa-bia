@@ -1,15 +1,13 @@
 import { Table } from "@mui/joy";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
 import { DBRows } from "../../../../server/src/dbTypes";
+import React from "react";
+import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
 
 export default function ConstructionSpecTableEditRowContent({
     inputs,
-    row: entry,
-    editable,
-    setRow: setEntry,
 }: TableEditRowContentComponentProps<DBRows.ConstructionSpec>) {
     return (
-        <td className="bg-gray-400">
+        <td>
             <Table size="sm">
                 <tr>
                     <th>Nazwa</th>

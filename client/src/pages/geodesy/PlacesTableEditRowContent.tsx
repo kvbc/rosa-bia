@@ -3,13 +3,16 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { Stack } from "@mui/joy";
-import DBTableEdit from "../../components/DBTableEdit";
+import DBTableEdit, {
+    DBTableEditDefaultRow,
+} from "../../components/DBTableEdit";
 import { GiVillage } from "react-icons/gi";
 import Table from "@mui/joy/Table";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
 import { DBRows } from "../../../../server/src/dbTypes";
 import React, { useContext, useMemo } from "react";
 import { PageGeodesyContext } from "../../contexts/PageGeodesyContext";
+import { TableEditRowInputsProps } from "../../components/TableEditRow";
 
 export default function PlacesTableEditRowContent({
     inputs,
@@ -21,12 +24,24 @@ export default function PlacesTableEditRowContent({
         throw "Error";
     }
 
-    const streetsDefaultRow = useMemo<Omit<DBRows.Street, "id">>(
+    const streetsDefaultRow = useMemo<DBTableEditDefaultRow<DBRows.Street>>(
         () => ({
             place_id: row.id,
             name: "",
         }),
         [row.id]
+    );
+
+    const streetsRowInputsProps = useMemo<
+        TableEditRowInputsProps<DBRows.Street>
+    >(
+        () => [
+            {
+                type: "text",
+                rowKey: "name",
+            },
+        ],
+        []
     );
 
     return (
@@ -69,12 +84,7 @@ export default function PlacesTableEditRowContent({
                             headers={["Ulice"]}
                             rowActionButtonOrientation="vertical"
                             defaultRow={streetsDefaultRow}
-                            rowInputsProps={[
-                                {
-                                    type: "text",
-                                    rowKey: "name",
-                                },
-                            ]}
+                            rowInputsProps={streetsRowInputsProps}
                         />
                     </AccordionDetails>
                 </Accordion>

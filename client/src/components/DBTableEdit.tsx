@@ -8,6 +8,8 @@ import TableEdit from "./TableEdit";
 import { DBRow } from "../../../server/src/dbTypes";
 import { DBTable } from "../hooks/useDBTable";
 
+export type DBTableEditDefaultRow<TRow extends DBRow> = Omit<TRow, "id">;
+
 export default function DBTableEdit<TRow extends DBRow>({
     dbTable,
     defaultRow: _defaultRow,
@@ -15,7 +17,7 @@ export default function DBTableEdit<TRow extends DBRow>({
     ...props
 }: {
     dbTable: DBTable<TRow>;
-    defaultRow: Omit<TRow, "id">;
+    defaultRow: DBTableEditDefaultRow<TRow>;
     rows?: TRow[];
 } & Omit<
     ComponentProps<typeof TableEdit<TRow>>,

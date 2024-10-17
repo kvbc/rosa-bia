@@ -1,42 +1,40 @@
 import { ButtonGroup, IconButton, Textarea } from "@mui/joy";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { MdCancel, MdEdit, MdSave } from "react-icons/md";
-import { DB } from "../../../../server/src/dbTypes";
+import useDBTable from "../../hooks/useDBTable";
+import { DBRows } from "../../../../server/src/dbTypes";
+import React from "react";
 
-export enum InfoBoardState {
-    Editing,
-    Viewing,
-}
+export type InfoBoardState = "editing" | "viewing";
 
 export default function InfoBoard() {
-    const [state, setState] = useState<InfoBoardState>(InfoBoardState.Viewing);
-    const infoBoardDBEntries = useDBEntriesStore<DB.InfoBoard>('info_boards')(); // prettier-ignore
-    const infoBoard = useMemo<DB.InfoBoard | undefined>(
-        () => infoBoardDBEntries.rows[0],
-        [infoBoardDBEntries.rows]
+    const [state, setState] = useState<InfoBoardState>("viewing");
+    const infoBoardDBTable = useDBTable<DBRows.InfoBoard>("info_boards");
+    const infoBoard = useMemo<DBRows.InfoBoard | undefined>(
+        () => infoBoardDBTable.rows[0],
+        [infoBoardDBTable.rows]
     );
     const [contents, setContents] = useState<string>("");
 
     useEffect(() => {
-        if (infoBoard) setContents(infoBoard.contents);
-    }, [infoBoard?.contents]);
+        if (infoBoard) {
+            setContents(infoBoard.contents);
+        }
+    }, [infoBoard, infoBoard?.contents]);
 
     const handleEditClicked = () => {
-        setState(InfoBoardState.Editing);
+        setState("editing");
     };
 
-    const handleSaveClicked = () => {
-        setState(InfoBoardState.Viewing);
+    const handleSaveClicked = useCallback(() => {
+        setState("viewing");
         if (infoBoard) {
-            infoBoardDBEntries.saveRow({
-                ...infoBoard,
-                contents,
-            });
+            infoBoardDBTable.requestUpdateRow({ ...infoBoard, contents });
         }
-    };
+    }, [infoBoard, contents, infoBoardDBTable]);
 
     const handleCancelClicked = () => {
-        setState(InfoBoardState.Viewing);
+        setState("viewing");
     };
 
     return (
@@ -44,11 +42,11 @@ export default function InfoBoard() {
             <h1>Tablica Informacyjna</h1>
             <Textarea
                 sx={{ flex: "1" }}
-                readOnly={state === InfoBoardState.Viewing}
+                readOnly={state === "viewing"}
                 value={contents}
                 onChange={(e) => setContents(e.target.value)}
             />
-            {state === InfoBoardState.Viewing && (
+            {state === "viewing" && (
                 <IconButton
                     onClick={handleEditClicked}
                     size="sm"
@@ -58,7 +56,7 @@ export default function InfoBoard() {
                     <MdEdit />
                 </IconButton>
             )}
-            {state === InfoBoardState.Editing && (
+            {state === "editing" && (
                 <ButtonGroup
                     sx={{
                         width: "100%",
