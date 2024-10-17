@@ -6,7 +6,7 @@
 //
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import RegistersPage from "./pages/rejestry/RejestryStrona";
+import RegistersPage from "./pages/registers/PageRegisters";
 import GeodesyPage from "./pages/geodesy/PageGeodesy";
 import InvestorsPage from "./pages/investors/PageInvestors";
 import AppNavbar from "./AppNavbar";
@@ -20,7 +20,7 @@ import React, { useState } from "react";
 import WebSocketContext from "./contexts/WebSocketContext";
 import PageFormsGUNB3 from "./pages/forms/PageFormsGUNB3";
 import PageHelp from "./pages/help/PageHelp";
-import PageHome from "./pages/glowna/PageHome";
+import PageHome from "./pages/home/PageHome";
 
 axios.interceptors.request.use((req) => {
     req.headers.Authorization =

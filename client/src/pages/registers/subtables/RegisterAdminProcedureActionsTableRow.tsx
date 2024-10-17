@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../../components/TableEditRow";
 import { Checkbox, Input } from "@mui/joy";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DBRows } from "../../../../../server/src/dbTypes";
 
 export default function RegisterAdminProcedureActionsTableRow({
     inputs,

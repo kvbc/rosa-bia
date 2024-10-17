@@ -15,13 +15,13 @@
  */
 
 import { Table } from "@mui/joy";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../../components/TableEditRow";
 import { ReactNode, useEffect, useMemo } from "react";
-import DBTableEdit from "../../components/DBTableEdit";
+import DBTableEdit from "../../../components/DBTableEdit";
 import RegisterPropertyDataTable from "./RegisterPropertyDataTable";
 import RegisterInvestPlotsDataTable from "./RegisterInvestPlotsTable";
 import RegisterCharParamsTable from "./RegisterCharParamsTable";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DBRows } from "../../../../../server/src/dbTypes";
 
 export default function RegisterConstructionIntentTable(
     props: TableEditRowContentComponentProps<DBRows.Register>

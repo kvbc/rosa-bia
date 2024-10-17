@@ -1,8 +1,8 @@
 import { Input, Table } from "@mui/joy";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../../components/TableEditRow";
 import { useEffect } from "react";
-import RegisterAdminProcedureActionsTableRow from "./RegisterAdminProcedureActionsTableRow";
-import { DBRows } from "../../../../server/src/dbTypes";
+import RegisterAdminProcedureActionsTableRow from "../RegisterAdminProcedureActionsTableRow";
+import { DBRows } from "../../../../../server/src/dbTypes";
 
 export default function RegisterAdminProcedureActionsTable(
     props: TableEditRowContentComponentProps<DBRows.Register>

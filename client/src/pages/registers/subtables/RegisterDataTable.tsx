@@ -5,8 +5,8 @@
  */
 
 import { Table } from "@mui/joy";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { TableEditRowContentComponentProps } from "../../../components/TableEditRow";
+import { DBRows } from "../../../../../server/src/dbTypes";
 
 export default function RegisterDataTable({
     inputs,

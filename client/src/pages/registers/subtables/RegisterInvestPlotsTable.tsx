@@ -1,6 +1,6 @@
-import { DBRows } from "../../../../server/src/dbTypes";
-import DBTableEdit from "../../components/DBTableEdit";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRow";
+import { DBRows } from "../../../../../server/src/dbTypes";
+import DBTableEdit from "../../../components/DBTableEdit";
+import { TableEditRowContentComponentProps } from "../../../components/TableEditRow";
 
 export default function RegisterInvestPlotsDataTable({
     inputs,

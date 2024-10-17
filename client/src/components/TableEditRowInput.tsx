@@ -3,7 +3,13 @@
 // Input component to be used inside of a TableEditRow
 //
 
-import React, { Dispatch, HTMLInputTypeAttribute, SetStateAction } from "react";
+import React, {
+    Dispatch,
+    HTMLInputTypeAttribute,
+    SetStateAction,
+    useEffect,
+    useState,
+} from "react";
 import Input from "@mui/joy/Input";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
@@ -20,7 +26,7 @@ export type TableEditRowInputProps<TRow extends TableEditRowType> = {
     setRow: Dispatch<SetStateAction<TRow>>;
     type: HTMLInputTypeAttribute | "select";
     rowKey: keyof TRow & string;
-    selectOptions?: TableEditRowInputSelectOption[];
+    getSelectOptions?: (row: TRow) => TableEditRowInputSelectOption[];
     placeholder?: string;
     disabled?: boolean;
     onBlur: () => void;
@@ -31,11 +37,21 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
     setRow,
     type,
     rowKey,
-    selectOptions,
+    getSelectOptions,
     placeholder,
     disabled,
     onBlur,
 }: TableEditRowInputProps<TRow>) {
+    const [selectOptions, setSelectOptions] = useState<
+        TableEditRowInputSelectOption[]
+    >([]);
+
+    useEffect(() => {
+        if (getSelectOptions) {
+            setSelectOptions(getSelectOptions(row));
+        }
+    }, [getSelectOptions, row]);
+
     return (
         <>
             {type === "select" && (
