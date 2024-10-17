@@ -19,6 +19,7 @@ import { DBRows } from "../../server/src/dbTypes";
 import useDBTable from "./hooks/useDBTable";
 import { MdLogout } from "react-icons/md";
 
+// TODO: make it so u can pass in password (mui modal)
 function AppNavbar() {
     const employeeDBTable = useDBTable<DBRows.Employee>("employees");
     const { employee, employeeLogin, employeeLogout } = useEmployee();
