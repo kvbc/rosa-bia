@@ -33,6 +33,7 @@ export type TableEditRowType = {
 
 const TableEditContext = createContext<EventTarget | null>(null);
 
+// TODO: Use only one context
 export default function TableEdit<TRow extends TableEditRowType>({
     rows: _rows,
     defaultRow,
