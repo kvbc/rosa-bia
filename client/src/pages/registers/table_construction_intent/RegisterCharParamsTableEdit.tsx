@@ -1,11 +1,12 @@
 import { Table } from "@mui/joy";
-import { TableEditRowContentComponentProps } from "../../../components/TableEditRow";
 import { DBRows } from "../../../../../server/src/dbTypes";
+import React from "react";
+import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 
-export default function RegisterCharParamsTable(
+export default function RegisterCharParamsTableEdit(
     props: TableEditRowContentComponentProps<DBRows.Register>
 ) {
-    const { inputs, row: entry, editable, setRow: setEntry } = props;
+    const { inputs } = props;
 
     return (
         <Table size="sm" sx={{ height: "100%" }}>

@@ -83,7 +83,7 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
                 (type === "checkbox" ? (
                     <Checkbox
                         size="sm"
-                        checked={row[rowKey] as boolean}
+                        checked={Boolean(row[rowKey])}
                         onChange={(e) => {
                             setRow((row) => ({
                                 ...row,

@@ -5,17 +5,27 @@
  */
 
 import { Table } from "@mui/joy";
-import { TableEditRowContentComponentProps } from "../../../components/TableEditRow";
 import { DBRows } from "../../../../../server/src/dbTypes";
+import React, { useContext, useMemo } from "react";
+import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
+import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
 
-export default function RegisterDataTable({
+export default function RegisterDataTableEdit({
     inputs,
-    row: entry,
-    editable,
-    setRow: setEntry,
+    row,
 }: TableEditRowContentComponentProps<DBRows.Register>) {
-    const investorDBEntries = useDBEntriesStore<DBRows.Investor>("investors")(); // prettier-ignore
-    const investor = investorDBEntries.rows.find(fEntry => fEntry.id === entry.app_investor_id); // prettier-ignore
+    const pageContext = useContext(PageRegistersContext);
+    if (!pageContext) {
+        throw "Error";
+    }
+
+    const investor = useMemo(
+        () =>
+            pageContext.investorsDBTable.rows.find(
+                (investor) => investor.id === row.app_investor_id
+            ),
+        [pageContext.investorsDBTable.rows, row.app_investor_id]
+    );
 
     return (
         <Table size="sm">
@@ -35,10 +45,7 @@ export default function RegisterDataTable({
                 </tr>
                 <tr>
                     <td colSpan={2}>
-                        <Table
-                            size="sm"
-                            sx={{ backgroundColor: "rgb(243 244 246)" }}
-                        >
+                        <Table size="sm">
                             <thead>
                                 <tr>
                                     <th>Inwestor</th>
@@ -49,7 +56,7 @@ export default function RegisterDataTable({
                                     <td>{inputs.app_investor_id}</td>
                                 </tr>
                                 <tr>
-                                    <td>{investor?.info}</td>
+                                    <td>{investor?.address}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -57,17 +64,14 @@ export default function RegisterDataTable({
                 </tr>
                 <tr>
                     <td colSpan={2}>
-                        <Table
-                            size="sm"
-                            sx={{ backgroundColor: "rgb(243 244 246)" }}
-                        >
+                        <Table size="sm">
                             <thead>
                                 <tr>
                                     <th colSpan={2}>
-                                        {DBRows.REGISTER_TYPE_INFOS[entry.type]
+                                        {DBRows.REGISTER_TYPE_INFOS[row.type]
                                             .subtype === "Mayor"
                                             ? "Decyzja starosty Człuchowskiego"
-                                            : "Decyzja Zaświadczenie"}
+                                            : "Zaświadczenie / Decyzja"}
                                     </th>
                                 </tr>
                             </thead>
@@ -91,10 +95,7 @@ export default function RegisterDataTable({
                 </tr>
                 <tr>
                     <td colSpan={2}>
-                        <Table
-                            size="sm"
-                            sx={{ backgroundColor: "rgb(243 244 246)" }}
-                        >
+                        <Table size="sm">
                             <thead>
                                 <tr>
                                     <th colSpan={2}>Inne rozstrzygnięcie</th>

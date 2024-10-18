@@ -162,6 +162,8 @@ insert into registers(
     object_demo_usable_area,
     object_demo_volume,
     object_demo_building_count,
+    object_usage_change_from,
+    object_usage_change_to,
 
     admin_construction_journal_number,
     admin_construction_journal_date
@@ -172,20 +174,22 @@ insert into registers(
     69,
     '2006-12-19',
     1,
-    null, 420, '2019-02-05',
-    null, 2137, '2011-07-23',
+    'Inne rozstrzygniecie', 420, '2019-02-05',
+    'Bez rozpatrzenia', 2137, '2011-07-23',
 
     1,
-    1,
-    1,
+    'Indywidualne',
+    'MPZP',
     1,
     34,
-    1,
-    1,
+    TRUE,
+    TRUE,
     69,
     69,
     69,
     69,
+    'z ...',
+    'na ...',
 
     420,
     '1999-12-19'

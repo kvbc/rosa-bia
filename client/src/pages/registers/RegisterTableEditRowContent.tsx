@@ -1,10 +1,10 @@
 import { Stack, Table } from "@mui/joy";
-import RegisterDataTable from "./subtables/RegisterDataTable";
-import RegisterConstructionIntentTable from "./subtables/RegisterConstructionIntentTable";
-import RegisterAdminProcedureTable from "./subtables/RegisterAdminProcedureTable";
+import RegisterDataTableEdit from "./table_app_data/RegisterDataTableEdit";
 import { DBRows } from "../../../../server/src/dbTypes";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
 import React from "react";
+import RegisterConstructionIntentTableEdit from "./table_construction_intent/RegisterConstructionIntentTableEdit";
+import RegisterAdminProceduresTableEdit from "./table_admin_procedures/RegisterAdminProceduresTableEdit";
 
 export default function RegisterTableEditRowContent(
     props: TableEditRowContentComponentProps<DBRows.Register>
@@ -19,10 +19,10 @@ export default function RegisterTableEditRowContent(
                     <td>{inputs.type}</td>
                 </tr>
             </Table>
-            <Stack direction="row">
-                <RegisterDataTable {...props} />
-                <RegisterConstructionIntentTable {...props} />
-                <RegisterAdminProcedureTable {...props} />
+            <Stack direction="row" justifyContent="stretch">
+                <RegisterDataTableEdit {...props} />
+                <RegisterConstructionIntentTableEdit {...props} />
+                <RegisterAdminProceduresTableEdit {...props} />
             </Stack>
         </td>
     );

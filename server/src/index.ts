@@ -204,7 +204,7 @@ app.get(
                     req,
                     res,
                     req.params.tableName,
-                    employee.admin
+                    Boolean(employee.admin)
                 )
             ) {
                 return;
@@ -239,18 +239,24 @@ app.get(
 
             const sqlKeys: string[] = [
                 ...DB_TABLE_ROW_INFOS[tableName].zod.keyof().options,
-            ].filter((key) => {
-                const adminProps = DB_TABLE_ROW_INFOS[tableName].adminProps;
-                if (adminProps && !employee.admin && adminProps.includes(key))
-                    return false;
-                return true;
-            });
+            ]
+                .map((key) => "`" + key + "`")
+                .filter((key) => {
+                    const adminProps = DB_TABLE_ROW_INFOS[tableName].adminProps;
+                    if (
+                        adminProps &&
+                        !employee.admin &&
+                        adminProps.includes(key)
+                    )
+                        return false;
+                    return true;
+                });
             let sqlQuery = `select ${sqlKeys.join(", ")} from ${tableName}`;
             if (typeof startIndex === "number") {
                 sqlQuery += " limit " + startIndex + ", " + (endIndex! - startIndex); // prettier-ignore
             }
 
-            console.log(`[GET /table/${tableName}] ${sqlQuery}`);
+            // console.log(`[GET /table/${tableName}] ${sqlQuery}`);
 
             db.all(sqlQuery, (error, rows) => {
                 if (error) {
@@ -293,7 +299,7 @@ app.post(
                     req,
                     res,
                     req.params.tableName,
-                    employee.admin
+                    Boolean(employee.admin)
                 )
             ) {
                 return;
@@ -361,7 +367,7 @@ app.delete(
                     req,
                     res,
                     req.params.tableName,
-                    employee.admin
+                    Boolean(employee.admin)
                 )
             ) {
                 return;
@@ -417,7 +423,7 @@ app.put(
                     req,
                     res,
                     req.params.tableName,
-                    employee.admin
+                    Boolean(employee.admin)
                 )
             ) {
                 return;

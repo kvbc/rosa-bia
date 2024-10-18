@@ -7,7 +7,6 @@
 
 import React, {
     ComponentProps,
-    createContext,
     useCallback,
     useContext,
     useEffect,
@@ -25,13 +24,12 @@ import Option from "@mui/joy/Option";
 import IconButton from "@mui/joy/IconButton";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import TableEditContext from "../contexts/TableEditContext";
 
 export type TableEditRowType = {
     id: number;
     [key: string]: unknown;
 };
-
-const TableEditContext = createContext<EventTarget | null>(null);
 
 export default function TableEdit<TRow extends TableEditRowType>({
     rows: _rows,
@@ -182,7 +180,6 @@ export default function TableEdit<TRow extends TableEditRowType>({
         }
     }, [upperTableEventTarget, commitChanges, cancelChanges]);
 
-    // FIXME: emittery not work on rerender :( (event emits when it just offed)
     // useEffect(() => {
     //     // console.log("noway");
     //     if (upperTableEditRowContext) {

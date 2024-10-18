@@ -1,12 +1,13 @@
 import { Table } from "@mui/joy";
-import { TableEditRowContentComponentProps } from "../../../components/TableEditRow";
 import RegisterAdminProcedureActionsTable from "./RegisterAdminProcedureActionsTable";
 import { DBRows } from "../../../../../server/src/dbTypes";
+import React from "react";
+import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 
-export default function RegisterAdminProcedureTable(
+export default function RegisterAdminProceduresTableEdit(
     props: TableEditRowContentComponentProps<DBRows.Register>
 ) {
-    const { inputs, row: entry, editable, setRow: setEntry } = props;
+    const { inputs, row } = props;
 
     return (
         <Table size="sm" sx={{ height: "100%" }}>
@@ -29,7 +30,7 @@ export default function RegisterAdminProcedureTable(
                         <RegisterAdminProcedureActionsTable {...props} />
                     </td>
                 </tr>
-                {DBRows.REGISTER_TYPE_INFOS[entry.type]
+                {DBRows.REGISTER_TYPE_INFOS[row.type]
                     .showAdminConstructionJournal && (
                     <tr>
                         <td colSpan={2}>

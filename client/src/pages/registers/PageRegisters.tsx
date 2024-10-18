@@ -1,5 +1,5 @@
 import React, { ContextType, useMemo } from "react";
-import { PageRegisterContext } from "../../contexts/PageRegisterContext";
+import { PageRegistersContext } from "../../contexts/PageRegistersContext";
 import RegisterTableEdit from "./RegisterTableEdit";
 import useDBTable from "../../hooks/useDBTable";
 import { DBRows } from "../../../../server/src/dbTypes";
@@ -15,8 +15,10 @@ export default function PageRegisters() {
     const constructionDivisionsDBTable = useDBTable<DBRows.ConstructionDivision>("construction_divisions"); // prettier-ignore
     const constructionSpecsDBTable = useDBTable<DBRows.ConstructionSpec>("construction_specs"); // prettier-ignore
     const investorsDBTable = useDBTable<DBRows.Investor>("investors"); // prettier-ignore
+    const registerPlotsDBTable = useDBTable<DBRows.RegisterPlot>("registers_plots"); // prettier-ignore
+    const registerAdminActionsDBTable = useDBTable<DBRows.RegisterAdminAction>("registers_admin_actions"); // prettier-ignore
 
-    const context = useMemo<ContextType<typeof PageRegisterContext>>(
+    const context = useMemo<ContextType<typeof PageRegistersContext>>(
         () => ({
             registersDBTable,
             communesDBTable,
@@ -28,6 +30,8 @@ export default function PageRegisters() {
             constructionDivisionsDBTable,
             constructionSpecsDBTable,
             investorsDBTable,
+            registerPlotsDBTable,
+            registerAdminActionsDBTable,
         }),
         [
             registersDBTable,
@@ -40,14 +44,16 @@ export default function PageRegisters() {
             constructionDivisionsDBTable,
             constructionSpecsDBTable,
             investorsDBTable,
+            registerPlotsDBTable,
+            registerAdminActionsDBTable,
         ]
     );
 
     return (
-        <PageRegisterContext.Provider value={context}>
+        <PageRegistersContext.Provider value={context}>
             <div>
                 <RegisterTableEdit />
             </div>
-        </PageRegisterContext.Provider>
+        </PageRegistersContext.Provider>
     );
 }

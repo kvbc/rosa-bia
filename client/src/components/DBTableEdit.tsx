@@ -42,7 +42,7 @@ export default function DBTableEdit<TRow extends DBRow>({
     );
 
     const defaultRow = useMemo<TRow>(
-        // FIXME: as
+        // FIXME: as?
         () => ({ ..._defaultRow, id: totalRowCount + 1 } as TRow),
         [_defaultRow, totalRowCount]
     );

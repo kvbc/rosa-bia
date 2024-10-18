@@ -57,6 +57,7 @@ export default function TableEditRow<TRow extends TableEditRowType>({
 }) {
     const [row, setRow] = useState<TRow>({ ...tableRow });
     const [state, setState] = useState<TableEditRowState>(stateProp);
+    const [eventTarget] = useState(new EventTarget());
 
     useEffect(() => {
         setRow({ ...tableRow });
@@ -69,8 +70,10 @@ export default function TableEditRow<TRow extends TableEditRowType>({
     const isContentEditable = state === "editing" || state === "adding";
 
     const handleInputBlur = useCallback(() => {
+        console.log("lul");
+        eventTarget.dispatchEvent(new CustomEvent("saved"));
         onSaveClicked?.(row);
-    }, [onSaveClicked, row]);
+    }, [onSaveClicked, row, eventTarget]);
 
     /*
      *
@@ -99,8 +102,10 @@ export default function TableEditRow<TRow extends TableEditRowType>({
             <ContentComponent
                 inputs={inputs}
                 row={row}
+                setRow={setRow}
                 editable={isContentEditable}
                 onInputBlur={handleInputBlur}
+                eventTarget={eventTarget}
             />
         );
     } else {
@@ -121,8 +126,9 @@ export default function TableEditRow<TRow extends TableEditRowType>({
 
     const handleActionSaveClicked = useCallback(() => {
         setState("viewing");
+        eventTarget.dispatchEvent(new CustomEvent("saved"));
         onSaveClicked?.(row);
-    }, [onSaveClicked, row]);
+    }, [onSaveClicked, row, eventTarget]);
 
     const handleActionCancelClicked = useCallback(() => {
         setRow(tableRow);

@@ -21,7 +21,7 @@ export const DB_TABLE_NAMES = [
     "construction_classes",
     "construction_specs",
     "registers",
-    "registers_invest_plots",
+    "registers_plots",
     "registers_admin_actions",
     "employees",
     "info_boards",
@@ -177,7 +177,7 @@ export namespace DBRows {
         },
         "Zm. Sp. Użytk. (6743.3)": {
             subtype: "Cert",
-            actionTypes: [],
+            actionTypes: ["Postanowienie", "Przedłużenie terminu"],
             showAdminConstructionJournal: false,
         },
         "BiP (6743.4)": {
@@ -199,12 +199,12 @@ export namespace DBRows {
         },
         "Pisma różne (670)": {
             subtype: "Mayor",
-            actionTypes: [],
+            actionTypes: ["Wezwanie"],
             showAdminConstructionJournal: false,
         },
         "Samodz. Lokali (705)": {
             subtype: "Mayor",
-            actionTypes: [],
+            actionTypes: ["Wezwanie"],
             showAdminConstructionJournal: false,
         },
         "Dz. bud": {
@@ -287,12 +287,14 @@ export namespace DBRows {
         object_spatial_plan_type: z.enum(REGISTER_SPATIAL_PLANS).optional(),
         object_street_id: z.number(),
         object_number: z.string(),
-        object_pnb_acc_infra: z.boolean(),
-        object_demo_under_conservation_protection: z.boolean(),
+        object_pnb_acc_infra: z.number(),
+        object_demo_under_conservation_protection: z.number(),
         object_demo_building_area: z.number(),
         object_demo_usable_area: z.number(),
         object_demo_volume: z.number(),
         object_demo_building_count: z.number(),
+        object_usage_change_from: z.string(),
+        object_usage_change_to: z.string(),
 
         admin_construction_journal_number: z.number(),
         admin_construction_journal_date: z.string(),
@@ -306,17 +308,27 @@ export namespace DBRows {
         _object_commune_id: number;
         _object_place_id: number;
     };
-    export const ZRegisterInvestPlot = z.object({
+
+    const REGISTER_PLOT_TYPES = [
+        "app", // dzialki objete wnioskiem
+        "invest", // dzialki objete inwestycja
+        "road", // dzialki w pasie drogowym
+        "limited", // dzialki z ograniczonym korzystaniem
+    ] as const;
+    export type RegisterPlotType = (typeof REGISTER_PLOT_TYPES)[number];
+    export const ZRegisterPlot = z.object({
         id: z.number(),
         plot: z.string(),
+        type: z.enum(REGISTER_PLOT_TYPES),
         register_id: z.number(),
     });
-    export type RegisterInvestPlot = z.infer<typeof ZRegisterInvestPlot>;
+    export type RegisterPlot = z.infer<typeof ZRegisterPlot>;
+
     export const ZRegisterAdminAction = z.object({
         id: z.number(),
         type: z.enum(REGISTER_ADMIN_ACTION_TYPES),
         register_id: z.number(),
-        select: z.boolean(),
+        select: z.number(),
         deadline: z.number(),
         letter_date: z.string(),
         receipt_date: z.string(),
@@ -332,7 +344,7 @@ export namespace DBRows {
         id: z.number(),
         name: z.string(),
         password: z.string(),
-        admin: z.boolean(),
+        admin: z.number(),
     });
     export const EMPLOYEE_ADMIN_PROPS: readonly (keyof Employee)[] = ['password'] // prettier-ignore
     export type Employee = z.infer<typeof ZEmployee>;
@@ -364,7 +376,7 @@ export const DB_TABLE_ROW_INFOS: {
     construction_classes: { zod: DBRows.ZConstructionClass },
     construction_specs: { zod: DBRows.ZConstructionSpec },
     registers: { zod: DBRows.ZRegister },
-    registers_invest_plots: { zod: DBRows.ZRegisterInvestPlot },
+    registers_plots: { zod: DBRows.ZRegisterPlot },
     registers_admin_actions: { zod: DBRows.ZRegisterAdminAction },
     employees: {
         zod: DBRows.ZEmployee,

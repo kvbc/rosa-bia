@@ -1,8 +1,6 @@
 //
 // useDBTable.tsx
 //
-// TODO: Merge DBTableStore from App into this?
-//
 
 import {
     EffectCallback,

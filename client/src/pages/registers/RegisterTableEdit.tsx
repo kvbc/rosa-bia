@@ -27,24 +27,26 @@ export default function RegisterTableEdit() {
             app_number: 0,
             app_submission_date: "",
             app_investor_id: 0,
-            // app_decision_type
+            app_decision_type: "Pozytywna",
             app_decision_number: 0,
             app_decision_issue_date: "",
-            // app_resolution_type
+            app_resolution_type: "Bez rozpatrzenia",
             app_resolution_number: 0,
             app_resolution_issue_date: "",
 
             object_construction_spec_id: 0,
-            // object_construction_form_type
-            // object_spatial_plan_type
+            object_construction_form_type: "Indywidualne",
+            object_spatial_plan_type: "MPZP",
             object_number: "",
             object_street_id: 0,
             object_demo_building_count: 0,
             object_demo_volume: 0,
             object_demo_usable_area: 0,
             object_demo_building_area: 0,
-            object_demo_under_conservation_protection: false,
-            object_pnb_acc_infra: false,
+            object_demo_under_conservation_protection: 0,
+            object_pnb_acc_infra: 0,
+            object_usage_change_from: "",
+            object_usage_change_to: "",
 
             _object_construction_division_id: 0,
             _object_construction_group_id: 0,
@@ -133,6 +135,8 @@ export default function RegisterTableEdit() {
             { rowKey: "object_demo_building_area", type: "number" }, // prettier-ignore
             { rowKey: "object_demo_under_conservation_protection", type: "checkbox" }, // prettier-ignore
             { rowKey: "object_pnb_acc_infra", type: "checkbox" }, // prettier-ignore
+            { rowKey: "object_usage_change_from", type: "text" }, // prettier-ignore
+            { rowKey: "object_usage_change_to", type: "text" }, // prettier-ignore
             { rowKey: "admin_construction_journal_date", type: "date" }, // prettier-ignore
             { rowKey: "admin_construction_journal_number", type: "number" }, // prettier-ignore
 

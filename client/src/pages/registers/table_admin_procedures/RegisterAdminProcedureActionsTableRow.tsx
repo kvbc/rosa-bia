@@ -1,43 +1,68 @@
-import { useCallback, useEffect, useState } from "react";
-import { TableEditRowContentComponentProps } from "../../../components/TableEditRow";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Checkbox, Input } from "@mui/joy";
 import { DBRows } from "../../../../../server/src/dbTypes";
+import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
+import React from "react";
+import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 
 export default function RegisterAdminProcedureActionsTableRow({
-    inputs,
-    row: entry,
+    row,
     editable,
-    setRow: setEntry,
     actionType,
-    eventEmitter,
+    eventTarget,
+    onInputBlur,
 }: {
     actionType: DBRows.RegisterAdminActionType;
 } & TableEditRowContentComponentProps<DBRows.Register>) {
-    const registerAdminActionsDBEntries = useDBEntriesStore<DBRows.RegisterAdminAction>('registers_admin_actions')(); // prettier-ignore
-    const dbAction = registerAdminActionsDBEntries.rows.find(
-        (fEntry) =>
-            fEntry.register_id === entry.id && fEntry.type === actionType
+    const pageContext = useContext(PageRegistersContext);
+    if (!pageContext) {
+        throw "Error";
+    }
+
+    const dbAction = useMemo(
+        () =>
+            pageContext.registerAdminActionsDBTable.rows.find(
+                (fRow) =>
+                    fRow.register_id === row.id && fRow.type === actionType
+            ),
+        [actionType, pageContext.registerAdminActionsDBTable.rows, row.id]
     );
     const [action, setAction] = useState<DBRows.RegisterAdminAction>(
         dbAction
             ? { ...dbAction }
             : {
-                  id: registerAdminActionsDBEntries.totalRowCount + 1,
+                  id: pageContext.registerAdminActionsDBTable.totalRowCount + 1,
                   receipt_date: "",
                   reply_date: "",
                   letter_date: "",
-                  register_id: entry.id,
+                  register_id: row.id,
                   deadline: 0,
                   type: actionType,
-                  select: false,
+                  select: 0,
               }
     );
 
     useEffect(() => {
-        return eventEmitter.on("save", () => {
-            registerAdminActionsDBEntries.saveRow(action);
-        });
-    }, [eventEmitter, action]);
+        const onRowSaved = () => {
+            console.log("nigga?");
+            if (dbAction) {
+                pageContext.registerAdminActionsDBTable.requestUpdateRow(
+                    action
+                );
+            } else {
+                pageContext.registerAdminActionsDBTable.requestAddRow(action);
+            }
+        };
+        eventTarget.addEventListener("saved", onRowSaved);
+        return () => {
+            eventTarget.removeEventListener("saved", onRowSaved);
+        };
+    }, [
+        eventTarget,
+        action,
+        pageContext.registerAdminActionsDBTable,
+        dbAction,
+    ]);
 
     useEffect(() => {
         if (dbAction) {
@@ -50,18 +75,20 @@ export default function RegisterAdminProcedureActionsTableRow({
             <td>{actionType}</td>
             <td>
                 <Checkbox
-                    checked={action.select}
+                    onBlur={onInputBlur}
+                    checked={Boolean(action.select)}
                     disabled={!editable}
                     onChange={(e) =>
                         setAction((action) => ({
                             ...action,
-                            select: e.target.checked,
+                            select: Number(e.target.checked),
                         }))
                     }
                 />
             </td>
             <td>
                 <Input
+                    onBlur={onInputBlur}
                     type="number"
                     value={action.deadline}
                     disabled={!editable}
@@ -75,6 +102,7 @@ export default function RegisterAdminProcedureActionsTableRow({
             </td>
             <td>
                 <Input
+                    onBlur={onInputBlur}
                     type="date"
                     value={action.letter_date}
                     disabled={!editable}
@@ -88,6 +116,7 @@ export default function RegisterAdminProcedureActionsTableRow({
             </td>
             <td>
                 <Input
+                    onBlur={onInputBlur}
                     type="date"
                     value={action.receipt_date}
                     disabled={!editable}
@@ -101,6 +130,7 @@ export default function RegisterAdminProcedureActionsTableRow({
             </td>
             <td>
                 <Input
+                    onBlur={onInputBlur}
                     type="date"
                     value={action.reply_date}
                     disabled={!editable}

@@ -98,6 +98,8 @@ create table registers(
     object_demo_usable_area integer not null, -- powierzchnia uzytkowa
     object_demo_volume integer not null, -- kubatura
     object_demo_building_count integer not null, -- ilosc budynkow
+    object_usage_change_from text not null, -- zm. sp. uzytk. z
+    object_usage_change_to text not null, -- zm. sp. uzytk. na
 
     admin_construction_journal_number integer not null, -- numer dziennika budowy
     admin_construction_journal_date date not null, -- data dziennika budowy
@@ -106,8 +108,9 @@ create table registers(
     foreign key(object_construction_spec_id) references construction_specs(id),
     foreign key(object_street_id) references streets(id)
 );
-create table registers_invest_plots( -- rejestry: dzialki objete inwestycja
+create table registers_plots( -- rejestry: dzialki
     id integer primary key autoincrement,
+    `type` text not null,
     `plot` text not null,
     register_id integer not null,
     foreign key(register_id) references registers(id)
