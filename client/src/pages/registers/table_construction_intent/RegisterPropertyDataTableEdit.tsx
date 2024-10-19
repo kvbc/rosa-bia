@@ -1,7 +1,10 @@
-import { Table } from "@mui/joy";
 import { DBRows } from "../../../../../server/src/dbTypes";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import React from "react";
+import MyTableTR from "../../../components/MyTableTR";
+import MyTableTH from "../../../components/MyTableth";
+import MyTableTD from "../../../components/MyTableTD";
+import MyTable from "../../../components/MyTable";
 
 export default function RegisterPropertyDataTableEdit({
     inputs,
@@ -13,57 +16,32 @@ export default function RegisterPropertyDataTableEdit({
     area?: DBRows.Place;
 } & TableEditRowContentComponentProps<DBRows.Register>) {
     return (
-        <Table size="sm">
+        <MyTable size="sm">
             <thead>
-                <tr>
-                    <th colSpan={2}>Dane nieruchomości</th>
-                </tr>
+                <MyTableTR>
+                    <MyTableTH colSpan={4}>Dane nieruchomości</MyTableTH>
+                </MyTableTR>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-                        <Table size="sm">
-                            <tbody>
-                                <tr>
-                                    <th>Gmina</th>
-                                    <td>{inputs._object_commune_id}</td>
-                                </tr>
-                                <tr>
-                                    <th>Miejscowość</th>
-                                    <td>{inputs._object_place_id}</td>
-                                </tr>
-                                <tr>
-                                    <th>Ulica</th>
-                                    <td>{inputs.object_street_id}</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    </td>
-                    <td>
-                        <Table
-                            size="sm"
-                            sx={{
-                                height: "100%",
-                            }}
-                        >
-                            <tbody>
-                                <tr>
-                                    <th>Jedn. ewid.</th>
-                                    <td>{place?.cad_unit}</td>
-                                </tr>
-                                <tr>
-                                    <th>Obręb</th>
-                                    <td>{area?.name}</td>
-                                </tr>
-                                <tr>
-                                    <th>Nr</th>
-                                    <td>{row.object_number}</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    </td>
-                </tr>
+                <MyTableTR>
+                    <MyTableTH>Gmina</MyTableTH>
+                    <MyTableTD>{inputs._object_commune_id}</MyTableTD>
+                    <MyTableTH scope="row">Jedn. ewid.</MyTableTH>
+                    <MyTableTD>{place?.cad_unit}</MyTableTD>
+                </MyTableTR>
+                <MyTableTR>
+                    <MyTableTH>Miejscowość</MyTableTH>
+                    <MyTableTD>{inputs._object_place_id}</MyTableTD>
+                    <MyTableTH scope="row">Obręb</MyTableTH>
+                    <MyTableTD>{area?.name}</MyTableTD>
+                </MyTableTR>
+                <MyTableTR>
+                    <MyTableTH>Ulica</MyTableTH>
+                    <MyTableTD>{inputs.object_street_id}</MyTableTD>
+                    <MyTableTH scope="row">Nr</MyTableTH>
+                    <MyTableTD>{row.object_number}</MyTableTD>
+                </MyTableTR>
             </tbody>
-        </Table>
+        </MyTable>
     );
 }

@@ -4,16 +4,22 @@
  *
  */
 
-import { Table } from "@mui/joy";
 import { DBRows } from "../../../../../server/src/dbTypes";
 import React, { useContext, useMemo } from "react";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
+import MyTableTR from "../../../components/MyTableTR";
+import MyTableTH from "../../../components/MyTableth";
+import MyTableTD from "../../../components/MyTableTD";
+import MyTable from "../../../components/MyTable";
 
 export default function RegisterDataTableEdit({
     inputs,
     row,
-}: TableEditRowContentComponentProps<DBRows.Register>) {
+    showMore,
+}: TableEditRowContentComponentProps<DBRows.Register> & {
+    showMore: boolean;
+}) {
     const pageContext = useContext(PageRegistersContext);
     if (!pageContext) {
         throw "Error";
@@ -28,98 +34,119 @@ export default function RegisterDataTableEdit({
     );
 
     return (
-        <Table size="sm">
+        <MyTable size="sm">
             <thead>
-                <tr>
-                    <th colSpan={2}>Dane Wniosku</th>
-                </tr>
+                <MyTableTR>
+                    <MyTableTH colSpan={2}>Dane Wniosku</MyTableTH>
+                </MyTableTR>
             </thead>
             <tbody>
-                <tr>
-                    <td>Numer zgłoszenia</td>
-                    <td>{inputs.app_number}</td>
-                </tr>
-                <tr>
-                    <td>Data złozenia</td>
-                    <td>{inputs.app_submission_date}</td>
-                </tr>
-                <tr>
-                    <td colSpan={2}>
-                        <Table size="sm">
-                            <thead>
-                                <tr>
-                                    <th>Inwestor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{inputs.app_investor_id}</td>
-                                </tr>
-                                <tr>
-                                    <td>{investor?.address}</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    </td>
-                </tr>
-                <tr>
-                    <td colSpan={2}>
-                        <Table size="sm">
-                            <thead>
-                                <tr>
-                                    <th colSpan={2}>
-                                        {DBRows.REGISTER_TYPE_INFOS[row.type]
-                                            .subtype === "Mayor"
-                                            ? "Decyzja starosty Człuchowskiego"
-                                            : "Zaświadczenie / Decyzja"}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colSpan={2}>
-                                        {inputs.app_decision_type}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Numer decyzji</td>
-                                    <td>{inputs.app_decision_number}</td>
-                                </tr>
-                                <tr>
-                                    <td>Data wydania</td>
-                                    <td>{inputs.app_decision_issue_date}</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    </td>
-                </tr>
-                <tr>
-                    <td colSpan={2}>
-                        <Table size="sm">
-                            <thead>
-                                <tr>
-                                    <th colSpan={2}>Inne rozstrzygnięcie</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colSpan={2}>
-                                        {inputs.app_resolution_type}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Numer pisma</td>
-                                    <td>{inputs.app_resolution_number}</td>
-                                </tr>
-                                <tr>
-                                    <td>Data wydania</td>
-                                    <td>{inputs.app_resolution_issue_date}</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    </td>
-                </tr>
+                <MyTableTR>
+                    <MyTableTD>Numer zgłoszenia</MyTableTD>
+                    <MyTableTD>{inputs.app_number}</MyTableTD>
+                </MyTableTR>
+                <MyTableTR>
+                    <MyTableTD>Data złozenia</MyTableTD>
+                    <MyTableTD>{inputs.app_submission_date}</MyTableTD>
+                </MyTableTR>
+                {showMore && (
+                    <>
+                        <MyTableTR>
+                            <MyTableTD colSpan={2}>
+                                <MyTable size="sm">
+                                    <thead>
+                                        <MyTableTR>
+                                            <MyTableTH>Inwestor</MyTableTH>
+                                        </MyTableTR>
+                                    </thead>
+                                    <tbody>
+                                        <MyTableTR>
+                                            <MyTableTD>
+                                                {inputs.app_investor_id}
+                                            </MyTableTD>
+                                        </MyTableTR>
+                                        <MyTableTR>
+                                            <MyTableTD>
+                                                {investor?.address}
+                                            </MyTableTD>
+                                        </MyTableTR>
+                                    </tbody>
+                                </MyTable>
+                            </MyTableTD>
+                        </MyTableTR>
+                        <MyTableTR>
+                            <MyTableTD colSpan={2}>
+                                <MyTable size="sm">
+                                    <thead>
+                                        <MyTableTR>
+                                            <MyTableTH colSpan={2}>
+                                                {DBRows.REGISTER_TYPE_INFOS[
+                                                    row.type
+                                                ].subtype === "Mayor"
+                                                    ? "Decyzja starosty Człuchowskiego"
+                                                    : "Zaświadczenie / Decyzja"}
+                                            </MyTableTH>
+                                        </MyTableTR>
+                                    </thead>
+                                    <tbody>
+                                        <MyTableTR>
+                                            <MyTableTD colSpan={2}>
+                                                {inputs.app_decision_type}
+                                            </MyTableTD>
+                                        </MyTableTR>
+                                        <MyTableTR>
+                                            <MyTableTD>Numer decyzji</MyTableTD>
+                                            <MyTableTD>
+                                                {inputs.app_decision_number}
+                                            </MyTableTD>
+                                        </MyTableTR>
+                                        <MyTableTR>
+                                            <MyTableTD>Data wydania</MyTableTD>
+                                            <MyTableTD>
+                                                {inputs.app_decision_issue_date}
+                                            </MyTableTD>
+                                        </MyTableTR>
+                                    </tbody>
+                                </MyTable>
+                            </MyTableTD>
+                        </MyTableTR>
+                        <MyTableTR>
+                            <MyTableTD colSpan={2}>
+                                <MyTable size="sm">
+                                    <thead>
+                                        <MyTableTR>
+                                            <MyTableTH colSpan={2}>
+                                                Inne rozstrzygnięcie
+                                            </MyTableTH>
+                                        </MyTableTR>
+                                    </thead>
+                                    <tbody>
+                                        <MyTableTR>
+                                            <MyTableTD colSpan={2}>
+                                                {inputs.app_resolution_type}
+                                            </MyTableTD>
+                                        </MyTableTR>
+                                        <MyTableTR>
+                                            <MyTableTD>Numer pisma</MyTableTD>
+                                            <MyTableTD>
+                                                {inputs.app_resolution_number}
+                                            </MyTableTD>
+                                        </MyTableTR>
+                                        <MyTableTR>
+                                            <MyTableTD>Data wydania</MyTableTD>
+                                            <MyTableTD>
+                                                {
+                                                    inputs.app_resolution_issue_date
+                                                }
+                                            </MyTableTD>
+                                        </MyTableTR>
+                                    </tbody>
+                                </MyTable>
+                            </MyTableTD>
+                        </MyTableTR>
+                    </>
+                )}
             </tbody>
-        </Table>
+        </MyTable>
     );
 }

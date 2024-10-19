@@ -13,7 +13,6 @@ import React, {
     useState,
 } from "react";
 import TableEditRow, { TableEditRowStateContext } from "./TableEditRow";
-import Table from "@mui/joy/Table";
 import Tooltip from "@mui/joy/Tooltip";
 import Box from "@mui/joy/Box";
 import FormControl from "@mui/joy/FormControl";
@@ -25,6 +24,10 @@ import IconButton from "@mui/joy/IconButton";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import TableEditContext from "../contexts/TableEditContext";
+import MyTable from "./MyTable";
+import MyTableTR from "./MyTableTR";
+import MyTableTH from "./MyTableth";
+import MyTableTD from "./MyTableTD";
 
 export type TableEditRowType = {
     id: number;
@@ -251,15 +254,23 @@ export default function TableEdit<TRow extends TableEditRowType>({
     };
 
     const content = (
-        <Table
+        <MyTable
             variant="outlined"
             size="sm"
-            borderAxis="bothBetween"
-            stickyFooter
-            stickyHeader
+            borderAxis="both"
+            stickyFooter={upperTableEventTarget === null}
+            stickyHeader={upperTableEventTarget === null}
+            sx={
+                {
+                    // "& > tbody > tr > td:last-child": {
+                    //     position: "sticky",
+                    //     top: 0,
+                    // },
+                }
+            }
         >
             <thead>
-                <tr>
+                <MyTableTR>
                     {(editable
                         ? [
                               ...headers,
@@ -279,11 +290,11 @@ export default function TableEdit<TRow extends TableEditRowType>({
                         }
                         return (
                             <Tooltip title={name} variant="soft" key={name}>
-                                <th style={{ width }}>{name}</th>
+                                <MyTableTH style={{ width }}>{name}</MyTableTH>
                             </Tooltip>
                         );
                     })}
-                </tr>
+                </MyTableTR>
             </thead>
             <tbody>
                 {(editable ? [...rows, addRow] : rows).map((row) => (
@@ -300,7 +311,11 @@ export default function TableEdit<TRow extends TableEditRowType>({
                         stateProp={
                             row === addRow
                                 ? "adding"
-                                : upperRowState ?? "viewing"
+                                : upperRowState === null
+                                ? "viewing"
+                                : upperRowState === "adding"
+                                ? "editing"
+                                : upperRowState
                         }
                         editable={editable}
                         inputsProps={rowInputsProps}
@@ -308,9 +323,9 @@ export default function TableEdit<TRow extends TableEditRowType>({
                     />
                 ))}
             </tbody>
-            <tfoot>
-                <tr>
-                    <td colSpan={headers.length + 2}>
+            <tfoot className="z-20">
+                <MyTableTR>
+                    <MyTableTD colSpan={headers.length + 2}>
                         <Box
                             sx={{
                                 display: "flex",
@@ -364,10 +379,10 @@ export default function TableEdit<TRow extends TableEditRowType>({
                                 </IconButton>
                             </Box>
                         </Box>
-                    </td>
-                </tr>
+                    </MyTableTD>
+                </MyTableTR>
             </tfoot>
-        </Table>
+        </MyTable>
     );
 
     // if (!upperTableEventTarget) {

@@ -4,6 +4,8 @@ import { DBRows } from "../../../../../server/src/dbTypes";
 import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
 import React from "react";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
+import MyTableTR from "../../../components/MyTableTR";
+import MyTableTD from "../../../components/MyTableTD";
 
 export default function RegisterAdminProcedureActionsTableRow({
     row,
@@ -71,10 +73,11 @@ export default function RegisterAdminProcedureActionsTableRow({
     }, [dbAction]);
 
     return (
-        <tr>
-            <td>{actionType}</td>
-            <td>
+        <MyTableTR>
+            <MyTableTD className="break-all">{actionType}</MyTableTD>
+            <MyTableTD>
                 <Checkbox
+                    size="sm"
                     onBlur={onInputBlur}
                     checked={Boolean(action.select)}
                     disabled={!editable}
@@ -85,9 +88,10 @@ export default function RegisterAdminProcedureActionsTableRow({
                         }))
                     }
                 />
-            </td>
-            <td>
+            </MyTableTD>
+            <MyTableTD>
                 <Input
+                    size="sm"
                     onBlur={onInputBlur}
                     type="number"
                     value={action.deadline}
@@ -99,9 +103,10 @@ export default function RegisterAdminProcedureActionsTableRow({
                         }))
                     }
                 />
-            </td>
-            <td>
+            </MyTableTD>
+            <MyTableTD>
                 <Input
+                    size="sm"
                     onBlur={onInputBlur}
                     type="date"
                     value={action.letter_date}
@@ -113,9 +118,10 @@ export default function RegisterAdminProcedureActionsTableRow({
                         }))
                     }
                 />
-            </td>
-            <td>
+            </MyTableTD>
+            <MyTableTD>
                 <Input
+                    size="sm"
                     onBlur={onInputBlur}
                     type="date"
                     value={action.receipt_date}
@@ -127,9 +133,10 @@ export default function RegisterAdminProcedureActionsTableRow({
                         }))
                     }
                 />
-            </td>
-            <td>
+            </MyTableTD>
+            <MyTableTD>
                 <Input
+                    size="sm"
                     onBlur={onInputBlur}
                     type="date"
                     value={action.reply_date}
@@ -141,7 +148,7 @@ export default function RegisterAdminProcedureActionsTableRow({
                         }))
                     }
                 />
-            </td>
-        </tr>
+            </MyTableTD>
+        </MyTableTR>
     );
 }

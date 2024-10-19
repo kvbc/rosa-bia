@@ -13,7 +13,7 @@ export default function PageEmployees() {
         () => ({
             name: "",
             password: "",
-            admin: false,
+            admin: 0,
         }),
         []
     );

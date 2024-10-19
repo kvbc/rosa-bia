@@ -45,7 +45,6 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
     const [selectOptions, setSelectOptions] = useState<
         TableEditRowInputSelectOption[]
     >([]);
-
     useEffect(() => {
         if (getSelectOptions) {
             setSelectOptions(getSelectOptions(row));
@@ -56,6 +55,7 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
         <>
             {type === "select" && (
                 <Select
+                    size="sm"
                     value={row[rowKey]}
                     onChange={(_, value) =>
                         selectOptions &&

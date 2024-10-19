@@ -13,17 +13,13 @@ body {
 }
 
 @layer base {
-    th {
+    thead > tr,
+    tbody > tr {
         @apply h-[60px] !important;
     }
-    tr {
-        /* @apply h-1 !important; */
-        /* @apply h-[70px] !important; */
-    }
-    td {
-        /* @apply max-h-[70px] */
-        /* @apply h-[inherit] !important; */
-        /* @apply h-[60px] !important; */
+    td,
+    th {
+        @apply h-auto !important;
     }
 
     tbody,

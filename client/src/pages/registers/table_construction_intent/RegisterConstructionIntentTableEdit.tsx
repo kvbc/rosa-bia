@@ -14,7 +14,7 @@
  *
  */
 
-import { Stack, Table } from "@mui/joy";
+import { Stack } from "@mui/joy";
 import React, { ReactNode, useContext, useEffect, useMemo } from "react";
 import RegisterPropertyDataTableEdit from "./RegisterPropertyDataTableEdit";
 import RegisterPlotsDataTableEdit from "./RegisterPlotsTableEdit";
@@ -22,11 +22,17 @@ import RegisterCharParamsTableEdit from "./RegisterCharParamsTableEdit";
 import { DBRows } from "../../../../../server/src/dbTypes";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
+import MyTableTR from "../../../components/MyTableTR";
+import MyTableTH from "../../../components/MyTableth";
+import MyTableTD from "../../../components/MyTableTD";
+import MyTable from "../../../components/MyTable";
 
 export default function RegisterConstructionIntentTableEdit(
-    props: TableEditRowContentComponentProps<DBRows.Register>
+    props: TableEditRowContentComponentProps<DBRows.Register> & {
+        showMore: boolean;
+    }
 ) {
-    const { inputs, row, setRow } = props;
+    const { inputs, row, setRow, showMore } = props;
 
     const pageContext = useContext(PageRegistersContext);
     if (!pageContext) {
@@ -89,164 +95,162 @@ export default function RegisterConstructionIntentTableEdit(
         limited: row.type === "ZRiD (7012)",
     };
 
-    return (
-        <Table size="sm" sx={{ height: "100%" }}>
-            <thead>
-                <tr>
-                    <th colSpan={2}>Zamierzenie Budowlane</th>
-                </tr>
-            </thead>
-            <tbody>
-                {/* 
-                
-                Top (always visible)    
+    //
+    // Top (Always visible)
+    //
+    const top = (
+        <>
+            <MyTableTR>
+                <MyTableTD rowSpan={showUsageChange ? 2 : 1}>
+                    Nazwa zamierzenia budowlanego
+                </MyTableTD>
+                <MyTableTD>{constructionIntentNode[row.type]}</MyTableTD>
+            </MyTableTR>
+            {showAccompanyInfrastructure && (
+                <MyTableTR>
+                    <MyTableTD>Infrastruktura towarzysząca</MyTableTD>
+                    <MyTableTD>{inputs.object_pnb_acc_infra}</MyTableTD>
+                </MyTableTR>
+            )}
+            {showUnderConservationProtection && (
+                <MyTableTR>
+                    <MyTableTD>Obiekt objęty ochroną konserwatorską</MyTableTD>
+                    <MyTableTD>
+                        {inputs.object_demo_under_conservation_protection}
+                    </MyTableTD>
+                </MyTableTR>
+            )}
+            {showUsageChange && (
+                <MyTableTR>
+                    <MyTableTD>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <div>z</div>
+                            {inputs.object_usage_change_from}
+                            <div>na</div>
+                            {inputs.object_usage_change_to}
+                        </Stack>
+                    </MyTableTD>
+                </MyTableTR>
+            )}
+        </>
+    );
 
-                */}
-                <tr>
-                    <td rowSpan={showUsageChange ? 2 : 1}>
-                        Nazwa zamierzenia budowlanego
-                    </td>
-                    <td>{constructionIntentNode[row.type]}</td>
-                </tr>
-                {showAccompanyInfrastructure && (
-                    <tr>
-                        <td>Infrastruktura towarzysząca</td>
-                        <td>{inputs.object_pnb_acc_infra}</td>
-                    </tr>
-                )}
-                {showUnderConservationProtection && (
-                    <tr>
-                        <td>Obiekt objęty ochroną konserwatorską</td>
-                        <td>
-                            {inputs.object_demo_under_conservation_protection}
-                        </td>
-                    </tr>
-                )}
-                {showUsageChange && (
-                    <tr>
-                        <td>
-                            <Stack
-                                direction="row"
-                                spacing={1}
-                                alignItems="center"
-                            >
-                                <div>z</div>
-                                {inputs.object_usage_change_from}
-                                <div>na</div>
-                                {inputs.object_usage_change_to}
-                            </Stack>
-                        </td>
-                    </tr>
-                )}
-                {/* 
-                
-                Body (complex)
-
-                */}
-                {/* Body :: PnB, ZRiD */}
-                {showConstructions && (
-                    <tr>
-                        <td>
-                            <Table size="sm">
-                                <tr>
-                                    <th>Sekcja</th>
-                                    <td>
+    const body = showMore && (
+        <>
+            {showConstructions && (
+                <MyTableTR>
+                    <MyTableTD colSpan={2}>
+                        <MyTable size="sm">
+                            <thead>
+                                <MyTableTR>
+                                    <MyTableTH colSpan={4}>Geodezja</MyTableTH>
+                                </MyTableTR>
+                            </thead>
+                            <tbody>
+                                <MyTableTR>
+                                    <MyTableTH>Sekcja</MyTableTH>
+                                    <MyTableTD>
                                         {inputs._object_construction_section_id}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Dział</th>
-                                    <td>
+                                    </MyTableTD>
+                                    <MyTableTH>PKOB</MyTableTH>
+                                    <MyTableTD>
+                                        {constructionClass?.pkob ?? "-"}
+                                    </MyTableTD>
+                                </MyTableTR>
+                                <MyTableTR>
+                                    <MyTableTH>Dział</MyTableTH>
+                                    <MyTableTD>
                                         {
                                             inputs._object_construction_division_id
                                         }
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Grupa</th>
-                                    <td>
+                                    </MyTableTD>
+                                    <MyTableTH>Kat. Zag. Ludzi</MyTableTH>
+                                    <MyTableTD>
+                                        {constructionSpec?.zl_class ?? "-"}
+                                    </MyTableTD>
+                                </MyTableTR>
+                                <MyTableTR>
+                                    <MyTableTH>Grupa</MyTableTH>
+                                    <MyTableTD>
                                         {inputs._object_construction_group_id}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Klasa</th>
-                                    <td>
+                                    </MyTableTD>
+                                    <MyTableTH>Kat. Obiektu</MyTableTH>
+                                    <MyTableTD>
+                                        {constructionSpec?.ob_cat ?? "-"}
+                                    </MyTableTD>
+                                </MyTableTR>
+                                <MyTableTR>
+                                    <MyTableTH>Klasa</MyTableTH>
+                                    <MyTableTD>
                                         {inputs._object_construction_class_id}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Wysz.</th>
-                                    <td>
-                                        {inputs.object_construction_spec_id}
-                                    </td>
-                                </tr>
-                            </Table>
-                        </td>
-                        <td>
-                            <Table
-                                size="sm"
-                                sx={{
-                                    height: "100%",
-                                }}
-                            >
-                                <tr>
-                                    <th>PKOB</th>
-                                    <td>{constructionClass?.pkob ?? "-"}</td>
-                                </tr>
-                                <tr>
-                                    <th>Kat. Zag. Ludzi</th>
-                                    <td>{constructionSpec?.zl_class ?? "-"}</td>
-                                </tr>
-                                <tr>
-                                    <th>Kat. Obiektu</th>
-                                    <td>{constructionSpec?.ob_cat ?? "-"}</td>
-                                </tr>
-                                <tr>
-                                    <th>Forma budownictwa</th>
-                                    <td>
+                                    </MyTableTD>
+                                    <MyTableTH>Forma budownictwa</MyTableTH>
+                                    <MyTableTD>
                                         {inputs.object_construction_form_type}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Planowanie przestrzenne</th>
-                                    <td>{inputs.object_spatial_plan_type}</td>
-                                </tr>
-                            </Table>
-                        </td>
-                    </tr>
-                )}
-                {showCharParams && (
-                    <tr>
-                        <td colSpan={2}>
-                            <RegisterCharParamsTableEdit {...props} />
-                        </td>
-                    </tr>
-                )}
-                {showPropertyData && (
-                    <tr>
-                        <td colSpan={2}>
-                            <RegisterPropertyDataTableEdit
-                                {...props}
-                                place={place}
-                                area={area}
-                            />
-                        </td>
-                    </tr>
-                )}
-                {(Object.keys(showPlots) as DBRows.RegisterPlotType[]).map(
-                    (plotType) =>
-                        showPlots[plotType] && (
-                            <tr key={plotType}>
-                                <td colSpan={2}>
-                                    <RegisterPlotsDataTableEdit
-                                        {...props}
-                                        plotType={plotType}
-                                    />
-                                </td>
-                            </tr>
-                        )
-                )}
+                                    </MyTableTD>
+                                </MyTableTR>
+                                <MyTableTR>
+                                    <MyTableTH>Wysz.</MyTableTH>
+                                    <MyTableTD>
+                                        {inputs.object_construction_spec_id}
+                                    </MyTableTD>
+                                    <MyTableTH>
+                                        Planowanie przestrzenne
+                                    </MyTableTH>
+                                    <MyTableTD>
+                                        {inputs.object_spatial_plan_type}
+                                    </MyTableTD>
+                                </MyTableTR>
+                            </tbody>
+                        </MyTable>
+                    </MyTableTD>
+                </MyTableTR>
+            )}
+            {showCharParams && (
+                <MyTableTR>
+                    <MyTableTD colSpan={2}>
+                        <RegisterCharParamsTableEdit {...props} />
+                    </MyTableTD>
+                </MyTableTR>
+            )}
+            {showPropertyData && (
+                <MyTableTR>
+                    <MyTableTD colSpan={2}>
+                        <RegisterPropertyDataTableEdit
+                            {...props}
+                            place={place}
+                            area={area}
+                        />
+                    </MyTableTD>
+                </MyTableTR>
+            )}
+            {(Object.keys(showPlots) as DBRows.RegisterPlotType[]).map(
+                (plotType) =>
+                    showPlots[plotType] && (
+                        <MyTableTR key={plotType}>
+                            <MyTableTD colSpan={2}>
+                                <RegisterPlotsDataTableEdit
+                                    {...props}
+                                    plotType={plotType}
+                                />
+                            </MyTableTD>
+                        </MyTableTR>
+                    )
+            )}
+        </>
+    );
+
+    return (
+        <MyTable size="sm" sx={{ height: "100%" }}>
+            <thead>
+                <MyTableTR>
+                    <MyTableTH colSpan={2}>Zamierzenie Budowlane</MyTableTH>
+                </MyTableTR>
+            </thead>
+            <tbody>
+                {top}
+                {body}
             </tbody>
-        </Table>
+        </MyTable>
     );
 }

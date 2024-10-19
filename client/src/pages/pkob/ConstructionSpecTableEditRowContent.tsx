@@ -1,27 +1,30 @@
-import { Table } from "@mui/joy";
 import { DBRows } from "../../../../server/src/dbTypes";
 import React from "react";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
+import MyTableTD from "../../components/MyTableTD";
+import MyTableTR from "../../components/MyTableTR";
+import MyTableTH from "../../components/MyTableth";
+import MyTable from "../../components/MyTable";
 
 export default function ConstructionSpecTableEditRowContent({
     inputs,
 }: TableEditRowContentComponentProps<DBRows.ConstructionSpec>) {
     return (
-        <td>
-            <Table size="sm">
-                <tr>
-                    <th>Nazwa</th>
-                    <td>{inputs.name}</td>
-                </tr>
-                <tr>
-                    <th>Kat. OB</th>
-                    <td>{inputs.ob_cat}</td>
-                </tr>
-                <tr>
-                    <th>Klasa ZL.</th>
-                    <td>{inputs.zl_class}</td>
-                </tr>
-            </Table>
-        </td>
+        <MyTableTD>
+            <MyTable size="sm">
+                <MyTableTR>
+                    <MyTableTH>Nazwa</MyTableTH>
+                    <MyTableTD>{inputs.name}</MyTableTD>
+                </MyTableTR>
+                <MyTableTR>
+                    <MyTableTH>Kat. OB</MyTableTH>
+                    <MyTableTD>{inputs.ob_cat}</MyTableTD>
+                </MyTableTR>
+                <MyTableTR>
+                    <MyTableTH>Klasa ZL.</MyTableTH>
+                    <MyTableTD>{inputs.zl_class}</MyTableTD>
+                </MyTableTR>
+            </MyTable>
+        </MyTableTD>
     );
 }

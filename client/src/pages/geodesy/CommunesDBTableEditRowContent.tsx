@@ -14,6 +14,7 @@ import React, { useContext, useMemo } from "react";
 import PlacesTableEditRowContent from "./PlacesTableEditRowContent";
 import { PageGeodesyContext } from "../../contexts/PageGeodesyContext";
 import { TableEditRowInputsProps } from "../../components/TableEditRow";
+import MyTableTD from "../../components/MyTableTD";
 
 export default function CommunesDBTableEditRowContent({
     inputs,
@@ -62,7 +63,7 @@ export default function CommunesDBTableEditRowContent({
 
     return (
         <>
-            <td>
+            <MyTableTD>
                 <Accordion className="shadow-none">
                     <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
                         <Stack
@@ -90,7 +91,7 @@ export default function CommunesDBTableEditRowContent({
                         />
                     </AccordionDetails>
                 </Accordion>
-            </td>
+            </MyTableTD>
         </>
     );
 }

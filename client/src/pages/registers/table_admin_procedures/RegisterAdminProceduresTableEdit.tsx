@@ -1,68 +1,83 @@
-import { Table } from "@mui/joy";
 import RegisterAdminProcedureActionsTable from "./RegisterAdminProcedureActionsTable";
 import { DBRows } from "../../../../../server/src/dbTypes";
 import React from "react";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
+import MyTableTD from "../../../components/MyTableTD";
+import MyTableTR from "../../../components/MyTableTR";
+import MyTableTH from "../../../components/MyTableth";
+import MyTable from "../../../components/MyTable";
 
 export default function RegisterAdminProceduresTableEdit(
-    props: TableEditRowContentComponentProps<DBRows.Register>
+    props: TableEditRowContentComponentProps<DBRows.Register> & {
+        showMore: boolean;
+    }
 ) {
-    const { inputs, row } = props;
+    const { inputs, row, showMore } = props;
 
     return (
-        <Table size="sm" sx={{ height: "100%" }}>
+        <MyTable size="sm" sx={{ height: "100%" }}>
             <thead>
-                <tr>
-                    <th colSpan={2}>Postępowanie administracyjne</th>
-                </tr>
+                <MyTableTR>
+                    <MyTableTH colSpan={2}>
+                        Postępowanie administracyjne
+                    </MyTableTH>
+                </MyTableTR>
             </thead>
             <tbody>
-                <tr>
-                    <td>Informacja o postępowaniu</td>
-                    <td>...</td>
-                </tr>
-                <tr>
-                    <td>Upływający czas w dniach</td>
-                    <td>...</td>
-                </tr>
-                <tr>
-                    <td colSpan={2}>
-                        <RegisterAdminProcedureActionsTable {...props} />
-                    </td>
-                </tr>
-                {DBRows.REGISTER_TYPE_INFOS[row.type]
-                    .showAdminConstructionJournal && (
-                    <tr>
-                        <td colSpan={2}>
-                            <Table size="sm">
-                                <thead>
-                                    <tr>
-                                        <th colSpan={2}>Dziennik budowy</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Numer</td>
-                                        <td>
-                                            {
-                                                inputs.admin_construction_journal_number
-                                            }
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Z dnia</td>
-                                        <td>
-                                            {
-                                                inputs.admin_construction_journal_date
-                                            }
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                        </td>
-                    </tr>
+                <MyTableTR>
+                    <MyTableTD>Informacja o postępowaniu</MyTableTD>
+                    <MyTableTD>...</MyTableTD>
+                </MyTableTR>
+                <MyTableTR>
+                    <MyTableTD>Upływający czas w dniach</MyTableTD>
+                    <MyTableTD>...</MyTableTD>
+                </MyTableTR>
+                {showMore && (
+                    <>
+                        <MyTableTR>
+                            <MyTableTD colSpan={2}>
+                                <RegisterAdminProcedureActionsTable
+                                    {...props}
+                                />
+                            </MyTableTD>
+                        </MyTableTR>
+                        {DBRows.REGISTER_TYPE_INFOS[row.type]
+                            .showAdminConstructionJournal && (
+                            <MyTableTR>
+                                <MyTableTD colSpan={2}>
+                                    <MyTable size="sm">
+                                        <thead>
+                                            <MyTableTR>
+                                                <MyTableTH colSpan={2}>
+                                                    Dziennik budowy
+                                                </MyTableTH>
+                                            </MyTableTR>
+                                        </thead>
+                                        <tbody>
+                                            <MyTableTR>
+                                                <MyTableTD>Numer</MyTableTD>
+                                                <MyTableTD>
+                                                    {
+                                                        inputs.admin_construction_journal_number
+                                                    }
+                                                </MyTableTD>
+                                            </MyTableTR>
+                                            <MyTableTR>
+                                                <MyTableTD>Z dnia</MyTableTD>
+                                                <MyTableTD>
+                                                    {
+                                                        inputs.admin_construction_journal_date
+                                                    }
+                                                </MyTableTD>
+                                            </MyTableTR>
+                                        </tbody>
+                                    </MyTable>
+                                </MyTableTD>
+                            </MyTableTR>
+                        )}
+                    </>
                 )}
             </tbody>
-        </Table>
+        </MyTable>
     );
 }
