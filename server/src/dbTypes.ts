@@ -264,6 +264,16 @@ export namespace DBRows {
     export const REGISTER_SPATIAL_PLANS = ["MPZP", "WZ"] as const;
     export type RegisterSpatialPlan = (typeof REGISTER_SPATIAL_PLANS)[number];
 
+    export const REGISTER_CONSTRUCTION_JOURNAL_TYPES = [
+        "DB/A",
+        "DB/B",
+        "DB/C",
+        "Własny",
+        "Elektroniczny",
+    ] as const;
+    export type RegisterConstructionJournalType =
+        (typeof REGISTER_CONSTRUCTION_JOURNAL_TYPES)[number];
+
     const zRegisterDecision = z.enum(REGISTER_SUBTYPE_INFOS.Mayor.decisions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.decisions)) // prettier-ignore
     const zRegisterResolution = z.enum(REGISTER_SUBTYPE_INFOS.Mayor.resolutions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.resolutions)) // prettier-ignore
 
@@ -281,6 +291,7 @@ export namespace DBRows {
         app_resolution_type: zRegisterResolution.optional(),
         app_resolution_number: z.number(),
         app_resolution_issue_date: z.string(),
+        app_construction_journal_type: z.enum(REGISTER_CONSTRUCTION_JOURNAL_TYPES),
 
         object_construction_spec_id: z.number(),
         object_construction_form_type: z.enum(REGISTER_CONSTRUCTION_FORMS).optional(),
@@ -298,6 +309,7 @@ export namespace DBRows {
 
         admin_construction_journal_number: z.number(),
         admin_construction_journal_date: z.string(),
+        admin_construction_journal_tome: z.number()
     });
     export type Register = z.infer<typeof ZRegister> & {
         // client-only helpers
@@ -347,7 +359,9 @@ export namespace DBRows {
         admin: z.number(),
     });
     export const EMPLOYEE_ADMIN_PROPS: readonly (keyof Employee)[] = ['password'] // prettier-ignore
-    export type Employee = z.infer<typeof ZEmployee>;
+    export type Employee = z.infer<typeof ZEmployee> & {
+        hasPassword: boolean;
+    };
 
     //
     // Home

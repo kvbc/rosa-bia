@@ -87,7 +87,7 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
                         onChange={(e) => {
                             setRow((row) => ({
                                 ...row,
-                                [rowKey]: e.target.checked,
+                                [rowKey]: Number(e.target.checked),
                             }));
                         }}
                         onBlur={onBlur}
@@ -101,7 +101,10 @@ export default function TableEditRowInput<TRow extends TableEditRowType>({
                         onChange={(e) => {
                             setRow((row) => ({
                                 ...row,
-                                [rowKey]: e.target.value,
+                                [rowKey]:
+                                    type === "number"
+                                        ? e.target.valueAsNumber
+                                        : e.target.value,
                             }));
                         }}
                         onBlur={onBlur}

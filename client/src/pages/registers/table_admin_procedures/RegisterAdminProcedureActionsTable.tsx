@@ -2,9 +2,7 @@ import { DBRows } from "../../../../../server/src/dbTypes";
 import React from "react";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import RegisterAdminProcedureActionsTableRow from "./RegisterAdminProcedureActionsTableRow";
-import MyTableTH from "../../../components/MyTableth";
-import MyTableTR from "../../../components/MyTableTR";
-import MyTable from "../../../components/MyTable";
+import { Table } from "@mui/joy";
 
 export default function RegisterAdminProcedureActionsTable(
     props: TableEditRowContentComponentProps<DBRows.Register>
@@ -12,16 +10,16 @@ export default function RegisterAdminProcedureActionsTable(
     const { row } = props;
 
     return (
-        <MyTable size="sm">
+        <Table size="sm">
             <thead>
-                <MyTableTR>
-                    <MyTableTH>Czynności</MyTableTH>
-                    <MyTableTH>Wybór</MyTableTH>
-                    <MyTableTH>Termin [dni]</MyTableTH>
-                    <MyTableTH>Data pisma</MyTableTH>
-                    <MyTableTH>Data odebrania</MyTableTH>
-                    <MyTableTH>Data odpowiedzi</MyTableTH>
-                </MyTableTR>
+                <tr>
+                    <th>Czynności</th>
+                    <th>Wybór</th>
+                    <th>Termin [dni]</th>
+                    <th>Data pisma</th>
+                    <th>Data odebrania</th>
+                    <th>Data odpowiedzi</th>
+                </tr>
             </thead>
             <tbody>
                 {DBRows.REGISTER_TYPE_INFOS[row.type].actionTypes.map(
@@ -34,6 +32,6 @@ export default function RegisterAdminProcedureActionsTable(
                     )
                 )}
             </tbody>
-        </MyTable>
+        </Table>
     );
 }

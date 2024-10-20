@@ -4,8 +4,6 @@ import { DBRows } from "../../../../../server/src/dbTypes";
 import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
 import React from "react";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
-import MyTableTR from "../../../components/MyTableTR";
-import MyTableTD from "../../../components/MyTableTD";
 
 export default function RegisterAdminProcedureActionsTableRow({
     row,
@@ -73,9 +71,9 @@ export default function RegisterAdminProcedureActionsTableRow({
     }, [dbAction]);
 
     return (
-        <MyTableTR>
-            <MyTableTD className="break-all">{actionType}</MyTableTD>
-            <MyTableTD>
+        <tr>
+            <td className="break-all">{actionType}</td>
+            <td>
                 <Checkbox
                     size="sm"
                     onBlur={onInputBlur}
@@ -88,8 +86,8 @@ export default function RegisterAdminProcedureActionsTableRow({
                         }))
                     }
                 />
-            </MyTableTD>
-            <MyTableTD>
+            </td>
+            <td>
                 <Input
                     size="sm"
                     onBlur={onInputBlur}
@@ -103,8 +101,8 @@ export default function RegisterAdminProcedureActionsTableRow({
                         }))
                     }
                 />
-            </MyTableTD>
-            <MyTableTD>
+            </td>
+            <td>
                 <Input
                     size="sm"
                     onBlur={onInputBlur}
@@ -118,8 +116,8 @@ export default function RegisterAdminProcedureActionsTableRow({
                         }))
                     }
                 />
-            </MyTableTD>
-            <MyTableTD>
+            </td>
+            <td>
                 <Input
                     size="sm"
                     onBlur={onInputBlur}
@@ -133,8 +131,8 @@ export default function RegisterAdminProcedureActionsTableRow({
                         }))
                     }
                 />
-            </MyTableTD>
-            <MyTableTD>
+            </td>
+            <td>
                 <Input
                     size="sm"
                     onBlur={onInputBlur}
@@ -148,7 +146,7 @@ export default function RegisterAdminProcedureActionsTableRow({
                         }))
                     }
                 />
-            </MyTableTD>
-        </MyTableTR>
+            </td>
+        </tr>
     );
 }

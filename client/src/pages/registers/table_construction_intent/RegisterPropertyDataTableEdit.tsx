@@ -1,10 +1,7 @@
 import { DBRows } from "../../../../../server/src/dbTypes";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import React from "react";
-import MyTableTR from "../../../components/MyTableTR";
-import MyTableTH from "../../../components/MyTableth";
-import MyTableTD from "../../../components/MyTableTD";
-import MyTable from "../../../components/MyTable";
+import { Table } from "@mui/joy";
 
 export default function RegisterPropertyDataTableEdit({
     inputs,
@@ -16,32 +13,32 @@ export default function RegisterPropertyDataTableEdit({
     area?: DBRows.Place;
 } & TableEditRowContentComponentProps<DBRows.Register>) {
     return (
-        <MyTable size="sm">
+        <Table size="sm">
             <thead>
-                <MyTableTR>
-                    <MyTableTH colSpan={4}>Dane nieruchomości</MyTableTH>
-                </MyTableTR>
+                <tr>
+                    <th colSpan={4}>Dane nieruchomości</th>
+                </tr>
             </thead>
             <tbody>
-                <MyTableTR>
-                    <MyTableTH>Gmina</MyTableTH>
-                    <MyTableTD>{inputs._object_commune_id}</MyTableTD>
-                    <MyTableTH scope="row">Jedn. ewid.</MyTableTH>
-                    <MyTableTD>{place?.cad_unit}</MyTableTD>
-                </MyTableTR>
-                <MyTableTR>
-                    <MyTableTH>Miejscowość</MyTableTH>
-                    <MyTableTD>{inputs._object_place_id}</MyTableTD>
-                    <MyTableTH scope="row">Obręb</MyTableTH>
-                    <MyTableTD>{area?.name}</MyTableTD>
-                </MyTableTR>
-                <MyTableTR>
-                    <MyTableTH>Ulica</MyTableTH>
-                    <MyTableTD>{inputs.object_street_id}</MyTableTD>
-                    <MyTableTH scope="row">Nr</MyTableTH>
-                    <MyTableTD>{row.object_number}</MyTableTD>
-                </MyTableTR>
+                <tr>
+                    <th>Gmina</th>
+                    <td>{inputs._object_commune_id}</td>
+                    <th scope="row">Jedn. ewid.</th>
+                    <td>{place?.cad_unit}</td>
+                </tr>
+                <tr>
+                    <th>Miejscowość</th>
+                    <td>{inputs._object_place_id}</td>
+                    <th scope="row">Obręb</th>
+                    <td>{area?.name}</td>
+                </tr>
+                <tr>
+                    <th>Ulica</th>
+                    <td>{inputs.object_street_id}</td>
+                    <th scope="row">Nr</th>
+                    <td>{row.object_number}</td>
+                </tr>
             </tbody>
-        </MyTable>
+        </Table>
     );
 }

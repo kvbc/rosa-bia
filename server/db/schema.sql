@@ -86,6 +86,7 @@ create table registers(
     app_resolution_type text,
     app_resolution_number integer not null,
     app_resolution_issue_date date not null, -- data wydania rozstrzygniecia
+    app_construction_journal_type text not null, -- typ dziennika budowy
 
     object_construction_spec_id integer not null, -- id wyszczegolnienia budowlanego obiektu 
     object_construction_form_type text, -- typ formy budownictwa
@@ -103,6 +104,7 @@ create table registers(
 
     admin_construction_journal_number integer not null, -- numer dziennika budowy
     admin_construction_journal_date date not null, -- data dziennika budowy
+    admin_construction_journal_tome integer not null, -- numer tomu dziennika budowy
 
     foreign key(app_investor_id) references investors(id),
     foreign key(object_construction_spec_id) references construction_specs(id),

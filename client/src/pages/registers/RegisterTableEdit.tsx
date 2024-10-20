@@ -33,6 +33,7 @@ export default function RegisterTableEdit() {
             app_resolution_type: "Bez rozpatrzenia",
             app_resolution_number: 0,
             app_resolution_issue_date: "",
+            app_construction_journal_type: "Elektroniczny",
 
             object_construction_spec_id: 0,
             object_construction_form_type: "Indywidualne",
@@ -57,6 +58,7 @@ export default function RegisterTableEdit() {
 
             admin_construction_journal_date: "",
             admin_construction_journal_number: 0,
+            admin_construction_journal_tome: 0,
         }),
         []
     );
@@ -109,6 +111,11 @@ export default function RegisterTableEdit() {
             { rowKey: "app_resolution_number", type: "number" }, // prettier-ignore
             { rowKey: "app_resolution_issue_date", type: "date" }, // prettier-ignore
             getSelectRowInputProps(
+                "app_construction_journal_type",
+                DBRows.REGISTER_CONSTRUCTION_JOURNAL_TYPES,
+                (type) => ({ value: type, name: type })
+            ),
+            getSelectRowInputProps(
                 "object_construction_spec_id",
                 (row) => constructionSpecsDBTable.rows.filter((fRow) => fRow.class_id === row._object_construction_class_id), // prettier-ignore
                 (row) => ({ value: row.id, name: row.name })
@@ -139,6 +146,7 @@ export default function RegisterTableEdit() {
             { rowKey: "object_usage_change_to", type: "text" }, // prettier-ignore
             { rowKey: "admin_construction_journal_date", type: "date" }, // prettier-ignore
             { rowKey: "admin_construction_journal_number", type: "number" }, // prettier-ignore
+            { rowKey: "admin_construction_journal_tome", type: "number" }, // prettier-ignore
 
             getSelectRowInputProps(
                 "_object_construction_section_id",

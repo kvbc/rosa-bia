@@ -20,8 +20,6 @@ import {
     TableEditRowContentComponent,
     TableEditRowContentComponentProps,
 } from "./TableEditRowContentComponent";
-import MyTableTD from "./MyTableTD";
-import MyTableTR from "./MyTableTR";
 
 export type TableEditRowState = "viewing" | "editing" | "adding";
 
@@ -112,9 +110,7 @@ export default function TableEditRow<TRow extends TableEditRowType>({
         );
     } else {
         content = inputsProps.map((inputProps) => (
-            <MyTableTD key={inputProps.rowKey}>
-                {getInputNode(inputProps)}
-            </MyTableTD>
+            <td key={inputProps.rowKey}>{getInputNode(inputProps)}</td>
         ));
     }
 
@@ -268,22 +264,22 @@ export default function TableEditRow<TRow extends TableEditRowType>({
      */
 
     return (
-        <MyTableTR>
+        <tr>
             <TableEditRowStateContext.Provider value={state}>
                 {content}
             </TableEditRowStateContext.Provider>
             {editable && (
                 <>
                     {!showSaveAction && (
-                        <MyTableTD>
+                        <td>
                             <Stack>
                                 {state !== "adding" && actionDeleteButton}
                                 {state === "adding" && actionAddButton}
                             </Stack>
-                        </MyTableTD>
+                        </td>
                     )}
                     {showSaveAction && (
-                        <MyTableTD>
+                        <td>
                             {state == "viewing" && (
                                 <ButtonGroup
                                     orientation={actionButtonOrientation}
@@ -303,10 +299,10 @@ export default function TableEditRow<TRow extends TableEditRowType>({
                             {state == "adding" && (
                                 <Stack>{actionAddButton}</Stack>
                             )}
-                        </MyTableTD>
+                        </td>
                     )}
                 </>
             )}
-        </MyTableTR>
+        </tr>
     );
 }

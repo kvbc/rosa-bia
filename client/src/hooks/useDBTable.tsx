@@ -82,6 +82,9 @@ export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
                 .then(() => {
                     // eventEmitter.emit("rowAdded", addedRow);
                     addRow(addedRow);
+                })
+                .catch(() => {
+                    setRows((rows) => [...rows]);
                 });
         },
         // [eventEmitter, tableName, isRowIDInRange]
@@ -97,6 +100,9 @@ export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
                 .then(() => {
                     // eventEmitter.emit("rowDeleted", deletedRow);
                     deleteRow(deletedRow);
+                })
+                .catch(() => {
+                    setRows((rows) => [...rows]);
                 });
         },
         // [eventEmitter, tableName, isRowIDInRange]
@@ -110,6 +116,9 @@ export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
                 .then(() => {
                     // eventEmitter.emit("rowUpdated", updatedRow);
                     updateRow(updatedRow);
+                })
+                .catch(() => {
+                    setRows((rows) => [...rows]);
                 });
         },
         // [eventEmitter, tableName, isRowIDInRange]
@@ -150,7 +159,7 @@ export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
     useEffect(() => {
         if (webSocket === null) {
             // FIXME: Error handling
-            throw "Error";
+            throw "No web socket";
         }
         const listener: WebSocket["onmessage"] = (event) => {
             const message: WSMessage<TRow> = JSON.parse(event.data);

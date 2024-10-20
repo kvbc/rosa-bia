@@ -1,4 +1,10 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box } from "@mui/joy";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Box,
+    Table,
+} from "@mui/joy";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaHouse } from "react-icons/fa6";
 import DBTableEdit, {
@@ -10,10 +16,6 @@ import { TableEditRowContentComponentProps } from "../../components/TableEditRow
 import { DBRows } from "../../../../server/src/dbTypes";
 import { PagePKOBContext } from "../../contexts/PagePKOBContext";
 import { TableEditRowInputsProps } from "../../components/TableEditRow";
-import MyTableTR from "../../components/MyTableTR";
-import MyTableTH from "../../components/MyTableth";
-import MyTableTD from "../../components/MyTableTD";
-import MyTable from "../../components/MyTable";
 
 export default function ConstructionClassTableEditRowContent({
     inputs,
@@ -57,7 +59,7 @@ export default function ConstructionClassTableEditRowContent({
 
     return (
         <>
-            <MyTableTD>
+            <td>
                 <Accordion className="shadow-none">
                     <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
                         <Box
@@ -72,20 +74,20 @@ export default function ConstructionClassTableEditRowContent({
                         </Box>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <MyTable size="sm">
+                        <Table size="sm">
                             <thead>
-                                <MyTableTR>
-                                    <MyTableTH className="w-[10%] text-wrap bg-gray-200">
+                                <tr>
+                                    <th className="w-[10%] text-wrap bg-gray-200">
                                         PKOB
-                                    </MyTableTH>
-                                </MyTableTR>
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
-                                <MyTableTR>
-                                    <MyTableTD>{inputs.pkob}</MyTableTD>
-                                </MyTableTR>
+                                <tr>
+                                    <td>{inputs.pkob}</td>
+                                </tr>
                             </tbody>
-                        </MyTable>
+                        </Table>
                         <br />
                         <DBTableEdit
                             dbTable={pageContext.constructionSpecsDBTable}
@@ -102,7 +104,7 @@ export default function ConstructionClassTableEditRowContent({
                         />
                     </AccordionDetails>
                 </Accordion>
-            </MyTableTD>
+            </td>
         </>
     );
 }

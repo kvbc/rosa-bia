@@ -24,10 +24,7 @@ import IconButton from "@mui/joy/IconButton";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import TableEditContext from "../contexts/TableEditContext";
-import MyTable from "./MyTable";
-import MyTableTR from "./MyTableTR";
-import MyTableTH from "./MyTableth";
-import MyTableTD from "./MyTableTD";
+import { Table } from "@mui/joy";
 
 export type TableEditRowType = {
     id: number;
@@ -208,14 +205,20 @@ export default function TableEdit<TRow extends TableEditRowType>({
     //     }
     // }, [upperTableEditRowContext, commitChanges, cancelChanges]);
 
+    useEffect(() => {
+        if (!upperTableEventTarget) {
+            commitChanges();
+        }
+    }, [rows, upperTableEventTarget, commitChanges]);
+
     const handleRowAdded = useCallback(
         (addedRow: TRow) => {
             // if (isRowIDInRange(newRow.id, startRowIndex, endRowIndex)) {
             setRows((rows) => [...rows, { ...addedRow }]);
             // setAddRow({ ...defaultRow, id: defaultRow.id + 1 });
-            if (!upperTableEventTarget) {
-                commitChanges();
-            }
+            // if (!upperTableEventTarget) {
+            //     commitChanges();
+            // }
             // onRowsRangeChanged?.(startRowIndex, endRowIndex);
             // }
         },
@@ -228,9 +231,9 @@ export default function TableEdit<TRow extends TableEditRowType>({
             setRows((rows) =>
                 rows.map((row) => (row.id === newRow.id ? newRow : row))
             );
-            if (!upperTableEventTarget) {
-                commitChanges();
-            }
+            // if (!upperTableEventTarget) {
+            //     commitChanges();
+            // }
         },
         [upperTableEventTarget, commitChanges]
     );
@@ -238,9 +241,9 @@ export default function TableEdit<TRow extends TableEditRowType>({
     const handleRowDeleted = useCallback(
         (deletedRow: TRow) => {
             setRows((rows) => rows.filter((row) => row.id !== deletedRow.id));
-            if (!upperTableEventTarget) {
-                commitChanges();
-            }
+            // if (!upperTableEventTarget) {
+            //     commitChanges();
+            // }
         },
         [upperTableEventTarget, commitChanges]
     );
@@ -254,7 +257,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
     };
 
     const content = (
-        <MyTable
+        <Table
             variant="outlined"
             size="sm"
             borderAxis="both"
@@ -270,7 +273,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
             }
         >
             <thead>
-                <MyTableTR>
+                <tr>
                     {(editable
                         ? [
                               ...headers,
@@ -290,11 +293,11 @@ export default function TableEdit<TRow extends TableEditRowType>({
                         }
                         return (
                             <Tooltip title={name} variant="soft" key={name}>
-                                <MyTableTH style={{ width }}>{name}</MyTableTH>
+                                <th style={{ width }}>{name}</th>
                             </Tooltip>
                         );
                     })}
-                </MyTableTR>
+                </tr>
             </thead>
             <tbody>
                 {(editable ? [...rows, addRow] : rows).map((row) => (
@@ -324,8 +327,8 @@ export default function TableEdit<TRow extends TableEditRowType>({
                 ))}
             </tbody>
             <tfoot className="z-20">
-                <MyTableTR>
-                    <MyTableTD colSpan={headers.length + 2}>
+                <tr>
+                    <td colSpan={headers.length + 2}>
                         <Box
                             sx={{
                                 display: "flex",
@@ -379,10 +382,10 @@ export default function TableEdit<TRow extends TableEditRowType>({
                                 </IconButton>
                             </Box>
                         </Box>
-                    </MyTableTD>
-                </MyTableTR>
+                    </td>
+                </tr>
             </tfoot>
-        </MyTable>
+        </Table>
     );
 
     // if (!upperTableEventTarget) {

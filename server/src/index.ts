@@ -189,10 +189,8 @@ app.get(
         }>,
         res: Response
     ) => {
-        getAuthorizedEmployee(req, res).then(({ employee }) => {
-            if (!employee) {
-                return;
-            }
+        getAuthorizedEmployee(req, res, true).then(({ employee }) => {
+            const isEmployeeAdmin = Boolean(employee?.admin);
 
             // get params
             const startIndex: number | undefined = stringToInteger(req.params.startIndex) // prettier-ignore
@@ -204,7 +202,7 @@ app.get(
                     req,
                     res,
                     req.params.tableName,
-                    Boolean(employee.admin)
+                    Boolean(isEmployeeAdmin)
                 )
             ) {
                 return;
@@ -237,20 +235,22 @@ app.get(
                 }
             }
 
-            const sqlKeys: string[] = [
-                ...DB_TABLE_ROW_INFOS[tableName].zod.keyof().options,
-            ]
-                .map((key) => "`" + key + "`")
-                .filter((key) => {
-                    const adminProps = DB_TABLE_ROW_INFOS[tableName].adminProps;
-                    if (
-                        adminProps &&
-                        !employee.admin &&
-                        adminProps.includes(key)
-                    )
-                        return false;
-                    return true;
-                });
+            // const sqlKeys: string[] = [
+            //     ...DB_TABLE_ROW_INFOS[tableName].zod.keyof().options,
+            // ]
+            //     .map((key) => "`" + key + "`")
+            //     .filter((key) => {
+            //         const adminProps = DB_TABLE_ROW_INFOS[tableName].adminProps;
+            //         if (
+            //             adminProps &&
+            //             !isEmployeeAdmin &&
+            //             adminProps.includes(key)
+            //         )
+            //             return false;
+            //         return true;
+            //     });
+            const sqlKeys: string[] = ["*"];
+
             let sqlQuery = `select ${sqlKeys.join(", ")} from ${tableName}`;
             if (typeof startIndex === "number") {
                 sqlQuery += " limit " + startIndex + ", " + (endIndex! - startIndex); // prettier-ignore
@@ -258,7 +258,7 @@ app.get(
 
             // console.log(`[GET /table/${tableName}] ${sqlQuery}`);
 
-            db.all(sqlQuery, (error, rows) => {
+            db.all<DBRow>(sqlQuery, (error, rows) => {
                 if (error) {
                     return resError(res, 500, error);
                 }
@@ -268,6 +268,28 @@ app.get(
                         if (error) {
                             return resError(res, 500, error);
                         }
+
+                        rows.forEach((row) => {
+                            if (tableName === "employees") {
+                                const employeeRow = row as DBRows.Employee;
+                                employeeRow.hasPassword =
+                                    typeof employeeRow.password === "string" &&
+                                    employeeRow.password.length > 0;
+                            }
+
+                            Object.keys(row).forEach((key) => {
+                                const adminProps =
+                                    DB_TABLE_ROW_INFOS[tableName].adminProps;
+                                if (
+                                    adminProps &&
+                                    !isEmployeeAdmin &&
+                                    adminProps.includes(key)
+                                ) {
+                                    row[key] = undefined;
+                                }
+                            });
+                        });
+
                         const totalCount = row["count(*)"];
                         const response: HTTPResponse<any> = {
                             responseType: "fetch table rows",

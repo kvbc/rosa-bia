@@ -150,6 +150,7 @@ insert into registers(
     app_resolution_type,
     app_resolution_number,
     app_resolution_issue_date,
+    app_construction_journal_type,
 
     object_construction_spec_id,
     object_construction_form_type,
@@ -166,7 +167,8 @@ insert into registers(
     object_usage_change_to,
 
     admin_construction_journal_number,
-    admin_construction_journal_date
+    admin_construction_journal_date,
+    admin_construction_journal_tome
 ) values (
     null,
     'PnB (6740)',
@@ -174,8 +176,9 @@ insert into registers(
     69,
     '2006-12-19',
     1,
-    'Inne rozstrzygniecie', 420, '2019-02-05',
+    'Inne rozstrzygnięcie', 420, '2019-02-05',
     'Bez rozpatrzenia', 2137, '2011-07-23',
+    'Elektroniczny',
 
     1,
     'Indywidualne',
@@ -192,7 +195,8 @@ insert into registers(
     'na ...',
 
     420,
-    '1999-12-19'
+    '1999-12-19',
+    1
 );
 
 -- 

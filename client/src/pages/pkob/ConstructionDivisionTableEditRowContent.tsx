@@ -14,7 +14,6 @@ import { useContext, useMemo } from "react";
 import { PagePKOBContext } from "../../contexts/PagePKOBContext";
 import React from "react";
 import { TableEditRowInputsProps } from "../../components/TableEditRow";
-import MyTableTD from "../../components/MyTableTD";
 
 export default function ConstructionDivisionTableEditRowContent({
     inputs,
@@ -48,7 +47,7 @@ export default function ConstructionDivisionTableEditRowContent({
 
     return (
         <>
-            <MyTableTD>
+            <td>
                 <Accordion className="shadow-none">
                     <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
                         <Box
@@ -78,7 +77,7 @@ export default function ConstructionDivisionTableEditRowContent({
                         />
                     </AccordionDetails>
                 </Accordion>
-            </MyTableTD>
+            </td>
         </>
     );
 }

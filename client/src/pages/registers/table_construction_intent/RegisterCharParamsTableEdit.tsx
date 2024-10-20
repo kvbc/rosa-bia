@@ -1,10 +1,7 @@
 import { DBRows } from "../../../../../server/src/dbTypes";
 import React from "react";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
-import MyTableTR from "../../../components/MyTableTR";
-import MyTableTH from "../../../components/MyTableth";
-import MyTableTD from "../../../components/MyTableTD";
-import MyTable from "../../../components/MyTable";
+import { Table } from "@mui/joy";
 
 export default function RegisterCharParamsTableEdit(
     props: TableEditRowContentComponentProps<DBRows.Register>
@@ -12,32 +9,30 @@ export default function RegisterCharParamsTableEdit(
     const { inputs } = props;
 
     return (
-        <MyTable size="sm" sx={{ height: "100%" }}>
+        <Table size="sm" sx={{ height: "100%" }}>
             <thead>
-                <MyTableTR>
-                    <MyTableTH colSpan={2}>
-                        Charakterystyczne parametry
-                    </MyTableTH>
-                </MyTableTR>
+                <tr>
+                    <th colSpan={2}>Charakterystyczne parametry</th>
+                </tr>
             </thead>
             <tbody>
-                <MyTableTR>
-                    <MyTableTD>Powierzchnia zabudowy [m²]</MyTableTD>
-                    <MyTableTD>{inputs.object_demo_building_area}</MyTableTD>
-                </MyTableTR>
-                <MyTableTR>
-                    <MyTableTD>Powierzchnia użytkowa [m²]</MyTableTD>
-                    <MyTableTD>{inputs.object_demo_usable_area}</MyTableTD>
-                </MyTableTR>
-                <MyTableTR>
-                    <MyTableTD>Kubatura [m³]</MyTableTD>
-                    <MyTableTD>{inputs.object_demo_volume}</MyTableTD>
-                </MyTableTR>
-                <MyTableTR>
-                    <MyTableTD>Ilość budynków [szt.]</MyTableTD>
-                    <MyTableTD>{inputs.object_demo_building_count}</MyTableTD>
-                </MyTableTR>
+                <tr>
+                    <td>Powierzchnia zabudowy [m²]</td>
+                    <td>{inputs.object_demo_building_area}</td>
+                </tr>
+                <tr>
+                    <td>Powierzchnia użytkowa [m²]</td>
+                    <td>{inputs.object_demo_usable_area}</td>
+                </tr>
+                <tr>
+                    <td>Kubatura [m³]</td>
+                    <td>{inputs.object_demo_volume}</td>
+                </tr>
+                <tr>
+                    <td>Ilość budynków [szt.]</td>
+                    <td>{inputs.object_demo_building_count}</td>
+                </tr>
             </tbody>
-        </MyTable>
+        </Table>
     );
 }

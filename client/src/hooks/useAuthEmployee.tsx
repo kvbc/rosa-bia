@@ -6,38 +6,13 @@
 
 import axios, { AxiosResponse } from "axios";
 import { HTTP_SERVER_URL } from "../../../config";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { HTTPRequestLogin, HTTPResponse } from "../../../server/src/types";
-import { DBRows } from "../../../server/src/dbTypes";
+import { useAuthEmployeeStore } from "../stores/useAuthEmployeeStore";
 
-export default function useEmployee() {
-    const ssEmployeeKey = "employee";
-    const [employee, setEmployee] = useState<DBRows.Employee | null>(() => {
-        const ssItem = window.sessionStorage.getItem(ssEmployeeKey);
-        return ssItem ? JSON.parse(ssItem) : null;
-    });
-    useEffect(() => {
-        if (employee === null) {
-            window.sessionStorage.removeItem(ssEmployeeKey);
-        } else {
-            window.sessionStorage.setItem(
-                ssEmployeeKey,
-                JSON.stringify(employee)
-            );
-        }
-    }, [employee]);
-
-    const lsJWTTokenKey = "jwtToken";
-    const [jwtToken, setJWTToken] = useState<string | null>(
-        window.localStorage.getItem(lsJWTTokenKey)
-    );
-    useEffect(() => {
-        if (jwtToken === null) {
-            window.localStorage.removeItem(lsJWTTokenKey);
-        } else {
-            window.localStorage.setItem(lsJWTTokenKey, jwtToken);
-        }
-    }, [jwtToken]);
+export default function useAuthEmployee() {
+    const { employee, jwtToken, setEmployee, setJWTToken } =
+        useAuthEmployeeStore();
 
     useEffect(() => {
         if (employee === null && jwtToken !== null) {
@@ -58,7 +33,7 @@ export default function useEmployee() {
                     }
                 });
         }
-    }, [employee, jwtToken]);
+    }, [employee, jwtToken, setEmployee]);
 
     const login = (req: HTTPRequestLogin) => {
         axios
@@ -83,7 +58,8 @@ export default function useEmployee() {
 
     return {
         employee,
-        employeeLogin: login,
-        employeeLogout: logout,
+        login,
+        logout,
+        jwtToken,
     };
 }

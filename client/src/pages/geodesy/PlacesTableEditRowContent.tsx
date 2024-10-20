@@ -2,7 +2,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { Stack } from "@mui/joy";
+import { Stack, Table } from "@mui/joy";
 import DBTableEdit, {
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
@@ -12,10 +12,6 @@ import { DBRows } from "../../../../server/src/dbTypes";
 import React, { useContext, useMemo } from "react";
 import { PageGeodesyContext } from "../../contexts/PageGeodesyContext";
 import { TableEditRowInputsProps } from "../../components/TableEditRow";
-import MyTableTR from "../../components/MyTableTR";
-import MyTableTH from "../../components/MyTableth";
-import MyTableTD from "../../components/MyTableTD";
-import MyTable from "../../components/MyTable";
 
 export default function PlacesTableEditRowContent({
     inputs,
@@ -49,7 +45,7 @@ export default function PlacesTableEditRowContent({
 
     return (
         <>
-            <MyTableTD>
+            <td>
                 <Accordion className="shadow-none">
                     <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
                         <Stack
@@ -63,22 +59,20 @@ export default function PlacesTableEditRowContent({
                         </Stack>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <MyTable size="sm">
+                        <Table size="sm">
                             <thead>
-                                <MyTableTR>
-                                    <MyTableTH>Jedn. ewid.</MyTableTH>
-                                    <MyTableTH>Obręb</MyTableTH>
-                                </MyTableTR>
+                                <tr>
+                                    <th>Jedn. ewid.</th>
+                                    <th>Obręb</th>
+                                </tr>
                             </thead>
                             <tbody>
-                                <MyTableTR>
-                                    <MyTableTD>{inputs.cad_unit}</MyTableTD>
-                                    <MyTableTD>
-                                        {inputs.area_place_id}
-                                    </MyTableTD>
-                                </MyTableTR>
+                                <tr>
+                                    <td>{inputs.cad_unit}</td>
+                                    <td>{inputs.area_place_id}</td>
+                                </tr>
                             </tbody>
-                        </MyTable>
+                        </Table>
                         <br />
                         <DBTableEdit
                             dbTable={pageGeodesyContext.streetsDBTable}
@@ -93,7 +87,7 @@ export default function PlacesTableEditRowContent({
                         />
                     </AccordionDetails>
                 </Accordion>
-            </MyTableTD>
+            </td>
         </>
     );
 }
