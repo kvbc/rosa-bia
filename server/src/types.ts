@@ -4,7 +4,7 @@
 //
 
 import { DBRow, DBRows, DBTableName } from "./dbTypes";
-import { z } from "zod";
+import { z, ZodObject } from "zod";
 
 export type WSMessage<TRow extends DBRow = DBRow> = {
     type: "table row added" | "table row updated" | "table row deleted";
@@ -33,6 +33,44 @@ export type HTTPResponse<TRow extends DBRow = DBRow> =
           jwtToken: string;
           employee: DBRows.Employee;
       };
+
+export const DB_FILTER_OPERATORS = [
+    "=",
+    ">",
+    ">=",
+    "<",
+    "<=",
+    "<>",
+    "like",
+] as const;
+export type DBFilterOperator = (typeof DB_FILTER_OPERATORS)[number];
+export const createHTTPRequestBodyGetTableRowsZodObject = (
+    zodRowObject: ZodObject<any>
+) =>
+    z
+        .object({
+            filters: z
+                .array(
+                    z.object({
+                        key: zodRowObject.keyof(),
+                        operator: z.enum(DB_FILTER_OPERATORS),
+                        value: z.string(),
+                    })
+                )
+                .optional(),
+        })
+        .optional();
+// Example: "id" ">=" "10"
+export type DBFilter<TRow extends DBRow = DBRow> = {
+    key: keyof TRow;
+    operator: DBFilterOperator;
+    value: string;
+};
+export type HTTPRequestBodyGetTableRows =
+    | {
+          filters?: DBFilter[];
+      }
+    | undefined;
 
 export const DB_ADMIN_MODIFY_TABLES: readonly DBTableName[] = [
     "construction_sections",

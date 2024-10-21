@@ -43,6 +43,7 @@ export default function TableEditRow<TRow extends TableEditRowType>({
     showSaveAction,
     inputsProps,
     ContentComponent,
+    saveOnInputBlur,
 }: {
     row: TRow;
     onDeleteClicked?: (row: TRow) => void;
@@ -54,6 +55,7 @@ export default function TableEditRow<TRow extends TableEditRowType>({
     actionButtonOrientation?: "horizontal" | "vertical";
     inputsProps: TableEditRowInputsProps<TRow>;
     ContentComponent?: TableEditRowContentComponent<TRow>;
+    saveOnInputBlur: boolean;
 }) {
     const [row, setRow] = useState<TRow>({ ...tableRow });
     const [state, setState] = useState<TableEditRowState>(stateProp);
@@ -70,10 +72,11 @@ export default function TableEditRow<TRow extends TableEditRowType>({
     const isContentEditable = state === "editing" || state === "adding";
 
     const handleInputBlur = useCallback(() => {
-        console.log("lul");
-        eventTarget.dispatchEvent(new CustomEvent("saved"));
-        onSaveClicked?.(row);
-    }, [onSaveClicked, row, eventTarget]);
+        if (saveOnInputBlur) {
+            eventTarget.dispatchEvent(new CustomEvent("saved"));
+            onSaveClicked?.(row);
+        }
+    }, [onSaveClicked, row, eventTarget, saveOnInputBlur]);
 
     /*
      *

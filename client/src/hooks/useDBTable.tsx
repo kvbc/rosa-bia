@@ -13,13 +13,16 @@ import { DBRow, DBTableName } from "../../../server/src/dbTypes";
 // import Emittery from "emittery";
 import axios from "axios";
 import { HTTP_SERVER_URL } from "../../../config";
-import { HTTPResponse, WSMessage } from "../../../server/src/types";
+import { DBFilter, HTTPResponse, WSMessage } from "../../../server/src/types";
 import WebSocketContext from "../contexts/WebSocketContext";
 
 export type DBTable<TRow extends DBRow> = ReturnType<typeof useDBTable<TRow>>;
 
 // FIXME: add filters and dont always fetch all on init
-export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
+export default function useDBTable<TRow extends DBRow>(
+    tableName: DBTableName,
+    initFilters?: DBFilter[]
+) {
     const [totalRowCount, setTotalRowCount] = useState(0);
     // const [eventEmitter] = useState(
     //     new Emittery<{
@@ -31,6 +34,7 @@ export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
     const [rows, setRows] = useState<TRow[]>([]);
     const [startRowIndex, setStartRowIndex] = useState<number>(0);
     const [endRowIndex, setEndRowIndex] = useState<number>(9999); // FIXME: yeah
+    const [filters, setFilters] = useState<DBFilter<TRow>[]>(initFilters ?? []);
     const webSocket = useContext(WebSocketContext);
 
     const isRowIDInRange = useCallback(
@@ -129,9 +133,12 @@ export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
         (startIndex: number, endIndex: number): ReturnType<EffectCallback> => {
             const abortController = new AbortController();
             axios
-                .get<HTTPResponse<TRow>>(
+                .post<HTTPResponse<TRow>>(
                     HTTP_SERVER_URL +
-                        `/table/${tableName}/${startIndex}/${endIndex}`,
+                        `/table/${tableName}/fetch/${startIndex}/${endIndex}`,
+                    {
+                        filters,
+                    },
                     {
                         signal: abortController.signal,
                     }
@@ -149,7 +156,7 @@ export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
                 });
             return () => abortController.abort();
         },
-        [tableName]
+        [tableName, filters]
     );
 
     useEffect(() => {
@@ -183,6 +190,7 @@ export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
     }, [webSocket, addRow, deleteRow, updateRow, tableName]);
 
     return {
+        tableName,
         totalRowCount,
         // eventEmitter,
         rows,
@@ -194,5 +202,7 @@ export default function useDBTable<TRow extends DBRow>(tableName: DBTableName) {
         requestDeleteRow,
         requestUpdateRow,
         requestFetchRows,
+        filters,
+        setFilters,
     };
 }

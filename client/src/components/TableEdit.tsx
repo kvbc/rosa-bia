@@ -35,6 +35,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
     rows: _rows,
     defaultRow,
     headers,
+    showFooter,
     rowInputsProps,
     onRowDeleteClicked,
     onRowAddClicked,
@@ -44,7 +45,8 @@ export default function TableEdit<TRow extends TableEditRowType>({
     editable,
     rowActionButtonOrientation,
     RowContentComponent,
-}: {
+    ...tableProps
+}: ComponentProps<typeof Table> & {
     rows: TRow[];
     headers: (
         | {
@@ -56,6 +58,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
     totalRowCount: number;
     defaultRow: TRow;
     editable?: boolean;
+    showFooter?: boolean;
     onRowDeleteClicked?: (row: TRow) => void;
     onRowAddClicked?: (row: TRow) => void;
     onRowSaveClicked?: (row: TRow) => void;
@@ -66,6 +69,9 @@ export default function TableEdit<TRow extends TableEditRowType>({
 }) {
     if (editable === undefined) {
         editable = true;
+    }
+    if (showFooter === undefined) {
+        showFooter = true;
     }
 
     // revertRows - rows used to revert the changes made to the table if this table is inside of any other table
@@ -211,42 +217,33 @@ export default function TableEdit<TRow extends TableEditRowType>({
         }
     }, [rows, upperTableEventTarget, commitChanges]);
 
-    const handleRowAdded = useCallback(
-        (addedRow: TRow) => {
-            // if (isRowIDInRange(newRow.id, startRowIndex, endRowIndex)) {
-            setRows((rows) => [...rows, { ...addedRow }]);
-            // setAddRow({ ...defaultRow, id: defaultRow.id + 1 });
-            // if (!upperTableEventTarget) {
-            //     commitChanges();
-            // }
-            // onRowsRangeChanged?.(startRowIndex, endRowIndex);
-            // }
-        },
-        [upperTableEventTarget, commitChanges]
-    );
+    const handleRowAdded = useCallback((addedRow: TRow) => {
+        // if (isRowIDInRange(newRow.id, startRowIndex, endRowIndex)) {
+        setRows((rows) => [...rows, { ...addedRow }]);
+        // setAddRow({ ...defaultRow, id: defaultRow.id + 1 });
+        // if (!upperTableEventTarget) {
+        //     commitChanges();
+        // }
+        // onRowsRangeChanged?.(startRowIndex, endRowIndex);
+        // }
+    }, []);
 
-    const handleRowSaved = useCallback(
-        (newRow: TRow) => {
-            console.log("saved mr", newRow);
-            setRows((rows) =>
-                rows.map((row) => (row.id === newRow.id ? newRow : row))
-            );
-            // if (!upperTableEventTarget) {
-            //     commitChanges();
-            // }
-        },
-        [upperTableEventTarget, commitChanges]
-    );
+    const handleRowSaved = useCallback((newRow: TRow) => {
+        console.log("saved mr", newRow);
+        setRows((rows) =>
+            rows.map((row) => (row.id === newRow.id ? newRow : row))
+        );
+        // if (!upperTableEventTarget) {
+        //     commitChanges();
+        // }
+    }, []);
 
-    const handleRowDeleted = useCallback(
-        (deletedRow: TRow) => {
-            setRows((rows) => rows.filter((row) => row.id !== deletedRow.id));
-            // if (!upperTableEventTarget) {
-            //     commitChanges();
-            // }
-        },
-        [upperTableEventTarget, commitChanges]
-    );
+    const handleRowDeleted = useCallback((deletedRow: TRow) => {
+        setRows((rows) => rows.filter((row) => row.id !== deletedRow.id));
+        // if (!upperTableEventTarget) {
+        //     commitChanges();
+        // }
+    }, []);
 
     const handleChangeRowsPerPage = (
         _event: unknown,
@@ -271,6 +268,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
                     // },
                 }
             }
+            {...tableProps}
         >
             <thead>
                 <tr>
@@ -307,7 +305,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
                         onAddClicked={
                             row === addRow ? handleRowAdded : undefined
                         }
-                        showSaveAction={!upperTableEventTarget}
+                        showSaveAction={upperTableEventTarget === null}
                         onSaveClicked={handleRowSaved}
                         onDeleteClicked={handleRowDeleted}
                         actionButtonOrientation={rowActionButtonOrientation}
@@ -323,68 +321,76 @@ export default function TableEdit<TRow extends TableEditRowType>({
                         editable={editable}
                         inputsProps={rowInputsProps}
                         ContentComponent={RowContentComponent}
+                        saveOnInputBlur={upperTableEventTarget !== null}
                     />
                 ))}
             </tbody>
-            <tfoot className="z-20">
-                <tr>
-                    <td colSpan={headers.length + 2}>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 2,
-                                justifyContent: "flex-end",
-                            }}
-                        >
-                            <FormControl orientation="horizontal" size="sm">
-                                <FormLabel>Wyniki na stronę:</FormLabel>
-                                <Select
-                                    onChange={handleChangeRowsPerPage}
-                                    value={rowsPerPage}
-                                >
-                                    <Option value={25}>25</Option>
-                                    <Option value={50}>50</Option>
-                                    <Option value={100}>100</Option>
-                                    <Option value={250}>250</Option>
-                                    <Option value={500}>500</Option>
-                                </Select>
-                                <FormLabel sx={{ paddingLeft: "4px" }}>
-                                    z {totalRowCount}
-                                </FormLabel>
-                            </FormControl>
-                            <Typography
-                                sx={{ textAlign: "center", minWidth: 20 }}
+
+            {showFooter && (
+                <tfoot className="z-20">
+                    <tr>
+                        <td colSpan={headers.length + 2}>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 2,
+                                    justifyContent: "flex-end",
+                                }}
                             >
-                                {page} / {pageCount} ({startRowIndex + 1}-
-                                {endRowIndex})
-                            </Typography>
-                            <Box sx={{ display: "flex", gap: 1 }}>
-                                <IconButton
-                                    size="sm"
-                                    color="neutral"
-                                    variant="outlined"
-                                    disabled={page === 1}
-                                    onClick={() => setPage((page) => page - 1)}
-                                    sx={{ bgcolor: "background.surface" }}
+                                <FormControl orientation="horizontal" size="sm">
+                                    <FormLabel>Wyniki na stronę:</FormLabel>
+                                    <Select
+                                        onChange={handleChangeRowsPerPage}
+                                        value={rowsPerPage}
+                                    >
+                                        <Option value={25}>25</Option>
+                                        <Option value={50}>50</Option>
+                                        <Option value={100}>100</Option>
+                                        <Option value={250}>250</Option>
+                                        <Option value={500}>500</Option>
+                                    </Select>
+                                    <FormLabel sx={{ paddingLeft: "4px" }}>
+                                        z {totalRowCount}
+                                    </FormLabel>
+                                </FormControl>
+                                <Typography
+                                    sx={{ textAlign: "center", minWidth: 20 }}
                                 >
-                                    <KeyboardArrowLeftIcon />
-                                </IconButton>
-                                <IconButton
-                                    size="sm"
-                                    color="neutral"
-                                    variant="outlined"
-                                    disabled={page === pageCount}
-                                    onClick={() => setPage((page) => page + 1)}
-                                    sx={{ bgcolor: "background.surface" }}
-                                >
-                                    <KeyboardArrowRightIcon />
-                                </IconButton>
+                                    {page} / {pageCount} ({startRowIndex + 1}-
+                                    {endRowIndex})
+                                </Typography>
+                                <Box sx={{ display: "flex", gap: 1 }}>
+                                    <IconButton
+                                        size="sm"
+                                        color="neutral"
+                                        variant="outlined"
+                                        disabled={page === 1}
+                                        onClick={() =>
+                                            setPage((page) => page - 1)
+                                        }
+                                        sx={{ bgcolor: "background.surface" }}
+                                    >
+                                        <KeyboardArrowLeftIcon />
+                                    </IconButton>
+                                    <IconButton
+                                        size="sm"
+                                        color="neutral"
+                                        variant="outlined"
+                                        disabled={page === pageCount}
+                                        onClick={() =>
+                                            setPage((page) => page + 1)
+                                        }
+                                        sx={{ bgcolor: "background.surface" }}
+                                    >
+                                        <KeyboardArrowRightIcon />
+                                    </IconButton>
+                                </Box>
                             </Box>
-                        </Box>
-                    </td>
-                </tr>
-            </tfoot>
+                        </td>
+                    </tr>
+                </tfoot>
+            )}
         </Table>
     );
 

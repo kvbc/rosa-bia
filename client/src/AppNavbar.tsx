@@ -163,7 +163,7 @@ function AppNavbar() {
                             </Tooltip>
                             <Tooltip
                                 variant="soft"
-                                title="nie wiem"
+                                title="coś"
                                 placement="right"
                             >
                                 <MenuItem>

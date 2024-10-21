@@ -144,12 +144,8 @@ insert into registers(
     app_number,
     app_submission_date,
     app_investor_id,
-    app_decision_type,
-    app_decision_number,
-    app_decision_issue_date,
-    app_resolution_type,
-    app_resolution_number,
-    app_resolution_issue_date,
+    app_decision_type, app_decision_number, app_decision_issue_date,
+    app_resolution_type, app_resolution_number, app_resolution_issue_date,
     app_construction_journal_type,
 
     object_construction_spec_id,
@@ -186,11 +182,103 @@ insert into registers(
     1,
     34,
     TRUE,
+    TRUE, 69, 69, 69, 69,
+    'z ...',
+    'na ...',
+
+    420,
+    '1999-12-19',
+    1
+), (
+    null,
+    'PnB (6740)',
+
+    69420,
+    '2007-12-19',
+    1,
+    'Inne rozstrzygnięcie', 420, '2019-02-05',
+    'Bez rozpatrzenia', 2137, '2011-07-23',
+    'Elektroniczny',
+
+    1,
+    'Indywidualne',
+    'MPZP',
+    1,
+    34,
     TRUE,
-    69,
-    69,
-    69,
-    69,
+    TRUE, 69, 69, 69, 69,
+    'z ...',
+    'na ...',
+
+    420,
+    '1999-12-19',
+    1
+), (
+    null,
+    'PnB (6740)',
+
+    2137,
+    '2008-12-19',
+    1,
+    'Inne rozstrzygnięcie', 420, '2019-02-05',
+    'Bez rozpatrzenia', 2137, '2011-07-23',
+    'Elektroniczny',
+
+    1,
+    'Indywidualne',
+    'MPZP',
+    1,
+    34,
+    TRUE,
+    TRUE, 69, 69, 69, 69,
+    'z ...',
+    'na ...',
+
+    420,
+    '1999-12-19',
+    1
+), (
+    null,
+    'PnB (6740)',
+
+    666,
+    '2009-12-19',
+    1,
+    'Inne rozstrzygnięcie', 420, '2019-02-05',
+    'Bez rozpatrzenia', 2137, '2011-07-23',
+    'Elektroniczny',
+
+    1,
+    'Indywidualne',
+    'MPZP',
+    1,
+    34,
+    TRUE,
+    TRUE, 69, 69, 69, 69,
+    'z ...',
+    'na ...',
+
+    420,
+    '1999-12-19',
+    1
+), (
+    null,
+    'PnB (6740)',
+
+    619,
+    '2010-12-19',
+    1,
+    'Inne rozstrzygnięcie', 420, '2019-02-05',
+    'Bez rozpatrzenia', 2137, '2011-07-23',
+    'Elektroniczny',
+
+    1,
+    'Indywidualne',
+    'MPZP',
+    1,
+    34,
+    TRUE,
+    TRUE, 69, 69, 69, 69,
     'z ...',
     'na ...',
 
