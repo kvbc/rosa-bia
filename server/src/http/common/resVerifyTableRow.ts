@@ -7,11 +7,11 @@ export const resVerifyTableRow = (
     res: Response,
     tableName: DB.TableName,
     row: any
-): boolean => {
+): DB.Row | null => {
     const ret = DB.Rows.INFOS[tableName].zod.safeParse(row);
     if (!ret.success) {
         resErrorMessage(res, 400, ret.error.message);
-        return false;
+        return null;
     }
-    return true;
+    return row as DB.Row;
 };

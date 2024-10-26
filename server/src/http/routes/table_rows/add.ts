@@ -1,4 +1,12 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
+import {
+    resError,
+    resGetAuthEmployee,
+    resVerifyTableName,
+    resVerifyTableRow,
+} from "../../common";
+import { DB } from "../../../db";
+import { db, wsServer } from "../../..";
 
 const router = Router();
 
@@ -6,71 +14,65 @@ const router = Router();
 // Insert a new row into the specified table
 //
 router.post(
-    "/table/:tableName",
-    (req: Request<{ tableName: string }>, res: Response) => {
-        getAuthorizedEmployee(req, res)
-            .then(({ employee }) => {
-                if (!employee) {
-                    return;
-                }
+    "/table_rows/add/:tableName",
+    async (req: Request<{ tableName: string }>, res: Response) => {
+        const { employee } = await resGetAuthEmployee(req, res).catch();
 
-                // verify params
-                if (
-                    !resVerifyTableName(
-                        req.method,
-                        res,
-                        req.params.tableName,
-                        Boolean(employee.admin)
-                    )
-                ) {
-                    return;
-                }
-                const tableName = req.params.tableName as DB.TableName;
+        if (!employee) {
+            return;
+        }
 
-                // verify body
-                if (!resVerifyTableRow(res, tableName, req.body)) {
-                    return;
-                }
-                const newRow: DB.Row = req.body;
+        // verify params
+        const tableName = resVerifyTableName(
+            "modify",
+            res,
+            req.params.tableName,
+            Boolean(employee.admin)
+        );
+        if (!tableName) {
+            return;
+        }
 
-                let sqlKeys = "id";
-                let sqlValues = "null";
-                const sqlParams: any[] = [];
-                for (const key in newRow) {
-                    if (key !== "id") {
-                        sqlKeys += `, \`${key}\``;
-                        sqlValues += ", ?";
-                        sqlParams.push(newRow[key]);
+        // verify body
+        const newRow = resVerifyTableRow(res, tableName, req.body);
+        if (!newRow) {
+            return;
+        }
+
+        const keys = Object.keys(newRow);
+        const sqlKeys = keys.map((key) => "`" + key + "`").join(", ");
+        const sqlParams = keys.map((_) => "?").join(", ");
+        const sqlValues = keys.map((key) => key === "id" ? null : newRow[key]); // prettier-ignore
+        const sqlQuery = `insert into ${tableName}(${sqlKeys}) values(${sqlParams})`;
+
+        console.log(
+            `[POST /table_rows/add/${tableName}] \n| Query: "${sqlQuery}" \n| Values: ${sqlValues.join(
+                ", "
+            )}`
+        );
+
+        db.run(sqlQuery, sqlValues, (error) => {
+            if (error) {
+                resError(res, 500, error);
+                return;
+            }
+            db.get<{ "last_insert_rowid()": number }>(
+                "select last_insert_rowid()",
+                (error, row) => {
+                    if (error) {
+                        resError(res, 500, error);
+                        return;
                     }
+                    const insertID = row["last_insert_rowid()"];
+                    wsServer.broadcastMessage({
+                        type: "table row added",
+                        tableRow: { ...newRow, id: insertID },
+                        tableName,
+                    });
+                    res.sendStatus(200);
                 }
-                const sqlQuery = `insert into ${tableName}(${sqlKeys}) values(${sqlValues})`;
-
-                console.log(
-                    `[POST /table/${tableName}] ${sqlQuery} ${sqlParams}`
-                );
-
-                db.run(sqlQuery, sqlParams, (err) => {
-                    if (err) {
-                        return resError(res, 500, err);
-                    }
-                    db.get<{ "last_insert_rowid()": number }>(
-                        "select last_insert_rowid()",
-                        (err, row) => {
-                            if (err) {
-                                return resError(res, 500, err);
-                            }
-                            const insertID = row["last_insert_rowid()"];
-                            wss.broadcastMessage({
-                                type: "table row added",
-                                tableRow: { ...newRow, id: insertID },
-                                tableName,
-                            });
-                            res.sendStatus(200);
-                        }
-                    );
-                });
-            })
-            .catch(console.error);
+            );
+        });
     }
 );
 

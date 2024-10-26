@@ -13,58 +13,53 @@ const router = Router();
 //
 // Delete an entry of the specified id from the given table
 //
-router.delete(
-    "/table/:tableName/:entryID",
-    (req: Request<{ tableName: string; entryID: string }>, res: Response) => {
-        resGetAuthEmployee(req, res)
-            .then((employee) => {
-                if (!employee) {
-                    return;
-                }
+router.post(
+    "/table_rows/delete/:tableName/:rowID",
+    async (
+        req: Request<{ tableName: string; rowID: string }>,
+        res: Response
+    ) => {
+        const { employee } = await resGetAuthEmployee(req, res).catch();
 
-                // verify params
-                if (
-                    !resVerifyTableName(
-                        req.method,
-                        res,
-                        req.params.tableName,
-                        Boolean(employee.row?.admin)
-                    )
-                ) {
-                    return;
-                }
-                const tableName = req.params.tableName as DB.TableName;
-                const entryID: number | undefined = stringToInteger(req.params.entryID) // prettier-ignore
-                if (entryID === undefined) {
-                    return resErrorMessage(res, 400, "Invalid entry id");
-                } else if (entryID < 0) {
-                    return resErrorMessage(
-                        res,
-                        400,
-                        "Start index cannot be negative"
-                    );
-                }
+        if (!employee) {
+            return;
+        }
 
-                const sqlQuery = `delete from ${tableName} where id = ?`;
-                const sqlParams = [entryID];
+        // verify params
+        const tableName = resVerifyTableName(
+            "modify",
+            res,
+            req.params.tableName,
+            Boolean(employee.admin)
+        );
+        if (!tableName) {
+            return;
+        }
+        //
+        const rowID: number | undefined = stringToInteger(req.params.rowID) // prettier-ignore
+        if (rowID === undefined) {
+            return resErrorMessage(res, 400, "Invalid row ID");
+        } else if (rowID < 0) {
+            return resErrorMessage(res, 400, "Row ID cannot be negative");
+        }
 
-                console.log(
-                    `[DELETE /table/${tableName}] ${sqlQuery} ${sqlParams}`
-                );
+        const sqlQuery = `delete from ${tableName} where id = ?`;
+        const sqlParams = [rowID];
 
-                db.run(sqlQuery, sqlParams, (err) => {
-                    if (err) {
-                        return resError(res, 500, err);
-                    }
-                    wsServer.broadcastMessage({
-                        type: "table row deleted",
-                        tableRow: { id: entryID },
-                        tableName,
-                    });
-                    res.sendStatus(200);
-                });
-            })
-            .catch(console.error);
+        console.log(`[POST /table_rows/delete/${tableName}/${rowID}]`);
+
+        db.run(sqlQuery, sqlParams, (error) => {
+            if (error) {
+                resError(res, 500, error);
+                return;
+            }
+            wsServer.broadcastMessage({
+                type: "table row deleted",
+                tableRow: { id: rowID },
+                tableName,
+            });
+            res.sendStatus(200);
+        });
     }
 );
 

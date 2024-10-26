@@ -22,8 +22,8 @@ export namespace HTTP {
           }
         | {
               type: "login";
-              jwtToken: string;
-              employee: DB.Rows.Employee;
+              jwtToken?: string;
+              employee?: DB.Rows.Employee;
           };
 
     export const startServer = () => {
@@ -32,14 +32,14 @@ export namespace HTTP {
         app.use(express.json());
         app.use(cors());
 
-        app.listen(HTTP_SERVER_PORT, () => {
-            console.log(`HTTP Server is running at ${HTTP_SERVER_URL}`);
-        });
-
         app.use(routeTableRowsGet);
         app.use(routeTableRowsAdd);
         app.use(routeTableRowsDelete);
         app.use(routeTableRowsUpdate);
         app.use(routeEmployeeLogin);
+
+        app.listen(HTTP_SERVER_PORT, () => {
+            console.log(`HTTP Server is running at ${HTTP_SERVER_URL}`);
+        });
     };
 }

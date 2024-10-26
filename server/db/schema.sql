@@ -5,7 +5,7 @@
 create table investors(
     id integer primary key autoincrement,
     `name` text not null unique,
-    `address` text not null,
+    `address` text not null
 );
 
 -- 
