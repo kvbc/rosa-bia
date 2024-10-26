@@ -6,7 +6,6 @@ create table investors(
     id integer primary key autoincrement,
     `name` text not null unique,
     `address` text not null,
-    info text not null
 );
 
 -- 
@@ -110,6 +109,7 @@ create table registers(
     foreign key(object_construction_spec_id) references construction_specs(id),
     foreign key(object_street_id) references streets(id)
 );
+
 create table registers_plots( -- rejestry: dzialki
     id integer primary key autoincrement,
     `type` text not null,
@@ -117,6 +117,7 @@ create table registers_plots( -- rejestry: dzialki
     register_id integer not null,
     foreign key(register_id) references registers(id)
 );
+
 create table registers_admin_actions( -- rejestry: czynnosci administracyjne
     id integer primary key autoincrement,
     `type` text not null,

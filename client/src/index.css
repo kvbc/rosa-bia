@@ -15,7 +15,7 @@ body {
 @layer base {
     thead > tr,
     tbody > tr {
-        @apply h-[60px] !important;
+        @apply h-[30px] !important;
     }
     td,
     th {

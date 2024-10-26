@@ -12,6 +12,7 @@ import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import { SiGoogleforms } from "react-icons/si";
+import { FaFileWord, FaFilePdf } from "react-icons/fa6";
 import {
     Button,
     DialogContent,
@@ -26,12 +27,17 @@ import {
     Select,
     Stack,
     Tooltip,
+    Typography,
 } from "@mui/joy";
 import React, { useCallback, useState } from "react";
 import useAuthEmployee from "./hooks/useAuthEmployee";
 import { DBRows } from "../../server/src/dbTypes";
 import useDBTable from "./hooks/useDBTable";
 import { MdLogout } from "react-icons/md";
+import {
+    Construction as ConstructionIcon,
+    SyncAlt as SyncAltIcon,
+} from "@mui/icons-material";
 
 // TODO: make it so u can pass in password (mui modal)
 function AppNavbar() {
@@ -172,6 +178,49 @@ function AppNavbar() {
                                         className="flex flex-row items-center gap-0.5 hover:underline"
                                     >
                                         GUNB-3
+                                    </Link>
+                                </MenuItem>
+                            </Tooltip>
+                        </Menu>
+                    </Dropdown>
+                    <Dropdown>
+                        <MenuButton variant="solid" color="primary" size="sm">
+                            <ConstructionIcon fontSize="small" />
+                            Narzędzia
+                        </MenuButton>
+                        <Menu>
+                            <Tooltip
+                                variant="soft"
+                                title="Zmiana rozszerzenia dokumentu"
+                                placement="right"
+                            >
+                                <MenuItem>
+                                    <Link
+                                        to="https://cloudconvert.com/document-converter"
+                                        target="_blank"
+                                        className="flex flex-row items-center gap-0.5 hover:underline"
+                                    >
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            spacing={0.5}
+                                        >
+                                            <Typography level="body-sm">
+                                                <Stack
+                                                    direction="row"
+                                                    sx={{
+                                                        alignItems: "center",
+                                                    }}
+                                                >
+                                                    <FaFilePdf />
+                                                    <SyncAltIcon fontSize="small" />
+                                                    <FaFileWord />
+                                                </Stack>
+                                            </Typography>
+                                            <Typography level="title-sm">
+                                                Konwerter dokumentów
+                                            </Typography>
+                                        </Stack>
                                     </Link>
                                 </MenuItem>
                             </Tooltip>

@@ -57,7 +57,7 @@ export default function RegisterTableEditRowContent(
                             size="sm"
                             variant="solid"
                             color="primary"
-                            className="absolute aspect-square p-0 top-[180px] left-0 z-30 -translate-y-1/2 -translate-x-1/2"
+                            className="absolute aspect-square p-0 top-[115px] left-0 z-30 -translate-y-1/2 -translate-x-1/2"
                             onClick={handleShowMoreButtonClicked}
                         >
                             <ArrowDownwardIcon
