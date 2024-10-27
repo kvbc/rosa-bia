@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { z, ZodObject } from "zod";
+import { z, ZodDiscriminatedUnionOption } from "zod";
 import { DB } from "../../../db";
 import {
     resError,
@@ -22,31 +22,48 @@ export const FILTER_OPERATORS = [
 ] as const;
 export type FilterOperator = (typeof FILTER_OPERATORS)[number];
 
-// Example: "id" ">=" "10"
-export type Filter<TRow extends DB.Row = DB.Row> = {
-    key: keyof TRow;
-    operator: FilterOperator;
-    value: string;
+const createFiltersShape = (tableName: DB.TableName) => {
+    const meta = DB.Rows.getMeta(tableName);
+
+    const [firstKey, ...otherKeys] =
+        "rowKeys" in meta
+            ? meta.keys.filter((key) => !meta.rowKeys.includes(key))
+            : meta.keys;
+
+    let rowOptions: ZodDiscriminatedUnionOption<"key">[] = [];
+    if ("rowKeys" in meta && "keyTableNames" in meta) {
+        rowOptions = meta.rowKeys.map(
+            (rowKey): ZodDiscriminatedUnionOption<"key"> =>
+                z.strictObject({
+                    key: z.literal(rowKey),
+                    filters: createFiltersShape(meta.keyTableNames![rowKey]!),
+                })
+        );
+    }
+
+    return z.array(
+        z.discriminatedUnion("key", [
+            z.strictObject({
+                key: z.enum([firstKey!, ...otherKeys]),
+                operator: z.enum(FILTER_OPERATORS),
+                value: z.string(),
+            }),
+            ...rowOptions,
+        ])
+    );
 };
 
-const createRequestBodyZodObject = (zodRowObject: ZodObject<any>) =>
+const createRequestBodyShape = (tableName: DB.TableName) =>
     z
         .object({
-            filters: z
-                .array(
-                    z.object({
-                        key: zodRowObject.keyof(),
-                        operator: z.enum(FILTER_OPERATORS),
-                        value: z.string(),
-                    })
-                )
-                .optional(),
+            filters: createFiltersShape(tableName).optional(),
         })
         .optional();
 
-// export type RequestBody = z.infer<
-//     ReturnType<typeof createRequestBodyZodObject>
-// >;
+export type RequestBody = z.infer<ReturnType<typeof createRequestBodyShape>>;
+
+// example "id" ">=" "10"
+export type Filter = NonNullable<NonNullable<RequestBody>["filters"]>[number];
 
 const router = Router();
 
@@ -104,14 +121,14 @@ router.post(
         }
 
         // verify body
-        const ret = createRequestBodyZodObject(DB.Rows.INFOS[tableName].zod).safeParse(req.body); // prettier-ignore
+        const ret = createRequestBodyShape(tableName).safeParse(req.body); // prettier-ignore
         if (!ret.success) {
             resErrorMessage(res, 400, ret.error.message);
             return;
         }
         const body = ret.data;
 
-        let sqlQuery = `select * from ${tableName}`;
+        let sqlQuery = `select ${tableName}.* from ${tableName}`;
         const sqlValues: string[] = [];
 
         let sqlWhereQuery = "";
@@ -119,7 +136,8 @@ router.post(
         if (body && body.filters) {
             body.filters.forEach((filter, index) => {
                 sqlWhereQuery += ` ${index === 0 ? "where" : "and"} `;
-                sqlWhereQuery += filter.key + " " + filter.operator + " ?";
+                sqlWhereQuery +=
+                    tableName + "." + filter.key + " " + filter.operator + " ?";
                 sqlValues.push(filter.value);
                 sqlWhereValues.push(filter.value);
             });
@@ -131,8 +149,11 @@ router.post(
         }
 
         console.log(
-            `[POST /table_rows/get/${tableName}/${startIndex}/${endIndex}]\n| Query: "${sqlQuery}"\n| Values: ${sqlValues}`
+            `[POST /table_rows/get/${tableName}/${startIndex ?? "-"}/${
+                endIndex ?? "-"
+            }]\n| Query: "${sqlQuery}"\n| Values: ${sqlValues}`
         );
+        console.dir(body, { depth: Infinity });
 
         db.all<DB.Row>(sqlQuery, sqlValues, (error, rows) => {
             if (error) {
@@ -157,8 +178,11 @@ router.post(
                         }
 
                         Object.keys(row).forEach((key) => {
-                            const adminProps =
-                                DB.Rows.INFOS[tableName].adminProps;
+                            const meta = DB.Rows.getMeta(tableName);
+                            const adminProps: readonly string[] | undefined =
+                                "adminProps" in meta
+                                    ? meta.adminProps
+                                    : undefined;
                             if (
                                 adminProps &&
                                 adminProps.includes(key) &&

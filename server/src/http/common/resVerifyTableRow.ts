@@ -8,7 +8,7 @@ export const resVerifyTableRow = (
     tableName: DB.TableName,
     row: any
 ): DB.Row | null => {
-    const ret = DB.Rows.INFOS[tableName].zod.safeParse(row);
+    const ret = DB.Rows.getMeta(tableName).zod.safeParse(row);
     if (!ret.success) {
         resErrorMessage(res, 400, ret.error.message);
         return null;

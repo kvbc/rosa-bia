@@ -6,7 +6,7 @@ import { db } from "../..";
 import { DB } from "../../db";
 import jwt from "jsonwebtoken";
 
-export const ZEmployeeLoginRequest = z.object({
+export const ZEmployeeLoginRequest = z.strictObject({
     employeeName: z.string(),
     employeePassword: z.string(),
 });

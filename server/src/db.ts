@@ -4,7 +4,7 @@
 //
 
 import { Database } from "sqlite3";
-import { z, ZodObject } from "zod";
+import { AnyZodObject, z, ZodObject } from "zod";
 
 export namespace DB {
     export const load = () => new Database("db/db.db");
@@ -31,7 +31,7 @@ export namespace DB {
     ] as const;
     export type TableName = (typeof TABLE_NAMES)[number];
 
-    export const TABLE_NAMES_MODIFY_ADMIN_ONLY: readonly DB.TableName[] = [
+    export const TABLE_NAMES_MODIFY_ADMIN_ONLY: readonly TableName[] = [
         "construction_sections",
         "construction_divisions",
         "construction_groups",
@@ -46,7 +46,7 @@ export namespace DB {
         // Investors
         //
 
-        export const ZInvestor = z.object({
+        export const ZInvestor = z.strictObject({
             id: z.number(),
             name: z.string(),
             address: z.string(),
@@ -57,13 +57,13 @@ export namespace DB {
         // Geodesy
         //
 
-        export const ZCommune = z.object({
+        export const ZCommune = z.strictObject({
             id: z.number(),
             name: z.string(),
         });
         export type Commune = z.infer<typeof ZCommune>;
 
-        export const ZPlace = z.object({
+        export const ZPlace = z.strictObject({
             id: z.number(),
             name: z.string(),
             commune_id: z.number(),
@@ -72,7 +72,7 @@ export namespace DB {
         });
         export type Place = z.infer<typeof ZPlace>;
 
-        export const ZStreet = z.object({
+        export const ZStreet = z.strictObject({
             id: z.number(),
             name: z.string(),
             place_id: z.number(),
@@ -83,13 +83,13 @@ export namespace DB {
         // PKOB
         //
 
-        export const ZConstructionSection = z.object({
+        export const ZConstructionSection = z.strictObject({
             id: z.number(),
             name: z.string(),
         });
         export type ConstructionSection = z.infer<typeof ZConstructionSection>;
 
-        export const ZConstructionDivision = z.object({
+        export const ZConstructionDivision = z.strictObject({
             id: z.number(),
             name: z.string(),
             section_id: z.number(),
@@ -98,14 +98,14 @@ export namespace DB {
             typeof ZConstructionDivision
         >;
 
-        export const ZConstructionGroup = z.object({
+        export const ZConstructionGroup = z.strictObject({
             id: z.number(),
             name: z.string(),
             division_id: z.number(),
         });
         export type ConstructionGroup = z.infer<typeof ZConstructionGroup>;
 
-        export const ZConstructionClass = z.object({
+        export const ZConstructionClass = z.strictObject({
             id: z.number(),
             name: z.string(),
             group_id: z.number(),
@@ -113,7 +113,7 @@ export namespace DB {
         });
         export type ConstructionClass = z.infer<typeof ZConstructionClass>;
 
-        export const ZConstructionSpec = z.object({
+        export const ZConstructionSpec = z.strictObject({
             id: z.number(),
             name: z.string(),
             class_id: z.number(),
@@ -297,39 +297,39 @@ export namespace DB {
         const ZRegisterResolution = z.enum(REGISTER_SUBTYPE_INFOS.Mayor.resolutions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.resolutions)) // prettier-ignore
 
         // prettier-ignore
-        export const ZRegister = z.object({
-        id: z.number(),
-        type: z.enum(REGISTER_TYPES),
+        export const ZRegister = z.strictObject({
+            id: z.number(),
+            type: z.enum(REGISTER_TYPES),
 
-        app_number: z.number(),
-        app_submission_date: z.string(),
-        app_investor_id: z.number(),
-        app_decision_type: ZRegisterDecision.optional(),
-        app_decision_number: z.number(),
-        app_decision_issue_date: z.string(),
-        app_resolution_type: ZRegisterResolution.optional(),
-        app_resolution_number: z.number(),
-        app_resolution_issue_date: z.string(),
-        app_construction_journal_type: z.enum(REGISTER_CONSTRUCTION_JOURNAL_TYPES),
+            app_number: z.number(),
+            app_submission_date: z.string(),
+            app_investor_id: z.number(),
+            app_decision_type: ZRegisterDecision.optional(),
+            app_decision_number: z.number(),
+            app_decision_issue_date: z.string(),
+            app_resolution_type: ZRegisterResolution.optional(),
+            app_resolution_number: z.number(),
+            app_resolution_issue_date: z.string(),
+            app_construction_journal_type: z.enum(REGISTER_CONSTRUCTION_JOURNAL_TYPES),
 
-        object_construction_spec_id: z.number(),
-        object_construction_form_type: z.enum(REGISTER_CONSTRUCTION_FORMS).optional(),
-        object_spatial_plan_type: z.enum(REGISTER_SPATIAL_PLANS).optional(),
-        object_street_id: z.number(),
-        object_number: z.string(),
-        object_pnb_acc_infra: z.number(),
-        object_demo_under_conservation_protection: z.number(),
-        object_demo_building_area: z.number(),
-        object_demo_usable_area: z.number(),
-        object_demo_volume: z.number(),
-        object_demo_building_count: z.number(),
-        object_usage_change_from: z.string(),
-        object_usage_change_to: z.string(),
+            object_construction_spec_id: z.number(),
+            object_construction_form_type: z.enum(REGISTER_CONSTRUCTION_FORMS).optional(),
+            object_spatial_plan_type: z.enum(REGISTER_SPATIAL_PLANS).optional(),
+            object_street_id: z.number(),
+            object_number: z.string(),
+            object_pnb_acc_infra: z.number(),
+            object_demo_under_conservation_protection: z.number(),
+            object_demo_building_area: z.number(),
+            object_demo_usable_area: z.number(),
+            object_demo_volume: z.number(),
+            object_demo_building_count: z.number(),
+            object_usage_change_from: z.string(),
+            object_usage_change_to: z.string(),
 
-        admin_construction_journal_number: z.number(),
-        admin_construction_journal_date: z.string(),
-        admin_construction_journal_tome: z.number()
-    });
+            admin_construction_journal_number: z.number(),
+            admin_construction_journal_date: z.string(),
+            admin_construction_journal_tome: z.number()
+        });
         export type Register = z.infer<typeof ZRegister> & {
             // client-only helpers
             _object_construction_section_id: number;
@@ -339,6 +339,19 @@ export namespace DB {
             _object_commune_id: number;
             _object_place_id: number;
         };
+        export const REGISTER_ROW_KEYS: (keyof Register)[] = [
+            "app_investor_id",
+            "object_construction_spec_id",
+            "object_street_id",
+        ] as const;
+        export type RegisterRowKey = (typeof REGISTER_ROW_KEYS)[number];
+        export const REGISTER_KEY_TABLE_NAMES: Partial<
+            Record<RegisterRowKey, DB.TableName>
+        > = {
+            app_investor_id: "investors",
+            object_construction_spec_id: "construction_specs",
+            object_street_id: "streets",
+        };
 
         const REGISTER_PLOT_TYPES = [
             "app", // dzialki objete wnioskiem
@@ -347,7 +360,7 @@ export namespace DB {
             "limited", // dzialki z ograniczonym korzystaniem
         ] as const;
         export type RegisterPlotType = (typeof REGISTER_PLOT_TYPES)[number];
-        export const ZRegisterPlot = z.object({
+        export const ZRegisterPlot = z.strictObject({
             id: z.number(),
             plot: z.string(),
             type: z.enum(REGISTER_PLOT_TYPES),
@@ -355,7 +368,7 @@ export namespace DB {
         });
         export type RegisterPlot = z.infer<typeof ZRegisterPlot>;
 
-        export const ZRegisterAdminAction = z.object({
+        export const ZRegisterAdminAction = z.strictObject({
             id: z.number(),
             type: z.enum(REGISTER_ADMIN_ACTION_TYPES),
             register_id: z.number(),
@@ -371,13 +384,13 @@ export namespace DB {
         // Employee
         //
 
-        export const ZEmployee = z.object({
+        export const ZEmployee = z.strictObject({
             id: z.number(),
             name: z.string(),
             password: z.string(),
             admin: z.number(),
         });
-        export const EMPLOYEE_ADMIN_PROPS: readonly (keyof Employee)[] = ['password'] // prettier-ignore
+        export const EMPLOYEE_ADMIN_PROPS: (keyof Employee)[] = ['password'] as const // prettier-ignore
         export type Employee = z.infer<typeof ZEmployee> & {
             // client-only
             has_password: boolean;
@@ -387,7 +400,7 @@ export namespace DB {
         // Home
         //
 
-        export const ZInfoBoard = z.object({
+        export const ZInfoBoard = z.strictObject({
             id: z.number(),
             contents: z.string(),
         });
@@ -397,29 +410,78 @@ export namespace DB {
         //
         //
 
-        export const INFOS: {
-            [key in TableName]: {
-                zod: ZodObject<any>;
-                adminProps?: readonly string[];
-            };
-        } = {
-            investors: { zod: ZInvestor },
-            communes: { zod: ZCommune },
-            places: { zod: ZPlace },
-            streets: { zod: ZStreet },
-            construction_sections: { zod: ZConstructionSection },
-            construction_divisions: { zod: ZConstructionDivision },
-            construction_groups: { zod: ZConstructionGroup },
-            construction_classes: { zod: ZConstructionClass },
-            construction_specs: { zod: ZConstructionSpec },
-            registers: { zod: ZRegister },
-            registers_plots: { zod: ZRegisterPlot },
-            registers_admin_actions: { zod: ZRegisterAdminAction },
+        export function getMeta(tableName: TableName) {
+            return INFOS[tableName];
+        }
+
+        // export const INFOS: {
+        //     [key in TableName]: {
+        //         zod: AnyZodObject;
+        //         adminProps?: readonly string[];
+        //         keys: [string, ...string[]];
+        //         rowKeys: readonly string[];
+        //         keyTableNames?: {
+        //             [key in keyof z.infer<AnyZodObject>]?: DB.TableName;
+        //         };
+        //     };
+        // } = {
+        const INFOS = {
+            investors: {
+                zod: ZInvestor,
+                keys: ZInvestor.keyof().options,
+            },
+            communes: {
+                zod: ZCommune,
+                keys: ZCommune.keyof().options,
+            },
+            places: { zod: ZPlace, keys: ZPlace.keyof().options },
+            streets: {
+                zod: ZStreet,
+                keys: ZStreet.keyof().options,
+            },
+            construction_sections: {
+                zod: ZConstructionSection,
+                keys: ZConstructionSection.keyof().options,
+            },
+            construction_divisions: {
+                zod: ZConstructionDivision,
+                keys: ZConstructionDivision.keyof().options,
+            },
+            construction_groups: {
+                zod: ZConstructionGroup,
+                keys: ZConstructionGroup.keyof().options,
+            },
+            construction_classes: {
+                zod: ZConstructionClass,
+                keys: ZConstructionClass.keyof().options,
+            },
+            construction_specs: {
+                zod: ZConstructionSpec,
+                keys: ZConstructionSpec.keyof().options,
+            },
+            registers: {
+                zod: ZRegister,
+                rowKeys: REGISTER_ROW_KEYS,
+                keyTableNames: REGISTER_KEY_TABLE_NAMES,
+                keys: ZRegister.keyof().options,
+            },
+            registers_plots: {
+                zod: ZRegisterPlot,
+                keys: ZRegisterPlot.keyof().options,
+            },
+            registers_admin_actions: {
+                zod: ZRegisterAdminAction,
+                keys: ZRegisterAdminAction.keyof().options,
+            },
             employees: {
                 zod: ZEmployee,
                 adminProps: EMPLOYEE_ADMIN_PROPS,
+                keys: ZEmployee.keyof().options,
             },
-            info_boards: { zod: ZInfoBoard },
+            info_boards: {
+                zod: ZInfoBoard,
+                keys: ZInfoBoard.keyof().options,
+            },
         };
     }
 }
