@@ -1,6 +1,5 @@
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
-import { HTTP_SERVER_PORT, HTTP_SERVER_URL } from "../../../config";
 
 import routeTableRowsGet from "./routes/table_rows/get";
 import routeTableRowsAdd from "./routes/table_rows/add";
@@ -10,6 +9,8 @@ import routeEmployeeLogin from "./routes/employee_login";
 import { DB } from "../db";
 
 export namespace HTTP {
+    export const SERVER_PORT = 3001;
+
     export type Response<TRow extends DB.Row = DB.Row> =
         | {
               type: "fetch table rows";
@@ -38,8 +39,10 @@ export namespace HTTP {
         app.use(routeTableRowsUpdate);
         app.use(routeEmployeeLogin);
 
-        app.listen(HTTP_SERVER_PORT, () => {
-            console.log(`HTTP Server is running at ${HTTP_SERVER_URL}`);
+        app.listen(SERVER_PORT, () => {
+            console.log(
+                `HTTP Server is running at http://localhost:${SERVER_PORT}`
+            );
         });
     };
 }

@@ -4,7 +4,7 @@
 //
 
 import { Database } from "sqlite3";
-import { AnyZodObject, z, ZodObject } from "zod";
+import { AnyZodObject, z } from "zod";
 
 export namespace DB {
     export const load = () => new Database("db/db.db");
@@ -31,6 +31,9 @@ export namespace DB {
     ] as const;
     export type TableName = (typeof TABLE_NAMES)[number];
 
+    //
+    // Tables that can only be modified by an employee of admin privilages
+    //
     export const TABLE_NAMES_MODIFY_ADMIN_ONLY: readonly TableName[] = [
         "construction_sections",
         "construction_divisions",
@@ -46,81 +49,109 @@ export namespace DB {
         // Investors
         //
 
-        export const ZInvestor = z.strictObject({
+        export const InvestorShape = z.strictObject({
             id: z.number(),
             name: z.string(),
             address: z.string(),
         });
-        export type Investor = z.infer<typeof ZInvestor>;
+        export type Investor = z.infer<typeof InvestorShape>;
 
         //
         // Geodesy
         //
 
-        export const ZCommune = z.strictObject({
+        export const CommuneShape = z.strictObject({
             id: z.number(),
             name: z.string(),
         });
-        export type Commune = z.infer<typeof ZCommune>;
+        export type Commune = z.infer<typeof CommuneShape>;
 
-        export const ZPlace = z.strictObject({
+        export const PlaceShape = z.strictObject({
             id: z.number(),
             name: z.string(),
             commune_id: z.number(),
             area_place_id: z.number(),
             cad_unit: z.string(),
         });
-        export type Place = z.infer<typeof ZPlace>;
+        export type Place = z.infer<typeof PlaceShape>;
+        export const PLACE_KEY_RELATIONS = {
+            commune_id: "communes",
+        } as const satisfies Partial<Record<keyof Place, DB.TableName>>;
 
-        export const ZStreet = z.strictObject({
+        export const StreetShape = z.strictObject({
             id: z.number(),
             name: z.string(),
             place_id: z.number(),
         });
-        export type Street = z.infer<typeof ZStreet>;
+        export type Street = z.infer<typeof StreetShape>;
+        export const STREET_KEY_RELATIONS = {
+            place_id: "places",
+        } as const satisfies Partial<Record<keyof Street, DB.TableName>>;
 
         //
         // PKOB
         //
 
-        export const ZConstructionSection = z.strictObject({
+        export const ConstructionSectionShape = z.strictObject({
             id: z.number(),
             name: z.string(),
         });
-        export type ConstructionSection = z.infer<typeof ZConstructionSection>;
+        export type ConstructionSection = z.infer<
+            typeof ConstructionSectionShape
+        >;
 
-        export const ZConstructionDivision = z.strictObject({
+        export const ConstructionDivisionShape = z.strictObject({
             id: z.number(),
             name: z.string(),
             section_id: z.number(),
         });
         export type ConstructionDivision = z.infer<
-            typeof ZConstructionDivision
+            typeof ConstructionDivisionShape
+        >;
+        export const CONSTRUCTION_DIVISION_KEY_RELATIONS = {
+            section_id: "construction_sections",
+        } as const satisfies Partial<
+            Record<keyof ConstructionDivision, DB.TableName>
         >;
 
-        export const ZConstructionGroup = z.strictObject({
+        export const ConstructionGroupShape = z.strictObject({
             id: z.number(),
             name: z.string(),
             division_id: z.number(),
         });
-        export type ConstructionGroup = z.infer<typeof ZConstructionGroup>;
+        export type ConstructionGroup = z.infer<typeof ConstructionGroupShape>;
+        export const CONSTRUCTION_GROUP_KEY_RELATIONS = {
+            division_id: "construction_divisions",
+        } as const satisfies Partial<
+            Record<keyof ConstructionGroup, DB.TableName>
+        >;
 
-        export const ZConstructionClass = z.strictObject({
+        export const ConstructionClassShape = z.strictObject({
             id: z.number(),
             name: z.string(),
             group_id: z.number(),
             pkob: z.number(),
         });
-        export type ConstructionClass = z.infer<typeof ZConstructionClass>;
+        export type ConstructionClass = z.infer<typeof ConstructionClassShape>;
+        export const CONSTRUCTION_CLASS_KEY_RELATIONS = {
+            group_id: "construction_groups",
+        } as const satisfies Partial<
+            Record<keyof ConstructionClass, DB.TableName>
+        >;
 
-        export const ZConstructionSpec = z.strictObject({
+        export const ConstructionSpecShape = z.strictObject({
             id: z.number(),
             name: z.string(),
             class_id: z.number(),
             zl_class: z.string(),
             ob_cat: z.string(),
         });
-        export type ConstructionSpec = z.infer<typeof ZConstructionSpec>;
+        export type ConstructionSpec = z.infer<typeof ConstructionSpecShape>;
+        export const CONSTRUCTION_SPEC_KEY_RELATIONS = {
+            class_id: "construction_classes",
+        } as const satisfies Partial<
+            Record<keyof ConstructionSpec, DB.TableName>
+        >;
 
         //
         // Registers
@@ -297,7 +328,7 @@ export namespace DB {
         const ZRegisterResolution = z.enum(REGISTER_SUBTYPE_INFOS.Mayor.resolutions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.resolutions)) // prettier-ignore
 
         // prettier-ignore
-        export const ZRegister = z.strictObject({
+        export const RegisterShape = z.strictObject({
             id: z.number(),
             type: z.enum(REGISTER_TYPES),
 
@@ -330,7 +361,7 @@ export namespace DB {
             admin_construction_journal_date: z.string(),
             admin_construction_journal_tome: z.number()
         });
-        export type Register = z.infer<typeof ZRegister> & {
+        export type Register = z.infer<typeof RegisterShape> & {
             // client-only helpers
             _object_construction_section_id: number;
             _object_construction_division_id: number;
@@ -339,19 +370,11 @@ export namespace DB {
             _object_commune_id: number;
             _object_place_id: number;
         };
-        export const REGISTER_ROW_KEYS: (keyof Register)[] = [
-            "app_investor_id",
-            "object_construction_spec_id",
-            "object_street_id",
-        ] as const;
-        export type RegisterRowKey = (typeof REGISTER_ROW_KEYS)[number];
-        export const REGISTER_KEY_TABLE_NAMES: Partial<
-            Record<RegisterRowKey, DB.TableName>
-        > = {
+        export const REGISTER_KEY_RELATIONS = {
             app_investor_id: "investors",
             object_construction_spec_id: "construction_specs",
             object_street_id: "streets",
-        };
+        } as const satisfies Partial<Record<keyof Register, DB.TableName>>;
 
         const REGISTER_PLOT_TYPES = [
             "app", // dzialki objete wnioskiem
@@ -360,15 +383,18 @@ export namespace DB {
             "limited", // dzialki z ograniczonym korzystaniem
         ] as const;
         export type RegisterPlotType = (typeof REGISTER_PLOT_TYPES)[number];
-        export const ZRegisterPlot = z.strictObject({
+        export const RegisterPlotShape = z.strictObject({
             id: z.number(),
             plot: z.string(),
             type: z.enum(REGISTER_PLOT_TYPES),
             register_id: z.number(),
         });
-        export type RegisterPlot = z.infer<typeof ZRegisterPlot>;
+        export type RegisterPlot = z.infer<typeof RegisterPlotShape>;
+        export const REGISTER_PLOT_KEY_RELATIONS = {
+            register_id: "registers",
+        } as const satisfies Partial<Record<keyof RegisterPlot, DB.TableName>>;
 
-        export const ZRegisterAdminAction = z.strictObject({
+        export const RegisterAdminActionShape = z.strictObject({
             id: z.number(),
             type: z.enum(REGISTER_ADMIN_ACTION_TYPES),
             register_id: z.number(),
@@ -378,110 +404,125 @@ export namespace DB {
             receipt_date: z.string(),
             reply_date: z.string(),
         });
-        export type RegisterAdminAction = z.infer<typeof ZRegisterAdminAction>;
+        export type RegisterAdminAction = z.infer<
+            typeof RegisterAdminActionShape
+        >;
+        export const REGISTER_ADMIN_ACTION_KEY_RELATIONS = {
+            register_id: "registers",
+        } as const satisfies Partial<
+            Record<keyof RegisterAdminAction, DB.TableName>
+        >;
 
         //
         // Employee
         //
 
-        export const ZEmployee = z.strictObject({
+        export const EmployeeShape = z.strictObject({
             id: z.number(),
             name: z.string(),
             password: z.string(),
             admin: z.number(),
         });
-        export const EMPLOYEE_ADMIN_PROPS: (keyof Employee)[] = ['password'] as const // prettier-ignore
-        export type Employee = z.infer<typeof ZEmployee> & {
+        export const EMPLOYEE_ADMIN_KEYS: (keyof Employee)[] = ['password'] as const // prettier-ignore
+        export type Employee = z.infer<typeof EmployeeShape> & {
             // client-only
             has_password: boolean;
         };
 
         //
-        // Home
+        // InfoBoard
         //
 
-        export const ZInfoBoard = z.strictObject({
+        export const InfoBoardShape = z.strictObject({
             id: z.number(),
             contents: z.string(),
         });
-        export type InfoBoard = z.infer<typeof ZInfoBoard>;
+        export type InfoBoard = z.infer<typeof InfoBoardShape>;
 
         //
         //
         //
 
         export function getMeta(tableName: TableName) {
-            return INFOS[tableName];
+            return META[tableName];
         }
 
-        // export const INFOS: {
-        //     [key in TableName]: {
-        //         zod: AnyZodObject;
-        //         adminProps?: readonly string[];
-        //         keys: [string, ...string[]];
-        //         rowKeys: readonly string[];
-        //         keyTableNames?: {
-        //             [key in keyof z.infer<AnyZodObject>]?: DB.TableName;
-        //         };
-        //     };
-        // } = {
-        const INFOS = {
+        const META: Record<
+            TableName,
+            {
+                shape: AnyZodObject;
+                keys: readonly string[];
+                keyRelations?: Record<string, TableName>;
+                adminKeys?: readonly string[];
+            }
+        > = {
             investors: {
-                zod: ZInvestor,
-                keys: ZInvestor.keyof().options,
+                shape: InvestorShape,
+                keys: InvestorShape.keyof().options,
             },
             communes: {
-                zod: ZCommune,
-                keys: ZCommune.keyof().options,
+                shape: CommuneShape,
+                keys: CommuneShape.keyof().options,
             },
-            places: { zod: ZPlace, keys: ZPlace.keyof().options },
+            places: {
+                shape: PlaceShape,
+                keys: PlaceShape.keyof().options,
+                keyRelations: PLACE_KEY_RELATIONS,
+            },
             streets: {
-                zod: ZStreet,
-                keys: ZStreet.keyof().options,
+                shape: StreetShape,
+                keys: StreetShape.keyof().options,
+                keyRelations: STREET_KEY_RELATIONS,
             },
             construction_sections: {
-                zod: ZConstructionSection,
-                keys: ZConstructionSection.keyof().options,
+                shape: ConstructionSectionShape,
+                keys: ConstructionSectionShape.keyof().options,
             },
             construction_divisions: {
-                zod: ZConstructionDivision,
-                keys: ZConstructionDivision.keyof().options,
+                shape: ConstructionDivisionShape,
+                keys: ConstructionDivisionShape.keyof().options,
+                keyRelations: CONSTRUCTION_DIVISION_KEY_RELATIONS,
             },
             construction_groups: {
-                zod: ZConstructionGroup,
-                keys: ZConstructionGroup.keyof().options,
+                shape: ConstructionGroupShape,
+                keys: ConstructionGroupShape.keyof().options,
+                keyRelations: CONSTRUCTION_GROUP_KEY_RELATIONS,
             },
             construction_classes: {
-                zod: ZConstructionClass,
-                keys: ZConstructionClass.keyof().options,
+                shape: ConstructionClassShape,
+                keys: ConstructionClassShape.keyof().options,
+                keyRelations: CONSTRUCTION_CLASS_KEY_RELATIONS,
             },
             construction_specs: {
-                zod: ZConstructionSpec,
-                keys: ZConstructionSpec.keyof().options,
+                shape: ConstructionSpecShape,
+                keys: ConstructionSpecShape.keyof().options,
+                keyRelations: CONSTRUCTION_SPEC_KEY_RELATIONS,
             },
             registers: {
-                zod: ZRegister,
-                rowKeys: REGISTER_ROW_KEYS,
-                keyTableNames: REGISTER_KEY_TABLE_NAMES,
-                keys: ZRegister.keyof().options,
+                shape: RegisterShape,
+                keys: RegisterShape.keyof().options,
+                keyRelations: REGISTER_KEY_RELATIONS,
             },
             registers_plots: {
-                zod: ZRegisterPlot,
-                keys: ZRegisterPlot.keyof().options,
+                shape: RegisterPlotShape,
+                keys: RegisterPlotShape.keyof().options,
+                keyRelations: REGISTER_PLOT_KEY_RELATIONS,
             },
             registers_admin_actions: {
-                zod: ZRegisterAdminAction,
-                keys: ZRegisterAdminAction.keyof().options,
+                shape: RegisterAdminActionShape,
+                keys: RegisterAdminActionShape.keyof().options,
+                keyRelations: REGISTER_ADMIN_ACTION_KEY_RELATIONS,
             },
             employees: {
-                zod: ZEmployee,
-                adminProps: EMPLOYEE_ADMIN_PROPS,
-                keys: ZEmployee.keyof().options,
+                shape: EmployeeShape,
+                adminKeys: EMPLOYEE_ADMIN_KEYS,
+                keys: EmployeeShape.keyof().options,
             },
             info_boards: {
-                zod: ZInfoBoard,
-                keys: ZInfoBoard.keyof().options,
+                shape: InfoBoardShape,
+                keys: InfoBoardShape.keyof().options,
             },
         };
+        // satisfies Record<DB.TableName, any>;
     }
 }

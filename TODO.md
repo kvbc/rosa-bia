@@ -4,8 +4,12 @@
 
 ### Todo
 
--   [ ] Add inner joins to table row fetch filters
 
 ### In Progress
 
+- [ ] server/http/routes/table_rows/get  
+- [ ] server/db  
+
 ### Done ✓
+
+

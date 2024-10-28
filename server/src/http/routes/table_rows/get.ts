@@ -23,20 +23,20 @@ export const FILTER_OPERATORS = [
 export type FilterOperator = (typeof FILTER_OPERATORS)[number];
 
 const createFiltersShape = (tableName: DB.TableName) => {
-    const meta = DB.Rows.getMeta(tableName);
+    const rowMeta = DB.Rows.getMeta(tableName);
+    const keyRelations = rowMeta.keyRelations;
 
-    const [firstKey, ...otherKeys] =
-        "rowKeys" in meta
-            ? meta.keys.filter((key) => !meta.rowKeys.includes(key))
-            : meta.keys;
+    const [firstKey, ...otherKeys] = keyRelations
+        ? rowMeta.keys.filter((key) => !Object.keys(keyRelations).includes(key))
+        : rowMeta.keys;
 
     let rowOptions: ZodDiscriminatedUnionOption<"key">[] = [];
-    if ("rowKeys" in meta && "keyTableNames" in meta) {
-        rowOptions = meta.rowKeys.map(
+    if (keyRelations) {
+        rowOptions = Object.keys(keyRelations).map(
             (rowKey): ZodDiscriminatedUnionOption<"key"> =>
                 z.strictObject({
                     key: z.literal(rowKey),
-                    filters: createFiltersShape(meta.keyTableNames![rowKey]!),
+                    filters: createFiltersShape(keyRelations[rowKey]),
                 })
         );
     }
@@ -60,10 +60,25 @@ const createRequestBodyShape = (tableName: DB.TableName) =>
         })
         .optional();
 
-export type RequestBody = z.infer<ReturnType<typeof createRequestBodyShape>>;
+export type RequestBody =
+    | {
+          filters?: Filter[];
+      }
+    | undefined;
 
 // example "id" ">=" "10"
-export type Filter = NonNullable<NonNullable<RequestBody>["filters"]>[number];
+// export type Filter = NonNullable<NonNullable<RequestBody>["filters"]>[number];
+export type Filter =
+    | {
+          key: string;
+          operator: FilterOperator;
+          value: string;
+          filters?: Filter[];
+      }
+    | {
+          key: string;
+          filters?: Filter[];
+      };
 
 const router = Router();
 
@@ -126,23 +141,38 @@ router.post(
             resErrorMessage(res, 400, ret.error.message);
             return;
         }
-        const body = ret.data;
+        const body = ret.data as RequestBody;
 
         let sqlQuery = `select ${tableName}.* from ${tableName}`;
-        const sqlValues: string[] = [];
 
-        let sqlWhereQuery = "";
-        const sqlWhereValues: any[] = [];
-        if (body && body.filters) {
-            body.filters.forEach((filter, index) => {
-                sqlWhereQuery += ` ${index === 0 ? "where" : "and"} `;
-                sqlWhereQuery +=
-                    tableName + "." + filter.key + " " + filter.operator + " ?";
-                sqlValues.push(filter.value);
-                sqlWhereValues.push(filter.value);
+        const sqlFilterValues: any[] = [];
+        let sqlInnerJoins = "";
+        let sqlWhere = "";
+        const processFilters = (tableName: DB.TableName, filters: Filter[]) => {
+            const rowMeta = DB.Rows.getMeta(tableName);
+            filters.forEach((filter, index) => {
+                if (
+                    filter.filters &&
+                    rowMeta.keyRelations &&
+                    Object.keys(rowMeta.keyRelations).includes(filter.key)
+                ) {
+                    const subTableName = rowMeta.keyRelations[filter.key];
+                    sqlInnerJoins += ` inner join ${subTableName} on ${tableName}.${filter.key} = ${subTableName}.id`;
+                    processFilters(subTableName, filter.filters);
+                }
+                if ("operator" in filter) {
+                    sqlWhere += ` ${sqlWhere.length === 0 ? "where" : "and"} `;
+                    sqlWhere += `${tableName}.${filter.key} ${filter.operator} ?`;
+                    sqlFilterValues.push(filter.value);
+                }
             });
+        };
+        if (body && body.filters) {
+            processFilters(tableName, body.filters);
         }
-        sqlQuery += sqlWhereQuery;
+        const sqlFilterQuery = sqlInnerJoins + sqlWhere;
+
+        sqlQuery += sqlFilterQuery;
 
         if (typeof startIndex === "number") {
             sqlQuery += " limit " + startIndex + ", " + (endIndex! - startIndex); // prettier-ignore
@@ -151,18 +181,18 @@ router.post(
         console.log(
             `[POST /table_rows/get/${tableName}/${startIndex ?? "-"}/${
                 endIndex ?? "-"
-            }]\n| Query: "${sqlQuery}"\n| Values: ${sqlValues}`
+            }]\n| Query: "${sqlQuery}"\n| Values: ${sqlFilterValues}`
         );
-        console.dir(body, { depth: Infinity });
+        // console.dir(body, { depth: Infinity });
 
-        db.all<DB.Row>(sqlQuery, sqlValues, (error, rows) => {
+        db.all<DB.Row>(sqlQuery, sqlFilterValues, (error, rows) => {
             if (error) {
                 resError(res, 500, error);
                 return;
             }
             db.get<{ "count(*)": number }>(
-                `select count(*) from ${tableName}` + sqlWhereQuery,
-                sqlWhereValues,
+                `select count(*) from ${tableName}` + sqlFilterQuery,
+                sqlFilterValues,
                 (error, row) => {
                     if (error) {
                         resError(res, 500, error);
@@ -178,14 +208,10 @@ router.post(
                         }
 
                         Object.keys(row).forEach((key) => {
-                            const meta = DB.Rows.getMeta(tableName);
-                            const adminProps: readonly string[] | undefined =
-                                "adminProps" in meta
-                                    ? meta.adminProps
-                                    : undefined;
+                            const rowMeta = DB.Rows.getMeta(tableName);
                             if (
-                                adminProps &&
-                                adminProps.includes(key) &&
+                                rowMeta.adminKeys &&
+                                rowMeta.adminKeys.includes(key) &&
                                 !isEmployeeAdmin
                             ) {
                                 row[key] = undefined;
