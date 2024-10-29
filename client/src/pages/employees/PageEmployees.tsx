@@ -3,22 +3,23 @@ import DBTableEdit, {
 } from "../../components/DBTableEdit";
 import React, { useMemo } from "react";
 import useDBTable from "../../hooks/useDBTable";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import { TableEditRowInputsProps } from "../../components/TableEditRow";
 
 export default function PageEmployees() {
-    const dbTable = useDBTable<DBRows.Employee>("employees");
+    const dbTable = useDBTable<DB.Rows.Employee>("employees");
 
-    const defaultRow = useMemo<DBTableEditDefaultRow<DBRows.Employee>>(
+    const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Employee>>(
         () => ({
             name: "",
             password: "",
             admin: 0,
+            has_password: false,
         }),
         []
     );
 
-    const rowInputsProps = useMemo<TableEditRowInputsProps<DBRows.Employee>>(
+    const rowInputsProps = useMemo<TableEditRowInputsProps<DB.Rows.Employee>>(
         () => [
             {
                 type: "text",

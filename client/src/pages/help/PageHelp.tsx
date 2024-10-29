@@ -1,9 +1,6 @@
 import React from "react";
+import { ContactInformationBox } from "../../components/ContactInformationBox";
 
 export default function PageHelp() {
-    return (
-        <div>
-            <h1>Pomoc</h1>
-        </div>
-    );
+    return <ContactInformationBox />;
 }

@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 
 import routeTableRowsGet from "./routes/table_rows/get";
@@ -6,43 +6,23 @@ import routeTableRowsAdd from "./routes/table_rows/add";
 import routeTableRowsDelete from "./routes/table_rows/delete";
 import routeTableRowsUpdate from "./routes/table_rows/update";
 import routeEmployeeLogin from "./routes/employee_login";
-import { DB } from "../db";
+import { HTTP } from "./types";
 
-export namespace HTTP {
-    export const SERVER_PORT = 3001;
+export const startHttpServer = () => {
+    const app = express();
 
-    export type Response<TRow extends DB.Row = DB.Row> =
-        | {
-              type: "fetch table rows";
-              totalCount: number;
-              rows: TRow[];
-          }
-        | {
-              type: "error";
-              message: string;
-          }
-        | {
-              type: "login";
-              jwtToken?: string;
-              employee?: DB.Rows.Employee;
-          };
+    app.use(express.json());
+    app.use(cors());
 
-    export const startServer = () => {
-        const app = express();
+    app.use(routeTableRowsGet);
+    app.use(routeTableRowsAdd);
+    app.use(routeTableRowsDelete);
+    app.use(routeTableRowsUpdate);
+    app.use(routeEmployeeLogin);
 
-        app.use(express.json());
-        app.use(cors());
-
-        app.use(routeTableRowsGet);
-        app.use(routeTableRowsAdd);
-        app.use(routeTableRowsDelete);
-        app.use(routeTableRowsUpdate);
-        app.use(routeEmployeeLogin);
-
-        app.listen(SERVER_PORT, () => {
-            console.log(
-                `HTTP Server is running at http://localhost:${SERVER_PORT}`
-            );
-        });
-    };
-}
+    app.listen(HTTP.SERVER_PORT, () => {
+        console.log(
+            `HTTP Server is running at http://localhost:${HTTP.SERVER_PORT}`
+        );
+    });
+};

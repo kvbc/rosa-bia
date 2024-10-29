@@ -32,4 +32,9 @@ export default [
     ...tseslint.configs.recommended,
     pluginReact.configs.flat.recommended,
     ...pluginQuery.configs["flat/recommended"],
+    {
+        rules: {
+            "@typescript-eslint/no-namespace": "off",
+        },
+    },
 ];

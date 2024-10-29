@@ -9,7 +9,7 @@ import DBTableEdit, {
 } from "../../components/DBTableEdit";
 import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import React, { useContext, useMemo } from "react";
 import PlacesTableEditRowContent from "./PlacesTableEditRowContent";
 import { PageGeodesyContext } from "../../contexts/PageGeodesyContext";
@@ -19,13 +19,13 @@ export default function CommunesDBTableEditRowContent({
     inputs,
     row,
     editable,
-}: TableEditRowContentComponentProps<DBRows.Commune>) {
+}: TableEditRowContentComponentProps<DB.Rows.Commune>) {
     const pageGeodesyContext = useContext(PageGeodesyContext);
     if (!pageGeodesyContext) {
         throw "Error";
     }
 
-    const placesDefaultRow = useMemo<DBTableEditDefaultRow<DBRows.Place>>(
+    const placesDefaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Place>>(
         () => ({
             commune_id: row.id,
             cad_unit: "",
@@ -35,7 +35,9 @@ export default function CommunesDBTableEditRowContent({
         [row.id]
     );
 
-    const placesRowInputsProps = useMemo<TableEditRowInputsProps<DBRows.Place>>(
+    const placesRowInputsProps = useMemo<
+        TableEditRowInputsProps<DB.Rows.Place>
+    >(
         () => [
             {
                 type: "text",

@@ -13,7 +13,7 @@ import DBTableEdit, {
 import ConstructionSpecTableEditRowContent from "./ConstructionSpecTableEditRowContent";
 import React, { useContext, useMemo } from "react";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import { PagePKOBContext } from "../../contexts/PagePKOBContext";
 import { TableEditRowInputsProps } from "../../components/TableEditRow";
 
@@ -21,13 +21,13 @@ export default function ConstructionClassTableEditRowContent({
     inputs,
     row,
     editable,
-}: TableEditRowContentComponentProps<DBRows.ConstructionClass>) {
+}: TableEditRowContentComponentProps<DB.Rows.ConstructionClass>) {
     const pageContext = useContext(PagePKOBContext);
     if (!pageContext) {
         throw "Error";
     }
 
-    const defaultRow = useMemo<DBTableEditDefaultRow<DBRows.ConstructionSpec>>(
+    const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.ConstructionSpec>>(
         () => ({
             name: "",
             class_id: row.id,
@@ -38,7 +38,7 @@ export default function ConstructionClassTableEditRowContent({
     );
 
     const rowInputsProps = useMemo<
-        TableEditRowInputsProps<DBRows.ConstructionSpec>
+        TableEditRowInputsProps<DB.Rows.ConstructionSpec>
     >(
         () => [
             {

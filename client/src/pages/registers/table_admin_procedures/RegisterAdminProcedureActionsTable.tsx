@@ -1,11 +1,11 @@
-import { DBRows } from "../../../../../server/src/dbTypes";
+import { DB } from "../../../../../server/src/db/types";
 import React from "react";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import RegisterAdminProcedureActionsTableRow from "./RegisterAdminProcedureActionsTableRow";
 import { Table } from "@mui/joy";
 
 export default function RegisterAdminProcedureActionsTable(
-    props: TableEditRowContentComponentProps<DBRows.Register>
+    props: TableEditRowContentComponentProps<DB.Rows.Register>
 ) {
     const { row } = props;
 
@@ -22,7 +22,7 @@ export default function RegisterAdminProcedureActionsTable(
                 </tr>
             </thead>
             <tbody>
-                {DBRows.REGISTER_TYPE_INFOS[row.type].actionTypes.map(
+                {DB.Rows.REGISTER_TYPE_INFOS[row.type].actionTypes.map(
                     (actionType) => (
                         <RegisterAdminProcedureActionsTableRow
                             key={actionType}

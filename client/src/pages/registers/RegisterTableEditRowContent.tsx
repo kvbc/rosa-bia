@@ -1,6 +1,6 @@
 import { IconButton, Stack, Table } from "@mui/joy";
 import RegisterDataTableEdit from "./table_app_data/RegisterDataTableEdit";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
 import React, { useCallback, useState } from "react";
 import RegisterConstructionIntentTableEdit from "./table_construction_intent/RegisterConstructionIntentTableEdit";
@@ -9,7 +9,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import RegisterConstructionJournalTableEdit from "./table_construction_journal/RegisterConstructionJournalTableEdit";
 
 export default function RegisterTableEditRowContent(
-    props: TableEditRowContentComponentProps<DBRows.Register>
+    props: TableEditRowContentComponentProps<DB.Rows.Register>
 ) {
     const { row, inputs } = props;
 

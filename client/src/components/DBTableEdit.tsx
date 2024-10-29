@@ -3,23 +3,15 @@
 // TableEdit component connected to update database rows
 //
 
-import React, {
-    ComponentProps,
-    useCallback,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
+import React, { ComponentProps, useCallback, useMemo } from "react";
 import TableEdit from "./TableEdit";
-import { DBRow } from "../../../server/src/dbTypes";
+import { DB } from "../../../server/src/db/types";
 import { DBTable } from "../hooks/useDBTable";
 import { Stack } from "@mui/joy";
-import DBTableEditFilters, { DBFilterRow } from "./DBTableEditFilters";
-import { DBFilter } from "../../../server/src/types";
 
-export type DBTableEditDefaultRow<TRow extends DBRow> = Omit<TRow, "id">;
+export type DBTableEditDefaultRow<TRow extends DB.Row> = Omit<TRow, "id">;
 
-export default function DBTableEdit<TRow extends DBRow>({
+export default function DBTableEdit<TRow extends DB.Row>({
     dbTable,
     defaultRow: _defaultRow,
     rows: customRows,
@@ -40,37 +32,36 @@ export default function DBTableEdit<TRow extends DBRow>({
         requestUpdateRow,
         setStartRowIndex,
         setEndRowIndex,
-        setFilters,
     } = dbTable;
 
-    const [filterRows, setFilterRows] = useState<DBFilterRow<TRow>[]>([]);
+    // const [filterRows, setFilterRows] = useState<DBFilterRow<TRow>[]>([]);
 
-    const handleFilterRowAddClicked = useCallback(
-        (filterRow: DBFilterRow<TRow>) => {
-            setFilterRows((filterRows) => [...filterRows, filterRow]);
-        },
-        []
-    );
+    // const handleFilterRowAddClicked = useCallback(
+    //     (filterRow: DBFilterRow<TRow>) => {
+    //         setFilterRows((filterRows) => [...filterRows, filterRow]);
+    //     },
+    //     []
+    // );
 
-    const handleFilterRowDeleteClicked = useCallback(
-        (filterRow: DBFilterRow<TRow>) => {
-            setFilterRows((filterRows) =>
-                filterRows.filter((row) => row.id !== filterRow.id)
-            );
-        },
-        []
-    );
+    // const handleFilterRowDeleteClicked = useCallback(
+    //     (filterRow: DBFilterRow<TRow>) => {
+    //         setFilterRows((filterRows) =>
+    //             filterRows.filter((row) => row.id !== filterRow.id)
+    //         );
+    //     },
+    //     []
+    // );
 
-    const handleFilterRowSaveClicked = useCallback(
-        (filterRow: DBFilterRow<TRow>) => {
-            setFilterRows((filterRows) =>
-                filterRows.map((row) =>
-                    row.id === filterRow.id ? filterRow : row
-                )
-            );
-        },
-        []
-    );
+    // const handleFilterRowSaveClicked = useCallback(
+    //     (filterRow: DBFilterRow<TRow>) => {
+    //         setFilterRows((filterRows) =>
+    //             filterRows.map((row) =>
+    //                 row.id === filterRow.id ? filterRow : row
+    //             )
+    //         );
+    //     },
+    //     []
+    // );
 
     const handleRowsRangeChanged = useCallback(
         (startIndex: number, endIndex: number) => {
@@ -86,24 +77,24 @@ export default function DBTableEdit<TRow extends DBRow>({
         [_defaultRow, totalRowCount]
     );
 
-    useEffect(() => {
-        setFilters(
-            filterRows.map<DBFilter<TRow>>((row) => ({
-                ...row,
-                id: undefined,
-            }))
-        );
-    }, [filterRows, setFilters]);
+    // useEffect(() => {
+    //     setFilters(
+    //         filterRows.map<DBFilter<TRow>>((row) => ({
+    //             ...row,
+    //             id: undefined,
+    //         }))
+    //     );
+    // }, [filterRows, setFilters]);
 
     return (
         <Stack>
-            <DBTableEditFilters
+            {/* <DBTableEditFilters
                 dbTable={dbTable}
                 rows={filterRows}
                 onRowAddClicked={handleFilterRowAddClicked}
                 onRowDeleteClicked={handleFilterRowDeleteClicked}
                 onRowSaveClicked={handleFilterRowSaveClicked}
-            />
+            /> */}
             <TableEdit
                 rows={customRows ?? rows}
                 defaultRow={defaultRow}

@@ -2,15 +2,15 @@ import { ButtonGroup, IconButton, Textarea } from "@mui/joy";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MdCancel, MdEdit, MdSave } from "react-icons/md";
 import useDBTable from "../../hooks/useDBTable";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import React from "react";
 
 export type InfoBoardState = "editing" | "viewing";
 
 export default function InfoBoard() {
     const [state, setState] = useState<InfoBoardState>("viewing");
-    const infoBoardDBTable = useDBTable<DBRows.InfoBoard>("info_boards");
-    const infoBoard = useMemo<DBRows.InfoBoard | undefined>(
+    const infoBoardDBTable = useDBTable<DB.Rows.InfoBoard>("info_boards");
+    const infoBoard = useMemo<DB.Rows.InfoBoard | undefined>(
         () => infoBoardDBTable.rows[0],
         [infoBoardDBTable.rows]
     );

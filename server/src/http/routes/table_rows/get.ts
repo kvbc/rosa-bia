@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { z, ZodDiscriminatedUnionOption } from "zod";
-import { DB } from "../../../db";
+import { DB } from "../../../db/types";
 import {
     resError,
     resErrorMessage,
@@ -9,7 +9,7 @@ import {
 } from "../../common";
 import { stringToInteger } from "../../../util";
 import { db } from "../../..";
-import { HTTP } from "../..";
+import { HTTP } from "../../types";
 
 export const FILTER_OPERATORS = [
     "=",

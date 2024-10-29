@@ -4,7 +4,7 @@
  *
  */
 
-import { DBRows } from "../../../../../server/src/dbTypes";
+import { DB } from "../../../../../server/src/db/types";
 import React, { useContext, useMemo } from "react";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
@@ -14,7 +14,7 @@ export default function RegisterDataTableEdit({
     inputs,
     row,
     showMore,
-}: TableEditRowContentComponentProps<DBRows.Register> & {
+}: TableEditRowContentComponentProps<DB.Rows.Register> & {
     showMore: boolean;
 }) {
     const pageContext = useContext(PageRegistersContext);
@@ -77,7 +77,7 @@ export default function RegisterDataTableEdit({
                                             <thead>
                                                 <tr>
                                                     <th colSpan={2}>
-                                                        {DBRows
+                                                        {DB.Rows
                                                             .REGISTER_TYPE_INFOS[
                                                             row.type
                                                         ].subtype === "Mayor"

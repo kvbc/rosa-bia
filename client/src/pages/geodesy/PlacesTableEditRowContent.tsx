@@ -8,7 +8,7 @@ import DBTableEdit, {
 } from "../../components/DBTableEdit";
 import { GiVillage } from "react-icons/gi";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import React, { useContext, useMemo } from "react";
 import { PageGeodesyContext } from "../../contexts/PageGeodesyContext";
 import { TableEditRowInputsProps } from "../../components/TableEditRow";
@@ -17,13 +17,13 @@ export default function PlacesTableEditRowContent({
     inputs,
     row,
     editable,
-}: TableEditRowContentComponentProps<DBRows.Place>) {
+}: TableEditRowContentComponentProps<DB.Rows.Place>) {
     const pageGeodesyContext = useContext(PageGeodesyContext);
     if (!pageGeodesyContext) {
         throw "Error";
     }
 
-    const streetsDefaultRow = useMemo<DBTableEditDefaultRow<DBRows.Street>>(
+    const streetsDefaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Street>>(
         () => ({
             place_id: row.id,
             name: "",
@@ -32,7 +32,7 @@ export default function PlacesTableEditRowContent({
     );
 
     const streetsRowInputsProps = useMemo<
-        TableEditRowInputsProps<DBRows.Street>
+        TableEditRowInputsProps<DB.Rows.Street>
     >(
         () => [
             {

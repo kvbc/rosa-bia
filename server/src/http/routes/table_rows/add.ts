@@ -5,7 +5,7 @@ import {
     resVerifyTableName,
     resVerifyTableRow,
 } from "../../common";
-import { DB } from "../../../db";
+import { DB } from "../../../db/types";
 import { db, wsServer } from "../../..";
 
 const router = Router();

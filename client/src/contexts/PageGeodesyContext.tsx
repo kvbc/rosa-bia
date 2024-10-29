@@ -1,8 +1,8 @@
 import { createContext } from "react";
 import { DBTable } from "../hooks/useDBTable";
-import { DBRows } from "../../../server/src/dbTypes";
+import { DB } from "../../../server/src/db/types";
 
 export const PageGeodesyContext = createContext<{
-    placesDBTable: DBTable<DBRows.Place>;
-    streetsDBTable: DBTable<DBRows.Street>;
+    placesDBTable: DBTable<DB.Rows.Place>;
+    streetsDBTable: DBTable<DB.Rows.Street>;
 } | null>(null);

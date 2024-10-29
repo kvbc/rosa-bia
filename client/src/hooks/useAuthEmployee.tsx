@@ -5,10 +5,11 @@
 //
 
 import axios, { AxiosResponse } from "axios";
-import { HTTP_SERVER_URL } from "../../../config";
 import { useEffect } from "react";
-import { HTTPRequestLogin, HTTPResponse } from "../../../server/src/types";
 import { useAuthEmployeeStore } from "../stores/useAuthEmployeeStore";
+import { HTTP } from "../../../server/src/http/types";
+import { HTTP_SERVER_URL } from "../api/http";
+import { EmployeeLoginRequest } from "../../../server/src/http/routes/employee_login";
 
 export default function useAuthEmployee() {
     const { employee, jwtToken, setEmployee, setJWTToken } =
@@ -17,7 +18,7 @@ export default function useAuthEmployee() {
     useEffect(() => {
         if (employee === null && jwtToken !== null) {
             axios
-                .post<HTTPResponse>(
+                .post<HTTP.Response>(
                     HTTP_SERVER_URL + "/login",
                     {},
                     {
@@ -28,23 +29,23 @@ export default function useAuthEmployee() {
                 )
                 .then((res) => res.data)
                 .then((res) => {
-                    if (res.responseType === "login") {
+                    if (res.type === "login") {
                         setEmployee(res.employee);
                     }
                 });
         }
     }, [employee, jwtToken, setEmployee]);
 
-    const login = (req: HTTPRequestLogin) => {
+    const login = (req: EmployeeLoginRequest) => {
         axios
             .post<
-                HTTPResponse,
-                AxiosResponse<HTTPResponse, unknown>,
-                HTTPRequestLogin
+                HTTP.Response,
+                AxiosResponse<HTTP.Response, unknown>,
+                EmployeeLoginRequest
             >(HTTP_SERVER_URL + "/login", req)
             .then((res) => res.data)
             .then((res) => {
-                if (res.responseType === "login") {
+                if (res.type === "login") {
                     setEmployee(res.employee);
                     setJWTToken(res.jwtToken);
                 }

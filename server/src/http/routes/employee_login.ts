@@ -1,16 +1,16 @@
 import { Request, Response, Router } from "express";
 import { z } from "zod";
 import { resError, resErrorMessage, resGetAuthEmployee } from "../common";
-import { HTTP } from "..";
 import { db } from "../..";
-import { DB } from "../../db";
+import { DB } from "../../db/types";
 import jwt from "jsonwebtoken";
+import { HTTP } from "../types";
 
-export const ZEmployeeLoginRequest = z.strictObject({
+export const EmployeeLoginRequestShape = z.strictObject({
     employeeName: z.string(),
     employeePassword: z.string(),
 });
-export type EmployeeLoginRequest = z.infer<typeof ZEmployeeLoginRequest>;
+export type EmployeeLoginRequest = z.infer<typeof EmployeeLoginRequestShape>;
 
 const router = Router();
 
@@ -42,7 +42,7 @@ router.post(
         }
 
         // verify body
-        const ret = ZEmployeeLoginRequest.safeParse(req.body);
+        const ret = EmployeeLoginRequestShape.safeParse(req.body);
         if (!ret.success) {
             resErrorMessage(res, 400, ret.error.message);
             return;

@@ -8,7 +8,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaCity } from "react-icons/fa6";
 import { Box } from "@mui/joy";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
 import { useContext, useMemo } from "react";
 import { PagePKOBContext } from "../../contexts/PagePKOBContext";
@@ -19,14 +19,14 @@ export default function ConstructionSectionTableEditRowContent({
     inputs,
     row,
     editable,
-}: TableEditRowContentComponentProps<DBRows.ConstructionSection>) {
+}: TableEditRowContentComponentProps<DB.Rows.ConstructionSection>) {
     const pageContext = useContext(PagePKOBContext);
     if (!pageContext) {
         throw "Error";
     }
 
     const defaultRow = useMemo<
-        DBTableEditDefaultRow<DBRows.ConstructionDivision>
+        DBTableEditDefaultRow<DB.Rows.ConstructionDivision>
     >(
         () => ({
             name: "",
@@ -36,7 +36,7 @@ export default function ConstructionSectionTableEditRowContent({
     );
 
     const rowInputsProps = useMemo<
-        TableEditRowInputsProps<DBRows.ConstructionDivision>
+        TableEditRowInputsProps<DB.Rows.ConstructionDivision>
     >(
         () => [
             {

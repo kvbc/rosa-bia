@@ -3,13 +3,13 @@ import DBTableEdit, {
 } from "../../components/DBTableEdit";
 import React, { useMemo } from "react";
 import useDBTable from "../../hooks/useDBTable";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import { TableEditRowInputsProps } from "../../components/TableEditRow";
 
 export default function PageInvestors() {
-    const dbTable = useDBTable<DBRows.Investor>("investors");
+    const dbTable = useDBTable<DB.Rows.Investor>("investors");
 
-    const defaultRow = useMemo<DBTableEditDefaultRow<DBRows.Investor>>(
+    const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Investor>>(
         () => ({
             address: "",
             name: "",
@@ -18,7 +18,7 @@ export default function PageInvestors() {
         []
     );
 
-    const rowInputsProps = useMemo<TableEditRowInputsProps<DBRows.Investor>>(
+    const rowInputsProps = useMemo<TableEditRowInputsProps<DB.Rows.Investor>>(
         () => [
             {
                 type: "text",
@@ -28,10 +28,6 @@ export default function PageInvestors() {
                 type: "text",
                 rowKey: "address",
             },
-            {
-                type: "text",
-                rowKey: "info",
-            },
         ],
         []
     );
@@ -39,7 +35,7 @@ export default function PageInvestors() {
     return (
         <DBTableEdit
             dbTable={dbTable}
-            headers={["Inwestor", "Adres", "Informacje"]}
+            headers={["Inwestor", "Adres"]}
             defaultRow={defaultRow}
             rowInputsProps={rowInputsProps}
         />

@@ -3,12 +3,9 @@
 // database table typings
 //
 
-import { Database } from "sqlite3";
 import { AnyZodObject, z } from "zod";
 
 export namespace DB {
-    export const load = () => new Database("db/db.db");
-
     export type Row = Record<string, any> & {
         id: number;
     };

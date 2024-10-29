@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Checkbox, Input } from "@mui/joy";
-import { DBRows } from "../../../../../server/src/dbTypes";
+import { DB } from "../../../../../server/src/db/types";
 import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
 import React from "react";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
@@ -12,8 +12,8 @@ export default function RegisterAdminProcedureActionsTableRow({
     eventTarget,
     onInputBlur,
 }: {
-    actionType: DBRows.RegisterAdminActionType;
-} & TableEditRowContentComponentProps<DBRows.Register>) {
+    actionType: DB.Rows.RegisterAdminActionType;
+} & TableEditRowContentComponentProps<DB.Rows.Register>) {
     const pageContext = useContext(PageRegistersContext);
     if (!pageContext) {
         throw "Error";
@@ -27,7 +27,7 @@ export default function RegisterAdminProcedureActionsTableRow({
             ),
         [actionType, pageContext.registerAdminActionsDBTable.rows, row.id]
     );
-    const [action, setAction] = useState<DBRows.RegisterAdminAction>(
+    const [action, setAction] = useState<DB.Rows.RegisterAdminAction>(
         dbAction
             ? { ...dbAction }
             : {

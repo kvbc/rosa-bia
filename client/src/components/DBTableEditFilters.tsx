@@ -6,22 +6,22 @@ import {
     IconButton,
     Stack,
 } from "@mui/joy";
-import { DB_TABLE_ROW_INFOS, DBRow } from "../../../server/src/dbTypes";
+import { DB } from "../../../server/src/db/types";
 import { DBTable } from "../hooks/useDBTable";
 import TableEdit from "./TableEdit";
-import { DB_FILTER_OPERATORS, DBFilter } from "../../../server/src/types";
 import { TableEditRowInputsProps } from "./TableEditRow";
 import { TableEditRowInputSelectOption } from "./TableEditRowInput";
+import { Filter as DBFilter } from "../../../server/src/http/routes/table_rows/get";
 import {
     FilterList as FilterListIcon,
     Help as HelpIcon,
 } from "@mui/icons-material";
 
-export type DBFilterRow<TRow extends DBRow> = DBFilter<TRow> & {
+export type DBFilterRow = DBFilter & {
     id: number;
 };
 
-export default function DBTableEditFilters<TRow extends DBRow>({
+export default function DBTableEditFilters<TRow extends DB.Row>({
     dbTable,
     rows,
     onRowAddClicked,
@@ -29,12 +29,12 @@ export default function DBTableEditFilters<TRow extends DBRow>({
     onRowSaveClicked,
 }: {
     dbTable: DBTable<TRow>;
-    rows: DBFilterRow<TRow>[];
-    onRowAddClicked: (row: DBFilterRow<TRow>) => void;
-    onRowDeleteClicked: (row: DBFilterRow<TRow>) => void;
-    onRowSaveClicked: (row: DBFilterRow<TRow>) => void;
+    rows: DBFilterRow[];
+    onRowAddClicked: (row: DBFilterRow) => void;
+    onRowDeleteClicked: (row: DBFilterRow) => void;
+    onRowSaveClicked: (row: DBFilterRow) => void;
 }) {
-    const defaultRow = useMemo<DBFilterRow<TRow>>(
+    const defaultRow = useMemo<DBFilterRow>(
         () => ({
             id: rows.length + 1,
             key: "id",
@@ -44,17 +44,16 @@ export default function DBTableEditFilters<TRow extends DBRow>({
         [rows.length]
     );
 
-    const rowInputsProps = useMemo<TableEditRowInputsProps<DBFilterRow<TRow>>>(
+    const rowInputsProps = useMemo<TableEditRowInputsProps<DBFilterRow>>(
         () => [
             {
                 rowKey: "key",
                 type: "select",
                 placeholder: "Klucz",
                 getSelectOptions: () =>
-                    [
-                        ...DB_TABLE_ROW_INFOS[dbTable.tableName].zod.keyof()
-                            .options,
-                    ].map<TableEditRowInputSelectOption>((key) => ({
+                    DB.Rows.getMeta(
+                        dbTable.tableName
+                    ).keys.map<TableEditRowInputSelectOption>((key) => ({
                         value: key,
                         name: key,
                     })),

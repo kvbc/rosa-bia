@@ -1,7 +1,7 @@
 import { Link } from "@mui/joy";
 import React from "react";
 
-export default function PageFormsGUNB3() {
+export default function PageStatsGUNB3() {
     return (
         <div>
             <h1>Formularz GUNB-3</h1>

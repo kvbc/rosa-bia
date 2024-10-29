@@ -4,23 +4,23 @@ import DBTableEdit, {
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
 import useDBTable from "../../hooks/useDBTable";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import { TableEditRowInputsProps } from "../../components/TableEditRow";
 import RegisterTableEditRowContent from "./RegisterTableEditRowContent";
 
 export default function RegisterTableEdit() {
-    const registersDBTable = useDBTable<DBRows.Register>("registers"); // prettier-ignore
-    const communesDBTable = useDBTable<DBRows.Commune>("communes"); // prettier-ignore
-    const placesDBTable = useDBTable<DBRows.Place>("places"); // prettier-ignore
-    const streetsDBTable = useDBTable<DBRows.Street>('streets'); // prettier-ignore
-    const constructionClassesDBTable = useDBTable<DBRows.ConstructionClass>("construction_classes"); // prettier-ignore
-    const constructionSectionsDBTable = useDBTable<DBRows.ConstructionSection>("construction_sections"); // prettier-ignore
-    const constructionGroupsDBTable = useDBTable<DBRows.ConstructionGroup>("construction_groups"); // prettier-ignore
-    const constructionDivisionsDBTable = useDBTable<DBRows.ConstructionDivision>("construction_divisions"); // prettier-ignore
-    const constructionSpecsDBTable = useDBTable<DBRows.ConstructionSpec>("construction_specs"); // prettier-ignore
-    const investorsDBTable = useDBTable<DBRows.Investor>("investors"); // prettier-ignore
+    const registersDBTable = useDBTable<DB.Rows.Register>("registers"); // prettier-ignore
+    const communesDBTable = useDBTable<DB.Rows.Commune>("communes"); // prettier-ignore
+    const placesDBTable = useDBTable<DB.Rows.Place>("places"); // prettier-ignore
+    const streetsDBTable = useDBTable<DB.Rows.Street>('streets'); // prettier-ignore
+    const constructionClassesDBTable = useDBTable<DB.Rows.ConstructionClass>("construction_classes"); // prettier-ignore
+    const constructionSectionsDBTable = useDBTable<DB.Rows.ConstructionSection>("construction_sections"); // prettier-ignore
+    const constructionGroupsDBTable = useDBTable<DB.Rows.ConstructionGroup>("construction_groups"); // prettier-ignore
+    const constructionDivisionsDBTable = useDBTable<DB.Rows.ConstructionDivision>("construction_divisions"); // prettier-ignore
+    const constructionSpecsDBTable = useDBTable<DB.Rows.ConstructionSpec>("construction_specs"); // prettier-ignore
+    const investorsDBTable = useDBTable<DB.Rows.Investor>("investors"); // prettier-ignore
 
-    const defaultRow = useMemo<DBTableEditDefaultRow<DBRows.Register>>(
+    const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Register>>(
         () => ({
             type: "PnB (6740)",
 
@@ -64,12 +64,12 @@ export default function RegisterTableEdit() {
     );
 
     const getSelectRowInputProps = useCallback(function <TOption>(
-        rowKey: TableEditRowInputsProps<DBRows.Register>[number]["rowKey"],
+        rowKey: TableEditRowInputsProps<DB.Rows.Register>[number]["rowKey"],
         options:
             | readonly TOption[]
-            | ((row: DBRows.Register) => readonly TOption[]),
+            | ((row: DB.Rows.Register) => readonly TOption[]),
         getOption: (option: TOption) => TableEditRowInputSelectOption
-    ): TableEditRowInputsProps<DBRows.Register>[number] {
+    ): TableEditRowInputsProps<DB.Rows.Register>[number] {
         return {
             rowKey,
             type: "select",
@@ -83,9 +83,9 @@ export default function RegisterTableEdit() {
         };
     },
     []);
-    const rowInputsProps = useMemo<TableEditRowInputsProps<DBRows.Register>>(
+    const rowInputsProps = useMemo<TableEditRowInputsProps<DB.Rows.Register>>(
         () => [
-            getSelectRowInputProps("type", DBRows.REGISTER_TYPES, (type) => ({
+            getSelectRowInputProps("type", DB.Rows.REGISTER_TYPES, (type) => ({
                 value: type,
                 name: type,
             })),
@@ -98,21 +98,21 @@ export default function RegisterTableEdit() {
             ),
             getSelectRowInputProps(
                 "app_decision_type",
-                row => DBRows.REGISTER_SUBTYPE_INFOS[DBRows.REGISTER_TYPE_INFOS[row.type].subtype].decisions, // prettier-ignore
+                row => DB.Rows.REGISTER_SUBTYPE_INFOS[DB.Rows.REGISTER_TYPE_INFOS[row.type].subtype].decisions, // prettier-ignore
                 (type) => ({ value: type, name: type })
             ),
             { rowKey: "app_decision_number", type: "number" }, // prettier-ignore
             { rowKey: "app_decision_issue_date", type: "date" }, // prettier-ignore
             getSelectRowInputProps(
                 "app_resolution_type",
-                row => DBRows.REGISTER_SUBTYPE_INFOS[DBRows.REGISTER_TYPE_INFOS[row.type].subtype].resolutions, // prettier-ignore
+                row => DB.Rows.REGISTER_SUBTYPE_INFOS[DB.Rows.REGISTER_TYPE_INFOS[row.type].subtype].resolutions, // prettier-ignore
                 (type) => ({ value: type, name: type })
             ),
             { rowKey: "app_resolution_number", type: "number" }, // prettier-ignore
             { rowKey: "app_resolution_issue_date", type: "date" }, // prettier-ignore
             getSelectRowInputProps(
                 "app_construction_journal_type",
-                DBRows.REGISTER_CONSTRUCTION_JOURNAL_TYPES,
+                DB.Rows.REGISTER_CONSTRUCTION_JOURNAL_TYPES,
                 (type) => ({ value: type, name: type })
             ),
             getSelectRowInputProps(
@@ -122,12 +122,12 @@ export default function RegisterTableEdit() {
             ),
             getSelectRowInputProps(
                 "object_construction_form_type",
-                DBRows.REGISTER_CONSTRUCTION_FORMS, // prettier-ignore
+                DB.Rows.REGISTER_CONSTRUCTION_FORMS, // prettier-ignore
                 (type) => ({ value: type, name: type })
             ),
             getSelectRowInputProps(
                 "object_spatial_plan_type",
-                DBRows.REGISTER_SPATIAL_PLANS, // prettier-ignore
+                DB.Rows.REGISTER_SPATIAL_PLANS, // prettier-ignore
                 (type) => ({ value: type, name: type })
             ),
             { rowKey: "object_number", type: "number" }, // prettier-ignore

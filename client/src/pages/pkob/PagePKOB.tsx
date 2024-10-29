@@ -2,18 +2,18 @@ import DBTableEdit, {
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
 import ConstructionSectionTableEditRowContent from "./ConstructionSectionTableEditRowContent";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import React, { ContextType, useMemo } from "react";
 import { PagePKOBContext } from "../../contexts/PagePKOBContext";
 import useDBTable from "../../hooks/useDBTable";
 import { TableEditRowInputsProps } from "../../components/TableEditRow";
 
 export default function PagePKOB() {
-    const constructionSectionsDBTable = useDBTable<DBRows.ConstructionSection>("construction_sections"); // prettier-ignore
-    const constructionDivisionsDBTable = useDBTable<DBRows.ConstructionDivision>("construction_divisions"); // prettier-ignore
-    const constructionGroupsDBTable = useDBTable<DBRows.ConstructionGroup>("construction_groups"); // prettier-ignore
-    const constructionClassesDBTable = useDBTable<DBRows.ConstructionClass>("construction_classes"); // prettier-ignore
-    const constructionSpecsDBTable = useDBTable<DBRows.ConstructionSpec>("construction_specs"); // prettier-ignore
+    const constructionSectionsDBTable = useDBTable<DB.Rows.ConstructionSection>("construction_sections"); // prettier-ignore
+    const constructionDivisionsDBTable = useDBTable<DB.Rows.ConstructionDivision>("construction_divisions"); // prettier-ignore
+    const constructionGroupsDBTable = useDBTable<DB.Rows.ConstructionGroup>("construction_groups"); // prettier-ignore
+    const constructionClassesDBTable = useDBTable<DB.Rows.ConstructionClass>("construction_classes"); // prettier-ignore
+    const constructionSpecsDBTable = useDBTable<DB.Rows.ConstructionSpec>("construction_specs"); // prettier-ignore
 
     const context = useMemo<ContextType<typeof PagePKOBContext>>(
         () => ({
@@ -33,7 +33,7 @@ export default function PagePKOB() {
     );
 
     const defaultRow = useMemo<
-        DBTableEditDefaultRow<DBRows.ConstructionSection>
+        DBTableEditDefaultRow<DB.Rows.ConstructionSection>
     >(
         () => ({
             name: "",
@@ -42,7 +42,7 @@ export default function PagePKOB() {
     );
 
     const rowInputsProps = useMemo<
-        TableEditRowInputsProps<DBRows.ConstructionSection>
+        TableEditRowInputsProps<DB.Rows.ConstructionSection>
     >(
         () => [
             {

@@ -1,17 +1,17 @@
 import { create } from "zustand";
-import { DBRows } from "../../../server/src/dbTypes";
+import { DB } from "../../../server/src/db/types";
 
 export const useAuthEmployeeStore = create<{
-    employee: DBRows.Employee | null;
+    employee: DB.Rows.Employee | null;
     jwtToken: string | null;
-    setEmployee: (employee: DBRows.Employee | null) => void;
+    setEmployee: (employee: DB.Rows.Employee | null) => void;
     setJWTToken: (jwtToken: string | null) => void;
 }>((set) => {
     const lsJWTTokenKey = "jwtToken";
     return {
         employee: null,
         jwtToken: window.localStorage.getItem(lsJWTTokenKey),
-        setEmployee: (employee: DBRows.Employee | null) => {
+        setEmployee: (employee: DB.Rows.Employee | null) => {
             set((state) => ({ ...state, employee }));
         },
         setJWTToken: (jwtToken: string | null) => {

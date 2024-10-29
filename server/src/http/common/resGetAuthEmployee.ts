@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { DB } from "../../db";
+import { DB } from "../../db/types";
 import jwt from "jsonwebtoken";
 import { db } from "../..";
 import { resError } from "./resError";
@@ -9,12 +9,12 @@ export const resGetAuthEmployee = async (
     req: Request,
     res: Response,
     optional?: boolean
-): Promise<{ employee?: DB.Rows.Employee; jwtToken?: string }> => {
+): Promise<{ employee: DB.Rows.Employee | null; jwtToken: string | null }> => {
     return new Promise((resolve, reject) => {
         const authorization = req.headers["authorization"];
         if (!(authorization && authorization.startsWith("Bearer "))) {
             if (optional) {
-                resolve({});
+                resolve({ employee: null, jwtToken: null });
             }
             if (!optional) {
                 resError(res, 401, "Authorization required");
@@ -31,7 +31,7 @@ export const resGetAuthEmployee = async (
                 (error, row) => {
                     if (error) {
                         if (optional) {
-                            resolve({ jwtToken });
+                            resolve({ employee: null, jwtToken });
                         } else {
                             resError(res, 500, error);
                             reject();
@@ -40,7 +40,7 @@ export const resGetAuthEmployee = async (
                     }
                     if (row === undefined) {
                         if (optional) {
-                            resolve({ jwtToken });
+                            resolve({ employee: null, jwtToken });
                         } else {
                             resErrorMessage(res, 500, "Employee not found");
                             reject();
@@ -52,7 +52,7 @@ export const resGetAuthEmployee = async (
             );
         } catch (error) {
             if (optional) {
-                resolve({ jwtToken });
+                resolve({ employee: null, jwtToken });
             } else {
                 resError(res, 401, error);
                 reject();

@@ -14,12 +14,12 @@ import {
 import ErrorIcon from "@mui/icons-material/Error";
 import React, { useCallback, useMemo, useState } from "react";
 import useDBTable from "../../hooks/useDBTable";
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import { PDFDocument } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 
-export default function PageFormsB05() {
-    const communesDBTable = useDBTable<DBRows.Commune>("communes");
+export default function PageStatsB05() {
+    const communesDBTable = useDBTable<DB.Rows.Commune>("communes");
 
     const minYear = 2019;
     const maxYear = new Date().getFullYear();

@@ -1,11 +1,11 @@
 import RegisterAdminProcedureActionsTable from "./RegisterAdminProcedureActionsTable";
-import { DBRows } from "../../../../../server/src/dbTypes";
+import { DB } from "../../../../../server/src/db/types";
 import React from "react";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import { Table } from "@mui/joy";
 
 export default function RegisterAdminProceduresTableEdit(
-    props: TableEditRowContentComponentProps<DBRows.Register> & {
+    props: TableEditRowContentComponentProps<DB.Rows.Register> & {
         showMore: boolean;
     }
 ) {
@@ -36,7 +36,7 @@ export default function RegisterAdminProceduresTableEdit(
                                 />
                             </td>
                         </tr>
-                        {DBRows.REGISTER_TYPE_INFOS[row.type]
+                        {DB.Rows.REGISTER_TYPE_INFOS[row.type]
                             .showAdminConstructionJournal && (
                             <tr>
                                 <td colSpan={2}>

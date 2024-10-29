@@ -1,4 +1,4 @@
-import { DBRows } from "../../../../../server/src/dbTypes";
+import { DB } from "../../../../../server/src/db/types";
 import DBTableEdit, {
     DBTableEditDefaultRow,
 } from "../../../components/DBTableEdit";
@@ -10,15 +10,15 @@ import { TableEditRowInputsProps } from "../../../components/TableEditRow";
 export default function RegisterPlotsDataTableEdit({
     row,
     plotType,
-}: TableEditRowContentComponentProps<DBRows.Register> & {
-    plotType: DBRows.RegisterPlotType;
+}: TableEditRowContentComponentProps<DB.Rows.Register> & {
+    plotType: DB.Rows.RegisterPlotType;
 }) {
     const pageContext = useContext(PageRegistersContext);
     if (!pageContext) {
         throw "Error";
     }
 
-    const defaultRow = useMemo<DBTableEditDefaultRow<DBRows.RegisterPlot>>(
+    const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.RegisterPlot>>(
         () => ({
             register_id: row.id,
             plot: "",
@@ -28,7 +28,7 @@ export default function RegisterPlotsDataTableEdit({
     );
 
     const rowInputsProps = useMemo<
-        TableEditRowInputsProps<DBRows.RegisterPlot>
+        TableEditRowInputsProps<DB.Rows.RegisterPlot>
     >(
         () => [
             {
@@ -40,7 +40,7 @@ export default function RegisterPlotsDataTableEdit({
         []
     );
 
-    const plotTypeHeaders: Record<DBRows.RegisterPlotType, string> = {
+    const plotTypeHeaders: Record<DB.Rows.RegisterPlotType, string> = {
         app: "Działki objęte wnioskiem",
         invest: "Działki objęte inwestycją",
         road: "Działki w pasie drogi",

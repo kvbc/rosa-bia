@@ -1,11 +1,11 @@
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import React from "react";
 import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
 import { Table } from "@mui/joy";
 
 export default function ConstructionSpecTableEditRowContent({
     inputs,
-}: TableEditRowContentComponentProps<DBRows.ConstructionSpec>) {
+}: TableEditRowContentComponentProps<DB.Rows.ConstructionSpec>) {
     return (
         <td>
             <Table size="sm">

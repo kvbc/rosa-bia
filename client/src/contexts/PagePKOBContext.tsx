@@ -1,11 +1,11 @@
 import { createContext } from "react";
 import { DBTable } from "../hooks/useDBTable";
-import { DBRows } from "../../../server/src/dbTypes";
+import { DB } from "../../../server/src/db/types";
 
 export const PagePKOBContext = createContext<{
-    constructionSectionsDBTable: DBTable<DBRows.ConstructionSection>;
-    constructionDivisionsDBTable: DBTable<DBRows.ConstructionDivision>;
-    constructionGroupsDBTable: DBTable<DBRows.ConstructionGroup>;
-    constructionClassesDBTable: DBTable<DBRows.ConstructionClass>;
-    constructionSpecsDBTable: DBTable<DBRows.ConstructionSpec>;
+    constructionSectionsDBTable: DBTable<DB.Rows.ConstructionSection>;
+    constructionDivisionsDBTable: DBTable<DB.Rows.ConstructionDivision>;
+    constructionGroupsDBTable: DBTable<DB.Rows.ConstructionGroup>;
+    constructionClassesDBTable: DBTable<DB.Rows.ConstructionClass>;
+    constructionSpecsDBTable: DBTable<DB.Rows.ConstructionSpec>;
 } | null>(null);

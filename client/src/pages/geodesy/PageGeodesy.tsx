@@ -1,4 +1,4 @@
-import { DBRows } from "../../../../server/src/dbTypes";
+import { DB } from "../../../../server/src/db/types";
 import DBTableEdit, {
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
@@ -9,9 +9,9 @@ import CommunesDBTableEditRowContent from "./CommunesDBTableEditRowContent";
 import React, { ContextType, useMemo } from "react";
 
 export default function PageGeodesy() {
-    const communesDBTable = useDBTable<DBRows.Commune>("communes");
-    const placesDBTable = useDBTable<DBRows.Place>("places");
-    const streetsDBTable = useDBTable<DBRows.Street>("streets");
+    const communesDBTable = useDBTable<DB.Rows.Commune>("communes");
+    const placesDBTable = useDBTable<DB.Rows.Place>("places");
+    const streetsDBTable = useDBTable<DB.Rows.Street>("streets");
 
     const context = useMemo<ContextType<typeof PageGeodesyContext>>(
         () => ({
@@ -21,7 +21,7 @@ export default function PageGeodesy() {
         [placesDBTable, streetsDBTable]
     );
 
-    const communesDefaultRow = useMemo<DBTableEditDefaultRow<DBRows.Commune>>(
+    const communesDefaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Commune>>(
         () => ({
             name: "",
         }),
@@ -29,7 +29,7 @@ export default function PageGeodesy() {
     );
 
     const communesRowInputsProps = useMemo<
-        TableEditRowInputsProps<DBRows.Commune>
+        TableEditRowInputsProps<DB.Rows.Commune>
     >(
         () => [
             {

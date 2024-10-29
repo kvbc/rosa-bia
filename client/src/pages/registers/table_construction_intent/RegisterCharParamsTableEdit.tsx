@@ -1,10 +1,10 @@
-import { DBRows } from "../../../../../server/src/dbTypes";
+import { DB } from "../../../../../server/src/db/types";
 import React from "react";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import { Table } from "@mui/joy";
 
 export default function RegisterCharParamsTableEdit(
-    props: TableEditRowContentComponentProps<DBRows.Register>
+    props: TableEditRowContentComponentProps<DB.Rows.Register>
 ) {
     const { inputs } = props;
 

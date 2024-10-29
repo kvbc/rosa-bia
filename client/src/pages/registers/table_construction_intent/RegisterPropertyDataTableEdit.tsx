@@ -1,4 +1,4 @@
-import { DBRows } from "../../../../../server/src/dbTypes";
+import { DB } from "../../../../../server/src/db/types";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import React from "react";
 import { Table } from "@mui/joy";
@@ -9,9 +9,9 @@ export default function RegisterPropertyDataTableEdit({
     place,
     area,
 }: {
-    place?: DBRows.Place;
-    area?: DBRows.Place;
-} & TableEditRowContentComponentProps<DBRows.Register>) {
+    place?: DB.Rows.Place;
+    area?: DB.Rows.Place;
+} & TableEditRowContentComponentProps<DB.Rows.Register>) {
     return (
         <Table size="sm">
             <thead>

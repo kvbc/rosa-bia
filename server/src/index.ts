@@ -4,12 +4,12 @@
 //
 
 import dotenv from "dotenv";
-import { WS } from "./ws";
-import { HTTP } from "./http";
-import { DB } from "./db";
+import { startWebSocketServer } from "./ws";
+import { startHttpServer } from "./http";
+import { loadDatabase } from "./db";
 
 dotenv.config();
 
-export const db = DB.load();
-export const wsServer = WS.startServer();
-export const httpServer = HTTP.startServer();
+export const db = loadDatabase();
+export const wsServer = startWebSocketServer();
+export const httpServer = startHttpServer();

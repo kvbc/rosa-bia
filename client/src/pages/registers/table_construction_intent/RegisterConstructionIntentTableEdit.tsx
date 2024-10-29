@@ -19,12 +19,12 @@ import React, { ReactNode, useContext, useEffect, useMemo } from "react";
 import RegisterPropertyDataTableEdit from "./RegisterPropertyDataTableEdit";
 import RegisterPlotsDataTableEdit from "./RegisterPlotsTableEdit";
 import RegisterCharParamsTableEdit from "./RegisterCharParamsTableEdit";
-import { DBRows } from "../../../../../server/src/dbTypes";
+import { DB } from "../../../../../server/src/db/types";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
 
 export default function RegisterConstructionIntentTableEdit(
-    props: TableEditRowContentComponentProps<DBRows.Register> & {
+    props: TableEditRowContentComponentProps<DB.Rows.Register> & {
         showMore: boolean;
     }
 ) {
@@ -51,7 +51,7 @@ export default function RegisterConstructionIntentTableEdit(
     useEffect(() => setRow(row => ({...row, _object_place_id: street?.place_id ?? 0})), [setRow, street?.place_id]) // prettier-ignore
     useEffect(() => setRow(row => ({...row, _object_commune_id: place?.commune_id ?? 0})), [setRow, place?.commune_id]) // prettier-ignore
 
-    const constructionIntentNode: { [key in DBRows.RegisterType]: ReactNode } =
+    const constructionIntentNode: { [key in DB.Rows.RegisterType]: ReactNode } =
         useMemo(
             () => ({
                 // "PnB (6740)": inputs._object_construction_group_id,
@@ -84,7 +84,7 @@ export default function RegisterConstructionIntentTableEdit(
     const showPropertyData = true;
     const showAppPlots =
         row.type === "Pisma różne (670)" || row.type === "Samodz. Lokali (705)";
-    const showPlots: Record<DBRows.RegisterPlotType, boolean> = {
+    const showPlots: Record<DB.Rows.RegisterPlotType, boolean> = {
         app: showAppPlots,
         invest: !showAppPlots,
         road: row.type === "ZRiD (7012)",
@@ -208,7 +208,7 @@ export default function RegisterConstructionIntentTableEdit(
                     </td>
                 </tr>
             )}
-            {(Object.keys(showPlots) as DBRows.RegisterPlotType[]).map(
+            {(Object.keys(showPlots) as DB.Rows.RegisterPlotType[]).map(
                 (plotType) =>
                     showPlots[plotType] && (
                         <tr key={plotType}>

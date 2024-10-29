@@ -1,4 +1,4 @@
-import { DBRows } from "../../../../../server/src/dbTypes";
+import { DB } from "../../../../../server/src/db/types";
 import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
 import React, { useContext } from "react";
 import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
@@ -6,7 +6,7 @@ import { Table } from "@mui/joy";
 
 export default function RegisterConstructionJournalTableEdit({
     inputs,
-}: TableEditRowContentComponentProps<DBRows.Register>) {
+}: TableEditRowContentComponentProps<DB.Rows.Register>) {
     const pageContext = useContext(PageRegistersContext);
     if (!pageContext) {
         throw "Error";
