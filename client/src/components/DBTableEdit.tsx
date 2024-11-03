@@ -27,9 +27,9 @@ export default function DBTableEdit<TRow extends DB.Row>({
     const {
         totalRowCount,
         rows,
-        requestAddRow,
-        requestDeleteRow,
-        requestUpdateRow,
+        addRowMutation,
+        deleteRowMutation,
+        updateRowMutation,
         setStartRowIndex,
         setEndRowIndex,
     } = dbTable;
@@ -99,9 +99,9 @@ export default function DBTableEdit<TRow extends DB.Row>({
                 rows={customRows ?? rows}
                 defaultRow={defaultRow}
                 totalRowCount={totalRowCount}
-                onRowAddClicked={requestAddRow}
-                onRowDeleteClicked={requestDeleteRow}
-                onRowSaveClicked={requestUpdateRow}
+                onRowAddClicked={addRowMutation.mutate}
+                onRowDeleteClicked={(row) => deleteRowMutation.mutate(row.id)}
+                onRowSaveClicked={updateRowMutation.mutate}
                 onRowsRangeChanged={handleRowsRangeChanged}
                 {...props}
             />

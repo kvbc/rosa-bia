@@ -1,37 +1,23 @@
-import { Link, Stack } from "@mui/joy";
+import { Link, Stack } from "@chakra-ui/react";
 import React, { ComponentProps } from "react";
 import { Link as ReactLink } from "react-router-dom";
 
 export const AppNavbarLink: React.FC<
     ComponentProps<typeof ReactLink> & ComponentProps<typeof Link>
-> = (props) => {
+> = (props: ComponentProps<typeof ReactLink> & ComponentProps<typeof Link>) => {
     return (
-        <>
-            <Link
-                component={ReactLink}
-                sx={(theme) => ({
-                    color: theme.palette.common.white,
-                    fontSize: theme.fontSize.xs,
-                    "& > *": {
-                        fontSize: theme.fontSize.lg,
-                    },
-                    // "&:hover": {
-                    //     textDecoration: "underline",
-                    // },
-                })}
-                {...props}
-            >
-                <Stack
-                    direction="row"
-                    sx={(theme) => ({
-                        alignItems: "center",
-                        fontSize: theme.fontSize.sm,
-                        gap: theme.spacing(0.25),
-                    })}
-                >
-                    {props.children}
-                </Stack>
-            </Link>
-        </>
+        <Link
+            as={ReactLink}
+            _hover={{
+                textDecoration: "underline",
+                textDecorationColor: "white",
+            }}
+            color="white"
+            {...props}
+        >
+            <Stack align="center" gap="0.5">
+                {props.children}
+            </Stack>
+        </Link>
     );
 };

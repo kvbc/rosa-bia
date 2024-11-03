@@ -102,7 +102,7 @@ router.post(
         const isEmployeeAdmin = Boolean(employee?.admin);
 
         // get params
-        const startIndex: number | undefined = stringToInteger(req.params.startIndex) // prettier-ignore
+        const startIndex: number = stringToInteger(req.params.startIndex) ?? 0 // prettier-ignore
         const endIndex: number | undefined = stringToInteger(req.params.endIndex); // prettier-ignore
 
         // verify params
@@ -116,15 +116,11 @@ router.post(
             return;
         }
         //
-        if (typeof startIndex === "number") {
-            if (startIndex < 0) {
-                resErrorMessage(res, 400, "Start index cannot be negative");
-                return;
-            }
-            if (endIndex === undefined) {
-                resErrorMessage(res, 400, "End index must be specified");
-                return;
-            }
+        if (startIndex < 0) {
+            resErrorMessage(res, 400, "Start index cannot be negative");
+            return;
+        }
+        if (typeof endIndex === "number") {
             if (endIndex < 0) {
                 resErrorMessage(res, 400, "End index cannot be negative");
                 return;
@@ -174,12 +170,15 @@ router.post(
 
         sqlQuery += sqlFilterQuery;
 
-        if (typeof startIndex === "number") {
-            sqlQuery += " limit " + startIndex + ", " + (endIndex! - startIndex); // prettier-ignore
+        sqlQuery += " limit " + startIndex + ", ";
+        if (typeof endIndex === "number") {
+            sqlQuery += endIndex - startIndex;
+        } else {
+            sqlQuery += "-1";
         }
 
         console.log(
-            `[POST /table_rows/get/${tableName}/${startIndex ?? "-"}/${
+            `[POST /table_rows/get/${tableName}/${startIndex}/${
                 endIndex ?? "-"
             }]\n| Query: "${sqlQuery}"\n| Values: ${sqlFilterValues}`
         );

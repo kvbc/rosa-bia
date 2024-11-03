@@ -2,66 +2,119 @@
 // useDBTable.tsx
 //
 
-import {
-    EffectCallback,
-    useCallback,
-    useContext,
-    useEffect,
-    useState,
-} from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { DB } from "../../../server/src/db/types";
 // import Emittery from "emittery";
-import axios from "axios";
-import { HTTP } from "../../../server/src/http/types";
-import { WS } from "../../../server/src/ws/types";
 import WebSocketContext from "../contexts/WebSocketContext";
-import { HTTP_SERVER_URL } from "../api/http";
+import {
+    apiAddTableRow,
+    apiDeleteTableRow,
+    apiGetTableRows,
+    apiUpdateTableRow,
+} from "../api/http";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { wsOnMessage } from "../api/ws";
+import { Filter } from "../../../server/src/http/routes/table_rows/get";
 
 export type DBTable<TRow extends DB.Row> = ReturnType<typeof useDBTable<TRow>>;
 
-// FIXME: add filters and dont always fetch all on init
 export default function useDBTable<TRow extends DB.Row>(
-    tableName: DB.TableName
-    // initFilters?: DBFilter[]
+    tableName: DB.TableName,
+    initFilters?: Filter[]
 ) {
     const [totalRowCount, setTotalRowCount] = useState(0);
-    // const [eventEmitter] = useState(
-    //     new Emittery<{
-    //         rowAdded: TRow;
-    //         rowDeleted: TRow;
-    //         rowUpdated: TRow;
-    //     }>()
-    // );
     const [rows, setRows] = useState<TRow[]>([]);
     const [startRowIndex, setStartRowIndex] = useState<number>(0);
-    const [endRowIndex, setEndRowIndex] = useState<number>(9999); // FIXME: yeah
-    // const [filters, setFilters] = useState<DBFilter<TRow>[]>(initFilters ?? []);
-    const webSocket = useContext(WebSocketContext);
+    const [endRowIndex, setEndRowIndex] = useState<number | null>(null);
+    const [filters, setFilters] = useState<Filter[]>(initFilters ?? []);
+    const webSocket = useContext(WebSocketContext)!;
+    const queryClient = useQueryClient();
+
+    const rowsQuery = useQuery({
+        queryKey: [
+            "table_rows",
+            tableName,
+            startRowIndex,
+            endRowIndex,
+            filters,
+        ],
+        queryFn: () =>
+            apiGetTableRows(tableName, startRowIndex, endRowIndex, filters),
+    });
+
+    useEffect(() => {
+        const data = rowsQuery.data;
+        if (data) {
+            setRows(data.rows as TRow[]);
+            setTotalRowCount(data.totalCount);
+        }
+    }, [rowsQuery.data]);
+
+    const addRowMutation = useMutation({
+        mutationFn: (newRow: TRow) => apiAddTableRow(tableName, newRow),
+        onSuccess: (_, newRow) => {
+            addRow(newRow);
+            queryClient.invalidateQueries({
+                queryKey: ["table_rows", tableName],
+            });
+        },
+        onError: () => {
+            setRows((rows) => [...rows]);
+        },
+    });
+
+    const deleteRowMutation = useMutation({
+        mutationFn: (rowID: number) => apiDeleteTableRow(tableName, rowID),
+        onSuccess: (_, rowID) => {
+            deleteRow(rowID);
+            queryClient.invalidateQueries({
+                queryKey: ["table_rows", tableName],
+            });
+        },
+        onError: () => {
+            setRows((rows) => [...rows]);
+        },
+    });
+
+    const updateRowMutation = useMutation({
+        mutationFn: (updatedRow: TRow) =>
+            apiUpdateTableRow(tableName, updatedRow),
+        onSuccess: (_, updatedRow) => {
+            updateRow(updatedRow);
+            queryClient.invalidateQueries({
+                queryKey: ["table_rows", tableName],
+            });
+        },
+        onError: () => {
+            setRows((rows) => [...rows]);
+        },
+    });
 
     const isRowIDInRange = useCallback(
         (rowID: number): boolean => {
-            return rowID > startRowIndex && rowID <= endRowIndex;
+            if (endRowIndex !== null && rowID > endRowIndex) {
+                return false;
+            }
+            return rowID > startRowIndex;
         },
         [startRowIndex, endRowIndex]
     );
 
     const addRow = useCallback(
-        (addedRow: TRow) => {
+        (newRow: TRow) => {
             setTotalRowCount((totalRowCount) => totalRowCount + 1);
-            if (isRowIDInRange(addedRow.id)) {
-                setRows((rows) => [...rows, addedRow]);
+            if (isRowIDInRange(newRow.id)) {
+                setRows((rows) => [...rows, newRow]);
             }
         },
         [isRowIDInRange]
     );
 
     const deleteRow = useCallback(
-        (deletedRow: TRow) => {
+        (rowID: number) => {
             setTotalRowCount((totalRowCount) => totalRowCount - 1);
-            if (isRowIDInRange(deletedRow.id)) {
-                setRows((rows) =>
-                    rows.filter((row) => row.id !== deletedRow.id)
-                );
+            if (isRowIDInRange(rowID)) {
+                setRows((rows) => rows.filter((row) => row.id !== rowID));
             }
         },
         [isRowIDInRange]
@@ -80,140 +133,38 @@ export default function useDBTable<TRow extends DB.Row>(
         [isRowIDInRange]
     );
 
-    const requestAddRow = useCallback(
-        (addedRow: TRow) => {
-            axios
-                .post(
-                    HTTP_SERVER_URL + "/table_rows/add/" + tableName,
-                    addedRow
-                )
-                .then(() => {
-                    // eventEmitter.emit("rowAdded", addedRow);
-                    addRow(addedRow);
-                })
-                .catch(() => {
-                    setRows((rows) => [...rows]);
-                });
-        },
-        // [eventEmitter, tableName, isRowIDInRange]
-        [tableName, addRow]
-    );
-
-    const requestDeleteRow = useCallback(
-        (deletedRow: TRow) => {
-            axios
-                .post(
-                    HTTP_SERVER_URL +
-                        `/table_rows/delete/${tableName}/${deletedRow.id}`
-                )
-                .then(() => {
-                    // eventEmitter.emit("rowDeleted", deletedRow);
-                    deleteRow(deletedRow);
-                })
-                .catch(() => {
-                    setRows((rows) => [...rows]);
-                });
-        },
-        // [eventEmitter, tableName, isRowIDInRange]
-        [tableName, deleteRow]
-    );
-
-    const requestUpdateRow = useCallback(
-        (updatedRow: TRow) => {
-            axios
-                .post(
-                    HTTP_SERVER_URL + "/table_rows/update/" + tableName,
-                    updatedRow
-                )
-                .then(() => {
-                    // eventEmitter.emit("rowUpdated", updatedRow);
-                    updateRow(updatedRow);
-                })
-                .catch(() => {
-                    setRows((rows) => [...rows]);
-                });
-        },
-        // [eventEmitter, tableName, isRowIDInRange]
-        [tableName, updateRow]
-    );
-
-    const requestFetchRows = useCallback(
-        (startIndex: number, endIndex: number): ReturnType<EffectCallback> => {
-            const abortController = new AbortController();
-            axios
-                .post<HTTP.Response<TRow>>(
-                    HTTP_SERVER_URL +
-                        `/table_rows/get/${tableName}/${startIndex}/${endIndex}`,
-                    {
-                        // filters,
-                    },
-                    {
-                        signal: abortController.signal,
-                    }
-                )
-                .then((res) => {
-                    // FIXME: why?
-                    if (abortController.signal.aborted) return;
-
-                    const msg = res.data;
-                    if (msg.type !== "fetch table rows") {
-                        throw "Invalid response type";
-                    }
-                    setTotalRowCount(msg.totalCount);
-                    setRows(msg.rows);
-                });
-            return () => abortController.abort();
-        },
-        [
-            tableName,
-            // filters
-        ]
-    );
-
     useEffect(() => {
-        return requestFetchRows(startRowIndex, endRowIndex);
-    }, [startRowIndex, endRowIndex, requestFetchRows]);
-
-    useEffect(() => {
-        if (webSocket === null) {
-            // FIXME: Error handling
-            throw "No web socket";
-        }
-        const listener: WebSocket["onmessage"] = (event) => {
-            const message: WS.Message<TRow> = JSON.parse(event.data);
-            if (message.tableName !== tableName) return;
+        return wsOnMessage<TRow>(webSocket, (message) => {
+            if (message.tableName !== tableName) {
+                return;
+            }
             switch (message.type) {
                 case "table row added":
                     addRow(message.tableRow);
                     break;
                 case "table row deleted":
-                    deleteRow(message.tableRow);
+                    deleteRow(message.tableRow.id);
                     break;
                 case "table row updated":
                     updateRow(message.tableRow);
                     break;
             }
-        };
-        webSocket.addEventListener("message", listener);
-        return () => {
-            webSocket.removeEventListener("message", listener);
-        };
+        });
     }, [webSocket, addRow, deleteRow, updateRow, tableName]);
 
     return {
         tableName,
         totalRowCount,
-        // eventEmitter,
         rows,
         startRowIndex,
         setStartRowIndex,
         endRowIndex,
         setEndRowIndex,
-        requestAddRow,
-        requestDeleteRow,
-        requestUpdateRow,
-        requestFetchRows,
-        // filters,
-        // setFilters,
+        rowsQuery,
+        addRowMutation,
+        deleteRowMutation,
+        updateRowMutation,
+        filters,
+        setFilters,
     };
 }

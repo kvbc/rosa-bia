@@ -1,66 +1,55 @@
 //
 // useEmployee.tsx
 //
-// FIXME: doesnt work globally
-//
 
-import axios, { AxiosResponse } from "axios";
-import { useEffect } from "react";
+import { useCallback } from "react";
 import { useAuthEmployeeStore } from "../stores/useAuthEmployeeStore";
-import { HTTP } from "../../../server/src/http/types";
-import { HTTP_SERVER_URL } from "../api/http";
-import { EmployeeLoginRequest } from "../../../server/src/http/routes/employee_login";
+import { apiEmployeeLogin } from "../api/http";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function useAuthEmployee() {
+    const queryClient = useQueryClient();
     const { employee, jwtToken, setEmployee, setJWTToken } =
         useAuthEmployeeStore();
 
-    useEffect(() => {
-        if (employee === null && jwtToken !== null) {
-            axios
-                .post<HTTP.Response>(
-                    HTTP_SERVER_URL + "/login",
-                    {},
-                    {
-                        headers: {
-                            Authorization: `Bearer ${jwtToken}`,
-                        },
-                    }
-                )
-                .then((res) => res.data)
-                .then((res) => {
-                    if (res.type === "login") {
-                        setEmployee(res.employee);
-                    }
-                });
-        }
-    }, [employee, jwtToken, setEmployee]);
-
-    const login = (req: EmployeeLoginRequest) => {
-        axios
-            .post<
-                HTTP.Response,
-                AxiosResponse<HTTP.Response, unknown>,
-                EmployeeLoginRequest
-            >(HTTP_SERVER_URL + "/login", req)
-            .then((res) => res.data)
-            .then((res) => {
-                if (res.type === "login") {
-                    setEmployee(res.employee);
-                    setJWTToken(res.jwtToken);
+    const query = useQuery({
+        queryKey: ["employee", employee, jwtToken],
+        queryFn: async () => {
+            if (employee === null && jwtToken !== null) {
+                const data = await apiEmployeeLogin(undefined, jwtToken!);
+                if (data) {
+                    setEmployee(data.employee);
                 }
-            });
-    };
+                return data;
+            }
+            return {
+                employee,
+                jwtToken,
+            };
+        },
+    });
 
-    const logout = () => {
+    const loginMutation = useMutation({
+        mutationFn: apiEmployeeLogin,
+        onSuccess: (data) => {
+            if (data) {
+                setEmployee(data.employee);
+                setJWTToken(data.jwtToken);
+                queryClient.invalidateQueries({
+                    queryKey: ["employee", data.employee, data.jwtToken],
+                });
+            }
+        },
+    });
+
+    const logout = useCallback(() => {
         setEmployee(null);
         setJWTToken(null);
-    };
+    }, [setEmployee, setJWTToken]);
 
     return {
-        employee,
-        login,
+        query,
         logout,
-        jwtToken,
+        loginMutation,
     };
 }

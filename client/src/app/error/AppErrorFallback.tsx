@@ -1,22 +1,17 @@
-import { Stack, Typography } from "@mui/joy";
 import { FallbackProps } from "react-error-boundary";
 import React from "react";
 import { ContactInformationBox } from "../../components/ContactInformationBox";
+import { Heading, Stack, Text } from "@chakra-ui/react";
 
 export const AppErrorFallback: React.FC<FallbackProps> = (
     props: FallbackProps
 ) => {
     return (
-        <Stack
-            justifyContent="center"
-            alignItems="center"
-            sx={{ width: "100%", height: "100%" }}
-            spacing={1}
-        >
-            <Typography color="danger" level="title-lg">
+        <Stack width="full" height="full" align="center" justify="center">
+            <Heading fontSize="xl" fontWeight="bold" color="red.500">
                 Błąd Krytyczny
-            </Typography>
-            <Typography level="body-sm">&quot;{props.error}&quot;</Typography>
+            </Heading>
+            <Text color="gray.500">&quot;{props.error}&quot;</Text>
             <ContactInformationBox />
         </Stack>
     );

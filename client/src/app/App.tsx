@@ -7,17 +7,21 @@
 
 import { BrowserRouter } from "react-router-dom";
 import { AppNavbar } from "./navbar/AppNavbar";
-import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import WebSocketContext from "../contexts/WebSocketContext";
-import useAuthEmployee from "../hooks/useAuthEmployee";
-import { HTTP } from "../../../server/src/http/types";
 import { ErrorBoundary } from "react-error-boundary";
 import { AppErrorFallback } from "./error/AppErrorFallback";
 import { WS_SERVER_URL } from "../api/ws";
-import { AppErrorModal } from "./error/AppErrorModal";
+import { AppErrorDialog } from "./error/AppErrorDialog";
 import { AppRoutes } from "./AppRoutes";
-import { AppErrorSnackbar } from "./error/AppErrorSnackbar";
+import { Provider as UIProvider } from "../components/ui/provider";
+import { Toaster, toaster } from "../components/ui/toaster";
+import { Box, Stack } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AppEmployee } from "./AppEmployee";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient();
 
 export type AppError = {
     brief: string;
@@ -27,8 +31,6 @@ export type AppError = {
 
 export const App: React.FC = () => {
     const [webSocket] = useState(new WebSocket(WS_SERVER_URL));
-    const authEmployee = useAuthEmployee();
-    const [errors, setErrors] = useState<AppError[]>([]);
     const [openedError, setOpenedError] = useState<AppError | null>(null);
 
     //
@@ -36,72 +38,47 @@ export const App: React.FC = () => {
     //
 
     const addError = useCallback((error: AppError) => {
-        setErrors((errors) => [...errors, error]);
-    }, []);
-
-    const removeError = useCallback((error: AppError) => {
-        setErrors((errors) => errors.filter((fError) => fError !== error));
-    }, []);
-
-    const openError = useCallback((error: AppError) => {
-        setOpenedError(error);
-    }, []);
-
-    //
-    // Auth Employee
-    //
-
-    useEffect(() => {
-        const id = axios.interceptors.request.use((req) => {
-            req.headers.Authorization = `Bearer ${authEmployee.jwtToken}`;
-            return req;
+        toaster.error({
+            title: "Błąd",
+            description: error.brief,
+            type: "error",
+            action: {
+                label: "Więcej",
+                onClick() {
+                    setOpenedError(error);
+                },
+            },
         });
-        return () => {
-            axios.interceptors.request.eject(id);
-        };
-    }, [authEmployee.jwtToken]);
-
-    useEffect(() => {
-        axios.interceptors.response.use(null, (error) => {
-            const req: XMLHttpRequest = error.request;
-            const res: HTTP.Response = error.response.data;
-            if (res.type === "error") {
-                addError({
-                    brief: error.message,
-                    url: req.responseURL,
-                    details: res.message,
-                });
-                return Promise.reject(error);
-            }
-        });
-    }, [addError]);
+    }, []);
 
     //
     // Render
     //
 
     return (
-        <WebSocketContext.Provider value={webSocket}>
-            <BrowserRouter>
-                <div className="flex flex-col justify-stretch h-full">
+        <QueryClientProvider client={queryClient}>
+            <AppEmployee addError={addError}>
+                <UIProvider>
                     <ErrorBoundary FallbackComponent={AppErrorFallback}>
-                        <AppErrorModal
-                            error={openedError}
-                            onClose={() => setOpenedError(null)}
-                        />
-                        <AppNavbar />
-                        <br />
-                        <main className="flex-1 p-4">
-                            <AppRoutes />
-                        </main>
-                        <AppErrorSnackbar
-                            errors={errors}
-                            onClose={removeError}
-                            onOpen={openError}
-                        />
+                        <WebSocketContext.Provider value={webSocket}>
+                            <BrowserRouter>
+                                <ReactQueryDevtools />
+                                <Toaster />
+                                <AppErrorDialog
+                                    error={openedError}
+                                    onClose={() => setOpenedError(null)}
+                                />
+                                <Stack height="full" gap="0">
+                                    <AppNavbar />
+                                    <Box as="main" padding="4">
+                                        <AppRoutes />
+                                    </Box>
+                                </Stack>
+                            </BrowserRouter>
+                        </WebSocketContext.Provider>
                     </ErrorBoundary>
-                </div>
-            </BrowserRouter>
-        </WebSocketContext.Provider>
+                </UIProvider>
+            </AppEmployee>
+        </QueryClientProvider>
     );
 };
