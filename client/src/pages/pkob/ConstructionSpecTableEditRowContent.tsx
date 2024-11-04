@@ -1,6 +1,6 @@
 import { DB } from "../../../../server/src/db/types";
 import React from "react";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
+import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import { Table } from "@mui/joy";
 
 export default function ConstructionSpecTableEditRowContent({

@@ -29,6 +29,7 @@ export type AppError = {
     url: string;
 };
 
+// TODO: use Zod on client to verify responses
 export const App: React.FC = () => {
     const [webSocket] = useState(new WebSocket(WS_SERVER_URL));
     const [openedError, setOpenedError] = useState<AppError | null>(null);
@@ -62,7 +63,7 @@ export const App: React.FC = () => {
                     <ErrorBoundary FallbackComponent={AppErrorFallback}>
                         <WebSocketContext.Provider value={webSocket}>
                             <BrowserRouter>
-                                <ReactQueryDevtools />
+                                <ReactQueryDevtools buttonPosition="bottom-left" />
                                 <Toaster />
                                 <AppErrorDialog
                                     error={openedError}

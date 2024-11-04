@@ -3,43 +3,32 @@
 // Row component for the TableEdit component
 //
 
-import React, {
-    createContext,
-    ReactNode,
-    useCallback,
-    useEffect,
-    useState,
-} from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { TableEditRowType } from "./TableEdit";
-import TableEditRowInput, { TableEditRowInputProps } from "./TableEditRowInput";
-import IconButton from "@mui/joy/IconButton";
-import ButtonGroup from "@mui/joy/ButtonGroup";
-import { MdEdit, MdDelete, MdAdd, MdCancel, MdSave } from "react-icons/md";
-import { Stack } from "@mui/joy";
+import { TableEditRowInput, TableEditRowInputProps } from "./TableEditRowInput";
 import {
     TableEditRowContentComponent,
     TableEditRowContentComponentProps,
 } from "./TableEditRowContentComponent";
+import { Center, Group, IconButton, Stack, Table } from "@chakra-ui/react";
+import { LuPencil, LuPlus, LuSave, LuTrash, LuX } from "react-icons/lu";
+import { TableEditRowContext } from "../../contexts/components/TableEditRowContext";
 
 export type TableEditRowState = "viewing" | "editing" | "adding";
-
-export const TableEditRowStateContext = createContext<TableEditRowState | null>(
-    null
-);
 
 export type TableEditRowInputsProps<TRow extends TableEditRowType> = Omit<
     TableEditRowInputProps<TRow>,
     "row" | "setRow" | "onBlur"
 >[];
 
-export default function TableEditRow<TRow extends TableEditRowType>({
+export function TableEditRow<TRow extends TableEditRowType>({
     row: tableRow,
     onDeleteClicked,
     onAddClicked,
     stateProp,
     onSaveClicked,
     editable,
-    actionButtonOrientation = "horizontal",
+    actionButtonDirection = "horizontal",
     showSaveAction,
     inputsProps,
     ContentComponent,
@@ -52,7 +41,7 @@ export default function TableEditRow<TRow extends TableEditRowType>({
     showSaveAction: boolean;
     editable: boolean;
     stateProp: TableEditRowState;
-    actionButtonOrientation?: "horizontal" | "vertical";
+    actionButtonDirection?: "horizontal" | "vertical";
     inputsProps: TableEditRowInputsProps<TRow>;
     ContentComponent?: TableEditRowContentComponent<TRow>;
     saveOnInputBlur: boolean;
@@ -113,7 +102,9 @@ export default function TableEditRow<TRow extends TableEditRowType>({
         );
     } else {
         content = inputsProps.map((inputProps) => (
-            <td key={inputProps.rowKey}>{getInputNode(inputProps)}</td>
+            <Table.Cell key={inputProps.rowKey}>
+                {getInputNode(inputProps)}
+            </Table.Cell>
         ));
     }
 
@@ -155,110 +146,57 @@ export default function TableEditRow<TRow extends TableEditRowType>({
     const actionAddButton = (
         <IconButton
             onClick={handleActionAddClicked}
-            size="sm"
+            size="2xs"
             variant="plain"
-            color="success"
+            color="fg.success"
         >
-            <MdAdd />
+            <LuPlus />
         </IconButton>
     );
+
     const actionDeleteButton = (
         <IconButton
             onClick={handleActionDeleteClicked}
-            size="sm"
+            size="2xs"
             variant="plain"
-            color="danger"
+            color="fg.error"
         >
-            <MdDelete />
+            <LuTrash />
         </IconButton>
     );
+
     const actionEditButton = (
         <IconButton
             onClick={handleActionEditClicked}
-            size="sm"
+            size="2xs"
             variant="plain"
-            color="primary"
+            color="fg.info"
         >
-            <MdEdit />
+            <LuPencil />
         </IconButton>
     );
+
     const actionSaveButton = (
         <IconButton
             onClick={handleActionSaveClicked}
-            size="sm"
+            size="2xs"
             variant="plain"
-            color="success"
+            color="fg.success"
         >
-            <MdSave />
+            <LuSave />
         </IconButton>
     );
+
     const actionCancelButton = (
         <IconButton
             onClick={handleActionCancelClicked}
-            size="sm"
+            size="2xs"
             variant="plain"
-            color="danger"
+            color="fg.error"
         >
-            <MdCancel />
+            <LuX />
         </IconButton>
     );
-
-    /*
-     *
-     *
-     *
-     */
-
-    // useEffect(() => {
-    //     // console.log("update");
-    //     const connectAction = (
-    //         action: "add" | "cancel" | "save" | "delete",
-    //         callback?: (row: TRow) => void
-    //     ) => {
-    //         return upperRowContext?.eventEmitter.on(action, (dir) => {
-    //             if (dir === "lower") {
-    //                 console.log(">>>", action, dir);
-    //                 if (contextData.depth === maxRowDepth) {
-    //                     callback?.(row);
-    //                     // setRow((row) => {
-    //                     //     callback?.(row);
-    //                     //     return row;
-    //                     // });
-    //                     eventEmitter.emit(action, "higher");
-    //                 } else {
-    //                     eventEmitter.emit(action, "lower");
-    //                 }
-    //             } else if (dir === "higher") {
-    //                 callback?.(row);
-    //                 // setRow((row) => {
-    //                 //     callback?.(row);
-    //                 //     return row;
-    //                 // });
-    //                 upperRowContext.eventEmitter.emit(action, "higher");
-    //             }
-    //         });
-    //     };
-    //     const offs = [
-    //         upperRowContext?.eventEmitter.on("stateChanged", setState),
-    //         connectAction("add", onAddClicked),
-    //         connectAction("save", onSaveClicked),
-    //         connectAction("delete", onDeleteClicked),
-    //         connectAction("cancel", onCancelClicked),
-    //     ];
-    //     return () => {
-    //         offs.forEach((off) => off?.());
-    //     };
-    // }, [
-    //     upperRowContext?.eventEmitter,
-    //     eventEmitter,
-    //     onAddClicked,
-    //     onCancelClicked,
-    //     onDeleteClicked,
-    //     onSaveClicked,
-    //     row,
-    //     contextData.depth,
-    //     maxRowDepth,
-    // ]);
 
     /*
      *
@@ -267,45 +205,49 @@ export default function TableEditRow<TRow extends TableEditRowType>({
      */
 
     return (
-        <tr>
-            <TableEditRowStateContext.Provider value={state}>
+        <Table.Row>
+            <TableEditRowContext.Provider value={state}>
                 {content}
-            </TableEditRowStateContext.Provider>
+            </TableEditRowContext.Provider>
             {editable && (
                 <>
                     {!showSaveAction && (
-                        <td>
+                        <Table.Cell>
                             <Stack>
                                 {state !== "adding" && actionDeleteButton}
                                 {state === "adding" && actionAddButton}
                             </Stack>
-                        </td>
+                        </Table.Cell>
                     )}
                     {showSaveAction && (
-                        <td>
+                        <Table.Cell>
                             {state == "viewing" && (
-                                <ButtonGroup
-                                    orientation={actionButtonOrientation}
+                                <Group
+                                    attached
+                                    direction={actionButtonDirection}
+                                    grow
                                 >
                                     {actionEditButton}
                                     {actionDeleteButton}
-                                </ButtonGroup>
+                                </Group>
                             )}
                             {state == "editing" && (
-                                <ButtonGroup
-                                    orientation={actionButtonOrientation}
+                                <Group
+                                    attached
+                                    direction={actionButtonDirection}
+                                    grow
                                 >
                                     {actionSaveButton}
                                     {actionCancelButton}
-                                </ButtonGroup>
+                                </Group>
                             )}
                             {state == "adding" && (
-                                <Stack>{actionAddButton}</Stack>
+                                <Center>{actionAddButton}</Center>
                             )}
-                        </td>
+                        </Table.Cell>
                     )}
                 </>
             )}
-        </tr>
+        </Table.Row>
     );
 }

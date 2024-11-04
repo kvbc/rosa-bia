@@ -6,8 +6,8 @@
 
 import { DB } from "../../../../../server/src/db/types";
 import React, { useContext, useMemo } from "react";
-import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
-import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
+import { TableEditRowContentComponentProps } from "../../../components/table_edit/TableEditRowContentComponent";
+import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
 import { Table } from "@mui/joy";
 
 export default function RegisterDataTableEdit({

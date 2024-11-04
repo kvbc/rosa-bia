@@ -4,7 +4,6 @@
 
 import { useCallback, useContext, useEffect, useState } from "react";
 import { DB } from "../../../server/src/db/types";
-// import Emittery from "emittery";
 import WebSocketContext from "../contexts/WebSocketContext";
 import {
     apiAddTableRow,

@@ -1,5 +1,5 @@
 import React, { ContextType, useMemo } from "react";
-import { PageRegistersContext } from "../../contexts/PageRegistersContext";
+import { PageRegistersContext } from "../../contexts/pages/PageRegistersContext";
 import RegisterTableEdit from "./RegisterTableEdit";
 import useDBTable from "../../hooks/useDBTable";
 import { DB } from "../../../../server/src/db/types";

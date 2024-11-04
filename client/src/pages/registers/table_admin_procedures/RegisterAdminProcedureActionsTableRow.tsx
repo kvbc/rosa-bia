@@ -1,9 +1,9 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Checkbox, Input } from "@mui/joy";
 import { DB } from "../../../../../server/src/db/types";
-import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
+import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
 import React from "react";
-import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
+import { TableEditRowContentComponentProps } from "../../../components/table_edit/TableEditRowContentComponent";
 
 export default function RegisterAdminProcedureActionsTableRow({
     row,

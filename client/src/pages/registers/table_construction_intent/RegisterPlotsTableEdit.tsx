@@ -3,9 +3,9 @@ import DBTableEdit, {
     DBTableEditDefaultRow,
 } from "../../../components/DBTableEdit";
 import React, { useContext, useMemo } from "react";
-import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
-import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
-import { TableEditRowInputsProps } from "../../../components/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../../components/table_edit/TableEditRowContentComponent";
+import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
+import { TableEditRowInputsProps } from "../../../components/table_edit/TableEditRow";
 
 export default function RegisterPlotsDataTableEdit({
     row,

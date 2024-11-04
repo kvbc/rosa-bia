@@ -6,7 +6,7 @@
 import React from "react";
 import { AppNavbarLinks } from "./AppNavbarLinks";
 import { AppNavbarEmployee } from "./AppNavbarEmployee";
-import { HStack, Image, StackSeparator } from "@chakra-ui/react";
+import { HStack, Image, Link, StackSeparator } from "@chakra-ui/react";
 import { AppNavbarEmployeeDialog } from "./AppNavbarEmployeeLoginDialog";
 
 export const AppNavbar: React.FC = () => {
@@ -18,10 +18,16 @@ export const AppNavbar: React.FC = () => {
                 color="white"
                 fontWeight="light"
                 fontSize="xs"
+                width="full"
                 padding="2"
                 separator={<StackSeparator borderColor="blue.800" />}
             >
-                <Image src="/logo.svg" height="32px" />
+                <Link
+                    target="_blank"
+                    href="https://www.starostwo.czluchow.org.pl/"
+                >
+                    <Image src="/logo.svg" height="32px" />
+                </Link>
                 <AppNavbarLinks />
                 <AppNavbarEmployee />
             </HStack>

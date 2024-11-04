@@ -46,11 +46,11 @@ export const AppNavbarEmployee: React.FC = () => {
     }
 
     return (
-        <HStack width="full" justify="end">
+        <HStack justify="end" alignSelf="stretch" flexGrow="1">
             <Skeleton loading={!employeeQuery.isFetched}>
                 {employee ? (
                     <VStack gap="0.5" align="end">
-                        <Text fontSize="sm" fontWeight="medium">
+                        <Text fontSize="xs" fontWeight="medium">
                             {displayEmployee.name}
                         </Text>
                         <Badge
@@ -90,6 +90,7 @@ export const AppNavbarEmployee: React.FC = () => {
             >
                 {employee && (
                     <AvatarRoot
+                        size="sm"
                         colorPalette={
                             colorPalettes[
                                 displayEmployee.name.charCodeAt(0) %
@@ -107,17 +108,17 @@ export const AppNavbarEmployee: React.FC = () => {
                                 offsetX="1"
                                 offsetY="1"
                             >
-                                <Button onClick={employeeLogout} bg="none">
-                                    <Icon
-                                        color="white"
-                                        bg="blue.700"
-                                        fontSize="sm"
-                                        outline="1px solid"
-                                        outlineColor="blue.700"
-                                    >
-                                        <LuLogOut />
-                                    </Icon>
-                                </Button>
+                                <Icon
+                                    color="white"
+                                    bg="blue.700"
+                                    fontSize="sm"
+                                    outline="1px solid"
+                                    outlineColor="blue.700"
+                                    onClick={employeeLogout}
+                                    cursor="pointer"
+                                >
+                                    <LuLogOut />
+                                </Icon>
                             </Float>
                         </Tooltip>
                     </AvatarRoot>

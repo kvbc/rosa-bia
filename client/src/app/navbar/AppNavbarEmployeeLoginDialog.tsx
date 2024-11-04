@@ -16,7 +16,7 @@ import {
 import useAuthEmployee from "../../hooks/useAuthEmployee";
 import useDBTable from "../../hooks/useDBTable";
 import { DB } from "../../../../server/src/db/types";
-import { Fieldset, Input } from "@chakra-ui/react";
+import { Fieldset } from "@chakra-ui/react";
 import { Field } from "../../components/ui/field";
 import { Button } from "../../components/ui/button";
 import {
@@ -24,6 +24,7 @@ import {
     NativeSelectRoot,
 } from "../../components/ui/native-select";
 import { Skeleton } from "../../components/ui/skeleton";
+import { PasswordInput } from "../../components/ui/password-input";
 
 export const AppNavbarEmployeeDialog: React.FC<PropsWithChildren> = ({
     children,
@@ -122,8 +123,7 @@ export const AppNavbarEmployeeDialog: React.FC<PropsWithChildren> = ({
                                     invalid={employeePassword.length === 0}
                                     errorText="Hasło jest wymagane"
                                 >
-                                    <Input
-                                        type="password"
+                                    <PasswordInput
                                         placeholder="Hasło"
                                         value={employeePassword}
                                         onChange={(e) =>

@@ -1,7 +1,7 @@
 import { IconButton, Stack, Table } from "@mui/joy";
 import RegisterDataTableEdit from "./table_app_data/RegisterDataTableEdit";
 import { DB } from "../../../../server/src/db/types";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
+import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import React, { useCallback, useState } from "react";
 import RegisterConstructionIntentTableEdit from "./table_construction_intent/RegisterConstructionIntentTableEdit";
 import RegisterAdminProceduresTableEdit from "./table_admin_procedures/RegisterAdminProceduresTableEdit";

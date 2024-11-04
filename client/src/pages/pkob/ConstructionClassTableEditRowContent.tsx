@@ -12,10 +12,10 @@ import DBTableEdit, {
 } from "../../components/DBTableEdit";
 import ConstructionSpecTableEditRowContent from "./ConstructionSpecTableEditRowContent";
 import React, { useContext, useMemo } from "react";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
+import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import { DB } from "../../../../server/src/db/types";
-import { PagePKOBContext } from "../../contexts/PagePKOBContext";
-import { TableEditRowInputsProps } from "../../components/TableEditRow";
+import { PagePKOBContext } from "../../contexts/pages/PagePKOBContext";
+import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 
 export default function ConstructionClassTableEditRowContent({
     inputs,

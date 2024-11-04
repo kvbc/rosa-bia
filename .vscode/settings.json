@@ -9,9 +9,6 @@
                 {
                     "name": "client",
                     "commands": ["cd client", "npm run dev"]
-                },
-                {
-                    "name": "app"
                 }
             ]
         }

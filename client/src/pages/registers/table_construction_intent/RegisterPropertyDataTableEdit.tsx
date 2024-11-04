@@ -1,5 +1,5 @@
 import { DB } from "../../../../../server/src/db/types";
-import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
+import { TableEditRowContentComponentProps } from "../../../components/table_edit/TableEditRowContentComponent";
 import React from "react";
 import { Table } from "@mui/joy";
 

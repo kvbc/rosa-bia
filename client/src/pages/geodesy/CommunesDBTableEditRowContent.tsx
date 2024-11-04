@@ -7,13 +7,13 @@ import { FaCity } from "react-icons/fa6";
 import DBTableEdit, {
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
-import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
+import { TableEditRowInputSelectOption } from "../../components/table_edit/TableEditRowInput";
+import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import { DB } from "../../../../server/src/db/types";
 import React, { useContext, useMemo } from "react";
 import PlacesTableEditRowContent from "./PlacesTableEditRowContent";
-import { PageGeodesyContext } from "../../contexts/PageGeodesyContext";
-import { TableEditRowInputsProps } from "../../components/TableEditRow";
+import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
+import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 
 export default function CommunesDBTableEditRowContent({
     inputs,

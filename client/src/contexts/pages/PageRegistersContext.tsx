@@ -1,6 +1,6 @@
 import { createContext } from "react";
-import { DBTable } from "../hooks/useDBTable";
-import { DB } from "../../../server/src/db/types";
+import { DBTable } from "../../hooks/useDBTable";
+import { DB } from "../../../../server/src/db/types";
 
 export const PageRegistersContext = createContext<{
     registersDBTable: DBTable<DB.Rows.Register>;

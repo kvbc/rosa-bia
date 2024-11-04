@@ -8,9 +8,9 @@ import {
 } from "@mui/joy";
 import { DB } from "../../../server/src/db/types";
 import { DBTable } from "../hooks/useDBTable";
-import TableEdit from "./TableEdit";
-import { TableEditRowInputsProps } from "./TableEditRow";
-import { TableEditRowInputSelectOption } from "./TableEditRowInput";
+import TableEdit from "./table_edit/TableEdit";
+import { TableEditRowInputsProps } from "./table_edit/TableEditRow";
+import { TableEditRowInputSelectOption } from "./table_edit/TableEditRowInputSelect";
 import { Filter as DBFilter } from "../../../server/src/http/routes/table_rows/get";
 import {
     FilterList as FilterListIcon,

@@ -5,7 +5,7 @@
 
 import React from "react";
 import { Link, Separator, Stack, Text } from "@chakra-ui/react";
-import { LuMail, LuPhoneCall, LuUser } from "react-icons/lu";
+import { LuGithub, LuMail, LuPhoneCall, LuUser } from "react-icons/lu";
 import { DataListItem, DataListRoot } from "./ui/data-list";
 
 export const ContactInformationBox: React.FC = () => {
@@ -20,7 +20,16 @@ export const ContactInformationBox: React.FC = () => {
                     {
                         LabelIcon: LuUser,
                         labelText: "Twórca",
-                        value: "Mateusz Leśniewski",
+                        value: (
+                            <Link
+                                href="https://pl-pl.facebook.com/mateusz.lesniewski.3990"
+                                target="_blank"
+                                colorPalette="blue"
+                                variant="underline"
+                            >
+                                Mateusz Leśniewski
+                            </Link>
+                        ),
                     },
                     {
                         LabelIcon: LuPhoneCall,
@@ -48,9 +57,25 @@ export const ContactInformationBox: React.FC = () => {
                             </Link>
                         ),
                     },
+                    {
+                        LabelIcon: LuGithub,
+                        labelText: "Github",
+                        value: (
+                            <Link
+                                href="https://github.com/kvbc"
+                                target="_blank"
+                                colorPalette="blue"
+                                variant="underline"
+                            >
+                                kvbc
+                            </Link>
+                        ),
+                        info: "Inne projekty programistyczne",
+                    },
                 ].map((item) => (
                     <DataListItem
                         key={item.labelText}
+                        info={item.info}
                         label={
                             <>
                                 <item.LabelIcon fontSize="small" />

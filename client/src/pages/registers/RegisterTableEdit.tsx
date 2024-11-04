@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo } from "react";
-import { TableEditRowInputSelectOption } from "../../components/TableEditRowInput";
+import { TableEditRowInputSelectOption } from "../../components/table_edit/TableEditRowInput";
 import DBTableEdit, {
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
 import useDBTable from "../../hooks/useDBTable";
 import { DB } from "../../../../server/src/db/types";
-import { TableEditRowInputsProps } from "../../components/TableEditRow";
+import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 import RegisterTableEditRowContent from "./RegisterTableEditRowContent";
 
 export default function RegisterTableEdit() {

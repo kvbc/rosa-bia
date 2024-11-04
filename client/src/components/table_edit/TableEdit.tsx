@@ -12,19 +12,12 @@ import React, {
     useEffect,
     useState,
 } from "react";
-import TableEditRow, { TableEditRowStateContext } from "./TableEditRow";
-import Tooltip from "@mui/joy/Tooltip";
-import Box from "@mui/joy/Box";
-import FormControl from "@mui/joy/FormControl";
-import Select from "@mui/joy/Select";
-import Typography from "@mui/joy/Typography";
-import FormLabel from "@mui/joy/FormLabel";
-import Option from "@mui/joy/Option";
-import IconButton from "@mui/joy/IconButton";
+import { TableEditRow } from "./TableEditRow";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import TableEditContext from "../contexts/TableEditContext";
-import { Table } from "@mui/joy";
+import TableEditContext from "../../contexts/components/TableEditContext";
+import { HStack, Table } from "@chakra-ui/react";
+import { TableEditRowContext } from "../../contexts/components/TableEditRowContext";
 
 export type TableEditRowType = {
     id: number;
@@ -46,7 +39,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
     rowActionButtonOrientation,
     RowContentComponent,
     ...tableProps
-}: ComponentProps<typeof Table> & {
+}: ComponentProps<typeof Table.Root> & {
     rows: TRow[];
     headers: (
         | {
@@ -63,7 +56,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
     onRowAddClicked?: (row: TRow) => void;
     onRowSaveClicked?: (row: TRow) => void;
     onRowsRangeChanged?: (startRowIndex: number, endRowIndex: number) => void;
-    rowActionButtonOrientation?: ComponentProps<typeof TableEditRow<TRow>>["actionButtonOrientation"]; // prettier-ignore
+    rowActionButtonOrientation?: ComponentProps<typeof TableEditRow<TRow>>["actionButtonDirection"]; // prettier-ignore
     rowInputsProps: ComponentProps<typeof TableEditRow<TRow>>["inputsProps"];
     RowContentComponent?: ComponentProps<typeof TableEditRow<TRow>>["ContentComponent"]; // prettier-ignore
 }) {
@@ -85,7 +78,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
     });
     const [eventTarget] = useState(new EventTarget());
     const upperTableEventTarget = useContext(TableEditContext);
-    const upperRowState = useContext(TableEditRowStateContext);
+    const upperRowState = useContext(TableEditRowContext);
 
     // const upperTableEditRowContext = useContext(TableEditRowContext);
     const pageCount = Math.ceil(totalRowCount / rowsPerPage);
@@ -254,24 +247,16 @@ export default function TableEdit<TRow extends TableEditRowType>({
     };
 
     const content = (
-        <Table
-            variant="outlined"
+        <Table.Root
+            variant="outline"
             size="sm"
-            borderAxis="both"
-            stickyFooter={upperTableEventTarget === null}
+            showColumnBorder
+            interactive
             stickyHeader={upperTableEventTarget === null}
-            sx={
-                {
-                    // "& > tbody > tr > td:last-child": {
-                    //     position: "sticky",
-                    //     top: 0,
-                    // },
-                }
-            }
             {...tableProps}
         >
-            <thead>
-                <tr>
+            <Table.Header>
+                <Table.Row bg="bg.subtle">
                     {(editable
                         ? [
                               ...headers,
@@ -290,14 +275,16 @@ export default function TableEdit<TRow extends TableEditRowType>({
                             width = header.width ?? "inherit";
                         }
                         return (
-                            <Tooltip title={name} variant="soft" key={name}>
-                                <th style={{ width }}>{name}</th>
-                            </Tooltip>
+                            <Table.ColumnHeader style={{ width }} key={name}>
+                                {/* <Tooltip content={name}> */}
+                                {name}
+                                {/* </Tooltip> */}
+                            </Table.ColumnHeader>
                         );
                     })}
-                </tr>
-            </thead>
-            <tbody>
+                </Table.Row>
+            </Table.Header>
+            <Table.Body>
                 {(editable ? [...rows, addRow] : rows).map((row) => (
                     <TableEditRow
                         key={row.id}
@@ -308,7 +295,7 @@ export default function TableEdit<TRow extends TableEditRowType>({
                         showSaveAction={upperTableEventTarget === null}
                         onSaveClicked={handleRowSaved}
                         onDeleteClicked={handleRowDeleted}
-                        actionButtonOrientation={rowActionButtonOrientation}
+                        actionButtonDirection={rowActionButtonOrientation}
                         stateProp={
                             row === addRow
                                 ? "adding"
@@ -324,21 +311,14 @@ export default function TableEdit<TRow extends TableEditRowType>({
                         saveOnInputBlur={upperTableEventTarget !== null}
                     />
                 ))}
-            </tbody>
+            </Table.Body>
 
             {showFooter && (
-                <tfoot className="z-20">
-                    <tr>
-                        <td colSpan={headers.length + 2}>
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 2,
-                                    justifyContent: "flex-end",
-                                }}
-                            >
-                                <FormControl orientation="horizontal" size="sm">
+                <Table.Footer className="z-20">
+                    <Table.Row>
+                        <Table.Cell colSpan={headers.length + 2}>
+                            <HStack align="center" justify="flex-end" gap="2">
+                                {/* <FormControl orientation="horizontal" size="sm">
                                     <FormLabel>Wyniki na stronę:</FormLabel>
                                     <Select
                                         onChange={handleChangeRowsPerPage}
@@ -385,13 +365,13 @@ export default function TableEdit<TRow extends TableEditRowType>({
                                     >
                                         <KeyboardArrowRightIcon />
                                     </IconButton>
-                                </Box>
-                            </Box>
-                        </td>
-                    </tr>
-                </tfoot>
+                                </Box> */}
+                            </HStack>
+                        </Table.Cell>
+                    </Table.Row>
+                </Table.Footer>
             )}
-        </Table>
+        </Table.Root>
     );
 
     // if (!upperTableEventTarget) {

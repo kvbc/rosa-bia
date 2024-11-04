@@ -20,8 +20,8 @@ import RegisterPropertyDataTableEdit from "./RegisterPropertyDataTableEdit";
 import RegisterPlotsDataTableEdit from "./RegisterPlotsTableEdit";
 import RegisterCharParamsTableEdit from "./RegisterCharParamsTableEdit";
 import { DB } from "../../../../../server/src/db/types";
-import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
-import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
+import { TableEditRowContentComponentProps } from "../../../components/table_edit/TableEditRowContentComponent";
+import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
 
 export default function RegisterConstructionIntentTableEdit(
     props: TableEditRowContentComponentProps<DB.Rows.Register> & {

@@ -9,11 +9,11 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { DB } from "../../../../server/src/db/types";
-import { TableEditRowContentComponentProps } from "../../components/TableEditRowContentComponent";
+import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import { useContext, useMemo } from "react";
-import { PagePKOBContext } from "../../contexts/PagePKOBContext";
+import { PagePKOBContext } from "../../contexts/pages/PagePKOBContext";
 import React from "react";
-import { TableEditRowInputsProps } from "../../components/TableEditRow";
+import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 
 export default function ConstructionDivisionTableEditRowContent({
     inputs,

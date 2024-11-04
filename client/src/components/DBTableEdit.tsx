@@ -4,7 +4,7 @@
 //
 
 import React, { ComponentProps, useCallback, useMemo } from "react";
-import TableEdit from "./TableEdit";
+import TableEdit from "./table_edit/TableEdit";
 import { DB } from "../../../server/src/db/types";
 import { DBTable } from "../hooks/useDBTable";
 import { Stack } from "@mui/joy";

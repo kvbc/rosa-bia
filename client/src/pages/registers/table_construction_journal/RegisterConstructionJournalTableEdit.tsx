@@ -1,7 +1,7 @@
 import { DB } from "../../../../../server/src/db/types";
-import { TableEditRowContentComponentProps } from "../../../components/TableEditRowContentComponent";
+import { TableEditRowContentComponentProps } from "../../../components/table_edit/TableEditRowContentComponent";
 import React, { useContext } from "react";
-import { PageRegistersContext } from "../../../contexts/PageRegistersContext";
+import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
 import { Table } from "@mui/joy";
 
 export default function RegisterConstructionJournalTableEdit({

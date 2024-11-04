@@ -44,7 +44,6 @@ export const AppNavbarLinks: React.FC = () => {
         <HStack
             direction="row"
             gap="2"
-            width="8/12"
             separator={<StackSeparator borderColor="blue.800" />}
         >
             <AppNavbarLink to="/">

@@ -4,9 +4,9 @@ import DBTableEdit, {
 import ConstructionSectionTableEditRowContent from "./ConstructionSectionTableEditRowContent";
 import { DB } from "../../../../server/src/db/types";
 import React, { ContextType, useMemo } from "react";
-import { PagePKOBContext } from "../../contexts/PagePKOBContext";
+import { PagePKOBContext } from "../../contexts/pages/PagePKOBContext";
 import useDBTable from "../../hooks/useDBTable";
-import { TableEditRowInputsProps } from "../../components/TableEditRow";
+import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 
 export default function PagePKOB() {
     const constructionSectionsDBTable = useDBTable<DB.Rows.ConstructionSection>("construction_sections"); // prettier-ignore
