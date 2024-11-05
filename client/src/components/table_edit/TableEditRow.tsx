@@ -4,7 +4,12 @@
 //
 
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
-import { TableEditColorValue, TableEditRowType } from "./TableEdit";
+import {
+    getTableEditColor,
+    nextTableEditColorValue,
+    TableEditColorValue,
+    TableEditRowType,
+} from "./TableEdit";
 import { TableEditRowInput, TableEditRowInputProps } from "./TableEditRowInput";
 import {
     TableEditRowContentComponent,
@@ -77,37 +82,65 @@ export function TableEditRow<TRow extends TableEditRowType>({
 
     let content: ReactNode = "";
 
-    const getInputNode = (inputProps: (typeof inputsProps)[number]) => (
-        <TableEditRowInput
-            row={row}
-            setRow={setRow}
-            {...inputProps}
-            disabled={!isContentEditable}
-            onBlur={handleInputBlur}
-            primaryBgColorValue={primaryBgColorValue}
-        />
+    const renderInput = useCallback<
+        TableEditRowContentComponentProps<TRow>["renderInput"]
+    >(
+        (rowKey, customPrimaryBgColorValue) => {
+            const inputProps = inputsProps.find(
+                (inputProps) => inputProps.rowKey === rowKey
+            );
+            if (!inputProps) {
+                return null;
+            }
+            return (
+                <TableEditRowInput
+                    row={row}
+                    setRow={setRow}
+                    disabled={!isContentEditable}
+                    onBlur={handleInputBlur}
+                    primaryBgColorValue={
+                        customPrimaryBgColorValue ?? primaryBgColorValue
+                    }
+                    {...inputProps}
+                />
+            );
+        },
+        [
+            handleInputBlur,
+            inputsProps,
+            isContentEditable,
+            primaryBgColorValue,
+            row,
+        ]
     );
 
     if (ContentComponent) {
-        const inputs: TableEditRowContentComponentProps<TRow>["inputs"] = {};
-        inputsProps.forEach((inputProps) => {
-            inputs[inputProps.rowKey] = getInputNode(inputProps);
-        });
         content = (
-            <ContentComponent
-                primaryBgcolorValue={primaryBgColorValue}
-                inputs={inputs}
-                row={row}
-                setRow={setRow}
-                editable={isContentEditable}
-                onInputBlur={handleInputBlur}
-                eventTarget={eventTarget}
-            />
+            <Table.Cell
+                borderColor={getTableEditColor(
+                    nextTableEditColorValue(primaryBgColorValue, 2)
+                )}
+            >
+                <ContentComponent
+                    primaryBgColorValue={primaryBgColorValue}
+                    renderInput={renderInput}
+                    row={row}
+                    setRow={setRow}
+                    editable={isContentEditable}
+                    onInputBlur={handleInputBlur}
+                    eventTarget={eventTarget}
+                />
+            </Table.Cell>
         );
     } else {
         content = inputsProps.map((inputProps) => (
-            <Table.Cell key={inputProps.rowKey}>
-                {getInputNode(inputProps)}
+            <Table.Cell
+                borderColor={getTableEditColor(
+                    nextTableEditColorValue(primaryBgColorValue, 2)
+                )}
+                key={inputProps.rowKey}
+            >
+                {renderInput(inputProps.rowKey)}
             </Table.Cell>
         ));
     }

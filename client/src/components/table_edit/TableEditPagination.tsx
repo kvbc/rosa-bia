@@ -53,25 +53,39 @@ export function TableEditPagination<TRow extends TableEditRowType>({
         <HStack justify="end">
             <Fieldset.Root>
                 <Fieldset.Content>
-                    <Field label="Wyniki na stronę" orientation="horizontal">
+                    <Field
+                        label="Wyniki na stronę"
+                        orientation="horizontal"
+                        color="gray"
+                        textWrap="balance"
+                    >
                         <SelectRoot
+                            color="black"
                             collection={rowsPerPageCollection}
                             value={[String(rowsPerPage)]}
                             onValueChange={(e) =>
                                 setRowsPerPage(Number(e.value))
                             }
+                            // variant="subtle"
                             bg={primaryBackgroundColor}
                             border="1px solid"
+                            borderRadius="sm"
                             borderColor={secondaryBackgroundColor}
                         >
                             <SelectTrigger>
                                 <SelectValueText />
                             </SelectTrigger>
-                            <SelectContent bg={primaryBackgroundColor}>
+                            <SelectContent
+                                bg={primaryBackgroundColor}
+                                border="1px solid"
+                                borderRadius="sm"
+                                borderColor={secondaryBackgroundColor}
+                            >
                                 {rowsPerPageCollection.items.map((item) => (
                                     <SelectItem
                                         key={item}
                                         item={item}
+                                        backgroundColor={primaryBackgroundColor}
                                         _hover={{
                                             backgroundColor:
                                                 secondaryBackgroundColor,

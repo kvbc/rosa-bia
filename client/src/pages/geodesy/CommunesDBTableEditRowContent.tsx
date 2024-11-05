@@ -7,7 +7,7 @@ import React, { useContext, useMemo } from "react";
 import PlacesTableEditRowContent from "./PlacesTableEditRowContent";
 import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 import { TableEditRowInputSelectOption } from "../../components/table_edit/TableEditRowInputSelect";
-import { Box, Table } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import {
     nextTableEditColorValue,
     TableEditHeader,
@@ -22,10 +22,10 @@ import { LuBuilding } from "react-icons/lu";
 import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
 
 export default function CommunesDBTableEditRowContent({
-    inputs,
+    renderInput,
     row,
     editable,
-    primaryBgcolorValue,
+    primaryBgColorValue: primaryBgcolorValue,
 }: TableEditRowContentComponentProps<DB.Rows.Commune>) {
     const pageGeodesyContext = useContext(PageGeodesyContext)!;
 
@@ -55,7 +55,7 @@ export default function CommunesDBTableEditRowContent({
             {
                 type: "select",
                 rowKey: "area_place_id",
-                selectOptions:
+                getSelectOptions: () =>
                     pageGeodesyContext.placesDBTable.rows.map<TableEditRowInputSelectOption>(
                         (row) => ({
                             value: row.id,
@@ -72,33 +72,31 @@ export default function CommunesDBTableEditRowContent({
     );
 
     return (
-        <Table.Cell>
-            <AccordionRoot collapsible variant="plain">
-                <AccordionItem value="1">
-                    <AccordionItemTrigger>
-                        <LuBuilding />
-                        <Box>{inputs.name}</Box>
-                    </AccordionItemTrigger>
-                    <AccordionItemContent>
-                        <DBTableEdit
-                            hidePagination
-                            dbTable={pageGeodesyContext.placesDBTable}
-                            rows={pageGeodesyContext.placesDBTable.rows.filter(
-                                (fRow) => fRow.commune_id === row.id
-                            )}
-                            rowActionButtonOrientation="vertical"
-                            primaryBackgroundColorValue={nextTableEditColorValue(
-                                primaryBgcolorValue
-                            )}
-                            editable={editable}
-                            headers={placesHeaders}
-                            defaultRow={placesDefaultRow}
-                            rowInputsProps={placesRowInputsProps}
-                            RowContentComponent={PlacesTableEditRowContent}
-                        />
-                    </AccordionItemContent>
-                </AccordionItem>
-            </AccordionRoot>
-        </Table.Cell>
+        <AccordionRoot collapsible variant="plain">
+            <AccordionItem value="1">
+                <AccordionItemTrigger>
+                    <LuBuilding />
+                    <Box>{renderInput("name")}</Box>
+                </AccordionItemTrigger>
+                <AccordionItemContent>
+                    <DBTableEdit
+                        hidePagination
+                        dbTable={pageGeodesyContext.placesDBTable}
+                        rows={pageGeodesyContext.placesDBTable.rows.filter(
+                            (fRow) => fRow.commune_id === row.id
+                        )}
+                        rowActionButtonOrientation="vertical"
+                        primaryBackgroundColorValue={nextTableEditColorValue(
+                            primaryBgcolorValue
+                        )}
+                        editable={editable}
+                        headers={placesHeaders}
+                        defaultRow={placesDefaultRow}
+                        rowInputsProps={placesRowInputsProps}
+                        RowContentComponent={PlacesTableEditRowContent}
+                    />
+                </AccordionItemContent>
+            </AccordionItem>
+        </AccordionRoot>
     );
 }

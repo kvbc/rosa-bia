@@ -12,6 +12,7 @@ import PageStatsGUNB3 from "../pages/stats/PageStatsGUNB3";
 import PageHelp from "../pages/help/PageHelp";
 import { PageArt29Common } from "../pages/art29-common/PageArt29Common";
 import { PageArt29BiP } from "../pages/art29-bip/PageArt29BiP";
+import { PageDatabase } from "../pages/database/PageDatabase";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -31,6 +32,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="/stats/b06" element={<PageStatsB06 />} />
             <Route path="/stats/gunb3" element={<PageStatsGUNB3 />} />
             <Route path="/help" element={<PageHelp />} />
+            <Route path="/database" element={<PageDatabase />} />
         </Routes>
     );
 };

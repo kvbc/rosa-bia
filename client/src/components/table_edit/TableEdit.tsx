@@ -13,7 +13,7 @@ import React, {
 } from "react";
 import { TableEditRow } from "./TableEditRow";
 import TableEditContext from "../../contexts/components/TableEditContext";
-import { Box, Table } from "@chakra-ui/react";
+import { Box, Stack, Table } from "@chakra-ui/react";
 import { TableEditRowContext } from "../../contexts/components/TableEditRowContext";
 import { TableEditPagination } from "./TableEditPagination";
 
@@ -114,11 +114,6 @@ export default function TableEdit<TRow extends TableEditRowType>(
     const [eventTarget] = useState(new EventTarget());
     const upperTableEventTarget = useContext(TableEditContext);
     const upperRowState = useContext(TableEditRowContext);
-
-    const primaryBackgroundColor = useMemo(
-        () => getTableEditColor(primaryBackgroundColorValue),
-        [primaryBackgroundColorValue]
-    );
 
     const headers = useMemo<typeof headersProp>(
         () =>
@@ -255,86 +250,126 @@ export default function TableEdit<TRow extends TableEditRowType>(
 
     return (
         <TableEditContext.Provider value={eventTarget}>
-            {!hidePagination && (
-                <Box bg="gray.100" padding="2">
-                    <TableEditPagination
-                        {...props}
-                        primaryBackgroundColor="gray.100"
-                        secondaryBackgroundColor="gray.200"
-                    />
-                </Box>
-            )}
-            <Table.Root
-                variant="outline"
-                size="sm"
-                showColumnBorder
-                interactive
-                stickyHeader={upperTableEventTarget === null}
-                {...tableProps}
-            >
-                <Table.Header>
-                    <Table.Row
-                        backgroundColor={getTableEditColor(
-                            nextTableEditColorValue(primaryBackgroundColorValue)
-                        )}
+            <Stack gap="0">
+                {!hidePagination && (
+                    <Box
+                        bg="gray.100"
+                        padding="2"
+                        outlineWidth="1px"
+                        outlineStyle="solid"
+                        outlineColor="gray.200"
                     >
-                        {headers.map((header) => {
-                            let name,
-                                width = "inherit";
-                            if (typeof header === "string") name = header;
-                            else {
-                                name = header.name;
-                                width = header.width ?? "inherit";
-                            }
-                            return (
-                                <Table.ColumnHeader
-                                    style={{ width }}
-                                    key={name}
-                                >
-                                    {name}
-                                </Table.ColumnHeader>
-                            );
-                        })}
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {(editable ? [...rows, addRow] : rows).map((row) => (
+                        <TableEditPagination
+                            {...props}
+                            primaryBackgroundColor="gray.200"
+                            secondaryBackgroundColor="gray.300"
+                        />
+                    </Box>
+                )}
+                <Table.Root
+                    variant="outline"
+                    size="sm"
+                    showColumnBorder
+                    // interactive
+                    stickyHeader={upperTableEventTarget === null}
+                    {...tableProps}
+                    outline={`1px solid ${getTableEditColor(
+                        nextTableEditColorValue(primaryBackgroundColorValue, 2)
+                    )} !important`}
+                    // outlineColor="yellow !important"
+                >
+                    <Table.Header>
                         <Table.Row
-                            key={row.id}
-                            backgroundColor={primaryBackgroundColor}
-                        >
-                            <TableEditRow
-                                row={row}
-                                onAddClicked={
-                                    row === addRow ? handleRowAdded : undefined
-                                }
-                                primaryBgColorValue={
+                            backgroundColor={getTableEditColor(
+                                nextTableEditColorValue(
                                     primaryBackgroundColorValue
+                                )
+                            )}
+                            // bg="red"
+                        >
+                            {headers.map((header) => {
+                                let name,
+                                    width = "inherit";
+                                if (typeof header === "string") name = header;
+                                else {
+                                    name = header.name;
+                                    width = header.width ?? "inherit";
                                 }
-                                showSaveAction={upperTableEventTarget === null}
-                                onSaveClicked={handleRowSaved}
-                                onDeleteClicked={handleRowDeleted}
-                                actionButtonDirection={
-                                    rowActionButtonOrientation
-                                }
-                                stateProp={
-                                    row === addRow
-                                        ? "adding"
-                                        : upperRowState === null
-                                        ? "viewing"
-                                        : upperRowState === "adding"
-                                        ? "editing"
-                                        : upperRowState
-                                }
-                                editable={editable}
-                                inputsProps={rowInputsProps}
-                                ContentComponent={RowContentComponent}
-                                saveOnInputBlur={upperTableEventTarget !== null}
-                            />
+                                return (
+                                    <Table.ColumnHeader
+                                        style={{ width }}
+                                        key={name}
+                                        borderColor={getTableEditColor(
+                                            nextTableEditColorValue(
+                                                primaryBackgroundColorValue,
+                                                2
+                                            )
+                                        )}
+                                        // borderColor={getTableEditColor(
+                                        //     nextTableEditColorValue(
+                                        //         primaryBackgroundColorValue,
+                                        //         2
+                                        //     )
+                                        // )}
+                                    >
+                                        {name}
+                                    </Table.ColumnHeader>
+                                );
+                            })}
                         </Table.Row>
-                    ))}
-                </Table.Body>
-                {/* {showFooter && (
+                    </Table.Header>
+                    <Table.Body>
+                        {(editable ? [...rows, addRow] : rows).map((row) => (
+                            <Table.Row
+                                key={row.id}
+                                backgroundColor={getTableEditColor(
+                                    primaryBackgroundColorValue
+                                )}
+                                borderColor={getTableEditColor(
+                                    nextTableEditColorValue(
+                                        primaryBackgroundColorValue,
+                                        2
+                                    )
+                                )}
+                            >
+                                <TableEditRow
+                                    row={row}
+                                    onAddClicked={
+                                        row === addRow
+                                            ? handleRowAdded
+                                            : undefined
+                                    }
+                                    primaryBgColorValue={
+                                        primaryBackgroundColorValue
+                                    }
+                                    showSaveAction={
+                                        upperTableEventTarget === null
+                                    }
+                                    onSaveClicked={handleRowSaved}
+                                    onDeleteClicked={handleRowDeleted}
+                                    actionButtonDirection={
+                                        rowActionButtonOrientation
+                                    }
+                                    stateProp={
+                                        row === addRow
+                                            ? "adding"
+                                            : upperRowState === null
+                                            ? "viewing"
+                                            : upperRowState === "adding"
+                                            ? "editing"
+                                            : upperRowState
+                                    }
+                                    editable={editable}
+                                    inputsProps={rowInputsProps}
+                                    ContentComponent={RowContentComponent}
+                                    saveOnInputBlur={
+                                        upperTableEventTarget !== null
+                                    }
+                                />
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                    {/* {showFooter && (
                     <Table.Footer>
                         <Table.Row>
                             <Table.Cell colSpan={headers.length}>
@@ -347,7 +382,8 @@ export default function TableEdit<TRow extends TableEditRowType>(
                         </Table.Row>
                     </Table.Footer>
                 )} */}
-            </Table.Root>
+                </Table.Root>
+            </Stack>
         </TableEditContext.Provider>
     );
 }

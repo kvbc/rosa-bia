@@ -1,4 +1,8 @@
-import { TableEditRowType } from "./TableEdit";
+import {
+    getTableEditColor,
+    nextTableEditColorValue,
+    TableEditRowType,
+} from "./TableEdit";
 import { TableEditRowInputProps } from "./TableEditRowInput";
 import { Checkbox } from "../ui/checkbox";
 import React from "react";
@@ -9,6 +13,7 @@ export function TableEditRowInputCheckbox<TRow extends TableEditRowType>({
     onBlur,
     setRow,
     rowKey,
+    primaryBgColorValue,
 }: TableEditRowInputProps<TRow>) {
     return (
         <Checkbox
@@ -22,6 +27,10 @@ export function TableEditRowInputCheckbox<TRow extends TableEditRowType>({
             }}
             onBlur={onBlur}
             disabled={disabled}
+            backgroundColor={getTableEditColor(primaryBgColorValue)}
+            borderColor={getTableEditColor(
+                nextTableEditColorValue(primaryBgColorValue, 2)
+            )}
         />
     );
 }

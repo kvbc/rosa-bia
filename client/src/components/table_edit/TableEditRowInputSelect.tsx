@@ -7,7 +7,11 @@ import {
     SelectValueText,
 } from "../ui/select";
 import { TableEditRowInputProps } from "./TableEditRowInput";
-import { TableEditRowType } from "./TableEdit";
+import {
+    getTableEditColor,
+    nextTableEditColorValue,
+    TableEditRowType,
+} from "./TableEdit";
 import { createListCollection } from "@chakra-ui/react";
 
 export type TableEditRowInputSelectOption = {
@@ -22,6 +26,7 @@ export function TableEditRowInputSelect<TRow extends TableEditRowType>({
     disabled,
     onBlur,
     getSelectOptions,
+    primaryBgColorValue,
 }: TableEditRowInputProps<TRow>) {
     const [selectOptions, setSelectOptions] = useState<
         TableEditRowInputSelectOption[]
@@ -58,13 +63,41 @@ export function TableEditRowInputSelect<TRow extends TableEditRowType>({
                     [rowKey]: e.value,
                 }))
             }
+            variant="outline"
         >
-            <SelectTrigger>
+            <SelectTrigger
+                border="1px solid"
+                borderRadius="sm"
+                borderColor={getTableEditColor(
+                    nextTableEditColorValue(primaryBgColorValue, 2)
+                )}
+                // _disabled={{
+                //     borderColor: getTableEditColor(
+                //         nextTableEditColorValue(primaryBgColorValue)
+                //     ),
+                // }}
+                _disabled={{ opacity: "50%" }}
+            >
                 <SelectValueText />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent
+                border="1px solid"
+                borderColor={getTableEditColor(
+                    nextTableEditColorValue(primaryBgColorValue, 2)
+                )}
+                backgroundColor={getTableEditColor(primaryBgColorValue)}
+            >
                 {selectOptionsCollection.items.map((item) => (
-                    <SelectItem item={item} key={item.value}>
+                    <SelectItem
+                        item={item}
+                        key={item.value}
+                        backgroundColor={getTableEditColor(primaryBgColorValue)}
+                        _hover={{
+                            backgroundColor: getTableEditColor(
+                                nextTableEditColorValue(primaryBgColorValue)
+                            ),
+                        }}
+                    >
                         {item.name}
                     </SelectItem>
                 ))}

@@ -14,6 +14,9 @@ export const AppNavbar: React.FC = () => {
         <AppNavbarEmployeeDialog>
             <HStack
                 as="nav"
+                // position="sticky"
+                // top="0"
+                // zIndex={50}
                 backgroundColor="blue.700"
                 color="white"
                 fontWeight="light"

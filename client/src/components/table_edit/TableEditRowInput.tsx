@@ -55,7 +55,7 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
             size="sm"
             type={type}
             value={row[rowKey] as string | number}
-            // backgroundColor={getTableEditColor(primaryBgColorValue)}
+            backgroundColor={getTableEditColor(primaryBgColorValue)}
             borderColor={getTableEditColor(
                 nextTableEditColorValue(primaryBgColorValue, 2)
             )}

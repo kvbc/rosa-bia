@@ -25,7 +25,7 @@ export default function ConstructionSectionTableEditRowContent({
     inputs,
     row,
     editable,
-    primaryBgcolorValue,
+    primaryBgColorValue: primaryBgcolorValue,
 }: TableEditRowContentComponentProps<DB.Rows.ConstructionSection>) {
     const pageContext = useContext(PagePKOBContext)!;
 

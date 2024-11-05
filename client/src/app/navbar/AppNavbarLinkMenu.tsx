@@ -1,29 +1,36 @@
-import React, { Dispatch, SetStateAction, useCallback } from "react";
+import React, {
+    Dispatch,
+    PropsWithChildren,
+    SetStateAction,
+    useCallback,
+} from "react";
 import {
     MenuContent,
     MenuItem,
     MenuRoot,
     MenuTrigger,
 } from "../../components/ui/menu";
-import { HStack, Icon, VStack } from "@chakra-ui/react";
+import { Box, HStack, Icon, VStack } from "@chakra-ui/react";
 import { LuChevronDown } from "react-icons/lu";
 import { AppNavbarLink } from "./AppNavbarLink";
 import { IconType } from "react-icons/lib";
 import { Tooltip } from "../../components/ui/tooltip";
 import { To } from "react-router-dom";
 
-export const AppNavbarLinkMenu: React.FC<{
-    Icon: IconType;
-    title: string;
-    isOpen: boolean;
-    setIsOpen: Dispatch<SetStateAction<boolean>>;
-    links: {
-        to: To;
-        display: string;
-        tooltip?: string;
-        openInNewTab?: boolean;
-    }[];
-}> = ({ Icon: MenuIcon, title, links, isOpen, setIsOpen }) => {
+export const AppNavbarLinkMenu: React.FC<
+    PropsWithChildren<{
+        Icon: IconType;
+        title: string;
+        isOpen: boolean;
+        setIsOpen: Dispatch<SetStateAction<boolean>>;
+        links: {
+            to: To;
+            display: string;
+            tooltip?: string;
+            openInNewTab?: boolean;
+        }[];
+    }>
+> = ({ Icon: MenuIcon, title, links, isOpen, setIsOpen, children }) => {
     const close = useCallback(() => {
         setIsOpen(false);
     }, [setIsOpen]);
@@ -33,76 +40,79 @@ export const AppNavbarLinkMenu: React.FC<{
     }, [setIsOpen]);
 
     return (
-        <MenuRoot
-            open={isOpen}
-            onPointerDownOutside={close}
-            onInteractOutside={close}
-            onEscapeKeyDown={close}
-            onExitComplete={close}
-            onFocusOutside={close}
-            onOpenChange={(e) => !e.open && close()}
-        >
-            <MenuTrigger asChild onMouseEnter={open}>
-                <VStack gap="0.5">
-                    <Icon fontSize="md">
-                        <MenuIcon />
-                    </Icon>
-                    <HStack gap="0.5">
-                        <Icon fontSize="sm">
-                            <LuChevronDown />
-                        </Icon>
-                        {title}
-                    </HStack>
-                </VStack>
-            </MenuTrigger>
-            <MenuContent
-                focusRing="none"
-                backgroundColor="blue.700"
-                onMouseLeave={close}
+        <Box position="relative">
+            <MenuRoot
+                open={isOpen}
+                onPointerDownOutside={close}
+                onInteractOutside={close}
+                onEscapeKeyDown={close}
+                onExitComplete={close}
+                onFocusOutside={close}
+                onOpenChange={(e) => !e.open && close()}
             >
-                {links.map((link, linkIndex) => {
-                    const body = (
-                        <AppNavbarLink
-                            key={linkIndex}
-                            to={link.to}
-                            width="full"
-                            _hover={{
-                                backgroundColor: "blue.800",
-                            }}
-                            target={
-                                link.openInNewTab === true ? "_blank" : "_self"
-                            }
-                        >
-                            <MenuItem
-                                value={String(linkIndex)}
-                                color="white"
-                                fontWeight="light"
-                                _hover={{
-                                    backgroundColor: "inherit",
-                                    cursor: "pointer",
-                                }}
-                            >
-                                <Icon fontSize="md">
-                                    <MenuIcon />
-                                </Icon>
-                                {link.display}
-                            </MenuItem>
-                        </AppNavbarLink>
-                    );
-                    if (link.tooltip) {
-                        return (
-                            <Tooltip
+                <MenuTrigger asChild onMouseEnter={open}>
+                    <VStack gap="0.5">
+                        <Icon fontSize="md">
+                            <MenuIcon />
+                        </Icon>
+                        <HStack gap="0.5">
+                            <Icon fontSize="sm">
+                                <LuChevronDown />
+                            </Icon>
+                            {title}
+                        </HStack>
+                    </VStack>
+                </MenuTrigger>
+                <MenuContent
+                    focusRing="none"
+                    backgroundColor="blue.700"
+                    onMouseLeave={close}
+                >
+                    {links.map((link, linkIndex) => {
+                        const body = (
+                            <AppNavbarLink
                                 key={linkIndex}
-                                content={link.tooltip}
-                                positioning={{ placement: "right" }}
+                                to={link.to}
+                                width="full"
+                                _hover={{
+                                    backgroundColor: "blue.800",
+                                }}
+                                target={
+                                    link.openInNewTab === true
+                                        ? "_blank"
+                                        : "_self"
+                                }
                             >
-                                {body}
-                            </Tooltip>
+                                <MenuItem
+                                    value={String(linkIndex)}
+                                    color="white"
+                                    fontWeight="light"
+                                    _hover={{
+                                        backgroundColor: "inherit",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    <Icon fontSize="md">
+                                        <MenuIcon />
+                                    </Icon>
+                                    {link.display}
+                                </MenuItem>
+                            </AppNavbarLink>
                         );
-                    }
-                    return body;
-                })}
-                {/* <AppNavbarLink
+                        if (link.tooltip) {
+                            return (
+                                <Tooltip
+                                    key={linkIndex}
+                                    content={link.tooltip}
+                                    positioning={{ placement: "right" }}
+                                >
+                                    {body}
+                                </Tooltip>
+                            );
+                        }
+                        return body;
+                    })}
+                    {/* <AppNavbarLink
                     to="stats/b05"
                     width="full"
                     _hover={{
@@ -124,7 +134,7 @@ export const AppNavbarLinkMenu: React.FC<{
                         nigga
                     </MenuItem>
                 </AppNavbarLink> */}
-                {/* <MenuItem
+                    {/* <MenuItem
                     value="1"
                     color="white"
                     fontWeight="light"
@@ -138,7 +148,9 @@ export const AppNavbarLinkMenu: React.FC<{
                     </Icon>
                     nigga
                 </MenuItem> */}
-            </MenuContent>
-        </MenuRoot>
+                </MenuContent>
+            </MenuRoot>
+            {children}
+        </Box>
     );
 };
