@@ -5,9 +5,12 @@ import React, { useMemo } from "react";
 import useDBTable from "../../hooks/useDBTable";
 import { DB } from "../../../../server/src/db/types";
 import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
+import { TableEditHeader } from "../../components/table_edit/TableEdit";
 
 export default function PageInvestors() {
     const dbTable = useDBTable<DB.Rows.Investor>("investors");
+
+    const headers = useMemo<TableEditHeader[]>(() => ["Inwestor", "Adres"], []);
 
     const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Investor>>(
         () => ({
@@ -35,7 +38,7 @@ export default function PageInvestors() {
     return (
         <DBTableEdit
             dbTable={dbTable}
-            headers={["Inwestor", "Adres"]}
+            headers={headers}
             defaultRow={defaultRow}
             rowInputsProps={rowInputsProps}
         />

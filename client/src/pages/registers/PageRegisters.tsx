@@ -4,7 +4,6 @@ import RegisterTableEdit from "./RegisterTableEdit";
 import useDBTable from "../../hooks/useDBTable";
 import { DB } from "../../../../server/src/db/types";
 
-// TODO: add construction journal
 export default function PageRegisters() {
     const registersDBTable = useDBTable<DB.Rows.Register>("registers"); // prettier-ignore
     const communesDBTable = useDBTable<DB.Rows.Commune>("communes"); // prettier-ignore

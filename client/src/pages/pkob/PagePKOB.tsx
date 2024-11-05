@@ -7,6 +7,7 @@ import React, { ContextType, useMemo } from "react";
 import { PagePKOBContext } from "../../contexts/pages/PagePKOBContext";
 import useDBTable from "../../hooks/useDBTable";
 import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
+import { TableEditHeader } from "../../components/table_edit/TableEdit";
 
 export default function PagePKOB() {
     const constructionSectionsDBTable = useDBTable<DB.Rows.ConstructionSection>("construction_sections"); // prettier-ignore
@@ -31,6 +32,8 @@ export default function PagePKOB() {
             constructionSpecsDBTable,
         ]
     );
+
+    const headers = useMemo<TableEditHeader[]>(() => ["Sekcje Budowlane"], []);
 
     const defaultRow = useMemo<
         DBTableEditDefaultRow<DB.Rows.ConstructionSection>
@@ -57,7 +60,7 @@ export default function PagePKOB() {
         <PagePKOBContext.Provider value={context}>
             <DBTableEdit
                 dbTable={constructionSectionsDBTable}
-                headers={["Sekcje Budowlane"]}
+                headers={headers}
                 defaultRow={defaultRow}
                 rowInputsProps={rowInputsProps}
                 RowContentComponent={ConstructionSectionTableEditRowContent}

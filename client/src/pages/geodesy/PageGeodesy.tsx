@@ -2,6 +2,7 @@ import { DB } from "../../../../server/src/db/types";
 import DBTableEdit, {
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
+import { TableEditHeader } from "../../components/table_edit/TableEdit";
 import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
 import useDBTable from "../../hooks/useDBTable";
@@ -13,13 +14,15 @@ export default function PageGeodesy() {
     const placesDBTable = useDBTable<DB.Rows.Place>("places");
     const streetsDBTable = useDBTable<DB.Rows.Street>("streets");
 
-    const context = useMemo<ContextType<typeof PageGeodesyContext>>(
+    const pageContext = useMemo<ContextType<typeof PageGeodesyContext>>(
         () => ({
             placesDBTable,
             streetsDBTable,
         }),
         [placesDBTable, streetsDBTable]
     );
+
+    const communesHeaders = useMemo<TableEditHeader[]>(() => ["Gmina"], []);
 
     const communesDefaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Commune>>(
         () => ({
@@ -41,10 +44,10 @@ export default function PageGeodesy() {
     );
 
     return (
-        <PageGeodesyContext.Provider value={context}>
+        <PageGeodesyContext.Provider value={pageContext}>
             <DBTableEdit
                 dbTable={communesDBTable}
-                headers={["Gmina"]}
+                headers={communesHeaders}
                 defaultRow={communesDefaultRow}
                 rowActionButtonOrientation="vertical"
                 rowInputsProps={communesRowInputsProps}

@@ -1,11 +1,12 @@
 import { ComponentType, Dispatch, ReactNode, SetStateAction } from "react";
-import { TableEditRowType } from "./TableEdit";
+import { TableEditColorValue, TableEditRowType } from "./TableEdit";
 
 export type TableEditRowContentComponentProps<TRow extends TableEditRowType> = {
     inputs: { [key in keyof TRow]?: ReactNode };
     row: TRow;
     setRow: Dispatch<SetStateAction<TRow>>;
     onInputBlur: () => void;
+    primaryBgcolorValue: TableEditColorValue;
     editable: boolean;
     eventTarget: EventTarget;
 };

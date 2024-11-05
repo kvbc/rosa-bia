@@ -4,7 +4,7 @@
 //
 
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
-import { TableEditRowType } from "./TableEdit";
+import { TableEditColorValue, TableEditRowType } from "./TableEdit";
 import { TableEditRowInput, TableEditRowInputProps } from "./TableEditRowInput";
 import {
     TableEditRowContentComponent,
@@ -18,7 +18,7 @@ export type TableEditRowState = "viewing" | "editing" | "adding";
 
 export type TableEditRowInputsProps<TRow extends TableEditRowType> = Omit<
     TableEditRowInputProps<TRow>,
-    "row" | "setRow" | "onBlur"
+    "row" | "setRow" | "onBlur" | "primaryBgColorValue"
 >[];
 
 export function TableEditRow<TRow extends TableEditRowType>({
@@ -31,6 +31,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
     actionButtonDirection = "horizontal",
     showSaveAction,
     inputsProps,
+    primaryBgColorValue,
     ContentComponent,
     saveOnInputBlur,
 }: {
@@ -41,6 +42,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
     showSaveAction: boolean;
     editable: boolean;
     stateProp: TableEditRowState;
+    primaryBgColorValue: TableEditColorValue;
     actionButtonDirection?: "horizontal" | "vertical";
     inputsProps: TableEditRowInputsProps<TRow>;
     ContentComponent?: TableEditRowContentComponent<TRow>;
@@ -82,6 +84,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
             {...inputProps}
             disabled={!isContentEditable}
             onBlur={handleInputBlur}
+            primaryBgColorValue={primaryBgColorValue}
         />
     );
 
@@ -92,6 +95,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
         });
         content = (
             <ContentComponent
+                primaryBgcolorValue={primaryBgColorValue}
                 inputs={inputs}
                 row={row}
                 setRow={setRow}
@@ -205,7 +209,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
      */
 
     return (
-        <Table.Row>
+        <>
             <TableEditRowContext.Provider value={state}>
                 {content}
             </TableEditRowContext.Provider>
@@ -248,6 +252,6 @@ export function TableEditRow<TRow extends TableEditRowType>({
                     )}
                 </>
             )}
-        </Table.Row>
+        </>
     );
 }

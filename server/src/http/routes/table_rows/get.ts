@@ -86,8 +86,6 @@ const router = Router();
 // Fetch rows from index [startIndex: inclusive] to [endIndex: exclusive]
 // or all if indices not specificed from the given table
 //
-// TODO: select registers.* from registers inner join investors on registers.app_investor_id = investors.id where investors.name like '%Stec%';
-//
 router.post(
     "/table_rows/get/:tableName/:startIndex?/:endIndex?",
     async (
@@ -189,8 +187,8 @@ router.post(
                 resError(res, 500, error);
                 return;
             }
-            db.get<{ "count(*)": number }>(
-                `select count(*) from ${tableName}` + sqlFilterQuery,
+            db.get<{ "count(*)": number; "max(id)": number }>(
+                `select count(*), max(id) from ${tableName}` + sqlFilterQuery,
                 sqlFilterValues,
                 (error, row) => {
                     if (error) {
@@ -219,10 +217,12 @@ router.post(
                     });
 
                     const totalCount = row["count(*)"];
+                    const topRowID = row["max(id)"];
                     const response: HTTP.Response = {
                         type: "fetch table rows",
                         totalCount,
                         rows,
+                        topRowID,
                     };
                     res.status(200).json(response);
                 }

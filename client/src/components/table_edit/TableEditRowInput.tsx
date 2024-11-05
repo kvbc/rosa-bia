@@ -4,7 +4,12 @@
 //
 
 import React, { Dispatch, HTMLInputTypeAttribute, SetStateAction } from "react";
-import { TableEditRowType } from "./TableEdit";
+import {
+    getTableEditColor,
+    nextTableEditColorValue,
+    TableEditColorValue,
+    TableEditRowType,
+} from "./TableEdit";
 import { Input } from "@chakra-ui/react";
 import {
     TableEditRowInputSelect,
@@ -20,13 +25,23 @@ export type TableEditRowInputProps<TRow extends TableEditRowType> = {
     getSelectOptions?: (row: TRow) => TableEditRowInputSelectOption[];
     placeholder?: string;
     disabled?: boolean;
+    primaryBgColorValue: TableEditColorValue;
     onBlur: () => void;
 };
 
 export function TableEditRowInput<TRow extends TableEditRowType>(
     props: TableEditRowInputProps<TRow>
 ) {
-    const { row, setRow, type, rowKey, placeholder, disabled, onBlur } = props;
+    const {
+        row,
+        setRow,
+        type,
+        rowKey,
+        placeholder,
+        disabled,
+        onBlur,
+        primaryBgColorValue,
+    } = props;
 
     switch (type) {
         case "select":
@@ -40,6 +55,10 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
             size="sm"
             type={type}
             value={row[rowKey] as string | number}
+            // backgroundColor={getTableEditColor(primaryBgColorValue)}
+            borderColor={getTableEditColor(
+                nextTableEditColorValue(primaryBgColorValue, 2)
+            )}
             onChange={(e) => {
                 setRow((row) => ({
                     ...row,

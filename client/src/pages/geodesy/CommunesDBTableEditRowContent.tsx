@@ -1,29 +1,38 @@
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { Stack } from "@mui/joy";
-import { FaCity } from "react-icons/fa6";
 import DBTableEdit, {
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
-import { TableEditRowInputSelectOption } from "../../components/table_edit/TableEditRowInput";
 import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import { DB } from "../../../../server/src/db/types";
 import React, { useContext, useMemo } from "react";
 import PlacesTableEditRowContent from "./PlacesTableEditRowContent";
-import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
 import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
+import { TableEditRowInputSelectOption } from "../../components/table_edit/TableEditRowInputSelect";
+import { Box, Table } from "@chakra-ui/react";
+import {
+    nextTableEditColorValue,
+    TableEditHeader,
+} from "../../components/table_edit/TableEdit";
+import {
+    AccordionItem,
+    AccordionItemContent,
+    AccordionItemTrigger,
+    AccordionRoot,
+} from "../../components/ui/accordion";
+import { LuBuilding } from "react-icons/lu";
+import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
 
 export default function CommunesDBTableEditRowContent({
     inputs,
     row,
     editable,
+    primaryBgcolorValue,
 }: TableEditRowContentComponentProps<DB.Rows.Commune>) {
-    const pageGeodesyContext = useContext(PageGeodesyContext);
-    if (!pageGeodesyContext) {
-        throw "Error";
-    }
+    const pageGeodesyContext = useContext(PageGeodesyContext)!;
+
+    const placesHeaders = useMemo<TableEditHeader[]>(
+        () => ["Miejscowości"],
+        []
+    );
 
     const placesDefaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Place>>(
         () => ({
@@ -63,36 +72,33 @@ export default function CommunesDBTableEditRowContent({
     );
 
     return (
-        <>
-            <td>
-                <Accordion className="shadow-none">
-                    <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
-                        <Stack
-                            direction="row"
-                            justifyContent="center"
-                            alignItems="center"
-                            spacing={1}
-                        >
-                            <FaCity />
-                            {inputs.name}
-                        </Stack>
-                    </AccordionSummary>
-                    <AccordionDetails>
+        <Table.Cell>
+            <AccordionRoot collapsible variant="plain">
+                <AccordionItem value="1">
+                    <AccordionItemTrigger>
+                        <LuBuilding />
+                        <Box>{inputs.name}</Box>
+                    </AccordionItemTrigger>
+                    <AccordionItemContent>
                         <DBTableEdit
+                            hidePagination
                             dbTable={pageGeodesyContext.placesDBTable}
                             rows={pageGeodesyContext.placesDBTable.rows.filter(
                                 (fRow) => fRow.commune_id === row.id
                             )}
                             rowActionButtonOrientation="vertical"
+                            primaryBackgroundColorValue={nextTableEditColorValue(
+                                primaryBgcolorValue
+                            )}
                             editable={editable}
-                            headers={["Miejscowości"]}
+                            headers={placesHeaders}
                             defaultRow={placesDefaultRow}
                             rowInputsProps={placesRowInputsProps}
                             RowContentComponent={PlacesTableEditRowContent}
                         />
-                    </AccordionDetails>
-                </Accordion>
-            </td>
-        </>
+                    </AccordionItemContent>
+                </AccordionItem>
+            </AccordionRoot>
+        </Table.Cell>
     );
 }

@@ -19,15 +19,22 @@ export type DBTable<TRow extends DB.Row> = ReturnType<typeof useDBTable<TRow>>;
 
 export default function useDBTable<TRow extends DB.Row>(
     tableName: DB.TableName,
-    initFilters?: Filter[]
+    filtersProp?: Filter[]
 ) {
     const [totalRowCount, setTotalRowCount] = useState(0);
+    const [topRowID, setTopRowID] = useState(0);
     const [rows, setRows] = useState<TRow[]>([]);
     const [startRowIndex, setStartRowIndex] = useState<number>(0);
     const [endRowIndex, setEndRowIndex] = useState<number | null>(null);
-    const [filters, setFilters] = useState<Filter[]>(initFilters ?? []);
+    const [filters, setFilters] = useState<Filter[]>(filtersProp ?? []);
     const webSocket = useContext(WebSocketContext)!;
     const queryClient = useQueryClient();
+
+    useEffect(() => {
+        if (filtersProp) {
+            setFilters(filtersProp);
+        }
+    }, [filtersProp]);
 
     const rowsQuery = useQuery({
         queryKey: [
@@ -46,6 +53,7 @@ export default function useDBTable<TRow extends DB.Row>(
         if (data) {
             setRows(data.rows as TRow[]);
             setTotalRowCount(data.totalCount);
+            setTopRowID(data.topRowID);
         }
     }, [rowsQuery.data]);
 
@@ -102,6 +110,7 @@ export default function useDBTable<TRow extends DB.Row>(
     const addRow = useCallback(
         (newRow: TRow) => {
             setTotalRowCount((totalRowCount) => totalRowCount + 1);
+            setTopRowID(newRow.id);
             if (isRowIDInRange(newRow.id)) {
                 setRows((rows) => [...rows, newRow]);
             }
@@ -112,11 +121,14 @@ export default function useDBTable<TRow extends DB.Row>(
     const deleteRow = useCallback(
         (rowID: number) => {
             setTotalRowCount((totalRowCount) => totalRowCount - 1);
+            if (rowID === topRowID) {
+                setTopRowID((topRowID) => topRowID - 1);
+            }
             if (isRowIDInRange(rowID)) {
                 setRows((rows) => rows.filter((row) => row.id !== rowID));
             }
         },
-        [isRowIDInRange]
+        [isRowIDInRange, topRowID]
     );
 
     const updateRow = useCallback(
@@ -165,5 +177,6 @@ export default function useDBTable<TRow extends DB.Row>(
         updateRowMutation,
         filters,
         setFilters,
+        topRowID,
     };
 }

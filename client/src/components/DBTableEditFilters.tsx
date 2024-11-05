@@ -21,6 +21,7 @@ export type DBFilterRow = DBFilter & {
     id: number;
 };
 
+// FIXME: fixme
 export default function DBTableEditFilters<TRow extends DB.Row>({
     dbTable,
     rows,

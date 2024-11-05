@@ -5,15 +5,21 @@ import React, { useMemo } from "react";
 import useDBTable from "../../hooks/useDBTable";
 import { DB } from "../../../../server/src/db/types";
 import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
+import { TableEditHeader } from "../../components/table_edit/TableEdit";
 
 export default function PageEmployees() {
     const dbTable = useDBTable<DB.Rows.Employee>("employees");
+
+    const headers = useMemo<TableEditHeader[]>(
+        () => ["Nazwa", "Hasło", "Administrator"],
+        []
+    );
 
     const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Employee>>(
         () => ({
             name: "",
             password: "",
-            admin: 0,
+            admin: Number(false),
             has_password: false,
         }),
         []
@@ -40,7 +46,7 @@ export default function PageEmployees() {
     return (
         <DBTableEdit
             dbTable={dbTable}
-            headers={["Nazwa", "Hasło", "Administrator"]}
+            headers={headers}
             defaultRow={defaultRow}
             rowInputsProps={rowInputsProps}
         />

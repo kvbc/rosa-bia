@@ -1,9 +1,9 @@
-import { ButtonGroup, IconButton, Textarea } from "@mui/joy";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { MdCancel, MdEdit, MdSave } from "react-icons/md";
 import useDBTable from "../../hooks/useDBTable";
 import { DB } from "../../../../server/src/db/types";
 import React from "react";
+import { Group, Heading, IconButton, Stack, Textarea } from "@chakra-ui/react";
+import { LuPencil, LuSave, LuX } from "react-icons/lu";
 
 export type InfoBoardState = "editing" | "viewing";
 
@@ -14,6 +14,7 @@ export default function InfoBoard() {
         () => infoBoardDBTable.rows[0],
         [infoBoardDBTable.rows]
     );
+    const [oldContents, setOldContents] = useState<string>("");
     const [contents, setContents] = useState<string>("");
 
     useEffect(() => {
@@ -22,68 +23,73 @@ export default function InfoBoard() {
         }
     }, [infoBoard, infoBoard?.contents]);
 
-    const handleEditClicked = () => {
+    const handleEditClicked = useCallback(() => {
         setState("editing");
-    };
+        setOldContents(contents);
+    }, [contents]);
 
     const handleSaveClicked = useCallback(() => {
         setState("viewing");
         if (infoBoard) {
-            infoBoardDBTable.requestUpdateRow({ ...infoBoard, contents });
+            infoBoardDBTable.updateRowMutation.mutate({
+                ...infoBoard,
+                contents,
+            });
         }
     }, [infoBoard, contents, infoBoardDBTable]);
 
-    const handleCancelClicked = () => {
+    const handleCancelClicked = useCallback(() => {
         setState("viewing");
-    };
+        setContents(oldContents);
+    }, [oldContents]);
+
+    const handleTextareaClicked = useCallback(() => {
+        if (state === "viewing") {
+            handleEditClicked();
+        }
+    }, [state, handleEditClicked]);
 
     return (
-        <div className="flex flex-col justify-stetch flex-1">
-            <h1>Tablica Informacyjna</h1>
-            <Textarea
-                sx={{ flex: "1" }}
-                readOnly={state === "viewing"}
-                value={contents}
-                onChange={(e) => setContents(e.target.value)}
-            />
+        <Stack width="3/12">
+            <Heading>Tablica Informacyjna</Heading>
             {state === "viewing" && (
                 <IconButton
                     onClick={handleEditClicked}
                     size="sm"
-                    variant="plain"
-                    color="primary"
+                    variant="outline"
+                    color="fg.info"
                 >
-                    <MdEdit />
+                    <LuPencil />
                 </IconButton>
             )}
             {state === "editing" && (
-                <ButtonGroup
-                    sx={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "stretch",
-                    }}
-                >
+                <Group attached grow>
                     <IconButton
                         onClick={handleSaveClicked}
                         size="sm"
-                        variant="plain"
-                        color="success"
-                        sx={{ flex: "1" }}
+                        variant="outline"
+                        color="fg.success"
                     >
-                        <MdSave />
+                        <LuSave />
                     </IconButton>
                     <IconButton
                         onClick={handleCancelClicked}
                         size="sm"
-                        variant="plain"
-                        color="danger"
-                        sx={{ flex: "1" }}
+                        variant="outline"
+                        color="fg.error"
                     >
-                        <MdCancel />
+                        <LuX />
                     </IconButton>
-                </ButtonGroup>
+                </Group>
             )}
-        </div>
+            <Textarea
+                justifySelf="stretch"
+                flexGrow="1"
+                readOnly={state === "viewing"}
+                value={contents}
+                onChange={(e) => setContents(e.target.value)}
+                onClick={handleTextareaClicked}
+            />
+        </Stack>
     );
 }

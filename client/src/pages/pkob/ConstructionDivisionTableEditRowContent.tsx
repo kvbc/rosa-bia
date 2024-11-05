@@ -1,29 +1,35 @@
-import { FaBuilding } from "react-icons/fa6";
 import DBTableEdit, {
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
 import ConstructionGroupTableEditRowContent from "./ConstructionGroupTableEditRowContent";
-import Accordion from "@mui/material/Accordion";
-import Box from "@mui/material/Box";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { DB } from "../../../../server/src/db/types";
 import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import { useContext, useMemo } from "react";
 import { PagePKOBContext } from "../../contexts/pages/PagePKOBContext";
 import React from "react";
 import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
+import { Box, Table } from "@chakra-ui/react";
+import {
+    AccordionItem,
+    AccordionItemContent,
+    AccordionItemTrigger,
+    AccordionRoot,
+} from "../../components/ui/accordion";
+import { LuCigarette } from "react-icons/lu";
+import {
+    nextTableEditColorValue,
+    TableEditHeader,
+} from "../../components/table_edit/TableEdit";
 
 export default function ConstructionDivisionTableEditRowContent({
     inputs,
     row,
     editable,
+    primaryBgcolorValue,
 }: TableEditRowContentComponentProps<DB.Rows.ConstructionDivision>) {
-    const pageContext = useContext(PagePKOBContext);
-    if (!pageContext) {
-        throw "Error";
-    }
+    const pageContext = useContext(PagePKOBContext)!;
+
+    const headers = useMemo<TableEditHeader[]>(() => ["Grupy Budowlane"], []);
 
     const defaultRow = useMemo<
         DBTableEditDefaultRow<DB.Rows.ConstructionGroup>
@@ -48,38 +54,34 @@ export default function ConstructionDivisionTableEditRowContent({
     );
 
     return (
-        <>
-            <td>
-                <Accordion className="shadow-none">
-                    <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                gap: 1,
-                                alignItems: "center",
-                            }}
-                        >
-                            <FaBuilding />
-                            {inputs.name}
-                        </Box>
-                    </AccordionSummary>
-                    <AccordionDetails>
+        <Table.Cell>
+            <AccordionRoot variant="plain" collapsible>
+                <AccordionItem value="1">
+                    <AccordionItemTrigger>
+                        <LuCigarette />
+                        <Box>{inputs.name}</Box>
+                    </AccordionItemTrigger>
+                    <AccordionItemContent>
                         <DBTableEdit
                             dbTable={pageContext.constructionGroupsDBTable}
                             rows={pageContext.constructionGroupsDBTable.rows.filter(
                                 (fRow) => fRow.division_id === row.id
                             )}
+                            primaryBackgroundColorValue={nextTableEditColorValue(
+                                primaryBgcolorValue
+                            )}
+                            hidePagination
                             editable={editable}
-                            headers={["Grupy Budowlane"]}
+                            headers={headers}
                             defaultRow={defaultRow}
                             rowInputsProps={rowInputsProps}
                             RowContentComponent={
                                 ConstructionGroupTableEditRowContent
                             }
                         />
-                    </AccordionDetails>
-                </Accordion>
-            </td>
-        </>
+                    </AccordionItemContent>
+                </AccordionItem>
+            </AccordionRoot>
+        </Table.Cell>
     );
 }

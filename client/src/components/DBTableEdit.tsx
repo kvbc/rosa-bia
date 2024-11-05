@@ -32,6 +32,7 @@ export default function DBTableEdit<TRow extends DB.Row>({
         updateRowMutation,
         setStartRowIndex,
         setEndRowIndex,
+        topRowID,
     } = dbTable;
 
     // const [filterRows, setFilterRows] = useState<DBFilterRow<TRow>[]>([]);
@@ -73,8 +74,8 @@ export default function DBTableEdit<TRow extends DB.Row>({
 
     const defaultRow = useMemo<TRow>(
         // FIXME: as?
-        () => ({ ..._defaultRow, id: totalRowCount + 1 } as TRow),
-        [_defaultRow, totalRowCount]
+        () => ({ ..._defaultRow, id: topRowID + 1 } as TRow),
+        [_defaultRow, topRowID]
     );
 
     // useEffect(() => {

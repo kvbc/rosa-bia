@@ -8,6 +8,7 @@ export namespace HTTP {
               type: "fetch table rows";
               totalCount: number;
               rows: TRow[];
+              topRowID: number;
           }
         | {
               type: "error";
