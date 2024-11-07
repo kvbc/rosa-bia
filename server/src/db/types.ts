@@ -414,7 +414,7 @@ export namespace DB {
         // Employee
         //
 
-        export const EmployeeShape = z.strictObject({
+        export const EmployeeShape = z.object({
             id: z.number(),
             name: z.string(),
             password: z.string(),

@@ -94,21 +94,21 @@ export default function PageStatsB05() {
 
                 // Województwo
                 pages[0].drawText("POMORSKIE", {
-                    x: 155,
+                    x: 115,
                     y: 335,
                     size: 12,
                     font,
                 });
                 // Powiat
                 pages[0].drawText("CZŁUCHOWSKI", {
-                    x: 390,
+                    x: 340,
                     y: 335,
                     size: 12,
                     font,
                 });
                 // Gmina
                 pages[0].drawText(communeName.toUpperCase(), {
-                    x: 680,
+                    x: 660,
                     y: 335,
                     size: 12,
                     font,
@@ -133,7 +133,9 @@ export default function PageStatsB05() {
     return (
         <Stack
             direction="row"
-            sx={{ height: "100%" }}
+            sx={{
+                height: "100%",
+            }}
             spacing={2}
             divider={<Divider orientation="vertical" />}
         >

@@ -13,3 +13,6 @@ dotenv.config();
 export const db = loadDatabase();
 export const wsServer = startWebSocketServer();
 export const httpServer = startHttpServer();
+
+wsServer.broadcastMessage({ type: "server started" });
+console.log("Servers (re)started");

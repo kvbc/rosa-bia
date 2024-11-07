@@ -13,6 +13,7 @@ import {
     LuHammer,
     LuDatabase,
     LuKey,
+    LuAsterisk,
 } from "react-icons/lu";
 import { AppNavbarLinkMenu } from "./AppNavbarLinkMenu";
 import useAuthEmployee from "../../hooks/useAuthEmployee";

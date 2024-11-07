@@ -75,6 +75,7 @@ export const ContactInformationBox: React.FC = () => {
                 ].map((item) => (
                     <DataListItem
                         key={item.labelText}
+                        colorPalette="blue"
                         info={item.info}
                         label={
                             <>

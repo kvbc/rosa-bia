@@ -6,6 +6,7 @@ import {
     resVerifyTableRow,
 } from "../../common";
 import { db, wsServer } from "../../..";
+import { DB } from "../../../db/types";
 
 const router = Router();
 
@@ -41,7 +42,7 @@ router.post(
         let sqlQuery = `update ${tableName} set `;
         const sqlParams: any[] = [];
         for (const key in newRow) {
-            if (key !== "id") {
+            if (key !== "id" && DB.Rows.getMeta(tableName).keys.includes(key)) {
                 if (sqlParams.length > 0) {
                     sqlQuery += ", ";
                 }

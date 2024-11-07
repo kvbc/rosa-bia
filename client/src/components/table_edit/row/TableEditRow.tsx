@@ -26,6 +26,7 @@ import { LuPencil, LuPlus, LuSave, LuTrash, LuX } from "react-icons/lu";
 import { TableEditRowContext } from "../../../contexts/components/TableEditRowContext";
 import { MyTableCell } from "../../my_table/MyTableCell";
 import { MyTableRow } from "../../my_table/MyTableRow";
+import { Tooltip } from "../../ui/tooltip";
 
 export type TableEditRowState = "viewing" | "editing" | "adding";
 
@@ -66,12 +67,12 @@ export function TableEditRow<TRow extends TableEditRowType>({
     const context = useMemo<ContextType<typeof TableEditRowContext>>(
         () => ({
             state,
-            eventTarget,
         }),
-        [state, eventTarget]
+        [state]
     );
 
     const isContentEditable = state === "editing" || state === "adding";
+    const isActionAddButtonDisabled = upperRowContext?.state === "adding";
 
     useEffect(() => {
         setRow({ ...rowProp });
@@ -164,9 +165,8 @@ export function TableEditRow<TRow extends TableEditRowType>({
     }, [rowProp]);
 
     const handleActionAddClicked = useCallback(() => {
-        eventTarget.dispatchEvent(new CustomEvent("added"));
         onAddClicked?.(row);
-    }, [row, onAddClicked, eventTarget]);
+    }, [row, onAddClicked]);
 
     const handleActionDeleteClicked = useCallback(() => {
         onDeleteClicked?.(row);
@@ -174,41 +174,31 @@ export function TableEditRow<TRow extends TableEditRowType>({
 
     /*
      *
-     *
-     *
-     */
-
-    useEffect(() => {
-        if (upperRowContext) {
-            const callback = () => {
-                handleActionAddClicked();
-            };
-            upperRowContext.eventTarget.addEventListener("added", callback);
-            return () => {
-                upperRowContext.eventTarget.removeEventListener(
-                    "added",
-                    callback
-                );
-            };
-        }
-    }, [handleActionAddClicked, upperRowContext]);
-
-    /*
-     *
      * Action buttons
      *
      */
 
-    const actionAddButton = (
-        <IconButton
-            onClick={handleActionAddClicked}
-            size="2xs"
-            variant="plain"
-            color="fg.success"
-        >
-            <LuPlus />
-        </IconButton>
-    );
+    const actionAddButton = (() => {
+        const button = (
+            <IconButton
+                onClick={handleActionAddClicked}
+                size="2xs"
+                variant="plain"
+                color="fg.success"
+                disabled={isActionAddButtonDisabled}
+            >
+                <LuPlus />
+            </IconButton>
+        );
+        if (isActionAddButtonDisabled) {
+            return (
+                <Tooltip content="Aby dodać ten wpis, dodaj pierw wpis powyżej">
+                    {button}
+                </Tooltip>
+            );
+        }
+        return button;
+    })();
 
     const actionDeleteButton = (
         <IconButton

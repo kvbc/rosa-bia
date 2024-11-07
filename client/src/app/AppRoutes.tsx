@@ -17,11 +17,11 @@ import { PageDatabase } from "../pages/database/PageDatabase";
 export const AppRoutes: React.FC = () => {
     return (
         <Routes>
-            {/* <Route path="/" element={<PageHome />} />
-            <Route path="/registers" element={<PageRegisters />} /> */}
+            {/* <Route path="/" element={<PageHome />} /> */}
+            {/* <Route path="/registers" element={<PageRegisters />} /> */}
             <Route path="/geodesy" element={<PageGeodesy />} />
             <Route path="/investors" element={<PageInvestors />} />
-            {/* <Route path="/construction/pkob" element={<PagePKOB />} />
+            {/* <Route path="/construction/pkob" element={<PagePKOB />} /> */}
             <Route
                 path="/construction/art29-common"
                 element={<PageArt29Common />}
@@ -32,7 +32,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="/stats/b06" element={<PageStatsB06 />} />
             <Route path="/stats/gunb3" element={<PageStatsGUNB3 />} />
             <Route path="/help" element={<PageHelp />} />
-            <Route path="/database" element={<PageDatabase />} /> */}
+            <Route path="/database" element={<PageDatabase />} />
         </Routes>
     );
 };

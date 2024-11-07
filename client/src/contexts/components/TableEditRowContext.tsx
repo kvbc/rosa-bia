@@ -3,5 +3,4 @@ import { TableEditRowState } from "../../components/table_edit/row/TableEditRow"
 
 export const TableEditRowContext = createContext<{
     state: TableEditRowState;
-    eventTarget: EventTarget;
 } | null>(null);

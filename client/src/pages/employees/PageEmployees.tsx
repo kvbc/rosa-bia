@@ -5,8 +5,8 @@ import {
 import React, { useMemo } from "react";
 import useDBTable from "../../hooks/useDBTable";
 import { DB } from "../../../../server/src/db/types";
-import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 import { TableEditHeader } from "../../components/table_edit/TableEdit";
+import { TableEditRowInputsProps } from "../../components/table_edit/row/TableEditRow";
 
 export default function PageEmployees() {
     const dbTable = useDBTable<DB.Rows.Employee>("employees");

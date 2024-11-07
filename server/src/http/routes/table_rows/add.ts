@@ -39,7 +39,9 @@ router.post(
             return;
         }
 
-        const keys = Object.keys(newRow);
+        const keys = Object.keys(newRow).filter((key) =>
+            DB.Rows.getMeta(tableName).keys.includes(key)
+        );
         const sqlKeys = keys.map((key) => "`" + key + "`").join(", ");
         const sqlParams = keys.map((_) => "?").join(", ");
         const sqlValues = keys.map((key) => key === "id" ? null : newRow[key]); // prettier-ignore
