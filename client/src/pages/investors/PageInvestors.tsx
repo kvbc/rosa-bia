@@ -1,4 +1,5 @@
-import DBTableEdit, {
+import {
+    DBTableEdit,
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
 import React, { useMemo } from "react";
@@ -16,7 +17,6 @@ export default function PageInvestors() {
         () => ({
             address: "",
             name: "",
-            info: "",
         }),
         []
     );

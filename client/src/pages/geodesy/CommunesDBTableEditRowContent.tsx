@@ -1,17 +1,12 @@
-import DBTableEdit, {
+import {
+    DBTableEdit,
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
-import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import { DB } from "../../../../server/src/db/types";
 import React, { useContext, useMemo } from "react";
 import PlacesTableEditRowContent from "./PlacesTableEditRowContent";
-import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
-import { TableEditRowInputSelectOption } from "../../components/table_edit/TableEditRowInputSelect";
 import { Box } from "@chakra-ui/react";
-import {
-    nextTableEditColorValue,
-    TableEditHeader,
-} from "../../components/table_edit/TableEdit";
+import { TableEditHeader } from "../../components/table_edit/TableEdit";
 import {
     AccordionItem,
     AccordionItemContent,
@@ -20,12 +15,14 @@ import {
 } from "../../components/ui/accordion";
 import { LuBuilding } from "react-icons/lu";
 import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
+import { TableEditRowContentComponentProps } from "../../components/table_edit/row/TableEditRowContentComponent";
+import { TableEditRowInputsProps } from "../../components/table_edit/row/TableEditRow";
+import { MySelectOption } from "../../components/MySelect";
 
 export default function CommunesDBTableEditRowContent({
-    renderInput,
+    inputs,
     row,
     editable,
-    primaryBgColorValue: primaryBgcolorValue,
 }: TableEditRowContentComponentProps<DB.Rows.Commune>) {
     const pageGeodesyContext = useContext(PageGeodesyContext)!;
 
@@ -56,7 +53,7 @@ export default function CommunesDBTableEditRowContent({
                 type: "select",
                 rowKey: "area_place_id",
                 getSelectOptions: () =>
-                    pageGeodesyContext.placesDBTable.rows.map<TableEditRowInputSelectOption>(
+                    pageGeodesyContext.placesDBTable.rows.map<MySelectOption>(
                         (row) => ({
                             value: row.id,
                             name: row.name,
@@ -76,7 +73,7 @@ export default function CommunesDBTableEditRowContent({
             <AccordionItem value="1">
                 <AccordionItemTrigger>
                     <LuBuilding />
-                    <Box>{renderInput("name")}</Box>
+                    <Box>{inputs.name}</Box>
                 </AccordionItemTrigger>
                 <AccordionItemContent>
                     <DBTableEdit
@@ -86,9 +83,7 @@ export default function CommunesDBTableEditRowContent({
                             (fRow) => fRow.commune_id === row.id
                         )}
                         rowActionButtonOrientation="vertical"
-                        primaryBackgroundColorValue={nextTableEditColorValue(
-                            primaryBgcolorValue
-                        )}
+                        colorPalette="blue"
                         editable={editable}
                         headers={placesHeaders}
                         defaultRow={placesDefaultRow}

@@ -11,7 +11,7 @@ import RegisterConstructionJournalTableEdit from "./table_construction_journal/R
 export default function RegisterTableEditRowContent(
     props: TableEditRowContentComponentProps<DB.Rows.Register>
 ) {
-    const { row, inputs } = props;
+    const { row, renderInput } = props;
 
     const [showMore, setShowMore] = useState(false);
 
@@ -27,7 +27,7 @@ export default function RegisterTableEditRowContent(
                         <th className="w-[10%]" scope="row">
                             Typ Rejestru
                         </th>
-                        <td>{inputs.type}</td>
+                        <td>{renderInput("type")}</td>
                     </tr>
                 </tbody>
             </Table>

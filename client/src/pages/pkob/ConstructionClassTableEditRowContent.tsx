@@ -1,31 +1,32 @@
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Box,
-    Table,
-} from "@mui/joy";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { FaHouse } from "react-icons/fa6";
-import DBTableEdit, {
+import {
+    DBTableEdit,
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
-import ConstructionSpecTableEditRowContent from "./ConstructionSpecTableEditRowContent";
 import React, { useContext, useMemo } from "react";
 import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import { DB } from "../../../../server/src/db/types";
 import { PagePKOBContext } from "../../contexts/pages/PagePKOBContext";
 import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
+import { Box, Table } from "@chakra-ui/react";
+import {
+    AccordionItem,
+    AccordionItemContent,
+    AccordionItemTrigger,
+    AccordionRoot,
+} from "../../components/ui/accordion";
+import {
+    getTableEditColor,
+    nextTableEditColorValue,
+} from "../../components/table_edit/TableEdit";
 
 export default function ConstructionClassTableEditRowContent({
-    inputs,
+    renderInput,
     row,
     editable,
+    primaryBgColorValue,
 }: TableEditRowContentComponentProps<DB.Rows.ConstructionClass>) {
-    const pageContext = useContext(PagePKOBContext);
-    if (!pageContext) {
-        throw "Error";
-    }
+    const pageContext = useContext(PagePKOBContext)!;
 
     const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.ConstructionSpec>>(
         () => ({
@@ -58,53 +59,71 @@ export default function ConstructionClassTableEditRowContent({
     );
 
     return (
-        <>
-            <td>
-                <Accordion className="shadow-none">
-                    <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                gap: 1,
-                                alignItems: "center",
-                            }}
-                        >
-                            <FaHouse />
-                            {inputs.name}
-                        </Box>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Table size="sm">
-                            <thead>
-                                <tr>
-                                    <th className="w-[10%] text-wrap bg-gray-200">
-                                        PKOB
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{inputs.pkob}</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                        <br />
-                        <DBTableEdit
-                            dbTable={pageContext.constructionSpecsDBTable}
-                            rows={pageContext.constructionSpecsDBTable.rows.filter(
-                                (fRow) => fRow.class_id === row.id
-                            )}
-                            editable={editable}
-                            headers={["Wyszczególnienia Budowlane"]}
-                            defaultRow={defaultRow}
-                            rowInputsProps={rowInputsProps}
-                            RowContentComponent={
-                                ConstructionSpecTableEditRowContent
-                            }
-                        />
-                    </AccordionDetails>
-                </Accordion>
-            </td>
-        </>
+        <AccordionRoot variant="plain" collapsible>
+            <AccordionItem value="1">
+                <AccordionItemTrigger>
+                    <FaHouse />
+                    <Box>{renderInput("name")}</Box>
+                </AccordionItemTrigger>
+                <AccordionItemContent>
+                    <Table.Root size="sm">
+                        <Table.Header>
+                            <Table.Row
+                                backgroundColor={getTableEditColor(
+                                    nextTableEditColorValue(
+                                        primaryBgColorValue,
+                                        2
+                                    )
+                                )}
+                            >
+                                <Table.ColumnHeader border="none">
+                                    PKOB
+                                </Table.ColumnHeader>
+                            </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                            <Table.Row
+                                backgroundColor={getTableEditColor(
+                                    nextTableEditColorValue(primaryBgColorValue)
+                                )}
+                            >
+                                <Table.Cell>
+                                    {renderInput(
+                                        "pkob",
+                                        nextTableEditColorValue(
+                                            primaryBgColorValue
+                                        )
+                                    )}
+                                </Table.Cell>
+                            </Table.Row>
+                        </Table.Body>
+                    </Table.Root>
+                    <br />
+                    <DBTableEdit
+                        dbTable={pageContext.constructionSpecsDBTable}
+                        rows={pageContext.constructionSpecsDBTable.rows.filter(
+                            (fRow) => fRow.class_id === row.id
+                        )}
+                        primaryBackgroundColorValue={nextTableEditColorValue(
+                            primaryBgColorValue
+                        )}
+                        editable={editable}
+                        hidePagination
+                        defaultRow={defaultRow}
+                        rowInputsProps={rowInputsProps}
+                        // headers={["Wyszczególnienia Budowlane"]}
+                        // RowContentComponent={
+                        //     ConstructionSpecTableEditRowContent
+                        // }
+                        title="Wyszczególnienia Budowlane"
+                        headers={[
+                            "Wyszczególnienie Budowlane",
+                            "Kat. OB",
+                            "Klasa ZL",
+                        ]}
+                    />
+                </AccordionItemContent>
+            </AccordionItem>
+        </AccordionRoot>
     );
 }

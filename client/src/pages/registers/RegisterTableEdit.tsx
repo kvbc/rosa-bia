@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo } from "react";
-import { TableEditRowInputSelectOption } from "../../components/table_edit/TableEditRowInput";
-import DBTableEdit, {
+import {
+    DBTableEdit,
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
 import useDBTable from "../../hooks/useDBTable";
 import { DB } from "../../../../server/src/db/types";
 import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 import RegisterTableEditRowContent from "./RegisterTableEditRowContent";
+import { TableEditRowInputSelectOption } from "../../components/table_edit/TableEditRowInputSelect";
 
 export default function RegisterTableEdit() {
     const registersDBTable = useDBTable<DB.Rows.Register>("registers"); // prettier-ignore

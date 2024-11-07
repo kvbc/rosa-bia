@@ -5,7 +5,7 @@ import { PageRegistersContext } from "../../../contexts/pages/PageRegistersConte
 import { Table } from "@mui/joy";
 
 export default function RegisterConstructionJournalTableEdit({
-    inputs,
+    renderInput,
 }: TableEditRowContentComponentProps<DB.Rows.Register>) {
     const pageContext = useContext(PageRegistersContext);
     if (!pageContext) {
@@ -22,15 +22,15 @@ export default function RegisterConstructionJournalTableEdit({
             <tbody>
                 <tr>
                     <td>Nr dziennika</td>
-                    <td>{inputs.admin_construction_journal_number}</td>
+                    <td>{renderInput("admin_construction_journal_number")}</td>
                 </tr>
                 <tr>
                     <td>Wydany w dniu</td>
-                    <td>{inputs.admin_construction_journal_date}</td>
+                    <td>{renderInput("admin_construction_journal_date")}</td>
                 </tr>
                 <tr>
                     <td>Numer tomu</td>
-                    <td>{inputs.admin_construction_journal_tome}</td>
+                    <td>{renderInput("admin_construction_journal_tome")}</td>
                 </tr>
             </tbody>
         </Table>

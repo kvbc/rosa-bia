@@ -28,7 +28,7 @@ export default function RegisterConstructionIntentTableEdit(
         showMore: boolean;
     }
 ) {
-    const { inputs, row, setRow, showMore } = props;
+    const { renderInput, row, setRow, showMore } = props;
 
     const pageContext = useContext(PageRegistersContext);
     if (!pageContext) {
@@ -54,7 +54,7 @@ export default function RegisterConstructionIntentTableEdit(
     const constructionIntentNode: { [key in DB.Rows.RegisterType]: ReactNode } =
         useMemo(
             () => ({
-                // "PnB (6740)": inputs._object_construction_group_id,
+                // "PnB (6740)": renderInput("_object_construction_group_id"),
                 "PnB (6740)": constructionGroup?.name,
                 "PnRozb. (6741)": "Rozbiórka budynku",
                 "Zg. Rozb. (6743.1)": "Rozbiórka budynku",
@@ -105,13 +105,17 @@ export default function RegisterConstructionIntentTableEdit(
             {showAccompanyInfrastructure && (
                 <tr>
                     <td>Infrastruktura towarzysząca</td>
-                    <td>{inputs.object_pnb_acc_infra}</td>
+                    <td>{renderInput("object_pnb_acc_infra")}</td>
                 </tr>
             )}
             {showUnderConservationProtection && (
                 <tr>
                     <td>Obiekt objęty ochroną konserwatorską</td>
-                    <td>{inputs.object_demo_under_conservation_protection}</td>
+                    <td>
+                        {renderInput(
+                            "object_demo_under_conservation_protection"
+                        )}
+                    </td>
                 </tr>
             )}
             {showUsageChange && (
@@ -119,9 +123,9 @@ export default function RegisterConstructionIntentTableEdit(
                     <td>
                         <Stack direction="row" spacing={1} alignItems="center">
                             <div>z</div>
-                            {inputs.object_usage_change_from}
+                            {renderInput("object_usage_change_from")}
                             <div>na</div>
-                            {inputs.object_usage_change_to}
+                            {renderInput("object_usage_change_to")}
                         </Stack>
                     </td>
                 </tr>
@@ -144,7 +148,9 @@ export default function RegisterConstructionIntentTableEdit(
                                 <tr>
                                     <th scope="row">Sekcja</th>
                                     <td>
-                                        {inputs._object_construction_section_id}
+                                        {renderInput(
+                                            "_object_construction_section_id"
+                                        )}
                                     </td>
                                     <th scope="row">PKOB</th>
                                     <td>{constructionClass?.pkob ?? "-"}</td>
@@ -152,9 +158,9 @@ export default function RegisterConstructionIntentTableEdit(
                                 <tr>
                                     <th scope="row">Dział</th>
                                     <td>
-                                        {
-                                            inputs._object_construction_division_id
-                                        }
+                                        {renderInput(
+                                            "_object_construction_division_id"
+                                        )}
                                     </td>
                                     <th scope="row">Kat. Zag. Ludzi</th>
                                     <td>{constructionSpec?.zl_class ?? "-"}</td>
@@ -162,7 +168,9 @@ export default function RegisterConstructionIntentTableEdit(
                                 <tr>
                                     <th scope="row">Grupa</th>
                                     <td>
-                                        {inputs._object_construction_group_id}
+                                        {renderInput(
+                                            "_object_construction_group_id"
+                                        )}
                                     </td>
                                     <th scope="row">Kat. Obiektu</th>
                                     <td>{constructionSpec?.ob_cat ?? "-"}</td>
@@ -170,20 +178,30 @@ export default function RegisterConstructionIntentTableEdit(
                                 <tr>
                                     <th scope="row">Klasa</th>
                                     <td>
-                                        {inputs._object_construction_class_id}
+                                        {renderInput(
+                                            "_object_construction_class_id"
+                                        )}
                                     </td>
                                     <th scope="row">Forma budownictwa</th>
                                     <td>
-                                        {inputs.object_construction_form_type}
+                                        {renderInput(
+                                            "object_construction_form_type"
+                                        )}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Wysz.</th>
                                     <td>
-                                        {inputs.object_construction_spec_id}
+                                        {renderInput(
+                                            "object_construction_spec_id"
+                                        )}
                                     </td>
                                     <th scope="row">Planowanie przestrzenne</th>
-                                    <td>{inputs.object_spatial_plan_type}</td>
+                                    <td>
+                                        {renderInput(
+                                            "object_spatial_plan_type"
+                                        )}
+                                    </td>
                                 </tr>
                             </tbody>
                         </Table>

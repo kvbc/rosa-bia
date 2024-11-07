@@ -1,4 +1,5 @@
-import DBTableEdit, {
+import {
+    DBTableEdit,
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
 import ConstructionSectionTableEditRowContent from "./ConstructionSectionTableEditRowContent";

@@ -3,42 +3,49 @@
 // Row component for the TableEdit component
 //
 
-import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import React, {
+    ContextType,
+    ReactNode,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
+import { TableEditRowType } from "../TableEdit";
 import {
-    getTableEditColor,
-    nextTableEditColorValue,
-    TableEditColorValue,
-    TableEditRowType,
-} from "./TableEdit";
-import { TableEditRowInput, TableEditRowInputProps } from "./TableEditRowInput";
+    TableEditRowInput,
+    TableEditRowInputProps,
+} from "./input/TableEditRowInput";
 import {
     TableEditRowContentComponent,
     TableEditRowContentComponentProps,
 } from "./TableEditRowContentComponent";
-import { Center, Group, IconButton, Stack, Table } from "@chakra-ui/react";
+import { Center, Group, IconButton, Stack } from "@chakra-ui/react";
 import { LuPencil, LuPlus, LuSave, LuTrash, LuX } from "react-icons/lu";
-import { TableEditRowContext } from "../../contexts/components/TableEditRowContext";
+import { TableEditRowContext } from "../../../contexts/components/TableEditRowContext";
+import { MyTableCell } from "../../my_table/MyTableCell";
+import { MyTableRow } from "../../my_table/MyTableRow";
 
 export type TableEditRowState = "viewing" | "editing" | "adding";
 
 export type TableEditRowInputsProps<TRow extends TableEditRowType> = Omit<
     TableEditRowInputProps<TRow>,
-    "row" | "setRow" | "onBlur" | "primaryBgColorValue"
+    "row" | "setRow" | "onFocusOut" | "disabled"
 >[];
 
 export function TableEditRow<TRow extends TableEditRowType>({
-    row: tableRow,
+    row: rowProp,
     onDeleteClicked,
     onAddClicked,
     stateProp,
     onSaveClicked,
     editable,
-    actionButtonDirection = "horizontal",
+    actionButtonOrientation = "horizontal",
     showSaveAction,
     inputsProps,
-    primaryBgColorValue,
     ContentComponent,
-    saveOnInputBlur,
+    saveOnInputFocusOut,
 }: {
     row: TRow;
     onDeleteClicked?: (row: TRow) => void;
@@ -47,32 +54,39 @@ export function TableEditRow<TRow extends TableEditRowType>({
     showSaveAction: boolean;
     editable: boolean;
     stateProp: TableEditRowState;
-    primaryBgColorValue: TableEditColorValue;
-    actionButtonDirection?: "horizontal" | "vertical";
+    actionButtonOrientation?: "horizontal" | "vertical";
     inputsProps: TableEditRowInputsProps<TRow>;
     ContentComponent?: TableEditRowContentComponent<TRow>;
-    saveOnInputBlur: boolean;
+    saveOnInputFocusOut: boolean;
 }) {
-    const [row, setRow] = useState<TRow>({ ...tableRow });
+    const [row, setRow] = useState<TRow>({ ...rowProp });
     const [state, setState] = useState<TableEditRowState>(stateProp);
     const [eventTarget] = useState(new EventTarget());
+    const upperRowContext = useContext(TableEditRowContext);
+    const context = useMemo<ContextType<typeof TableEditRowContext>>(
+        () => ({
+            state,
+            eventTarget,
+        }),
+        [state, eventTarget]
+    );
+
+    const isContentEditable = state === "editing" || state === "adding";
 
     useEffect(() => {
-        setRow({ ...tableRow });
-    }, [tableRow]);
+        setRow({ ...rowProp });
+    }, [rowProp]);
 
     useEffect(() => {
         setState(stateProp);
     }, [stateProp]);
 
-    const isContentEditable = state === "editing" || state === "adding";
-
-    const handleInputBlur = useCallback(() => {
-        if (saveOnInputBlur) {
-            eventTarget.dispatchEvent(new CustomEvent("saved"));
+    const handleInputFocusOut = useCallback(() => {
+        if (saveOnInputFocusOut) {
             onSaveClicked?.(row);
+            eventTarget.dispatchEvent(new CustomEvent("saved"));
         }
-    }, [onSaveClicked, row, eventTarget, saveOnInputBlur]);
+    }, [onSaveClicked, row, eventTarget, saveOnInputFocusOut]);
 
     /*
      *
@@ -80,12 +94,8 @@ export function TableEditRow<TRow extends TableEditRowType>({
      *
      */
 
-    let content: ReactNode = "";
-
-    const renderInput = useCallback<
-        TableEditRowContentComponentProps<TRow>["renderInput"]
-    >(
-        (rowKey, customPrimaryBgColorValue) => {
+    const renderInput = useCallback(
+        (rowKey: keyof TRow) => {
             const inputProps = inputsProps.find(
                 (inputProps) => inputProps.rowKey === rowKey
             );
@@ -97,51 +107,38 @@ export function TableEditRow<TRow extends TableEditRowType>({
                     row={row}
                     setRow={setRow}
                     disabled={!isContentEditable}
-                    onBlur={handleInputBlur}
-                    primaryBgColorValue={
-                        customPrimaryBgColorValue ?? primaryBgColorValue
-                    }
+                    onFocusOut={handleInputFocusOut}
                     {...inputProps}
                 />
             );
         },
-        [
-            handleInputBlur,
-            inputsProps,
-            isContentEditable,
-            primaryBgColorValue,
-            row,
-        ]
+        [handleInputFocusOut, inputsProps, isContentEditable, row]
     );
 
+    let content: ReactNode = "";
     if (ContentComponent) {
+        const inputs: TableEditRowContentComponentProps<TRow>["inputs"] = {};
+        inputsProps.forEach((inputProps) => {
+            inputs[inputProps.rowKey] = renderInput(inputProps.rowKey);
+        });
         content = (
-            <Table.Cell
-                borderColor={getTableEditColor(
-                    nextTableEditColorValue(primaryBgColorValue, 2)
-                )}
-            >
+            <MyTableCell>
                 <ContentComponent
-                    primaryBgColorValue={primaryBgColorValue}
-                    renderInput={renderInput}
+                    key="1"
+                    inputs={inputs}
                     row={row}
                     setRow={setRow}
                     editable={isContentEditable}
-                    onInputBlur={handleInputBlur}
+                    onInputFocusOut={handleInputFocusOut}
                     eventTarget={eventTarget}
                 />
-            </Table.Cell>
+            </MyTableCell>
         );
     } else {
         content = inputsProps.map((inputProps) => (
-            <Table.Cell
-                borderColor={getTableEditColor(
-                    nextTableEditColorValue(primaryBgColorValue, 2)
-                )}
-                key={inputProps.rowKey}
-            >
+            <MyTableCell key={inputProps.rowKey}>
                 {renderInput(inputProps.rowKey)}
-            </Table.Cell>
+            </MyTableCell>
         ));
     }
 
@@ -162,17 +159,39 @@ export function TableEditRow<TRow extends TableEditRowType>({
     }, [onSaveClicked, row, eventTarget]);
 
     const handleActionCancelClicked = useCallback(() => {
-        setRow(tableRow);
+        setRow(rowProp);
         setState("viewing");
-    }, [tableRow]);
+    }, [rowProp]);
 
     const handleActionAddClicked = useCallback(() => {
+        eventTarget.dispatchEvent(new CustomEvent("added"));
         onAddClicked?.(row);
-    }, [row, onAddClicked]);
+    }, [row, onAddClicked, eventTarget]);
 
     const handleActionDeleteClicked = useCallback(() => {
         onDeleteClicked?.(row);
     }, [row, onDeleteClicked]);
+
+    /*
+     *
+     *
+     *
+     */
+
+    useEffect(() => {
+        if (upperRowContext) {
+            const callback = () => {
+                handleActionAddClicked();
+            };
+            upperRowContext.eventTarget.addEventListener("added", callback);
+            return () => {
+                upperRowContext.eventTarget.removeEventListener(
+                    "added",
+                    callback
+                );
+            };
+        }
+    }, [handleActionAddClicked, upperRowContext]);
 
     /*
      *
@@ -242,26 +261,26 @@ export function TableEditRow<TRow extends TableEditRowType>({
      */
 
     return (
-        <>
-            <TableEditRowContext.Provider value={state}>
+        <MyTableRow>
+            <TableEditRowContext.Provider value={context}>
                 {content}
             </TableEditRowContext.Provider>
             {editable && (
                 <>
                     {!showSaveAction && (
-                        <Table.Cell>
+                        <MyTableCell>
                             <Stack>
                                 {state !== "adding" && actionDeleteButton}
                                 {state === "adding" && actionAddButton}
                             </Stack>
-                        </Table.Cell>
+                        </MyTableCell>
                     )}
                     {showSaveAction && (
-                        <Table.Cell>
+                        <MyTableCell>
                             {state == "viewing" && (
                                 <Group
-                                    attached
-                                    direction={actionButtonDirection}
+                                    // attached
+                                    orientation={actionButtonOrientation}
                                     grow
                                 >
                                     {actionEditButton}
@@ -270,8 +289,8 @@ export function TableEditRow<TRow extends TableEditRowType>({
                             )}
                             {state == "editing" && (
                                 <Group
-                                    attached
-                                    direction={actionButtonDirection}
+                                    // attached
+                                    orientation={actionButtonOrientation}
                                     grow
                                 >
                                     {actionSaveButton}
@@ -281,10 +300,10 @@ export function TableEditRow<TRow extends TableEditRowType>({
                             {state == "adding" && (
                                 <Center>{actionAddButton}</Center>
                             )}
-                        </Table.Cell>
+                        </MyTableCell>
                     )}
                 </>
             )}
-        </>
+        </MyTableRow>
     );
 }

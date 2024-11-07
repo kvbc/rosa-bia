@@ -3,6 +3,8 @@ import { PageRegistersContext } from "../../contexts/pages/PageRegistersContext"
 import RegisterTableEdit from "./RegisterTableEdit";
 import useDBTable from "../../hooks/useDBTable";
 import { DB } from "../../../../server/src/db/types";
+import { MyTable } from "../../components/MyTable";
+import { Input } from "@chakra-ui/react";
 
 export default function PageRegisters() {
     const registersDBTable = useDBTable<DB.Rows.Register>("registers"); // prettier-ignore
@@ -51,9 +53,21 @@ export default function PageRegisters() {
 
     return (
         <PageRegistersContext.Provider value={context}>
-            <div>
-                <RegisterTableEdit />
-            </div>
+            {/* <MyTable
+                headers={["Yo", "Wassup", "My nigga"]}
+                rows={[
+                    [
+                        "1",
+                        <MyTable
+                            key="2"
+                            headers={["1", "2", "3"]}
+                            rows={[["4", "5", "6"]]}
+                        />,
+                        <Input key="3" variant="outline" />,
+                    ],
+                ]}
+            /> */}
+            <RegisterTableEdit />
         </PageRegistersContext.Provider>
     );
 }

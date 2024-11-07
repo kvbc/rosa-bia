@@ -11,7 +11,7 @@ import { PageRegistersContext } from "../../../contexts/pages/PageRegistersConte
 import { Table } from "@mui/joy";
 
 export default function RegisterDataTableEdit({
-    inputs,
+    renderInput,
     row,
     showMore,
 }: TableEditRowContentComponentProps<DB.Rows.Register> & {
@@ -42,11 +42,11 @@ export default function RegisterDataTableEdit({
                     <>
                         <tr>
                             <td>Numer zgłoszenia</td>
-                            <td>{inputs.app_number}</td>
+                            <td>{renderInput("app_number")}</td>
                         </tr>
                         <tr>
                             <td>Data złozenia</td>
-                            <td>{inputs.app_submission_date}</td>
+                            <td>{renderInput("app_submission_date")}</td>
                         </tr>
                         {showMore && (
                             <>
@@ -61,7 +61,9 @@ export default function RegisterDataTableEdit({
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        {inputs.app_investor_id}
+                                                        {renderInput(
+                                                            "app_investor_id"
+                                                        )}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -89,25 +91,25 @@ export default function RegisterDataTableEdit({
                                             <tbody>
                                                 <tr>
                                                     <td colSpan={2}>
-                                                        {
-                                                            inputs.app_decision_type
-                                                        }
+                                                        {renderInput(
+                                                            "app_decision_type"
+                                                        )}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Numer decyzji</td>
                                                     <td>
-                                                        {
-                                                            inputs.app_decision_number
-                                                        }
+                                                        {renderInput(
+                                                            "app_decision_number"
+                                                        )}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Data wydania</td>
                                                     <td>
-                                                        {
-                                                            inputs.app_decision_issue_date
-                                                        }
+                                                        {renderInput(
+                                                            "app_decision_issue_date"
+                                                        )}
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -127,25 +129,25 @@ export default function RegisterDataTableEdit({
                                             <tbody>
                                                 <tr>
                                                     <td colSpan={2}>
-                                                        {
-                                                            inputs.app_resolution_type
-                                                        }
+                                                        {renderInput(
+                                                            "app_resolution_type"
+                                                        )}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Numer pisma</td>
                                                     <td>
-                                                        {
-                                                            inputs.app_resolution_number
-                                                        }
+                                                        {renderInput(
+                                                            "app_resolution_number"
+                                                        )}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Data wydania</td>
                                                     <td>
-                                                        {
-                                                            inputs.app_resolution_issue_date
-                                                        }
+                                                        {renderInput(
+                                                            "app_resolution_issue_date"
+                                                        )}
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -160,15 +162,17 @@ export default function RegisterDataTableEdit({
                     <>
                         <tr>
                             <td>Złożony w dniu</td>
-                            <td>{inputs.app_submission_date}</td>
+                            <td>{renderInput("app_submission_date")}</td>
                         </tr>
                         <tr>
                             <td>Nr decyzji PnB</td>
-                            <td>{inputs.app_number}</td>
+                            <td>{renderInput("app_number")}</td>
                         </tr>
                         <tr>
                             <td>Typ dziennika</td>
-                            <td>{inputs.app_construction_journal_type}</td>
+                            <td>
+                                {renderInput("app_construction_journal_type")}
+                            </td>
                         </tr>
                     </>
                 )}

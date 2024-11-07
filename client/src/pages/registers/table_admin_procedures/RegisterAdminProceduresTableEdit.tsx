@@ -9,7 +9,7 @@ export default function RegisterAdminProceduresTableEdit(
         showMore: boolean;
     }
 ) {
-    const { inputs, row, showMore } = props;
+    const { renderInput, row, showMore } = props;
 
     return (
         <Table size="sm" sx={{ height: "100%" }}>
@@ -52,17 +52,17 @@ export default function RegisterAdminProceduresTableEdit(
                                             <tr>
                                                 <td>Numer</td>
                                                 <td>
-                                                    {
-                                                        inputs.admin_construction_journal_number
-                                                    }
+                                                    {renderInput(
+                                                        "admin_construction_journal_number"
+                                                    )}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Z dnia</td>
                                                 <td>
-                                                    {
-                                                        inputs.admin_construction_journal_date
-                                                    }
+                                                    {renderInput(
+                                                        "admin_construction_journal_date"
+                                                    )}
                                                 </td>
                                             </tr>
                                         </tbody>

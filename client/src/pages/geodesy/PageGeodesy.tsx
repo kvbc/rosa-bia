@@ -1,9 +1,10 @@
 import { DB } from "../../../../server/src/db/types";
-import DBTableEdit, {
+import {
+    DBTableEdit,
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
+import { TableEditRowInputsProps } from "../../components/table_edit/row/TableEditRow";
 import { TableEditHeader } from "../../components/table_edit/TableEdit";
-import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
 import useDBTable from "../../hooks/useDBTable";
 import CommunesDBTableEditRowContent from "./CommunesDBTableEditRowContent";

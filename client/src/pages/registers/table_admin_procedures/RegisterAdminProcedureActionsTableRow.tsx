@@ -46,11 +46,13 @@ export default function RegisterAdminProcedureActionsTableRow({
         const onRowSaved = () => {
             console.log("nigga?");
             if (dbAction) {
-                pageContext.registerAdminActionsDBTable.requestUpdateRow(
+                pageContext.registerAdminActionsDBTable.updateRowMutation.mutate(
                     action
                 );
             } else {
-                pageContext.registerAdminActionsDBTable.requestAddRow(action);
+                pageContext.registerAdminActionsDBTable.addRowMutation.mutate(
+                    action
+                );
             }
         };
         eventTarget.addEventListener("saved", onRowSaved);

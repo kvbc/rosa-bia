@@ -1,16 +1,11 @@
-import DBTableEdit, {
+import {
+    DBTableEdit,
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
-import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import { DB } from "../../../../server/src/db/types";
 import React, { useContext, useMemo } from "react";
-import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
-import {
-    getTableEditColor,
-    nextTableEditColorValue,
-    TableEditHeader,
-} from "../../components/table_edit/TableEdit";
-import { Box, Table } from "@chakra-ui/react";
+import { TableEditHeader } from "../../components/table_edit/TableEdit";
+import { Box, HStack } from "@chakra-ui/react";
 import { LuHome } from "react-icons/lu";
 import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
 import {
@@ -19,16 +14,34 @@ import {
     AccordionItemTrigger,
     AccordionRoot,
 } from "../../components/ui/accordion";
+import { TableEditRowContentComponentProps } from "../../components/table_edit/row/TableEditRowContentComponent";
+import { TableEditRowInputsProps } from "../../components/table_edit/row/TableEditRow";
+import { MyTable } from "../../components/my_table/MyTable";
+import { MyTableHeader } from "../../components/my_table/MyTableHeader";
+import { MyTableRow } from "../../components/my_table/MyTableRow";
+import { MyTableCell } from "../../components/my_table/MyTableCell";
+import { FaRoad } from "react-icons/fa6";
+import { FaArrowsAltH } from "react-icons/fa";
+import { FaMapMarkedAlt } from "react-icons/fa";
 
 export default function PlacesTableEditRowContent({
-    renderInput,
+    inputs,
     row,
     editable,
-    primaryBgColorValue,
 }: TableEditRowContentComponentProps<DB.Rows.Place>) {
     const pageGeodesyContext = useContext(PageGeodesyContext)!;
 
-    const streetsHeaders = useMemo<TableEditHeader[]>(() => ["Ulice"], []);
+    const streetsHeaders = useMemo<TableEditHeader[]>(
+        () => [
+            <MyTableHeader key="1">
+                <HStack>
+                    <FaRoad />
+                    Ulice
+                </HStack>
+            </MyTableHeader>,
+        ],
+        []
+    );
 
     const streetsDefaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Street>>(
         () => ({
@@ -50,49 +63,38 @@ export default function PlacesTableEditRowContent({
         []
     );
 
-    primaryBgColorValue = nextTableEditColorValue(primaryBgColorValue);
-    const secondaryBgColorValue = nextTableEditColorValue(primaryBgColorValue); // prettier-ignore
-    const thirdBgColorValue = nextTableEditColorValue(secondaryBgColorValue); // prettier-ignore
-    const primaryBgColor = getTableEditColor(primaryBgColorValue); // prettier-ignore
-    const secondaryBgColor = getTableEditColor(secondaryBgColorValue); // prettier-ignore
-    const thirdBgColor = getTableEditColor(thirdBgColorValue);
-
     return (
         <AccordionRoot variant="plain" collapsible>
             <AccordionItem value="1">
                 <AccordionItemTrigger>
                     <LuHome />
-                    <Box>{renderInput("name")}</Box>
+                    <Box>{inputs.name}</Box>
                 </AccordionItemTrigger>
                 <AccordionItemContent>
-                    <Table.Root size="sm" variant="outline">
-                        <Table.Header>
-                            <Table.Row backgroundColor={secondaryBgColor}>
-                                <Table.ColumnHeader borderColor={thirdBgColor}>
-                                    Jedn. ewid.
-                                </Table.ColumnHeader>
-                                <Table.ColumnHeader borderColor={thirdBgColor}>
+                    <MyTable
+                        myHeaders={[
+                            <MyTableHeader key="1">
+                                <HStack>
+                                    <FaArrowsAltH />
+                                    Jednostka ewidencyjna
+                                </HStack>
+                            </MyTableHeader>,
+                            <MyTableHeader key="2">
+                                <HStack>
+                                    <FaMapMarkedAlt />
                                     Obręb
-                                </Table.ColumnHeader>
-                            </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                            <Table.Row backgroundColor={primaryBgColor}>
-                                <Table.Cell>
-                                    {renderInput(
-                                        "cad_unit",
-                                        primaryBgColorValue
-                                    )}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {renderInput(
-                                        "area_place_id",
-                                        primaryBgColorValue
-                                    )}
-                                </Table.Cell>
-                            </Table.Row>
-                        </Table.Body>
-                    </Table.Root>
+                                </HStack>
+                            </MyTableHeader>,
+                        ]}
+                        myRows={[
+                            <MyTableRow key="1">
+                                <MyTableCell>{inputs.cad_unit}</MyTableCell>
+                                <MyTableCell>
+                                    {inputs.area_place_id}
+                                </MyTableCell>
+                            </MyTableRow>,
+                        ]}
+                    />
                     <br />
                     <DBTableEdit
                         dbTable={pageGeodesyContext.streetsDBTable}
@@ -102,7 +104,6 @@ export default function PlacesTableEditRowContent({
                         editable={editable}
                         hidePagination
                         headers={streetsHeaders}
-                        primaryBackgroundColorValue={primaryBgColorValue}
                         rowActionButtonOrientation="vertical"
                         defaultRow={streetsDefaultRow}
                         rowInputsProps={streetsRowInputsProps}

@@ -1,3 +1,5 @@
+// 1
+
 import axios, { AxiosResponse } from "axios";
 import { HTTP } from "../../../server/src/http/types";
 import { EmployeeLoginRequest } from "../../../server/src/http/routes/employee_login";
@@ -5,6 +7,12 @@ import { DB } from "../../../server/src/db/types";
 import { Filter } from "../../../server/src/http/routes/table_rows/get";
 
 export const HTTP_SERVER_URL = "http://localhost:" + HTTP.SERVER_PORT;
+
+/*
+ *
+ * Employees
+ *
+ */
 
 export const apiEmployeeLogin = async (
     req?: EmployeeLoginRequest,
@@ -36,6 +44,12 @@ export const apiEmployeeLogin = async (
             }
         });
 };
+
+/*
+ *
+ * Table Rows
+ *
+ */
 
 export const apiAddTableRow = async (
     tableName: DB.TableName,

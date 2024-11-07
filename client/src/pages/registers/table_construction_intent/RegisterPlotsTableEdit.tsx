@@ -1,5 +1,6 @@
 import { DB } from "../../../../../server/src/db/types";
-import DBTableEdit, {
+import {
+    DBTableEdit,
     DBTableEditDefaultRow,
 } from "../../../components/DBTableEdit";
 import React, { useContext, useMemo } from "react";

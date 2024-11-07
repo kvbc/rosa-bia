@@ -6,7 +6,7 @@ import { Table } from "@mui/joy";
 export default function RegisterCharParamsTableEdit(
     props: TableEditRowContentComponentProps<DB.Rows.Register>
 ) {
-    const { inputs } = props;
+    const { renderInput } = props;
 
     return (
         <Table size="sm" sx={{ height: "100%" }}>
@@ -18,19 +18,19 @@ export default function RegisterCharParamsTableEdit(
             <tbody>
                 <tr>
                     <td>Powierzchnia zabudowy [m²]</td>
-                    <td>{inputs.object_demo_building_area}</td>
+                    <td>{renderInput("object_demo_building_area")}</td>
                 </tr>
                 <tr>
                     <td>Powierzchnia użytkowa [m²]</td>
-                    <td>{inputs.object_demo_usable_area}</td>
+                    <td>{renderInput("object_demo_usable_area")}</td>
                 </tr>
                 <tr>
                     <td>Kubatura [m³]</td>
-                    <td>{inputs.object_demo_volume}</td>
+                    <td>{renderInput("object_demo_volume")}</td>
                 </tr>
                 <tr>
                     <td>Ilość budynków [szt.]</td>
-                    <td>{inputs.object_demo_building_count}</td>
+                    <td>{renderInput("object_demo_building_count")}</td>
                 </tr>
             </tbody>
         </Table>

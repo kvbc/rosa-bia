@@ -1,4 +1,5 @@
-import DBTableEdit, {
+import {
+    DBTableEdit,
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
 import ConstructionGroupTableEditRowContent from "./ConstructionGroupTableEditRowContent";
@@ -8,7 +9,7 @@ import { useContext, useMemo } from "react";
 import { PagePKOBContext } from "../../contexts/pages/PagePKOBContext";
 import React from "react";
 import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
-import { Box, Table } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import {
     AccordionItem,
     AccordionItemContent,
@@ -22,10 +23,10 @@ import {
 } from "../../components/table_edit/TableEdit";
 
 export default function ConstructionDivisionTableEditRowContent({
-    inputs,
+    renderInput,
     row,
     editable,
-    primaryBgColorValue: primaryBgcolorValue,
+    primaryBgColorValue,
 }: TableEditRowContentComponentProps<DB.Rows.ConstructionDivision>) {
     const pageContext = useContext(PagePKOBContext)!;
 
@@ -54,34 +55,32 @@ export default function ConstructionDivisionTableEditRowContent({
     );
 
     return (
-        <Table.Cell>
-            <AccordionRoot variant="plain" collapsible>
-                <AccordionItem value="1">
-                    <AccordionItemTrigger>
-                        <LuCigarette />
-                        <Box>{inputs.name}</Box>
-                    </AccordionItemTrigger>
-                    <AccordionItemContent>
-                        <DBTableEdit
-                            dbTable={pageContext.constructionGroupsDBTable}
-                            rows={pageContext.constructionGroupsDBTable.rows.filter(
-                                (fRow) => fRow.division_id === row.id
-                            )}
-                            primaryBackgroundColorValue={nextTableEditColorValue(
-                                primaryBgcolorValue
-                            )}
-                            hidePagination
-                            editable={editable}
-                            headers={headers}
-                            defaultRow={defaultRow}
-                            rowInputsProps={rowInputsProps}
-                            RowContentComponent={
-                                ConstructionGroupTableEditRowContent
-                            }
-                        />
-                    </AccordionItemContent>
-                </AccordionItem>
-            </AccordionRoot>
-        </Table.Cell>
+        <AccordionRoot variant="plain" collapsible>
+            <AccordionItem value="1">
+                <AccordionItemTrigger>
+                    <LuCigarette />
+                    <Box>{renderInput("name")}</Box>
+                </AccordionItemTrigger>
+                <AccordionItemContent>
+                    <DBTableEdit
+                        dbTable={pageContext.constructionGroupsDBTable}
+                        rows={pageContext.constructionGroupsDBTable.rows.filter(
+                            (fRow) => fRow.division_id === row.id
+                        )}
+                        primaryBackgroundColorValue={nextTableEditColorValue(
+                            primaryBgColorValue
+                        )}
+                        hidePagination
+                        editable={editable}
+                        headers={headers}
+                        defaultRow={defaultRow}
+                        rowInputsProps={rowInputsProps}
+                        RowContentComponent={
+                            ConstructionGroupTableEditRowContent
+                        }
+                    />
+                </AccordionItemContent>
+            </AccordionItem>
+        </AccordionRoot>
     );
 }

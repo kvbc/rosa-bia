@@ -1,43 +1,32 @@
-import {
-    createListCollection,
-    Fieldset,
-    HStack,
-    Tokens,
-} from "@chakra-ui/react";
-import React, { ComponentProps, useEffect, useMemo, useState } from "react";
+import { Fieldset, HStack } from "@chakra-ui/react";
+import React, {
+    ComponentProps,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import { Field } from "../ui/field";
-import {
-    SelectContent,
-    SelectItem,
-    SelectRoot,
-    SelectTrigger,
-    SelectValueText,
-} from "../ui/select";
 import {
     PaginationItems,
     PaginationNextTrigger,
     PaginationPrevTrigger,
     PaginationRoot,
 } from "../ui/pagination";
-import TableEdit, { TableEditRowType } from "./TableEdit";
+import { TableEdit, TableEditRowType } from "./TableEdit";
+import { createMySelectOptions, MySelect } from "../MySelect";
+import { ColorContext } from "../../contexts/ColorContext";
 
 export function TableEditPagination<TRow extends TableEditRowType>({
     totalRowCount,
     onRowsRangeChanged,
-    primaryBackgroundColor = "currentBg",
-    secondaryBackgroundColor = "currentBg",
-}: ComponentProps<typeof TableEdit<TRow>> & {
-    primaryBackgroundColor?: Tokens["colors"] | "currentBg";
-    secondaryBackgroundColor?: Tokens["colors"] | "currentBg";
-}) {
+}: ComponentProps<typeof TableEdit<TRow>>) {
     const [rowsPerPage, setRowsPerPage] = useState<number>(25);
     const [page, setPage] = useState<number>(1);
+    const colorContext = useContext(ColorContext);
 
-    const rowsPerPageCollection = useMemo(
-        () =>
-            createListCollection({
-                items: ["25", "50", "100", "250", "500"],
-            }),
+    const rowsPerPageOptions = useMemo(
+        () => createMySelectOptions(["25", "50", "100", "250", "500"]),
         []
     );
 
@@ -56,51 +45,24 @@ export function TableEditPagination<TRow extends TableEditRowType>({
                     <Field
                         label="Wyniki na stronę"
                         orientation="horizontal"
-                        color="gray"
+                        color={colorContext.darkFg}
                         textWrap="balance"
                     >
-                        <SelectRoot
+                        <MySelect
                             color="black"
-                            collection={rowsPerPageCollection}
-                            value={[String(rowsPerPage)]}
-                            onValueChange={(e) =>
-                                setRowsPerPage(Number(e.value))
+                            options={rowsPerPageOptions}
+                            value={String(rowsPerPage)}
+                            onValueChanged={(value) =>
+                                setRowsPerPage(Number(value))
                             }
-                            // variant="subtle"
-                            bg={primaryBackgroundColor}
-                            border="1px solid"
-                            borderRadius="sm"
-                            borderColor={secondaryBackgroundColor}
-                        >
-                            <SelectTrigger>
-                                <SelectValueText />
-                            </SelectTrigger>
-                            <SelectContent
-                                bg={primaryBackgroundColor}
-                                border="1px solid"
-                                borderRadius="sm"
-                                borderColor={secondaryBackgroundColor}
-                            >
-                                {rowsPerPageCollection.items.map((item) => (
-                                    <SelectItem
-                                        key={item}
-                                        item={item}
-                                        backgroundColor={primaryBackgroundColor}
-                                        _hover={{
-                                            backgroundColor:
-                                                secondaryBackgroundColor,
-                                        }}
-                                    >
-                                        {item}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </SelectRoot>
+                        />
                     </Field>
                 </Fieldset.Content>
             </Fieldset.Root>
             <PaginationRoot
+                colorPalette={colorContext.palette}
                 count={totalRowCount}
+                variant="solid"
                 pageSize={rowsPerPage}
                 page={page}
                 onPageChange={(e) => setPage(e.page)}
