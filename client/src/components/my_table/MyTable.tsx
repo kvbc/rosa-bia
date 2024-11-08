@@ -14,12 +14,13 @@ import { MyTableContext } from "../../contexts/components/MyTableContext";
 const colorPalettes: ColorPalette[] = [
     "gray",
     "blue",
-    "teal",
     "green",
     "orange",
-    "pink",
+    // "yellow",
     "purple",
-    "red",
+    "pink",
+    // "teal",
+    // "red",
 ];
 
 export function MyTable(

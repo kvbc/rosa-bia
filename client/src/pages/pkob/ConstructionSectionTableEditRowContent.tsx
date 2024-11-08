@@ -4,11 +4,9 @@ import {
 } from "../../components/DBTableEdit";
 import ConstructionDivisionTableEditRowContent from "./ConstructionDivisionTableEditRowContent";
 import { DB } from "../../../../server/src/db/types";
-import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import { useContext, useMemo } from "react";
 import { PagePKOBContext } from "../../contexts/pages/PagePKOBContext";
 import React from "react";
-import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 import { Box } from "@chakra-ui/react";
 import {
     AccordionItem,
@@ -16,17 +14,15 @@ import {
     AccordionItemTrigger,
     AccordionRoot,
 } from "../../components/ui/accordion";
-import { LuCigarette } from "react-icons/lu";
-import {
-    nextTableEditColorValue,
-    TableEditHeader,
-} from "../../components/table_edit/TableEdit";
+import { TableEditHeader } from "../../components/table_edit/TableEdit";
+import { TableEditRowContentComponentProps } from "../../components/table_edit/row/TableEditRowContentComponent";
+import { TableEditRowInputsProps } from "../../components/table_edit/row/TableEditRow";
+import { ConstructionSectionIcon } from "./PagePKOB";
 
 export default function ConstructionSectionTableEditRowContent({
-    renderInput,
+    inputs,
     row,
     editable,
-    primaryBgColorValue,
 }: TableEditRowContentComponentProps<DB.Rows.ConstructionSection>) {
     const pageContext = useContext(PagePKOBContext)!;
 
@@ -58,8 +54,8 @@ export default function ConstructionSectionTableEditRowContent({
         <AccordionRoot collapsible variant="plain">
             <AccordionItem value="1">
                 <AccordionItemTrigger>
-                    <LuCigarette />
-                    <Box>{renderInput("name")}</Box>
+                    <ConstructionSectionIcon />
+                    <Box>{inputs.name}</Box>
                 </AccordionItemTrigger>
                 <AccordionItemContent>
                     <DBTableEdit
@@ -67,9 +63,6 @@ export default function ConstructionSectionTableEditRowContent({
                         dbTable={pageContext.constructionDivisionsDBTable}
                         rows={pageContext.constructionDivisionsDBTable.rows.filter(
                             (fRow) => fRow.section_id === row.id
-                        )}
-                        primaryBackgroundColorValue={nextTableEditColorValue(
-                            primaryBgColorValue
                         )}
                         editable={editable}
                         headers={headers}

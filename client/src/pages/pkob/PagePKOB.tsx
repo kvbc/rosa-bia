@@ -7,8 +7,31 @@ import { DB } from "../../../../server/src/db/types";
 import React, { ContextType, useMemo } from "react";
 import { PagePKOBContext } from "../../contexts/pages/PagePKOBContext";
 import useDBTable from "../../hooks/useDBTable";
-import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
 import { TableEditHeader } from "../../components/table_edit/TableEdit";
+import { TableEditRowInputsProps } from "../../components/table_edit/row/TableEditRow";
+
+import { FaBuilding, FaListUl, FaUsers, FaWarehouse } from "react-icons/fa6";
+import { FaThList } from "react-icons/fa";
+
+// import {
+//     AiOutlineAppstoreAdd,
+//     AiOutlineFile,
+//     AiOutlineHome,
+//     AiOutlineProject,
+//     AiOutlineTeam,
+// } from "react-icons/ai";
+
+// export const ConstructionSectionIcon = AiOutlineProject;
+// export const ConstructionDivisionIcon = AiOutlineHome;
+// export const ConstructionGroupIcon = AiOutlineTeam;
+// export const ConstructionClassIcon = AiOutlineAppstoreAdd;
+// export const ConstructionSpecIcon = AiOutlineFile;
+
+export const ConstructionSectionIcon = FaBuilding;
+export const ConstructionDivisionIcon = FaWarehouse;
+export const ConstructionGroupIcon = FaUsers;
+export const ConstructionClassIcon = FaThList;
+export const ConstructionSpecIcon = FaListUl;
 
 export default function PagePKOB() {
     const constructionSectionsDBTable = useDBTable<DB.Rows.ConstructionSection>("construction_sections"); // prettier-ignore

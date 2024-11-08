@@ -13,11 +13,11 @@ import {
     AccordionItemTrigger,
     AccordionRoot,
 } from "../../components/ui/accordion";
-import { LuBuilding } from "react-icons/lu";
 import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
 import { TableEditRowContentComponentProps } from "../../components/table_edit/row/TableEditRowContentComponent";
 import { TableEditRowInputsProps } from "../../components/table_edit/row/TableEditRow";
 import { MySelectOption } from "../../components/MySelect";
+import { FaLandmark } from "react-icons/fa6";
 
 export default function CommunesDBTableEditRowContent({
     inputs,
@@ -72,7 +72,7 @@ export default function CommunesDBTableEditRowContent({
         <AccordionRoot collapsible variant="plain">
             <AccordionItem value="1">
                 <AccordionItemTrigger>
-                    <LuBuilding />
+                    <FaLandmark />
                     <Box>{inputs.name}</Box>
                 </AccordionItemTrigger>
                 <AccordionItemContent>

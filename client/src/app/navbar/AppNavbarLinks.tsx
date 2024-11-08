@@ -3,17 +3,16 @@ import { AppNavbarLink } from "./AppNavbarLink";
 import { Float, HStack, Icon, StackSeparator } from "@chakra-ui/react";
 import {
     LuHome,
-    LuFileArchive,
     LuFileBarChart,
     LuGlobe,
     LuBriefcase,
     LuUser,
     LuHelpCircle,
-    LuConstruction,
     LuHammer,
     LuDatabase,
     LuKey,
-    LuAsterisk,
+    LuFileText,
+    LuHardHat,
 } from "react-icons/lu";
 import { AppNavbarLinkMenu } from "./AppNavbarLinkMenu";
 import useAuthEmployee from "../../hooks/useAuthEmployee";
@@ -77,7 +76,7 @@ export const AppNavbarLinks: React.FC = () => {
             </AppNavbarLink>
             <AppNavbarLink to="/registers">
                 <Icon fontSize="md">
-                    <LuFileArchive />
+                    <LuFileText />
                 </Icon>
                 Rejestry
             </AppNavbarLink>
@@ -121,7 +120,7 @@ export const AppNavbarLinks: React.FC = () => {
                 <AppNavbarLinkMenu
                     isOpen={isConstructionMenuOpen}
                     setIsOpen={setIsConstructionMenuOpen}
-                    Icon={LuConstruction}
+                    Icon={LuHardHat}
                     title="Budowlanka"
                     links={[
                         {

@@ -21,7 +21,7 @@ export const AppRoutes: React.FC = () => {
             {/* <Route path="/registers" element={<PageRegisters />} /> */}
             <Route path="/geodesy" element={<PageGeodesy />} />
             <Route path="/investors" element={<PageInvestors />} />
-            {/* <Route path="/construction/pkob" element={<PagePKOB />} /> */}
+            <Route path="/construction/pkob" element={<PagePKOB />} />
             <Route
                 path="/construction/art29-common"
                 element={<PageArt29Common />}

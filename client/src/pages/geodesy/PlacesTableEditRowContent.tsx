@@ -6,7 +6,6 @@ import { DB } from "../../../../server/src/db/types";
 import React, { useContext, useMemo } from "react";
 import { TableEditHeader } from "../../components/table_edit/TableEdit";
 import { Box, HStack } from "@chakra-ui/react";
-import { LuHome } from "react-icons/lu";
 import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
 import {
     AccordionItem,
@@ -21,7 +20,7 @@ import { MyTableHeader } from "../../components/my_table/MyTableHeader";
 import { MyTableRow } from "../../components/my_table/MyTableRow";
 import { MyTableCell } from "../../components/my_table/MyTableCell";
 import { FaRoad } from "react-icons/fa6";
-import { FaArrowsAltH } from "react-icons/fa";
+import { FaArrowsAltH, FaFileAlt, FaHome } from "react-icons/fa";
 import { FaMapMarkedAlt } from "react-icons/fa";
 
 export default function PlacesTableEditRowContent({
@@ -67,7 +66,7 @@ export default function PlacesTableEditRowContent({
         <AccordionRoot variant="plain" collapsible>
             <AccordionItem value="1">
                 <AccordionItemTrigger>
-                    <LuHome />
+                    <FaHome />
                     <Box>{inputs.name}</Box>
                 </AccordionItemTrigger>
                 <AccordionItemContent>
@@ -75,7 +74,7 @@ export default function PlacesTableEditRowContent({
                         myHeaders={[
                             <MyTableHeader key="1">
                                 <HStack>
-                                    <FaArrowsAltH />
+                                    <FaFileAlt />
                                     Jednostka ewidencyjna
                                 </HStack>
                             </MyTableHeader>,

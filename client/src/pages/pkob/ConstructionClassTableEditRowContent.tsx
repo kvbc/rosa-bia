@@ -1,30 +1,31 @@
-import { FaHouse } from "react-icons/fa6";
 import {
     DBTableEdit,
     DBTableEditDefaultRow,
 } from "../../components/DBTableEdit";
 import React, { useContext, useMemo } from "react";
-import { TableEditRowContentComponentProps } from "../../components/table_edit/TableEditRowContentComponent";
 import { DB } from "../../../../server/src/db/types";
 import { PagePKOBContext } from "../../contexts/pages/PagePKOBContext";
-import { TableEditRowInputsProps } from "../../components/table_edit/TableEditRow";
-import { Box, Table } from "@chakra-ui/react";
+import { Box, HStack } from "@chakra-ui/react";
 import {
     AccordionItem,
     AccordionItemContent,
     AccordionItemTrigger,
     AccordionRoot,
 } from "../../components/ui/accordion";
-import {
-    getTableEditColor,
-    nextTableEditColorValue,
-} from "../../components/table_edit/TableEdit";
+import { TableEditRowContentComponentProps } from "../../components/table_edit/row/TableEditRowContentComponent";
+import { TableEditRowInputsProps } from "../../components/table_edit/row/TableEditRow";
+import { MyTable } from "../../components/my_table/MyTable";
+import { MyTableHeader } from "../../components/my_table/MyTableHeader";
+import { MyTableRow } from "../../components/my_table/MyTableRow";
+import { MyTableCell } from "../../components/my_table/MyTableCell";
+import { ConstructionClassIcon, ConstructionSpecIcon } from "./PagePKOB";
+import { FaExclamationTriangle } from "react-icons/fa";
+import { FaTags } from "react-icons/fa6";
 
 export default function ConstructionClassTableEditRowContent({
-    renderInput,
+    inputs,
     row,
     editable,
-    primaryBgColorValue,
 }: TableEditRowContentComponentProps<DB.Rows.ConstructionClass>) {
     const pageContext = useContext(PagePKOBContext)!;
 
@@ -62,64 +63,50 @@ export default function ConstructionClassTableEditRowContent({
         <AccordionRoot variant="plain" collapsible>
             <AccordionItem value="1">
                 <AccordionItemTrigger>
-                    <FaHouse />
-                    <Box>{renderInput("name")}</Box>
+                    <ConstructionClassIcon />
+                    <Box>{inputs.name}</Box>
                 </AccordionItemTrigger>
                 <AccordionItemContent>
-                    <Table.Root size="sm">
-                        <Table.Header>
-                            <Table.Row
-                                backgroundColor={getTableEditColor(
-                                    nextTableEditColorValue(
-                                        primaryBgColorValue,
-                                        2
-                                    )
-                                )}
-                            >
-                                <Table.ColumnHeader border="none">
-                                    PKOB
-                                </Table.ColumnHeader>
-                            </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                            <Table.Row
-                                backgroundColor={getTableEditColor(
-                                    nextTableEditColorValue(primaryBgColorValue)
-                                )}
-                            >
-                                <Table.Cell>
-                                    {renderInput(
-                                        "pkob",
-                                        nextTableEditColorValue(
-                                            primaryBgColorValue
-                                        )
-                                    )}
-                                </Table.Cell>
-                            </Table.Row>
-                        </Table.Body>
-                    </Table.Root>
+                    <MyTable
+                        myHeaders={[
+                            <MyTableHeader key="1">PKOB</MyTableHeader>,
+                        ]}
+                        myRows={[
+                            <MyTableRow key="1">
+                                <MyTableCell>{inputs.pkob}</MyTableCell>
+                            </MyTableRow>,
+                        ]}
+                    />
                     <br />
                     <DBTableEdit
                         dbTable={pageContext.constructionSpecsDBTable}
                         rows={pageContext.constructionSpecsDBTable.rows.filter(
                             (fRow) => fRow.class_id === row.id
                         )}
-                        primaryBackgroundColorValue={nextTableEditColorValue(
-                            primaryBgColorValue
-                        )}
                         editable={editable}
                         hidePagination
                         defaultRow={defaultRow}
                         rowInputsProps={rowInputsProps}
-                        // headers={["Wyszczególnienia Budowlane"]}
-                        // RowContentComponent={
-                        //     ConstructionSpecTableEditRowContent
-                        // }
                         title="Wyszczególnienia Budowlane"
                         headers={[
-                            "Wyszczególnienie Budowlane",
-                            "Kat. OB",
-                            "Klasa ZL",
+                            <MyTableHeader key="1">
+                                <HStack>
+                                    <ConstructionSpecIcon />
+                                    Wyszczególnienie Budowlane
+                                </HStack>
+                            </MyTableHeader>,
+                            <MyTableHeader key="2">
+                                <HStack>
+                                    <FaTags />
+                                    Kat. Obiektu
+                                </HStack>
+                            </MyTableHeader>,
+                            <MyTableHeader key="3">
+                                <HStack>
+                                    <FaExclamationTriangle />
+                                    Kat. Zagrożenia Ludzi
+                                </HStack>
+                            </MyTableHeader>,
                         ]}
                     />
                 </AccordionItemContent>
