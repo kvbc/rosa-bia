@@ -46,6 +46,7 @@ export function TableEdit<TRow extends TableEditRowType>(
         editable?: boolean;
         showFooter?: boolean;
         title?: string;
+        disableRowAdding?: boolean;
         hidePagination?: boolean;
         onRowDeleteClicked?: (row: TRow) => void;
         onRowAddClicked?: (row: TRow) => void;
@@ -66,6 +67,7 @@ export function TableEdit<TRow extends TableEditRowType>(
         defaultRow,
         headers: headersProp,
         rowInputsProps,
+        disableRowAdding,
         onRowDeleteClicked,
         onRowAddClicked,
         onRowSaveClicked,
@@ -278,7 +280,10 @@ export function TableEdit<TRow extends TableEditRowType>(
                         </MyTableHeader>
                     );
                 })}
-                myRows={(editable ? [...rows, addRow] : rows).map((row) => (
+                myRows={(editable && !disableRowAdding
+                    ? [...rows, addRow]
+                    : rows
+                ).map((row) => (
                     <TableEditRow<TRow>
                         key={row === addRow ? row.id + 100 : row.id} // to avoid same-key problems when changing ids
                         row={row}

@@ -1,38 +1,37 @@
 import { DB } from "../../../../../server/src/db/types";
-import { TableEditRowContentComponentProps } from "../../../components/table_edit/TableEditRowContentComponent";
-import React, { useContext } from "react";
-import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
-import { Table } from "@mui/joy";
+import React from "react";
+import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
+import { MyTable as Tb } from "../../../components/my_table/MyTable";
+import { MyTableHeader as Th } from "../../../components/my_table/MyTableHeader";
+import { MyTableRow as Tr } from "../../../components/my_table/MyTableRow";
+import { MyTableCell as Tc } from "../../../components/my_table/MyTableCell";
 
 export default function RegisterConstructionJournalTableEdit({
-    renderInput,
+    inputs,
 }: TableEditRowContentComponentProps<DB.Rows.Register>) {
-    const pageContext = useContext(PageRegistersContext);
-    if (!pageContext) {
-        throw "Error";
-    }
-
     return (
-        <Table size="sm">
-            <thead>
-                <tr>
-                    <th colSpan={2}>Dziennik budowy</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Nr dziennika</td>
-                    <td>{renderInput("admin_construction_journal_number")}</td>
-                </tr>
-                <tr>
-                    <td>Wydany w dniu</td>
-                    <td>{renderInput("admin_construction_journal_date")}</td>
-                </tr>
-                <tr>
-                    <td>Numer tomu</td>
-                    <td>{renderInput("admin_construction_journal_tome")}</td>
-                </tr>
-            </tbody>
-        </Table>
+        <Tb
+            isCollapsible
+            myHeaders={
+                <>
+                    <Th colSpan={2}>Dziennik budowy</Th>
+                </>
+            }
+        >
+            <Tr>
+                <Tc height="60px">Nr dziennika</Tc>
+                <Tc height="60px">
+                    {inputs.admin_construction_journal_number}
+                </Tc>
+            </Tr>
+            <Tr>
+                <Tc height="60px">Wydany w dniu</Tc>
+                <Tc height="60px">{inputs.admin_construction_journal_date}</Tc>
+            </Tr>
+            <Tr>
+                <Tc height="60px">Numer tomu</Tc>
+                <Tc height="60px">{inputs.admin_construction_journal_tome}</Tc>
+            </Tr>
+        </Tb>
     );
 }

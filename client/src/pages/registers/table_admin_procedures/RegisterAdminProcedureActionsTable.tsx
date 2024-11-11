@@ -1,8 +1,9 @@
 import { DB } from "../../../../../server/src/db/types";
 import React from "react";
-import { TableEditRowContentComponentProps } from "../../../components/table_edit/TableEditRowContentComponent";
 import RegisterAdminProcedureActionsTableRow from "./RegisterAdminProcedureActionsTableRow";
-import { Table } from "@mui/joy";
+import { MyTable as Tb } from "../../../components/my_table/MyTable";
+import { MyTableHeader as Th } from "../../../components/my_table/MyTableHeader";
+import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
 
 export default function RegisterAdminProcedureActionsTable(
     props: TableEditRowContentComponentProps<DB.Rows.Register>
@@ -10,28 +11,28 @@ export default function RegisterAdminProcedureActionsTable(
     const { row } = props;
 
     return (
-        <Table size="sm">
-            <thead>
-                <tr>
-                    <th>Czynności</th>
-                    <th>Wybór</th>
-                    <th>Termin [dni]</th>
-                    <th>Data pisma</th>
-                    <th>Data odebrania</th>
-                    <th>Data odpowiedzi</th>
-                </tr>
-            </thead>
-            <tbody>
-                {DB.Rows.REGISTER_TYPE_INFOS[row.type].actionTypes.map(
-                    (actionType) => (
-                        <RegisterAdminProcedureActionsTableRow
-                            key={actionType}
-                            actionType={actionType}
-                            {...props}
-                        />
-                    )
-                )}
-            </tbody>
-        </Table>
+        <Tb
+            isCollapsible
+            myHeaders={
+                <>
+                    <Th>Czynności</Th>
+                    <Th>Wybór</Th>
+                    <Th>Termin [dni]</Th>
+                    <Th>Data pisma</Th>
+                    <Th>Data odebrania</Th>
+                    <Th>Data odpowiedzi</Th>
+                </>
+            }
+        >
+            {DB.Rows.REGISTER_TYPE_INFOS[row.type].actionTypes.map(
+                (actionType) => (
+                    <RegisterAdminProcedureActionsTableRow
+                        key={actionType}
+                        actionType={actionType}
+                        {...props}
+                    />
+                )
+            )}
+        </Tb>
     );
 }

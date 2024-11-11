@@ -12,7 +12,7 @@ import React, {
     useContext,
 } from "react";
 import { TableEditRowType } from "../../TableEdit";
-import { Input } from "@chakra-ui/react";
+import { Center, Input, InputProps } from "@chakra-ui/react";
 import { TableEditRowInputSelect } from "./TableEditRowInputSelect";
 import { TableEditRowInputCheckbox } from "./TableEditRowInputCheckbox";
 import { ColorContext } from "../../../../contexts/ColorContext";
@@ -31,10 +31,18 @@ export type TableEditRowInputProps<TRow extends TableEditRowType> = {
 };
 
 export function TableEditRowInput<TRow extends TableEditRowType>(
-    props: TableEditRowInputProps<TRow>
+    props: TableEditRowInputProps<TRow> & InputProps
 ) {
-    const { row, setRow, type, rowKey, placeholder, disabled, onFocusOut } =
-        props;
+    const {
+        row,
+        setRow,
+        type,
+        rowKey,
+        placeholder,
+        disabled,
+        onFocusOut,
+        ...inputProps
+    } = props;
 
     const colorContext = useContext(ColorContext);
 
@@ -42,7 +50,11 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
         case "select":
             return <TableEditRowInputSelect {...props} />;
         case "checkbox":
-            return <TableEditRowInputCheckbox {...props} />;
+            return (
+                <Center>
+                    <TableEditRowInputCheckbox {...props} />
+                </Center>
+            );
         case "number":
             return <TableEditRowInputNumber {...props} />;
     }
@@ -50,6 +62,7 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
     return (
         <Input
             size="sm"
+            fontSize="inherit"
             type={type}
             value={row[rowKey] as string}
             backgroundColor={colorContext.bg2}
@@ -67,6 +80,11 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
             _selection={{
                 backgroundColor: colorContext.border,
             }}
+            //
+            // padding="0.5"
+            // height="auto"
+            //
+            {...inputProps}
         />
     );
 }

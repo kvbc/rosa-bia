@@ -76,7 +76,9 @@ create table registers(
     id integer primary key autoincrement,
     `type` text not null,
 
-    app_number integer not null unique, -- numer wniosku
+    assigned_employee_id integer, -- przypisany pracownik (przydzial)
+
+    app_number text not null, -- numer wniosku
     app_submission_date date not null, -- data zlozenia
     app_investor_id integer not null,
     app_decision_type text,
@@ -100,14 +102,18 @@ create table registers(
     object_demo_building_count integer not null, -- ilosc budynkow
     object_usage_change_from text not null, -- zm. sp. uzytk. z
     object_usage_change_to text not null, -- zm. sp. uzytk. na
+    object_prbud_intent_id integer not null, -- id zamierzenia budowlanego
+    object_public_info boolean not null, -- informacja publiczna?
 
     admin_construction_journal_number integer not null, -- numer dziennika budowy
     admin_construction_journal_date date not null, -- data dziennika budowy
     admin_construction_journal_tome integer not null, -- numer tomu dziennika budowy
 
+    foreign key(assigned_employee_id) references employees(id),
     foreign key(app_investor_id) references investors(id),
     foreign key(object_construction_spec_id) references construction_specs(id),
-    foreign key(object_street_id) references streets(id)
+    foreign key(object_street_id) references streets(id),
+    foreign key(object_prbud_intent_id) references prbud_intents(id)
 );
 
 create table registers_plots( -- rejestry: dzialki
@@ -148,4 +154,22 @@ create table employees(
 create table info_boards(
     id integer primary key autoincrement,
     contents text not null
+);
+
+-- 
+-- PrBud 
+-- 
+
+create table prbud_types(
+    id integer primary key autoincrement,
+    register_type text not null,
+    `name` text not null
+);
+create table prbud_intents(
+    id integer primary key autoincrement,
+    type_id integer not null,
+    intent text not null,
+    legal_basis text not null, -- podstawa prawna
+    additional_requirements text not null, -- dodatkowe wymagania
+    foreign key(type_id) references prbud_types(id)
 );

@@ -1,49 +1,21 @@
 import React from "react";
 import useAuthEmployee from "../../hooks/useAuthEmployee";
-import {
-    AvatarFallback,
-    AvatarRoot,
-    Badge,
-    ColorPalette,
-    Float,
-    HStack,
-    Icon,
-    Text,
-    VStack,
-} from "@chakra-ui/react";
+import { Badge, Float, HStack, Icon, Text, VStack } from "@chakra-ui/react";
 import { LuLogIn, LuLogOut } from "react-icons/lu";
 import { Button } from "../../components/ui/button";
 import { DialogTrigger } from "../../components/ui/dialog";
 import { Tooltip } from "../../components/ui/tooltip";
 import { Skeleton, SkeletonCircle } from "../../components/ui/skeleton";
+import { EmployeeAvatar } from "../../components/EmployeeAvatar";
 
 export const AppNavbarEmployee: React.FC = () => {
     const { query: employeeQuery, logout: employeeLogout } = useAuthEmployee();
-    const colorPalettes: ColorPalette[] = [
-        "red",
-        "orange",
-        "yellow",
-        "green",
-        "teal",
-        "blue",
-        "cyan",
-        "purple",
-        "pink",
-    ];
 
     const employee = employeeQuery.data?.employee;
     const displayEmployee = employee ?? {
         admin: false,
         name: "This is a very long username",
     };
-
-    let avatarFallback = "";
-    const nameWords = displayEmployee.name.split(" ");
-    if (nameWords.length >= 2) {
-        avatarFallback = nameWords[0][0] + nameWords[1][0];
-    } else {
-        avatarFallback = displayEmployee.name[0] + displayEmployee.name[1];
-    }
 
     return (
         <HStack justify="end" alignSelf="stretch" flexGrow="1">
@@ -89,16 +61,7 @@ export const AppNavbarEmployee: React.FC = () => {
                 size={!employeeQuery.isFetched ? "10" : ""}
             >
                 {employee && (
-                    <AvatarRoot
-                        size="sm"
-                        colorPalette={
-                            colorPalettes[
-                                displayEmployee.name.charCodeAt(0) %
-                                    colorPalettes.length
-                            ]
-                        }
-                    >
-                        <AvatarFallback>{avatarFallback}</AvatarFallback>
+                    <EmployeeAvatar fullName={displayEmployee.name}>
                         <Tooltip
                             content="Wyloguj"
                             // positioning={{ placement: "left" }}
@@ -121,7 +84,7 @@ export const AppNavbarEmployee: React.FC = () => {
                                 </Icon>
                             </Float>
                         </Tooltip>
-                    </AvatarRoot>
+                    </EmployeeAvatar>
                 )}
             </SkeletonCircle>
         </HStack>

@@ -1,22 +1,22 @@
-import { Table } from "@chakra-ui/react";
 import React, { ComponentProps, useContext } from "react";
 import { ColorContext } from "../../contexts/ColorContext";
+import { MyTableCell } from "./MyTableCell";
 
-export function MyTableHeader({
+export function MyTableHeaderRow({
     children,
     ...props
-}: ComponentProps<typeof Table.ColumnHeader>) {
+}: ComponentProps<typeof MyTableCell>) {
     const colorContext = useContext(ColorContext);
 
     return (
-        <Table.ColumnHeader
-            borderColor={colorContext.border}
+        <MyTableCell
+            backgroundColor={colorContext.bg2}
             _selection={{
                 backgroundColor: colorContext.border,
             }}
             {...props}
         >
             {children}
-        </Table.ColumnHeader>
+        </MyTableCell>
     );
 }

@@ -2,7 +2,15 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useDBTable from "../../hooks/useDBTable";
 import { DB } from "../../../../server/src/db/types";
 import React from "react";
-import { Group, Heading, IconButton, Stack, Textarea } from "@chakra-ui/react";
+import {
+    Box,
+    Group,
+    Heading,
+    IconButton,
+    Separator,
+    Stack,
+    Textarea,
+} from "@chakra-ui/react";
 import { LuPencil, LuSave, LuX } from "react-icons/lu";
 
 export type InfoBoardState = "editing" | "viewing";
@@ -51,7 +59,10 @@ export default function InfoBoard() {
 
     return (
         <Stack width="3/12">
-            <Heading>Tablica Informacyjna</Heading>
+            <Box>
+                <Heading>Tablica Informacyjna</Heading>
+                <Separator />
+            </Box>
             {state === "viewing" && (
                 <IconButton
                     onClick={handleEditClicked}

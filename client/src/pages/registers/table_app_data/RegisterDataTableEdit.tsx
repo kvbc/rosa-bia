@@ -5,22 +5,25 @@
  */
 
 import { DB } from "../../../../../server/src/db/types";
-import React, { useContext, useMemo } from "react";
-import { TableEditRowContentComponentProps } from "../../../components/table_edit/TableEditRowContentComponent";
+import React, { PropsWithChildren, useContext, useMemo } from "react";
 import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
-import { Table } from "@mui/joy";
+import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
+import { MyTable as Tb } from "../../../components/my_table/MyTable";
+import { MyTableHeader as Th } from "../../../components/my_table/MyTableHeader";
+import { MyTableRow as Tr } from "../../../components/my_table/MyTableRow";
+import { MyTableCell as Tc } from "../../../components/my_table/MyTableCell";
 
 export default function RegisterDataTableEdit({
-    renderInput,
+    inputs,
     row,
     showMore,
-}: TableEditRowContentComponentProps<DB.Rows.Register> & {
-    showMore: boolean;
-}) {
-    const pageContext = useContext(PageRegistersContext);
-    if (!pageContext) {
-        throw "Error";
+    children,
+}: PropsWithChildren<
+    TableEditRowContentComponentProps<DB.Rows.Register> & {
+        showMore: boolean;
     }
+>) {
+    const pageContext = useContext(PageRegistersContext)!;
 
     const investor = useMemo(
         () =>
@@ -30,153 +33,144 @@ export default function RegisterDataTableEdit({
         [pageContext.investorsDBTable.rows, row.app_investor_id]
     );
 
+    const subtype = DB.Rows.REGISTER_TYPE_INFOS[row.type].subtype;
+
     return (
-        <Table size="sm">
-            <thead>
-                <tr>
-                    <th colSpan={2}>Dane Wniosku</th>
-                </tr>
-            </thead>
-            <tbody>
-                {row.type !== "Dz. bud" && (
-                    <>
-                        <tr>
-                            <td>Numer zgłoszenia</td>
-                            <td>{renderInput("app_number")}</td>
-                        </tr>
-                        <tr>
-                            <td>Data złozenia</td>
-                            <td>{renderInput("app_submission_date")}</td>
-                        </tr>
-                        {showMore && (
-                            <>
-                                <tr>
-                                    <td colSpan={2}>
-                                        <Table size="sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>Inwestor</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        {renderInput(
-                                                            "app_investor_id"
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{investor?.address}</td>
-                                                </tr>
-                                            </tbody>
-                                        </Table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan={2}>
-                                        <Table size="sm">
-                                            <thead>
-                                                <tr>
-                                                    <th colSpan={2}>
-                                                        {DB.Rows
-                                                            .REGISTER_TYPE_INFOS[
-                                                            row.type
-                                                        ].subtype === "Mayor"
-                                                            ? "Decyzja starosty Człuchowskiego"
-                                                            : "Zaświadczenie / Decyzja"}
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td colSpan={2}>
-                                                        {renderInput(
-                                                            "app_decision_type"
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Numer decyzji</td>
-                                                    <td>
-                                                        {renderInput(
-                                                            "app_decision_number"
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Data wydania</td>
-                                                    <td>
-                                                        {renderInput(
-                                                            "app_decision_issue_date"
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </Table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan={2}>
-                                        <Table size="sm">
-                                            <thead>
-                                                <tr>
-                                                    <th colSpan={2}>
-                                                        Inne rozstrzygnięcie
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td colSpan={2}>
-                                                        {renderInput(
-                                                            "app_resolution_type"
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Numer pisma</td>
-                                                    <td>
-                                                        {renderInput(
-                                                            "app_resolution_number"
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Data wydania</td>
-                                                    <td>
-                                                        {renderInput(
-                                                            "app_resolution_issue_date"
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </Table>
-                                    </td>
-                                </tr>
-                            </>
-                        )}
-                    </>
-                )}
-                {row.type === "Dz. bud" && (
-                    <>
-                        <tr>
-                            <td>Złożony w dniu</td>
-                            <td>{renderInput("app_submission_date")}</td>
-                        </tr>
-                        <tr>
-                            <td>Nr decyzji PnB</td>
-                            <td>{renderInput("app_number")}</td>
-                        </tr>
-                        <tr>
-                            <td>Typ dziennika</td>
-                            <td>
-                                {renderInput("app_construction_journal_type")}
-                            </td>
-                        </tr>
-                    </>
-                )}
-            </tbody>
-        </Table>
+        <Tb
+            myHeaders={[
+                <Th key="1" colSpan={2}>
+                    Dane wniosku
+                </Th>,
+            ]}
+            overflow="visible"
+        >
+            {row.type === "Dz. bud" && (
+                <>
+                    <Tr>
+                        <Tc height="60px">Złożony w dniu</Tc>
+                        <Tc height="60px">{inputs.app_submission_date}</Tc>
+                    </Tr>
+                    <Tr>
+                        <Tc height="60px">Nr decyzji PnB</Tc>
+                        <Tc height="60px">{inputs.app_number}</Tc>
+                    </Tr>
+                    <Tr>
+                        <Tc height="60px">Typ dziennika</Tc>
+                        <Tc height="60px">
+                            {inputs.app_construction_journal_type}
+                        </Tc>
+                    </Tr>
+                </>
+            )}
+            {row.type !== "Dz. bud" && (
+                <>
+                    <Tr>
+                        <Tc height="60px">Numer zgłoszenia</Tc>
+                        <Tc height="60px">{inputs.app_number}</Tc>
+                    </Tr>
+                    <Tr>
+                        <Tc height="60px" position="relative">
+                            Data złożenia
+                            {/* show more button */}
+                            {children}
+                        </Tc>
+                        <Tc height="60px">{inputs.app_submission_date}</Tc>
+                    </Tr>
+                    {showMore && (
+                        <>
+                            <Tr>
+                                <Tc colSpan={2}>
+                                    <Tb
+                                        isCollapsible
+                                        myHeaders={
+                                            <>
+                                                <Th>Inwestor</Th>
+                                            </>
+                                        }
+                                    >
+                                        <Tr>
+                                            <Tc>{inputs.app_investor_id}</Tc>
+                                        </Tr>
+                                        <Tr>
+                                            <Tc>{investor?.address ?? "-"}</Tc>
+                                        </Tr>
+                                    </Tb>
+                                </Tc>
+                            </Tr>
+                            <Tr>
+                                <Tc colSpan={2}>
+                                    <Tb
+                                        isCollapsible
+                                        myHeaders={
+                                            <>
+                                                <Th colSpan={2}>
+                                                    {subtype === "Mayor"
+                                                        ? "Decyzja Starosty Człuchowskiego"
+                                                        : subtype === "Cert"
+                                                        ? "Zaświadczenie / Decyzja"
+                                                        : "Odpowiedź"}
+                                                </Th>
+                                            </>
+                                        }
+                                    >
+                                        <Tr>
+                                            <Tc colSpan={2}>
+                                                {inputs.app_decision_type}
+                                            </Tc>
+                                        </Tr>
+                                        <Tr>
+                                            <Tc>Numer decyzji</Tc>
+                                            <Tc>
+                                                {inputs.app_decision_number}
+                                            </Tc>
+                                        </Tr>
+                                        <Tr>
+                                            <Tc>Data wydania</Tc>
+                                            <Tc>
+                                                {inputs.app_decision_issue_date}
+                                            </Tc>
+                                        </Tr>
+                                    </Tb>
+                                </Tc>
+                            </Tr>
+                            <Tr height="full">
+                                <Tc colSpan={2} height="full">
+                                    <Tb
+                                        isCollapsible
+                                        myHeaders={
+                                            <>
+                                                <Th colSpan={2}>
+                                                    Inne rozstrzygnięcie
+                                                </Th>
+                                            </>
+                                        }
+                                    >
+                                        <Tr>
+                                            <Tc colSpan={2}>
+                                                {inputs.app_resolution_type}
+                                            </Tc>
+                                        </Tr>
+                                        <Tr>
+                                            <Tc>Numer pisma</Tc>
+                                            <Tc>
+                                                {inputs.app_resolution_number}
+                                            </Tc>
+                                        </Tr>
+                                        <Tr>
+                                            <Tc>Data wydania</Tc>
+                                            <Tc>
+                                                {
+                                                    inputs.app_resolution_issue_date
+                                                }
+                                            </Tc>
+                                        </Tr>
+                                    </Tb>
+                                </Tc>
+                            </Tr>
+                        </>
+                    )}
+                </>
+            )}
+        </Tb>
     );
 }

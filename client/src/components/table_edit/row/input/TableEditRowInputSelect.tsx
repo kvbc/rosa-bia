@@ -25,6 +25,7 @@ export function TableEditRowInputSelect<TRow extends TableEditRowType>({
         <MySelect
             options={selectOptions}
             value={String(row[rowKey])}
+            fontSize="inherit"
             onValueChanged={(value) =>
                 setRow((row) => ({
                     ...row,

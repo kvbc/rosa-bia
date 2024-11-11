@@ -1,78 +1,91 @@
 import RegisterAdminProcedureActionsTable from "./RegisterAdminProcedureActionsTable";
 import { DB } from "../../../../../server/src/db/types";
 import React from "react";
-import { TableEditRowContentComponentProps } from "../../../components/table_edit/TableEditRowContentComponent";
-import { Table } from "@mui/joy";
+import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
+import { MyTable as Tb } from "../../../components/my_table/MyTable";
+import { MyTableCell as Tc } from "../../../components/my_table/MyTableCell";
+import { MyTableHeader as Th } from "../../../components/my_table/MyTableHeader";
+import { MyTableRow as Tr } from "../../../components/my_table/MyTableRow";
+import RegisterCharParamsTableEdit from "../table_construction_intent/RegisterCharParamsTableEdit";
+import { FeatureUnfinishedIcon } from "../../../components/FeatureUnfinishedIcon";
 
 export default function RegisterAdminProceduresTableEdit(
     props: TableEditRowContentComponentProps<DB.Rows.Register> & {
         showMore: boolean;
     }
 ) {
-    const { renderInput, row, showMore } = props;
+    const { inputs, row, showMore } = props;
+
+    const showCharParamsTable = row.type === "PnB (6740)";
 
     return (
-        <Table size="sm" sx={{ height: "100%" }}>
-            <thead>
-                <tr>
-                    <th colSpan={2}>Postępowanie administracyjne</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Informacja o postępowaniu</td>
-                    <td>...</td>
-                </tr>
-                <tr>
-                    <td>Upływający czas w dniach</td>
-                    <td>...</td>
-                </tr>
-                {showMore && (
-                    <>
-                        <tr>
-                            <td colSpan={2}>
-                                <RegisterAdminProcedureActionsTable
-                                    {...props}
-                                />
-                            </td>
-                        </tr>
-                        {DB.Rows.REGISTER_TYPE_INFOS[row.type]
-                            .showAdminConstructionJournal && (
-                            <tr>
-                                <td colSpan={2}>
-                                    <Table size="sm">
-                                        <thead>
-                                            <tr>
-                                                <th colSpan={2}>
-                                                    Dziennik budowy
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Numer</td>
-                                                <td>
-                                                    {renderInput(
-                                                        "admin_construction_journal_number"
-                                                    )}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Z dnia</td>
-                                                <td>
-                                                    {renderInput(
-                                                        "admin_construction_journal_date"
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </Table>
-                                </td>
-                            </tr>
-                        )}
-                    </>
-                )}
-            </tbody>
-        </Table>
+        <Tb
+            myHeaders={
+                <>
+                    <Th colSpan={2}>Postępowanie administracyjne</Th>
+                </>
+            }
+        >
+            <Tr>
+                <Tc height="60px">Informacja o postępowaniu</Tc>
+                <Tc height="60px">
+                    <FeatureUnfinishedIcon />
+                </Tc>
+            </Tr>
+            <Tr>
+                <Tc height="60px">Upływający czas (dni)</Tc>
+                <Tc height="60px">
+                    <FeatureUnfinishedIcon />
+                </Tc>
+            </Tr>
+            {showMore && (
+                <>
+                    <Tr>
+                        <Tc colSpan={2}>
+                            <RegisterAdminProcedureActionsTable {...props} />
+                        </Tc>
+                    </Tr>
+                    {DB.Rows.REGISTER_TYPE_INFOS[row.type]
+                        .showAdminConstructionJournal && (
+                        <Tr>
+                            <Tc colSpan={2}>
+                                <Tb
+                                    isCollapsible
+                                    myHeaders={
+                                        <>
+                                            <Th colSpan={2}>Dziennik budowy</Th>
+                                        </>
+                                    }
+                                >
+                                    <Tr>
+                                        <Tc>Numer</Tc>
+                                        <Tc>
+                                            {
+                                                inputs.admin_construction_journal_number
+                                            }
+                                        </Tc>
+                                    </Tr>
+                                    <Tr>
+                                        <Tc>Z dnia</Tc>
+                                        <Tc>
+                                            {
+                                                inputs.admin_construction_journal_date
+                                            }
+                                        </Tc>
+                                    </Tr>
+                                </Tb>
+                            </Tc>
+                        </Tr>
+                    )}
+                    {showCharParamsTable && (
+                        <Tr>
+                            <Tc colSpan={2}>
+                                <RegisterCharParamsTableEdit {...props} />
+                            </Tc>
+                        </Tr>
+                    )}
+                </>
+            )}
+        </Tb>
     );
 }

@@ -55,6 +55,10 @@ export function DBTableEdit<TRow extends DB.Row>({
         [defaultRowProp, topRowID]
     );
 
+    // useEffect(() => {
+    //     console.log(defaultRow);
+    // }, [defaultRow]);
+
     return (
         <TableEdit
             rows={customRows ?? rows}

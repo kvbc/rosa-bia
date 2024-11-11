@@ -15,4 +15,7 @@ export const PageRegistersContext = createContext<{
     investorsDBTable: DBTable<DB.Rows.Investor>;
     registerPlotsDBTable: DBTable<DB.Rows.RegisterPlot>;
     registerAdminActionsDBTable: DBTable<DB.Rows.RegisterAdminAction>;
+    employeesDBTable: DBTable<DB.Rows.Employee>;
+    prBudIntentTypesDBTable: DBTable<DB.Rows.PrBudType>;
+    prBudIntentsDBTable: DBTable<DB.Rows.PrBudIntent>;
 } | null>(null);

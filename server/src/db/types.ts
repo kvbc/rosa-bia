@@ -25,6 +25,8 @@ export namespace DB {
         "registers_admin_actions",
         "employees",
         "info_boards",
+        "prbud_types",
+        "prbud_intents",
     ] as const;
     export type TableName = (typeof TABLE_NAMES)[number];
 
@@ -39,6 +41,8 @@ export namespace DB {
         "construction_specs",
         "employees",
         "info_boards",
+        "prbud_types",
+        "prbud_intents",
     ];
 
     export namespace Rows {
@@ -168,7 +172,7 @@ export namespace DB {
         ] as const;
         export type RegisterType = (typeof REGISTER_TYPES)[number];
 
-        export type RegisterSubtype = "Mayor" | "Cert"; // decyzja starosty / zaświadczenie
+        export type RegisterSubtype = "Mayor" | "Cert" | "Response"; // decyzja starosty / zaświadczenie / odpowiedz
 
         export const REGISTER_ADMIN_ACTION_TYPES = [
             "Wezwanie",
@@ -177,6 +181,7 @@ export namespace DB {
             "Konserwator",
             "Zawieszenie postępowania",
             "Przedłużenie terminu",
+            "Publiczna informacja",
         ] as const;
         export type RegisterAdminActionType = (typeof REGISTER_ADMIN_ACTION_TYPES)[number]; // prettier-ignore
 
@@ -198,6 +203,7 @@ export namespace DB {
                     "Konserwator",
                     "Zawieszenie postępowania",
                     "Przedłużenie terminu",
+                    "Publiczna informacja",
                 ],
                 showAdminConstructionJournal: true,
             },
@@ -242,16 +248,17 @@ export namespace DB {
                     "Konserwator",
                     "Zawieszenie postępowania",
                     "Przedłużenie terminu",
+                    "Publiczna informacja",
                 ],
                 showAdminConstructionJournal: true,
             },
             "Pisma różne (670)": {
-                subtype: "Mayor",
+                subtype: "Response",
                 actionTypes: ["Wezwanie"],
                 showAdminConstructionJournal: false,
             },
             "Samodz. Lokali (705)": {
-                subtype: "Mayor",
+                subtype: "Response",
                 actionTypes: ["Wezwanie"],
                 showAdminConstructionJournal: false,
             },
@@ -275,11 +282,12 @@ export namespace DB {
                     "Bez rozpatrzenia",
                     "Uchylająca",
                     "Utrzymana w mocy",
+                    "Zmiana 155 k.pa.",
                 ] as const,
             } as const,
             Cert: {
                 decisions: [
-                    "Brak Sprzeciwu",
+                    "Brak sprzeciwu",
                     "Sprzeciwu",
                     "Inne rozstrzygnięcie",
                 ] as const,
@@ -290,6 +298,10 @@ export namespace DB {
                     "Utrzymana w mocy",
                 ] as const,
             } as const,
+            Response: {
+                decisions: ["Pozytywna", "Sprzeciwu", "Inne rozstrzygnięcie"],
+                resolutions: ["Uchylająca", "Utrzymana w mocy"],
+            },
         } as const satisfies Record<
             RegisterSubtype,
             Record<string, readonly string[]>
@@ -321,21 +333,30 @@ export namespace DB {
         ] as const;
         export type RegisterConstructionJournalType = (typeof REGISTER_CONSTRUCTION_JOURNAL_TYPES)[number]; // prettier-ignore
 
-        const ZRegisterDecision = z.enum(REGISTER_SUBTYPE_INFOS.Mayor.decisions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.decisions)) // prettier-ignore
-        const ZRegisterResolution = z.enum(REGISTER_SUBTYPE_INFOS.Mayor.resolutions).or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.resolutions)) // prettier-ignore
+        const RegisterDecisionShape = z
+            .enum(REGISTER_SUBTYPE_INFOS.Mayor.decisions)
+            .or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.decisions))
+            .or(z.enum(REGISTER_SUBTYPE_INFOS.Response.decisions));
+
+        const RegisterResolutionShape = z
+            .enum(REGISTER_SUBTYPE_INFOS.Mayor.resolutions)
+            .or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.resolutions))
+            .or(z.enum(REGISTER_SUBTYPE_INFOS.Response.resolutions));
 
         // prettier-ignore
         export const RegisterShape = z.strictObject({
             id: z.number(),
             type: z.enum(REGISTER_TYPES),
 
-            app_number: z.number(),
+            assigned_employee_id: z.number(),
+
+            app_number: z.string(),
             app_submission_date: z.string(),
             app_investor_id: z.number(),
-            app_decision_type: ZRegisterDecision.optional(),
+            app_decision_type: RegisterDecisionShape.optional(),
             app_decision_number: z.number(),
             app_decision_issue_date: z.string(),
-            app_resolution_type: ZRegisterResolution.optional(),
+            app_resolution_type: RegisterResolutionShape.optional(),
             app_resolution_number: z.number(),
             app_resolution_issue_date: z.string(),
             app_construction_journal_type: z.enum(REGISTER_CONSTRUCTION_JOURNAL_TYPES),
@@ -353,6 +374,8 @@ export namespace DB {
             object_demo_building_count: z.number(),
             object_usage_change_from: z.string(),
             object_usage_change_to: z.string(),
+            object_prbud_intent_id: z.number(),
+            object_public_info: z.number(),
 
             admin_construction_journal_number: z.number(),
             admin_construction_journal_date: z.string(),
@@ -360,6 +383,7 @@ export namespace DB {
         });
         export type Register = z.infer<typeof RegisterShape> & {
             // client-only helpers
+            _object_prbud_intent_type_id: number;
             _object_construction_section_id: number;
             _object_construction_division_id: number;
             _object_construction_group_id: number;
@@ -368,6 +392,8 @@ export namespace DB {
             _object_place_id: number;
         };
         export const REGISTER_KEY_RELATIONS = {
+            assigned_employee_id: "employees",
+            object_prbud_intent_id: "prbud_intents",
             app_investor_id: "investors",
             object_construction_spec_id: "construction_specs",
             object_street_id: "streets",
@@ -435,6 +461,29 @@ export namespace DB {
             contents: z.string(),
         });
         export type InfoBoard = z.infer<typeof InfoBoardShape>;
+
+        //
+        // PrBud
+        //
+
+        export const PrBudTypeShape = z.strictObject({
+            id: z.number(),
+            name: z.string(),
+            register_type: z.enum(REGISTER_TYPES),
+        });
+        export type PrBudType = z.infer<typeof PrBudTypeShape>;
+
+        export const PrBudIntentShape = z.strictObject({
+            id: z.number(),
+            type_id: z.number(),
+            intent: z.string(),
+            legal_basis: z.string(),
+            additional_requirements: z.string(),
+        });
+        export type PrBudIntent = z.infer<typeof PrBudIntentShape>;
+        export const PRBUD_INTENT_KEY_RELATIONS = {
+            type_id: "prbud_types",
+        } as const satisfies Partial<Record<keyof PrBudIntent, DB.TableName>>;
 
         //
         //
@@ -518,6 +567,15 @@ export namespace DB {
             info_boards: {
                 shape: InfoBoardShape,
                 keys: InfoBoardShape.keyof().options,
+            },
+            prbud_types: {
+                shape: PrBudTypeShape,
+                keys: PrBudTypeShape.keyof().options,
+            },
+            prbud_intents: {
+                shape: PrBudIntentShape,
+                keys: PrBudIntentShape.keyof().options,
+                keyRelations: PRBUD_INTENT_KEY_RELATIONS,
             },
         };
         // satisfies Record<DB.TableName, any>;

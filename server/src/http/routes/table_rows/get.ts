@@ -77,7 +77,7 @@ export type Filter =
       }
     | {
           key: string;
-          filters?: Filter[];
+          filters: Filter[];
       };
 
 const router = Router();
@@ -187,8 +187,9 @@ router.post(
                 resError(res, 500, error);
                 return;
             }
-            db.get<{ "count(*)": number; "max(id)": number }>(
-                `select count(*), max(id) from ${tableName}` + sqlFilterQuery,
+            db.get<{ "count(*)": number; max_id: number }>(
+                `select count(*), max(${tableName}.id) as max_id from ${tableName}` +
+                    sqlFilterQuery,
                 sqlFilterValues,
                 (error, row) => {
                     if (error) {
@@ -217,7 +218,7 @@ router.post(
                     });
 
                     const totalCount = row["count(*)"];
-                    const topRowID = row["max(id)"];
+                    const topRowID = row["max_id"];
                     const response: HTTP.Response = {
                         type: "fetch table rows",
                         totalCount,

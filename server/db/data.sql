@@ -141,6 +141,8 @@ insert into registers(
     id,
     `type`,
 
+    assigned_employee_id,
+
     app_number,
     app_submission_date,
     app_investor_id,
@@ -161,6 +163,8 @@ insert into registers(
     object_demo_building_count,
     object_usage_change_from,
     object_usage_change_to,
+    object_prbud_intent_id,
+    object_public_info,
 
     admin_construction_journal_number,
     admin_construction_journal_date,
@@ -169,7 +173,9 @@ insert into registers(
     null,
     'PnB (6740)',
 
-    69,
+    1,
+
+    '69',
     '2006-12-19',
     1,
     'Inne rozstrzygnięcie', 420, '2019-02-05',
@@ -185,6 +191,8 @@ insert into registers(
     TRUE, 69, 69, 69, 69,
     'z ...',
     'na ...',
+    1,
+    FALSE,
 
     420,
     '1999-12-19',
@@ -192,8 +200,10 @@ insert into registers(
 ), (
     null,
     'PnB (6740)',
+    
+    2,
 
-    69420,
+    '69420',
     '2007-12-19',
     2,
     'Inne rozstrzygnięcie', 420, '2019-02-05',
@@ -209,6 +219,8 @@ insert into registers(
     TRUE, 69, 69, 69, 69,
     'z ...',
     'na ...',
+    1,
+    FALSE,
 
     420,
     '1999-12-19',
@@ -217,7 +229,9 @@ insert into registers(
     null,
     'PnB (6740)',
 
-    2137,
+    3,
+
+    '2137',
     '2008-12-19',
     3,
     'Inne rozstrzygnięcie', 420, '2019-02-05',
@@ -233,6 +247,8 @@ insert into registers(
     TRUE, 69, 69, 69, 69,
     'z ...',
     'na ...',
+    1,
+    FALSE,
 
     420,
     '1999-12-19',
@@ -241,7 +257,9 @@ insert into registers(
     null,
     'PnB (6740)',
 
-    666,
+    4,
+
+    '666',
     '2009-12-19',
     4,
     'Inne rozstrzygnięcie', 420, '2019-02-05',
@@ -257,6 +275,8 @@ insert into registers(
     TRUE, 69, 69, 69, 69,
     'z ...',
     'na ...',
+    1,
+    FALSE,
 
     420,
     '1999-12-19',
@@ -265,7 +285,9 @@ insert into registers(
     null,
     'PnB (6740)',
 
-    619,
+    5,
+
+    '619',
     '2010-12-19',
     5,
     'Inne rozstrzygnięcie', 420, '2019-02-05',
@@ -281,6 +303,8 @@ insert into registers(
     TRUE, 69, 69, 69, 69,
     'z ...',
     'na ...',
+    1,
+    FALSE,
 
     420,
     '1999-12-19',
@@ -303,3 +327,18 @@ insert into employees values
 -- 
 
 insert into info_boards values(null, 'testowa zawartosc');
+
+-- 
+-- PrBud
+-- 
+
+insert into prbud_types values
+    (null, 'Zg. Zwykłe (6743.2)', 'Budowa'),
+    (null, 'Zg. Zwykłe (6743.2)', 'Przebudowa'),
+    (null, 'Zg. Zwykłe (6743.2)', 'Remont'),
+    (null, 'Zg. Zwykłe (6743.2)', 'Instalacja'),
+    (null, 'Zg. Zwykłe (6743.2)', 'Inne'),
+    (null, 'BiP (6743.4)', 'Budowa'),
+    (null, 'BiP (6743.4)', 'Przebudowa'),
+    (null, 'BiP (6743.4)', 'Instalacja'),
+    (null, 'BiP (6743.4)', 'Inne');

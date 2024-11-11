@@ -13,6 +13,7 @@ import {
     LuKey,
     LuFileText,
     LuHardHat,
+    LuLaptop,
 } from "react-icons/lu";
 import { AppNavbarLinkMenu } from "./AppNavbarLinkMenu";
 import useAuthEmployee from "../../hooks/useAuthEmployee";
@@ -98,49 +99,6 @@ export const AppNavbarLinks: React.FC = () => {
                 </Icon>
                 Pomoc
             </AppNavbarLink>
-            {isAdmin && (
-                <AppNavbarLink to="/employees" position="relative">
-                    <Icon fontSize="md">
-                        <LuUser />
-                    </Icon>
-                    Użytkownicy
-                    {adminAccessIcon}
-                </AppNavbarLink>
-            )}
-            {isAdmin && (
-                <AppNavbarLink to="/database" position="relative">
-                    <Icon fontSize="md">
-                        <LuDatabase />
-                    </Icon>
-                    Baza Danych
-                    {adminAccessIcon}
-                </AppNavbarLink>
-            )}
-            {isAdmin && (
-                <AppNavbarLinkMenu
-                    isOpen={isConstructionMenuOpen}
-                    setIsOpen={setIsConstructionMenuOpen}
-                    Icon={LuHardHat}
-                    title="Budowlanka"
-                    links={[
-                        {
-                            to: "/construction/pkob",
-                            display: "PKOB",
-                            tooltip: "Polska Klasyfikacja Obiektów Budowlanych",
-                        },
-                        {
-                            to: "/construction/art29-common",
-                            display: "art. 29 Pr.bud. Zwykłe (6743.2)",
-                        },
-                        {
-                            to: "/construction/art29-bip",
-                            display: "art. 29 Pr.bud. BiP (6743.4)",
-                        },
-                    ]}
-                >
-                    {adminAccessIcon}
-                </AppNavbarLinkMenu>
-            )}
             <AppNavbarLinkMenu
                 isOpen={isStatsMenuOpen}
                 setIsOpen={setIsStatsMenuOpen}
@@ -178,6 +136,54 @@ export const AppNavbarLinks: React.FC = () => {
                     },
                 ]}
             />
+            {isAdmin && (
+                <AppNavbarLinkMenu
+                    isOpen={isConstructionMenuOpen}
+                    setIsOpen={setIsConstructionMenuOpen}
+                    Icon={LuHardHat}
+                    title="Budowlanka"
+                    links={[
+                        {
+                            to: "/construction/pkob",
+                            display: "PKOB",
+                            tooltip: "Polska Klasyfikacja Obiektów Budowlanych",
+                        },
+                        {
+                            to: "/construction/art-prbud",
+                            display: "Art. 29 Pr.bud.",
+                        },
+                    ]}
+                >
+                    {adminAccessIcon}
+                </AppNavbarLinkMenu>
+            )}
+            {isAdmin && (
+                <AppNavbarLink to="/employees" position="relative">
+                    <Icon fontSize="md">
+                        <LuUser />
+                    </Icon>
+                    Użytkownicy
+                    {adminAccessIcon}
+                </AppNavbarLink>
+            )}
+            {isAdmin && (
+                <AppNavbarLink to="/database" position="relative">
+                    <Icon fontSize="md">
+                        <LuDatabase />
+                    </Icon>
+                    Baza Danych
+                    {adminAccessIcon}
+                </AppNavbarLink>
+            )}
+            {isAdmin && (
+                <AppNavbarLink to="/system" position="relative">
+                    <Icon fontSize="md">
+                        <LuLaptop />
+                    </Icon>
+                    System
+                    {adminAccessIcon}
+                </AppNavbarLink>
+            )}
         </HStack>
     );
 };

@@ -20,7 +20,7 @@ import { MyTableHeader } from "../../components/my_table/MyTableHeader";
 import { MyTableRow } from "../../components/my_table/MyTableRow";
 import { MyTableCell } from "../../components/my_table/MyTableCell";
 import { FaRoad } from "react-icons/fa6";
-import { FaArrowsAltH, FaFileAlt, FaHome } from "react-icons/fa";
+import { FaFileAlt, FaHome } from "react-icons/fa";
 import { FaMapMarkedAlt } from "react-icons/fa";
 
 export default function PlacesTableEditRowContent({

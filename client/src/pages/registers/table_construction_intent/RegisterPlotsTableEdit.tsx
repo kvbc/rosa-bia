@@ -4,9 +4,9 @@ import {
     DBTableEditDefaultRow,
 } from "../../../components/DBTableEdit";
 import React, { useContext, useMemo } from "react";
-import { TableEditRowContentComponentProps } from "../../../components/table_edit/TableEditRowContentComponent";
 import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
-import { TableEditRowInputsProps } from "../../../components/table_edit/TableEditRow";
+import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
+import { TableEditRowInputsProps } from "../../../components/table_edit/row/TableEditRow";
 
 export default function RegisterPlotsDataTableEdit({
     row,
@@ -14,10 +14,7 @@ export default function RegisterPlotsDataTableEdit({
 }: TableEditRowContentComponentProps<DB.Rows.Register> & {
     plotType: DB.Rows.RegisterPlotType;
 }) {
-    const pageContext = useContext(PageRegistersContext);
-    if (!pageContext) {
-        throw "Error";
-    }
+    const pageContext = useContext(PageRegistersContext)!;
 
     const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.RegisterPlot>>(
         () => ({
@@ -50,6 +47,7 @@ export default function RegisterPlotsDataTableEdit({
 
     return (
         <DBTableEdit
+            hidePagination
             dbTable={pageContext.registerPlotsDBTable}
             rows={pageContext.registerPlotsDBTable.rows.filter(
                 (fRow) => fRow.register_id === row.id && fRow.type === plotType
@@ -57,6 +55,7 @@ export default function RegisterPlotsDataTableEdit({
             defaultRow={defaultRow}
             headers={[plotTypeHeaders[plotType]]}
             rowInputsProps={rowInputsProps}
+            isCollapsible
         />
     );
 }
