@@ -78,8 +78,9 @@ export function PageSystem() {
 
         return array;
     }, []);
-    const currentVersion = versions.find(
-        (version) => version.date.getTime() === Date.now()
+    const currentVersion = useMemo(
+        () => versions.find((version) => version.date.getTime() === Date.now()),
+        [versions]
     );
 
     const technologies = useMemo<
@@ -142,7 +143,7 @@ export function PageSystem() {
             },
             {
                 Icon: FaPlug,
-                label: "WebSockets",
+                label: "WebSocket",
                 link: "https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API",
                 brief: "Protokół komunikacji sieciowej umożliwiający dwukierunkową, stałą i pełnodupleksową wymianę danych pomiędzy klientem a serwerem w czasie rzeczywistym.",
             },
@@ -176,36 +177,42 @@ export function PageSystem() {
                     Informacje systemowe
                 </HStack>
             </Heading>
+            <Separator />
             <DataListRoot>
                 <DataListItem label="Wersja" value={currentVersion?.label} />
             </DataListRoot>
-            <Separator />
+            <br />
+
             <Heading size="md">
                 <HStack>
                     <LuPlusCircle />
                     Funkcje do dodania
                 </HStack>
             </Heading>
+            <Separator />
             <List.Root fontSize="sm">
                 <List.Item>
                     System zarządzania bazą danych (przywracanie, tworzenie i
-                    usuwanie kopii),
+                    usuwanie kopii)
                 </List.Item>
                 <List.Item>
-                    Skrypt przenoszący dane z excela do bazy danych,
+                    Skrypt przenoszący dane z excela do bazy danych
                 </List.Item>
                 <List.Item>Generatory statystyk</List.Item>
+                <List.Item>Obsługa wszystkich typów rejestrów</List.Item>
             </List.Root>
-            <Separator />
+            <br />
+
             <Heading size="md">
                 <HStack>
                     <LuHistory />
                     Dziennik zmian
                 </HStack>
             </Heading>
+            <Separator />
             <TimelineRoot>
                 {versions.map((version) => (
-                    <TimelineItem key={version.label}>
+                    <TimelineItem key={version.date.toString()}>
                         <TimelineConnector
                             backgroundColor={
                                 version === currentVersion ? "fg.info" : "black"
@@ -231,13 +238,15 @@ export function PageSystem() {
                     </TimelineItem>
                 ))}
             </TimelineRoot>
-            <Separator />
+            {/* <br /> */}
+
             <Heading size="md">
                 <HStack>
                     <LuCpu />
                     Użyte technologie
                 </HStack>
             </Heading>
+            <Separator />
             <SimpleGrid columns={4} fontSize="sm">
                 {technologies.map((tech) => (
                     <Tooltip content={tech.brief} key={tech.label}>
