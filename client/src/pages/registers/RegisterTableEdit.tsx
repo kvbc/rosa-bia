@@ -11,7 +11,6 @@ import { PageRegistersContext } from "../../contexts/pages/PageRegistersContext"
 import { TableEditHeader } from "../../components/table_edit/TableEdit";
 import { EmployeeAvatar } from "../../components/EmployeeAvatar";
 import { Badge } from "@chakra-ui/react";
-import { ColorContext } from "../../contexts/ColorContext";
 
 export default function RegisterTableEdit(
     props: Omit<
