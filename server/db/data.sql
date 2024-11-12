@@ -151,6 +151,7 @@ insert into registers(
     app_construction_journal_type,
 
     object_construction_spec_id,
+    object_custom_construction_intent,
     object_construction_form_type,
     object_spatial_plan_type,
     object_street_id,
@@ -165,10 +166,21 @@ insert into registers(
     object_usage_change_to,
     object_prbud_intent_id,
     object_public_info,
+    object_localization_date_from,
+    object_localization_date_to,
+    object_neighbour_property_type,
 
     admin_construction_journal_number,
     admin_construction_journal_date,
-    admin_construction_journal_tome
+    admin_construction_journal_tome,
+
+    other_case_title,
+    other_case_from,
+    other_case_sign,
+    other_case_date,
+    other_case_init_date,
+    other_case_settle_date,
+    other_case_comments
 ) values (
     null,
     'PnB (6740)',
@@ -183,6 +195,7 @@ insert into registers(
     'Elektroniczny',
 
     1,
+    '',
     'Indywidualne',
     'MPZP',
     1,
@@ -193,10 +206,14 @@ insert into registers(
     'na ...',
     1,
     FALSE,
+    '1999-12-19', '1999-12-19',
+    'Budynek',
 
     420,
     '1999-12-19',
-    1
+    1,
+
+    'Costam', 'od kogostam', 'ZG.123.KG', '1999-12-19', '2000-12-19', '2001-12-19', 'brak'
 ), (
     null,
     'PnB (6740)',
@@ -211,6 +228,7 @@ insert into registers(
     'Elektroniczny',
 
     1,
+    '',
     'Indywidualne',
     'MPZP',
     1,
@@ -221,10 +239,14 @@ insert into registers(
     'na ...',
     1,
     FALSE,
+    '1999-12-19', '1999-12-19',
+    'Budynek',
 
     420,
     '1999-12-19',
-    1
+    1,
+
+    'Costam', 'od kogostam', 'ZG.123.KG', '1999-12-19', '2000-12-19', '2001-12-19', 'brak'
 ), (
     null,
     'PnB (6740)',
@@ -239,6 +261,7 @@ insert into registers(
     'Elektroniczny',
 
     1,
+    '',
     'Indywidualne',
     'MPZP',
     1,
@@ -249,10 +272,14 @@ insert into registers(
     'na ...',
     1,
     FALSE,
+    '1999-12-19', '1999-12-19',
+    'Budynek',
 
     420,
     '1999-12-19',
-    1
+    1,
+
+    'Costam', 'od kogostam', 'ZG.123.KG', '1999-12-19', '2000-12-19', '2001-12-19', 'brak'
 ), (
     null,
     'PnB (6740)',
@@ -267,6 +294,7 @@ insert into registers(
     'Elektroniczny',
 
     1,
+    '',
     'Indywidualne',
     'MPZP',
     1,
@@ -277,10 +305,14 @@ insert into registers(
     'na ...',
     1,
     FALSE,
+    '1999-12-19', '1999-12-19',
+    'Budynek',
 
     420,
     '1999-12-19',
-    1
+    1,
+
+    'Costam', 'od kogostam', 'ZG.123.KG', '1999-12-19', '2000-12-19', '2001-12-19', 'brak'
 ), (
     null,
     'PnB (6740)',
@@ -295,6 +327,7 @@ insert into registers(
     'Elektroniczny',
 
     1,
+    '',
     'Indywidualne',
     'MPZP',
     1,
@@ -305,10 +338,14 @@ insert into registers(
     'na ...',
     1,
     FALSE,
+    '1999-12-19', '1999-12-19',
+    'Budynek',
 
     420,
     '1999-12-19',
-    1
+    1,
+
+    'Costam', 'od kogostam', 'ZG.123.KG', '1999-12-19', '2000-12-19', '2001-12-19', 'brak'
 );
 
 -- 

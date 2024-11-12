@@ -13,7 +13,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { AppErrorFallback } from "./error/AppErrorFallback";
 import { WS_SERVER_URL } from "../api/ws";
 import { AppErrorDialog } from "./error/AppErrorDialog";
-import { AppRoutes } from "./AppRoutes";
+import { AppPageRoutes } from "./AppPageRoutes";
 import { Provider as UIProvider } from "../components/ui/provider";
 import { Toaster, toaster } from "../components/ui/toaster";
 import { Box, Stack } from "@chakra-ui/react";
@@ -71,8 +71,13 @@ export const App: React.FC = () => {
                                 />
                                 <Stack height="full" gap="0">
                                     <AppNavbar />
-                                    <Box as="main" padding="4" height="100%">
-                                        <AppRoutes />
+                                    <Box
+                                        as="main"
+                                        padding="4"
+                                        height="100%"
+                                        fontSize="2xs"
+                                    >
+                                        <AppPageRoutes />
                                     </Box>
                                 </Stack>
                             </BrowserRouter>

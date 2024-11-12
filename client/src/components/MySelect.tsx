@@ -1,15 +1,8 @@
 // 1
 
-import React, { ComponentProps, ReactNode, useContext, useMemo } from "react";
-import {
-    SelectContent,
-    SelectItem,
-    SelectRoot,
-    SelectTrigger,
-    SelectValueText,
-} from "./ui/select";
+import React, { HTMLProps, ReactNode, useContext } from "react";
+import { Box, BoxProps, HStack } from "@chakra-ui/react";
 import { ColorContext } from "../contexts/ColorContext";
-import { createListCollection, HStack } from "@chakra-ui/react";
 
 export type MySelectOption = {
     preNameNode?: ReactNode;
@@ -25,6 +18,8 @@ export function createMySelectOptions(stringArray: string[]): MySelectOption[] {
     }));
 }
 
+// const MyselectValueText;
+
 export function MySelect({
     options,
     value,
@@ -35,80 +30,173 @@ export function MySelect({
     value: string;
     onValueChanged: (value: string) => void;
 } & Omit<
-    ComponentProps<typeof SelectRoot>,
+    BoxProps & HTMLProps<HTMLSelectElement>,
     "collection" | "value" | "onValueChange"
 >) {
     const colorContext = useContext(ColorContext);
 
-    const collection = useMemo(
-        () =>
-            createListCollection({
-                items: options,
-                itemToString: (option) => option.name,
-                itemToValue: (option) => String(option.value),
-            }),
-        [options]
-    );
-
     return (
-        <SelectRoot
-            size="sm"
-            collection={collection}
-            value={[value]}
-            onValueChange={(e) => onValueChanged(e.value[0])}
-            variant="outline"
-            fontSize="inherit"
+        <Box
+            asChild
+            width="full"
+            backgroundColor={colorContext.bg2}
+            // backgroundColor={colorContext.bg1}
+            padding="1"
+            border="1px solid"
+            borderColor={colorContext.border}
+            role="group"
+            _disabled={{
+                opacity: "50%",
+            }}
+            boxShadow="none"
             {...selectRootProps}
         >
-            <SelectTrigger
-                fontSize="inherit"
-                border="1px solid"
-                borderRadius="sm"
-                borderColor={colorContext.border}
-                backgroundColor={colorContext.bg2}
-                _disabled={{ opacity: "50%" }}
-            >
-                <SelectValueText
-                    // FIXME: font size does not inherit?
-                    // fontSize="inherit"
-                    fontSize="xs" // from MyTable.tsx
-                >
-                    {(items) => {
-                        const item = items[0];
-                        return (
-                            <HStack>
-                                {item.preNameNode}
-                                {item.name}
-                                {item.postNameNode}
-                            </HStack>
-                        );
-                    }}
-                </SelectValueText>
-            </SelectTrigger>
-            <SelectContent
-                fontSize="inherit"
-                border="1px solid"
-                backgroundColor={colorContext.bg2}
-                borderColor={colorContext.border}
+            <select
+                value={value}
+                onChange={(e) => onValueChanged(e.target.value)}
             >
                 {options.map((option) => (
-                    <SelectItem
-                        // FIXME: same thing as above
-                        fontSize="xs"
-                        item={option}
-                        justifyContent="flex-start"
+                    <Box
+                        asChild
                         key={option.name}
                         backgroundColor={colorContext.bg2}
+                        borderColor={colorContext.border}
+                        boxShadow="none"
+                        // FIXME: this fucking background color
                         _hover={{
-                            backgroundColor: colorContext.border,
+                            boxShadow: "0 0 10px 100px green inset",
+                        }}
+                        _groupHover={{
+                            color: "red",
+                            // backgroundColor: colorContext.border,
                         }}
                     >
-                        {option.preNameNode}
-                        {option.name}
-                        {option.postNameNode}
-                    </SelectItem>
+                        <option value={option.value}>
+                            <HStack>
+                                {option.preNameNode}
+                                {option.name}
+                                {option.postNameNode}
+                            </HStack>
+                        </option>
+                    </Box>
                 ))}
-            </SelectContent>
-        </SelectRoot>
+            </select>
+        </Box>
     );
+
+    // return (
+    //     <NativeSelectRoot
+    //         size="sm"
+    //         height="auto"
+    //         icon={
+    //             <Icon size="xs" bg="red">
+    //                 <LuChevronDown />
+    //             </Icon>
+    //         }
+    //         {...selectRootProps}
+    //     >
+    //         <NativeSelectField
+    //             value={value}
+    //             onChange={(e) => onValueChanged(e.currentTarget.value)}
+    //             fontSize="inherit"
+    //             border="1px solid"
+    //             borderRadius="sm"
+    //             borderColor={colorContext.border}
+    //             backgroundColor={colorContext.bg2}
+    //             // padding="0"
+    //             // padding="0"
+    //             paddingLeft="1"
+    //             paddingBottom="0"
+    //             paddingTop="0"
+    //             _disabled={{ opacity: "50%" }}
+    //         >
+    //             {options.map((option) => (
+    //                 <Box
+    //                     as="option"
+    //                     key={option.name}
+    //                     fontSize="inherit"
+    //                     _hover={{
+    //                         backgroundColor: colorContext.border,
+    //                     }}
+    //                 >
+    //                     {option.name}
+    //                 </Box>
+    //             ))}
+    //         </NativeSelectField>
+    //     </NativeSelectRoot>
+    // );
+
+    // const collection = useMemo(
+    //     () =>
+    //         createListCollection({
+    //             items: options,
+    //             itemToString: (option) => option.name,
+    //             itemToValue: (option) => String(option.value),
+    //         }),
+    //     [options]
+    // );
+
+    // return (
+    //     <SelectRoot
+    //         size="sm"
+    //         collection={collection}
+    //         value={[value]}
+    //         onValueChange={(e) => onValueChanged(e.value[0])}
+    //         variant="outline"
+    //         fontSize="inherit"
+    //         {...selectRootProps}
+    //     >
+    //         <SelectTrigger
+    //             fontSize="inherit"
+    //             border="1px solid"
+    //             borderRadius="sm"
+    //             borderColor={colorContext.border}
+    //             backgroundColor={colorContext.bg2}
+    //             padding="0 !important"
+    //             _disabled={{ opacity: "50%" }}
+    //         >
+    //             <SelectValueText
+    //                 // FIXME: font size does not inherit?
+    //                 // fontSize="inherit"
+    //                 fontSize="xs" // from MyTable.tsx
+    //                 bg="red"
+    //             >
+    //                 {(items) => {
+    //                     const item = items[0];
+    //                     return (
+    //                         <HStack>
+    //                             {item.preNameNode}
+    //                             {item.name}
+    //                             {item.postNameNode}
+    //                         </HStack>
+    //                     );
+    //                 }}
+    //             </SelectValueText>
+    //         </SelectTrigger>
+    //         <SelectContent
+    //             fontSize="inherit"
+    //             border="1px solid"
+    //             backgroundColor={colorContext.bg2}
+    //             borderColor={colorContext.border}
+    //         >
+    //             {options.map((option) => (
+    //                 <SelectItem
+    //                     // FIXME: same thing as above
+    //                     fontSize="xs"
+    //                     item={option}
+    //                     justifyContent="flex-start"
+    //                     key={option.name}
+    //                     backgroundColor={colorContext.bg2}
+    //                     _hover={{
+    //                         backgroundColor: colorContext.border,
+    //                     }}
+    //                 >
+    //                     {option.preNameNode}
+    //                     {option.name}
+    //                     {option.postNameNode}
+    //                 </SelectItem>
+    //             ))}
+    //         </SelectContent>
+    //     </SelectRoot>
+    // );
 }

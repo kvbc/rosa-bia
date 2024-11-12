@@ -16,7 +16,6 @@ import { Center, Input, InputProps } from "@chakra-ui/react";
 import { TableEditRowInputSelect } from "./TableEditRowInputSelect";
 import { TableEditRowInputCheckbox } from "./TableEditRowInputCheckbox";
 import { ColorContext } from "../../../../contexts/ColorContext";
-import { TableEditRowInputNumber } from "./TableEditRowInputNumber";
 import { MySelectOption } from "../../../MySelect";
 
 export type TableEditRowInputProps<TRow extends TableEditRowType> = {
@@ -55,23 +54,31 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
                     <TableEditRowInputCheckbox {...props} />
                 </Center>
             );
-        case "number":
-            return <TableEditRowInputNumber {...props} />;
+        // case "number":
+        //     return <TableEditRowInputNumber {...props} />;
     }
 
     return (
         <Input
             size="sm"
-            fontSize="inherit"
-            type={type}
+            fontSize="2xs"
+            type={type === "number" ? "text" : type}
+            // padding="0.5 !important"
+            margin="0 !important"
+            paddingLeft={type === "date" ? "0 !important" : "0.5 !important"}
+            height="100% !important"
             value={row[rowKey] as string}
             backgroundColor={colorContext.bg2}
+            borderRadius="none"
             borderColor={colorContext.border}
             variant="outline"
             onChange={(e) => {
                 setRow((row) => ({
                     ...row,
-                    [rowKey]: e.target.value,
+                    [rowKey]:
+                        type === "number"
+                            ? e.target.valueAsNumber
+                            : e.target.value,
                 }));
             }}
             onBlur={onFocusOut}

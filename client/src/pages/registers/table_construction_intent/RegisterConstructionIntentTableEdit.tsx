@@ -14,27 +14,35 @@
  *
  */
 
-import React, { ReactNode, useContext, useEffect, useMemo } from "react";
+import React, {
+    ComponentProps,
+    ReactNode,
+    useContext,
+    useEffect,
+    useMemo,
+} from "react";
 import RegisterPropertyDataTableEdit from "./RegisterPropertyDataTableEdit";
 import RegisterPlotsDataTableEdit from "./RegisterPlotsTableEdit";
 import RegisterCharParamsTableEdit from "./RegisterCharParamsTableEdit";
 import { DB } from "../../../../../server/src/db/types";
 import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
 import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
-import { MyTable as Tb } from "../../../components/my_table/MyTable";
+import { MyTable, MyTable as Tb } from "../../../components/my_table/MyTable";
 import { MyTableCell as Tc } from "../../../components/my_table/MyTableCell";
 import { MyTableHeader as Th } from "../../../components/my_table/MyTableHeader";
 import { MyTableRow as Tr } from "../../../components/my_table/MyTableRow";
 import { MyTableHeaderRow as ThRow } from "../../../components/my_table/MyTableHeaderRow";
 import { HStack, Text } from "@chakra-ui/react";
 import { FeatureUnfinishedIcon } from "../../../components/FeatureUnfinishedIcon";
+import { topRowHeight } from "../RegisterTableEditRowContent";
 
 export default function RegisterConstructionIntentTableEdit(
-    props: TableEditRowContentComponentProps<DB.Rows.Register> & {
-        showMore: boolean;
-    }
+    props: ComponentProps<typeof MyTable> &
+        TableEditRowContentComponentProps<DB.Rows.Register> & {
+            showMore: boolean;
+        }
 ) {
-    const { inputs, row, setRow, showMore } = props;
+    const { inputs, row, setRow, showMore, ...myTableProps } = props;
 
     const pageContext = useContext(PageRegistersContext)!;
 
@@ -65,12 +73,22 @@ export default function RegisterConstructionIntentTableEdit(
             "Zg. Zwykłe (6743.2)": inputs._object_prbud_intent_type_id,
             "Zm. Sp. Użytk. (6743.3)": "Zmiana sposobu użytkowania",
             "BiP (6743.4)": inputs._object_prbud_intent_type_id,
-            "ZRiD (7012)": <FeatureUnfinishedIcon />,
-            "Pisma różne (670)": <FeatureUnfinishedIcon />,
-            "Samodz. Lokali (705)": <FeatureUnfinishedIcon />,
+            "ZRiD (7012)": inputs.object_custom_construction_intent,
+            "Pisma różne (670)": inputs.object_custom_construction_intent,
+            "Samodz. Lokali (705)": inputs.object_custom_construction_intent,
             "Dz. bud": <FeatureUnfinishedIcon />,
+            "Tymczasowe (6743.5)": inputs._object_prbud_intent_type_id,
+            Uzupełniający: <FeatureUnfinishedIcon />,
+            "Wejście na dz. sąsiednią": "Zgoda wejścia na działkę sąsiednią",
+            "Konserwator (Inne)": <FeatureUnfinishedIcon />,
+            "Lokalizacja inwestycji (Inne)": <FeatureUnfinishedIcon />,
+            "PiNB (Inne)": <FeatureUnfinishedIcon />,
         }),
-        [constructionGroup?.name, inputs._object_prbud_intent_type_id]
+        [
+            constructionGroup?.name,
+            inputs._object_prbud_intent_type_id,
+            inputs.object_custom_construction_intent,
+        ]
     );
 
     const showAccompanyInfrastructure =
@@ -84,8 +102,12 @@ export default function RegisterConstructionIntentTableEdit(
     const showConstructions =
         row.type === "PnB (6740)" || row.type === "Zm. Sp. Użytk. (6743.3)";
 
+    const showLocalizationDateRange = row.type === "Tymczasowe (6743.5)";
+
     const showPrBud =
-        row.type === "Zg. Zwykłe (6743.2)" || row.type === "BiP (6743.4)";
+        row.type === "Zg. Zwykłe (6743.2)" ||
+        row.type === "BiP (6743.4)" ||
+        row.type === "Tymczasowe (6743.5)";
 
     const showPublicInfo =
         row.type === "Pisma różne (670)" || row.type === "Samodz. Lokali (705)";
@@ -94,7 +116,11 @@ export default function RegisterConstructionIntentTableEdit(
         row.type === "PnRozb. (6741)" ||
         row.type === "Zg. Rozb. (6743.1)" ||
         row.type === "Zg. Zwykłe (6743.2)" ||
-        row.type === "BiP (6743.4)";
+        row.type === "BiP (6743.4)" ||
+        row.type === "Tymczasowe (6743.5)";
+
+    const showNeighbouringPropertyType =
+        row.type === "Wejście na dz. sąsiednią";
 
     const showPropertyData = true;
 
@@ -113,29 +139,27 @@ export default function RegisterConstructionIntentTableEdit(
     //
     const top = (
         <>
-            <Tr>
-                <Tc height="60px" rowSpan={showUsageChange ? 2 : 1}>
+            <Tr height={topRowHeight}>
+                <Tc rowSpan={showUsageChange ? 2 : 1}>
                     Nazwa zamierzenia budowlanego
                 </Tc>
-                <Tc height="60px">{constructionIntentNodes[row.type]}</Tc>
+                <Tc>{constructionIntentNodes[row.type]}</Tc>
             </Tr>
             {showAccompanyInfrastructure && (
-                <Tr>
-                    <Tc height="60px">Infrastruktura towarzysząca</Tc>
-                    <Tc height="60px">{inputs.object_pnb_acc_infra}</Tc>
+                <Tr height={topRowHeight}>
+                    <Tc>Infrastruktura towarzysząca</Tc>
+                    <Tc>{inputs.object_pnb_acc_infra}</Tc>
                 </Tr>
             )}
             {showUnderConservationProtection && (
-                <Tr>
-                    <Tc height="60px">Obiekt objęty ochroną konserwatorską</Tc>
-                    <Tc height="60px">
-                        {inputs.object_demo_under_conservation_protection}
-                    </Tc>
+                <Tr height={topRowHeight}>
+                    <Tc>Obiekt objęty ochroną konserwatorską</Tc>
+                    <Tc>{inputs.object_demo_under_conservation_protection}</Tc>
                 </Tr>
             )}
             {showUsageChange && (
-                <Tr>
-                    <Tc height="60px">
+                <Tr height={topRowHeight}>
+                    <Tc>
                         <HStack alignItems="center">
                             <Text>z</Text>
                             {inputs.object_usage_change_from}
@@ -146,15 +170,21 @@ export default function RegisterConstructionIntentTableEdit(
                 </Tr>
             )}
             {showPrBud && (
-                <Tr>
-                    <Tc height="60px">{inputs.object_prbud_intent_id}</Tc>
-                    <Tc height="60px">{prBudIntent?.legal_basis ?? "-"}</Tc>
+                <Tr height={topRowHeight}>
+                    <Tc>{inputs.object_prbud_intent_id}</Tc>
+                    <Tc>{prBudIntent?.legal_basis ?? "-"}</Tc>
                 </Tr>
             )}
             {showPublicInfo && (
-                <Tr>
-                    <Tc height="60px">Informacja publiczna</Tc>
-                    <Tc height="60px">{inputs.object_public_info}</Tc>
+                <Tr height={topRowHeight}>
+                    <Tc>Informacja publiczna</Tc>
+                    <Tc>{inputs.object_public_info}</Tc>
+                </Tr>
+            )}
+            {showNeighbouringPropertyType && (
+                <Tr height={topRowHeight}>
+                    <Tc>Dane nieruchomości sąsiedniej</Tc>
+                    <Tc>{inputs.object_neighbour_property_type}</Tc>
                 </Tr>
             )}
         </>
@@ -162,10 +192,29 @@ export default function RegisterConstructionIntentTableEdit(
 
     const body = showMore && (
         <>
+            {showLocalizationDateRange && (
+                <Tr height={topRowHeight}>
+                    <Tc>Termin lokalizacji obiektu</Tc>
+                    <Tc>
+                        <Tb>
+                            <Tr>
+                                <ThRow>od</ThRow>
+                                <Tc>{inputs.object_localization_date_from}</Tc>
+                            </Tr>
+                            <Tr>
+                                <ThRow>do</ThRow>
+
+                                <Tc>{inputs.object_localization_date_to}</Tc>
+                            </Tr>
+                        </Tb>
+                    </Tc>
+                </Tr>
+            )}
             {showConstructions && (
                 <Tr>
                     <Tc colSpan={2}>
                         <Tb
+                            dontAdvanceIndentLevel
                             isCollapsible
                             // defaultIsCollapsed
                             myHeaders={
@@ -474,6 +523,7 @@ export default function RegisterConstructionIntentTableEdit(
                     <Th colSpan={2}>Zamierzenie Budowlane</Th>
                 </>
             }
+            {...myTableProps}
             // sx={{ height: "100%" }}
         >
             {top}

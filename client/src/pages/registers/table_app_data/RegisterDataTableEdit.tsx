@@ -5,24 +5,25 @@
  */
 
 import { DB } from "../../../../../server/src/db/types";
-import React, { PropsWithChildren, useContext, useMemo } from "react";
+import React, { ComponentProps, useContext, useMemo } from "react";
 import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
 import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
-import { MyTable as Tb } from "../../../components/my_table/MyTable";
+import { MyTable, MyTable as Tb } from "../../../components/my_table/MyTable";
 import { MyTableHeader as Th } from "../../../components/my_table/MyTableHeader";
 import { MyTableRow as Tr } from "../../../components/my_table/MyTableRow";
 import { MyTableCell as Tc } from "../../../components/my_table/MyTableCell";
+import { topRowHeight } from "../RegisterTableEditRowContent";
 
 export default function RegisterDataTableEdit({
     inputs,
     row,
     showMore,
     children,
-}: PropsWithChildren<
+    ...myTableProps
+}: ComponentProps<typeof MyTable> &
     TableEditRowContentComponentProps<DB.Rows.Register> & {
         showMore: boolean;
-    }
->) {
+    }) {
     const pageContext = useContext(PageRegistersContext)!;
 
     const investor = useMemo(
@@ -43,38 +44,37 @@ export default function RegisterDataTableEdit({
                 </Th>,
             ]}
             overflow="visible"
+            {...myTableProps}
         >
             {row.type === "Dz. bud" && (
                 <>
                     <Tr>
-                        <Tc height="60px">Złożony w dniu</Tc>
-                        <Tc height="60px">{inputs.app_submission_date}</Tc>
+                        <Tc>Złożony w dniu</Tc>
+                        <Tc>{inputs.app_submission_date}</Tc>
                     </Tr>
                     <Tr>
-                        <Tc height="60px">Nr decyzji PnB</Tc>
-                        <Tc height="60px">{inputs.app_number}</Tc>
+                        <Tc>Nr decyzji PnB</Tc>
+                        <Tc>{inputs.app_number}</Tc>
                     </Tr>
                     <Tr>
-                        <Tc height="60px">Typ dziennika</Tc>
-                        <Tc height="60px">
-                            {inputs.app_construction_journal_type}
-                        </Tc>
+                        <Tc>Typ dziennika</Tc>
+                        <Tc>{inputs.app_construction_journal_type}</Tc>
                     </Tr>
                 </>
             )}
             {row.type !== "Dz. bud" && (
                 <>
-                    <Tr>
-                        <Tc height="60px">Numer zgłoszenia</Tc>
-                        <Tc height="60px">{inputs.app_number}</Tc>
+                    <Tr height={topRowHeight}>
+                        <Tc>Numer zgłoszenia</Tc>
+                        <Tc>{inputs.app_number}</Tc>
                     </Tr>
-                    <Tr>
-                        <Tc height="60px" position="relative">
+                    <Tr height={topRowHeight}>
+                        <Tc position="relative">
                             Data złożenia
                             {/* show more button */}
                             {children}
                         </Tc>
-                        <Tc height="60px">{inputs.app_submission_date}</Tc>
+                        <Tc>{inputs.app_submission_date}</Tc>
                     </Tr>
                     {showMore && (
                         <>

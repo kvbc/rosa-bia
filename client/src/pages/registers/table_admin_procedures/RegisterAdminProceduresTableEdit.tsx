@@ -1,20 +1,22 @@
 import RegisterAdminProcedureActionsTable from "./RegisterAdminProcedureActionsTable";
 import { DB } from "../../../../../server/src/db/types";
-import React from "react";
+import React, { ComponentProps } from "react";
 import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
-import { MyTable as Tb } from "../../../components/my_table/MyTable";
+import { MyTable, MyTable as Tb } from "../../../components/my_table/MyTable";
 import { MyTableCell as Tc } from "../../../components/my_table/MyTableCell";
 import { MyTableHeader as Th } from "../../../components/my_table/MyTableHeader";
 import { MyTableRow as Tr } from "../../../components/my_table/MyTableRow";
 import RegisterCharParamsTableEdit from "../table_construction_intent/RegisterCharParamsTableEdit";
 import { FeatureUnfinishedIcon } from "../../../components/FeatureUnfinishedIcon";
+import { topRowHeight } from "../RegisterTableEditRowContent";
 
 export default function RegisterAdminProceduresTableEdit(
-    props: TableEditRowContentComponentProps<DB.Rows.Register> & {
-        showMore: boolean;
-    }
+    props: ComponentProps<typeof MyTable> &
+        TableEditRowContentComponentProps<DB.Rows.Register> & {
+            showMore: boolean;
+        }
 ) {
-    const { inputs, row, showMore } = props;
+    const { inputs, row, showMore, ...myTableProps } = props;
 
     const showCharParamsTable = row.type === "PnB (6740)";
 
@@ -25,16 +27,17 @@ export default function RegisterAdminProceduresTableEdit(
                     <Th colSpan={2}>Postępowanie administracyjne</Th>
                 </>
             }
+            {...myTableProps}
         >
-            <Tr>
-                <Tc height="60px">Informacja o postępowaniu</Tc>
-                <Tc height="60px">
+            <Tr height={topRowHeight}>
+                <Tc>Informacja o postępowaniu</Tc>
+                <Tc>
                     <FeatureUnfinishedIcon />
                 </Tc>
             </Tr>
-            <Tr>
-                <Tc height="60px">Upływający czas (dni)</Tc>
-                <Tc height="60px">
+            <Tr height={topRowHeight}>
+                <Tc>Upływający czas (dni)</Tc>
+                <Tc>
                     <FeatureUnfinishedIcon />
                 </Tc>
             </Tr>

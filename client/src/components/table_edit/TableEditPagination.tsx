@@ -47,15 +47,26 @@ export function TableEditPagination<TRow extends TableEditRowType>({
                         orientation="horizontal"
                         color={colorContext.darkFg}
                         textWrap="balance"
+                        // fontSize="inherit !important"
                     >
-                        <MySelect
-                            color="black"
-                            options={rowsPerPageOptions}
-                            value={String(rowsPerPage)}
-                            onValueChanged={(value) =>
-                                setRowsPerPage(Number(value))
-                            }
-                        />
+                        <ColorContext.Provider
+                            value={{
+                                bg1: "gray.200",
+                                bg2: "gray.300",
+                                border: "gray.400",
+                                palette: "gray",
+                                darkFg: "gray.600",
+                            }}
+                        >
+                            <MySelect
+                                color="black"
+                                options={rowsPerPageOptions}
+                                value={String(rowsPerPage)}
+                                onValueChanged={(value) =>
+                                    setRowsPerPage(Number(value))
+                                }
+                            />
+                        </ColorContext.Provider>
                     </Field>
                 </Fieldset.Content>
             </Fieldset.Root>
@@ -65,6 +76,7 @@ export function TableEditPagination<TRow extends TableEditRowType>({
                 variant="solid"
                 pageSize={rowsPerPage}
                 page={page}
+                size="2xs"
                 onPageChange={(e) => setPage(e.page)}
             >
                 <HStack>

@@ -169,6 +169,12 @@ export namespace DB {
             "Pisma różne (670)",
             "Samodz. Lokali (705)",
             "Dz. bud",
+            "Tymczasowe (6743.5)",
+            "Konserwator (Inne)",
+            "Lokalizacja inwestycji (Inne)",
+            "PiNB (Inne)",
+            "Uzupełniający",
+            "Wejście na dz. sąsiednią",
         ] as const;
         export type RegisterType = (typeof REGISTER_TYPES)[number];
 
@@ -182,6 +188,12 @@ export namespace DB {
             "Zawieszenie postępowania",
             "Przedłużenie terminu",
             "Publiczna informacja",
+            "Zawiadomienie o kontroli",
+            "Zgłoszenie rozbiórki",
+            "Kontrola",
+            "Wynik kontroli",
+            "Upomnienie",
+            "Zawiadomienie o ponownej kontroli",
         ] as const;
         export type RegisterAdminActionType = (typeof REGISTER_ADMIN_ACTION_TYPES)[number]; // prettier-ignore
 
@@ -267,6 +279,60 @@ export namespace DB {
                 actionTypes: [],
                 showAdminConstructionJournal: false,
             },
+            "Tymczasowe (6743.5)": {
+                subtype: "Cert",
+                actionTypes: [
+                    "Postanowienie",
+                    "Przedłużenie terminu",
+                    "Zawiadomienie o kontroli",
+                    "Zgłoszenie rozbiórki",
+                    "Kontrola",
+                    "Wynik kontroli",
+                    "Wezwanie",
+                    "Upomnienie",
+                    "Zawiadomienie o ponownej kontroli",
+                ],
+                showAdminConstructionJournal: false,
+            },
+            Uzupełniający: {
+                subtype: "Mayor",
+                actionTypes: [
+                    "Wezwanie",
+                    "Zawiadomienie",
+                    "Postanowienie",
+                    "Zawieszenie postępowania",
+                    "Przedłużenie terminu",
+                    "Publiczna informacja",
+                ],
+                showAdminConstructionJournal: false,
+            },
+            "Wejście na dz. sąsiednią": {
+                subtype: "Mayor",
+                actionTypes: [
+                    "Wezwanie",
+                    "Zawiadomienie",
+                    "Postanowienie",
+                    "Konserwator",
+                    "Zawieszenie postępowania",
+                    "Przedłużenie terminu",
+                ],
+                showAdminConstructionJournal: false,
+            },
+            "Konserwator (Inne)": {
+                subtype: "Mayor",
+                actionTypes: [],
+                showAdminConstructionJournal: false,
+            },
+            "Lokalizacja inwestycji (Inne)": {
+                subtype: "Mayor",
+                actionTypes: [],
+                showAdminConstructionJournal: false,
+            },
+            "PiNB (Inne)": {
+                subtype: "Mayor",
+                actionTypes: [],
+                showAdminConstructionJournal: false,
+            },
         } as const;
 
         export const REGISTER_SUBTYPE_INFOS = {
@@ -343,6 +409,14 @@ export namespace DB {
             .or(z.enum(REGISTER_SUBTYPE_INFOS.Cert.resolutions))
             .or(z.enum(REGISTER_SUBTYPE_INFOS.Response.resolutions));
 
+        export const REGISTER_NEIGHBOURING_PROPERTY_TYPES = [
+            "Budynek",
+            "Lokal",
+            "Nieruchomość",
+        ] as const;
+        export type RegisterNeighbouringPropertyType =
+            (typeof REGISTER_NEIGHBOURING_PROPERTY_TYPES)[number];
+
         // prettier-ignore
         export const RegisterShape = z.strictObject({
             id: z.number(),
@@ -362,6 +436,7 @@ export namespace DB {
             app_construction_journal_type: z.enum(REGISTER_CONSTRUCTION_JOURNAL_TYPES),
 
             object_construction_spec_id: z.number(),
+            object_custom_construction_intent: z.string(),
             object_construction_form_type: z.enum(REGISTER_CONSTRUCTION_FORMS).optional(),
             object_spatial_plan_type: z.enum(REGISTER_SPATIAL_PLANS).optional(),
             object_street_id: z.number(),
@@ -376,10 +451,21 @@ export namespace DB {
             object_usage_change_to: z.string(),
             object_prbud_intent_id: z.number(),
             object_public_info: z.number(),
+            object_localization_date_from: z.string(),
+            object_localization_date_to: z.string(),
+            object_neighbour_property_type: z.enum(REGISTER_NEIGHBOURING_PROPERTY_TYPES),
 
             admin_construction_journal_number: z.number(),
             admin_construction_journal_date: z.string(),
-            admin_construction_journal_tome: z.number()
+            admin_construction_journal_tome: z.number(),
+
+            other_case_title: z.string(),
+            other_case_from: z.string(),
+            other_case_sign: z.string(),
+            other_case_date: z.string(),
+            other_case_init_date: z.string(),
+            other_case_settle_date: z.string(),
+            other_case_comments: z.string()
         });
         export type Register = z.infer<typeof RegisterShape> & {
             // client-only helpers

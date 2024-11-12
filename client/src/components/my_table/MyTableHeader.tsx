@@ -14,6 +14,7 @@ export function MyTableHeader({
             _selection={{
                 backgroundColor: colorContext.border,
             }}
+            padding="0.5"
             {...props}
         >
             {children}

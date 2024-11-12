@@ -1,5 +1,5 @@
 import { DB } from "../../../../../server/src/db/types";
-import React from "react";
+import React, { useMemo } from "react";
 import RegisterAdminProcedureActionsTableRow from "./RegisterAdminProcedureActionsTableRow";
 import { MyTable as Tb } from "../../../components/my_table/MyTable";
 import { MyTableHeader as Th } from "../../../components/my_table/MyTableHeader";
@@ -10,6 +10,11 @@ export default function RegisterAdminProcedureActionsTable(
 ) {
     const { row } = props;
 
+    const actionTypes = useMemo(
+        () => DB.Rows.REGISTER_TYPE_INFOS[row.type].actionTypes,
+        [row.type]
+    );
+
     return (
         <Tb
             isCollapsible
@@ -17,22 +22,20 @@ export default function RegisterAdminProcedureActionsTable(
                 <>
                     <Th>Czynności</Th>
                     <Th>Wybór</Th>
-                    <Th>Termin [dni]</Th>
+                    <Th>Termin (dni)</Th>
                     <Th>Data pisma</Th>
                     <Th>Data odebrania</Th>
                     <Th>Data odpowiedzi</Th>
                 </>
             }
         >
-            {DB.Rows.REGISTER_TYPE_INFOS[row.type].actionTypes.map(
-                (actionType) => (
-                    <RegisterAdminProcedureActionsTableRow
-                        key={actionType}
-                        actionType={actionType}
-                        {...props}
-                    />
-                )
-            )}
+            {actionTypes.map((actionType) => (
+                <RegisterAdminProcedureActionsTableRow
+                    key={actionType}
+                    actionType={actionType}
+                    {...props}
+                />
+            ))}
         </Tb>
     );
 }

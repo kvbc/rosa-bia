@@ -28,6 +28,7 @@ export const AppNavbarLinkMenu: React.FC<
             display: string;
             tooltip?: string;
             openInNewTab?: boolean;
+            Icon?: IconType;
         }[];
     }>
 > = ({ Icon: MenuIcon, title, links, isOpen, setIsOpen, children }) => {
@@ -93,7 +94,11 @@ export const AppNavbarLinkMenu: React.FC<
                                     }}
                                 >
                                     <Icon fontSize="md">
-                                        <MenuIcon />
+                                        {link.Icon ? (
+                                            <link.Icon />
+                                        ) : (
+                                            <MenuIcon />
+                                        )}
                                     </Icon>
                                     {link.display}
                                 </MenuItem>

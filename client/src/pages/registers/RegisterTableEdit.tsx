@@ -42,6 +42,7 @@ export default function RegisterTableEdit(
             app_construction_journal_type: "Elektroniczny",
 
             object_construction_spec_id: 0,
+            object_custom_construction_intent: "",
             object_construction_form_type: "Indywidualne",
             object_spatial_plan_type: "MPZP",
             object_number: "",
@@ -56,6 +57,9 @@ export default function RegisterTableEdit(
             object_usage_change_to: "",
             object_prbud_intent_id: 1,
             object_public_info: 0,
+            object_localization_date_from: "",
+            object_localization_date_to: "",
+            object_neighbour_property_type: "Budynek",
 
             _object_prbud_intent_type_id: 1,
             _object_construction_division_id: 0,
@@ -68,6 +72,14 @@ export default function RegisterTableEdit(
             admin_construction_journal_date: "",
             admin_construction_journal_number: 0,
             admin_construction_journal_tome: 0,
+
+            other_case_title: "",
+            other_case_from: "",
+            other_case_sign: "",
+            other_case_date: "",
+            other_case_init_date: "",
+            other_case_settle_date: "",
+            other_case_comments: "",
         }),
         []
     );
@@ -162,6 +174,12 @@ export default function RegisterTableEdit(
                 (row) => pageContext.streetsDBTable.rows.filter((fRow) => fRow.place_id === row._object_place_id), // prettier-ignore
                 (row) => ({ value: row.id, name: row.name })
             ),
+            getSelectRowInputProps(
+                "object_neighbour_property_type",
+                DB.Rows.REGISTER_NEIGHBOURING_PROPERTY_TYPES,
+                (type) => ({ value: type, name: type })
+            ),
+            { rowKey: "object_custom_construction_intent", type: "text" }, // prettier-ignore
             { rowKey: "object_demo_building_count", type: "number" }, // prettier-ignore
             { rowKey: "object_demo_volume", type: "number" }, // prettier-ignore
             { rowKey: "object_demo_usable_area", type: "number" }, // prettier-ignore
@@ -173,7 +191,16 @@ export default function RegisterTableEdit(
             { rowKey: "object_public_info", type: "checkbox" }, // prettier-ignore
             { rowKey: "admin_construction_journal_date", type: "date" }, // prettier-ignore
             { rowKey: "admin_construction_journal_number", type: "number" }, // prettier-ignore
+            { rowKey: "object_localization_date_from", type: "date" }, // prettier-ignore
+            { rowKey: "object_localization_date_to", type: "date" }, // prettier-ignore
             { rowKey: "admin_construction_journal_tome", type: "number" }, // prettier-ignore
+            { rowKey: "other_case_title", type: "text" },
+            { rowKey: "other_case_from", type: "text" },
+            { rowKey: "other_case_sign", type: "text" },
+            { rowKey: "other_case_date", type: "text" },
+            { rowKey: "other_case_init_date", type: "text" },
+            { rowKey: "other_case_settle_date", type: "text" },
+            { rowKey: "other_case_comments", type: "text" },
 
             getSelectRowInputProps(
                 "object_prbud_intent_id",

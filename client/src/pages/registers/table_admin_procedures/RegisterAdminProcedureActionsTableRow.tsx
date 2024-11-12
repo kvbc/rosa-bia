@@ -7,7 +7,6 @@ import { MyTableRow as Tr } from "../../../components/my_table/MyTableRow";
 import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
 import { TableEditRowInputCheckbox } from "../../../components/table_edit/row/input/TableEditRowInputCheckbox";
 import { TableEditRowInput } from "../../../components/table_edit/row/input/TableEditRowInput";
-import { TableEditRowInputNumber } from "../../../components/table_edit/row/input/TableEditRowInputNumber";
 
 export default function RegisterAdminProcedureActionsTableRow({
     row,
@@ -99,7 +98,7 @@ export default function RegisterAdminProcedureActionsTableRow({
                 /> */}
             </Tc>
             <Tc>
-                <TableEditRowInputNumber
+                <TableEditRowInput
                     type="number"
                     row={action}
                     setRow={setAction}

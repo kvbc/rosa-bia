@@ -90,6 +90,7 @@ create table registers(
     app_construction_journal_type text not null, -- typ dziennika budowy
 
     object_construction_spec_id integer not null, -- id wyszczegolnienia budowlanego obiektu 
+    object_custom_construction_intent text not null, -- customowa nazwa zamierzenia budowlanego (np. dla ZRiDu)
     object_construction_form_type text, -- typ formy budownictwa
     object_spatial_plan_type text, -- typ planowania przestrzennego
     object_street_id integer not null,
@@ -104,10 +105,21 @@ create table registers(
     object_usage_change_to text not null, -- zm. sp. uzytk. na
     object_prbud_intent_id integer not null, -- id zamierzenia budowlanego
     object_public_info boolean not null, -- informacja publiczna?
+    object_localization_date_from date, -- data lokalizacji od 
+    object_localization_date_to date, -- data lokalizacji do
+    object_neighbour_property_type text, -- dane nieruchomości sąsiedniej
 
     admin_construction_journal_number integer not null, -- numer dziennika budowy
     admin_construction_journal_date date not null, -- data dziennika budowy
     admin_construction_journal_tome integer not null, -- numer tomu dziennika budowy
+
+    other_case_title text not null, -- sprawa
+    other_case_from text not null, -- od kogo
+    other_case_sign text not null, -- znak pisma
+    other_case_date date, -- z dnia
+    other_case_init_date date, -- data wszczęcia sprawy
+    other_case_settle_date date, -- data ostatecznego załatwienia sprawy
+    other_case_comments text not null, -- uwagi
 
     foreign key(assigned_employee_id) references employees(id),
     foreign key(app_investor_id) references investors(id),

@@ -33,6 +33,7 @@ export function DBTableEdit<TRow extends DB.Row>({
     const {
         totalRowCount,
         rows,
+        rowsQuery,
         addRowMutation,
         deleteRowMutation,
         updateRowMutation,
@@ -64,6 +65,7 @@ export function DBTableEdit<TRow extends DB.Row>({
             rows={customRows ?? rows}
             defaultRow={defaultRow}
             totalRowCount={totalRowCount}
+            isLoading={rowsQuery.isFetching}
             onRowAddClicked={addRowMutation.mutate}
             onRowDeleteClicked={(row) => deleteRowMutation.mutate(row.id)}
             onRowSaveClicked={updateRowMutation.mutate}

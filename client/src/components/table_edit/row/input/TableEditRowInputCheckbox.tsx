@@ -21,7 +21,8 @@ export function TableEditRowInputCheckbox<TRow extends TableEditRowType>({
             colorPalette={colorContext.palette}
             checked={Boolean(row[rowKey])}
             border="1px solid"
-            borderRadius="xs"
+            // borderRadius="xs"
+            borderRadius="none"
             borderColor={colorContext.border}
             variant="subtle"
             onCheckedChange={(e) => {

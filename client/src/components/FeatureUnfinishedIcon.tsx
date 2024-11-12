@@ -7,7 +7,7 @@ export const FeatureUnfinishedIcon = () => {
     return (
         <Tooltip content="Funkcja nieukończona">
             <Center>
-                <Icon size="lg" color="fg.error">
+                <Icon size="md" color="fg.error">
                     <LuAlertCircle />
                 </Icon>
             </Center>

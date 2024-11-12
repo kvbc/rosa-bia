@@ -23,10 +23,10 @@ const colorPalettes: ColorPalette[] = [
     "green",
     "purple",
     "orange",
+    "red",
+    "yellow",
     "pink",
-    // "yellow",
-    // "teal",
-    // "red",
+    "teal",
 ];
 
 export function MyTable(
@@ -36,6 +36,8 @@ export function MyTable(
         myFooter?: ReactNode;
         isCollapsible?: boolean;
         defaultIsCollapsed?: boolean;
+        customIndentLevel?: number;
+        dontAdvanceIndentLevel?: boolean;
     } & ComponentProps<typeof Table.Root>
 ) {
     const {
@@ -45,6 +47,8 @@ export function MyTable(
         isCollapsible,
         defaultIsCollapsed,
         children,
+        customIndentLevel,
+        dontAdvanceIndentLevel,
         ...tableRootProps
     } = props;
     const myRows = _myRows ?? children;
@@ -53,7 +57,11 @@ export function MyTable(
         defaultIsCollapsed ?? false
     );
 
-    const indentLevel = useContext(MyTableContext);
+    const contextIndentLevel = useContext(MyTableContext);
+    const indentLevel = customIndentLevel ?? contextIndentLevel;
+    const lowerIndentLevel = dontAdvanceIndentLevel
+        ? indentLevel
+        : indentLevel + 1;
     const lowerColorContext = useMemo<ContextType<typeof ColorContext>>(
         () => ({
             bg1: colorPalettes[indentLevel] + ".100",
@@ -79,12 +87,12 @@ export function MyTable(
             outline="1px solid"
             outlineColor={lowerColorContext.border}
             showColumnBorder
-            fontSize="xs"
+            fontSize="2xs"
             overflow="visible"
             {...tableRootProps}
         >
             <ColorContext.Provider value={lowerColorContext}>
-                <MyTableContext.Provider value={indentLevel + 1}>
+                <MyTableContext.Provider value={lowerIndentLevel}>
                     <Table.Header position="relative">
                         <Table.Row
                             zIndex={999}
@@ -96,11 +104,13 @@ export function MyTable(
                             <Float placement="top-end" zIndex={100} offset="1">
                                 <IconButton
                                     size="2xs"
-                                    borderRadius="full"
-                                    variant="surface"
+                                    minWidth="0 !important"
+                                    width="16px !important"
+                                    height="16px !important"
                                     onClick={handleCollapseButtonClicked}
                                 >
                                     <Icon
+                                        fontSize="8px !important"
                                         transition="transform"
                                         transform={
                                             !isCollapsed ? "rotate(180deg)" : ""
@@ -109,6 +119,22 @@ export function MyTable(
                                         <LuArrowDown />
                                     </Icon>
                                 </IconButton>
+                                {/* <IconButton
+                                    size="2xs"
+                                    borderRadius="full"
+                                    variant="surface"
+                                    onClick={handleCollapseButtonClicked}
+                                >
+                                    <Icon
+                                        size="xs"
+                                        transition="transform"
+                                        transform={
+                                            !isCollapsed ? "rotate(180deg)" : ""
+                                        }
+                                    >
+                                        <LuArrowDown />
+                                    </Icon>
+                                </IconButton> */}
                             </Float>
                         )}
                     </Table.Header>

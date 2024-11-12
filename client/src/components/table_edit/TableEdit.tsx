@@ -14,12 +14,14 @@ import React, {
 } from "react";
 import { TableEditRow } from "./row/TableEditRow";
 import TableEditContext from "../../contexts/components/TableEditContext";
-import { Stack } from "@chakra-ui/react";
+import { Box, Float, Skeleton, Spinner, Stack } from "@chakra-ui/react";
 import { TableEditRowContext } from "../../contexts/components/TableEditRowContext";
 // import { TableEditPagination } from "./TableEditPagination";
 import { MyTable } from "../my_table/MyTable";
 import { MyTableHeader } from "../my_table/MyTableHeader";
 import { TableEditPagination } from "./TableEditPagination";
+import { MyTableRow } from "../my_table/MyTableRow";
+import { MyTableCell } from "../my_table/MyTableCell";
 
 export type TableEditHeader =
     | {
@@ -46,6 +48,7 @@ export function TableEdit<TRow extends TableEditRowType>(
         editable?: boolean;
         showFooter?: boolean;
         title?: string;
+        isLoading?: boolean;
         disableRowAdding?: boolean;
         hidePagination?: boolean;
         onRowDeleteClicked?: (row: TRow) => void;
@@ -74,6 +77,7 @@ export function TableEdit<TRow extends TableEditRowType>(
         onRowsRangeChanged,
         totalRowCount,
         title,
+        isLoading,
         hidePagination,
         rowActionButtonOrientation,
         RowContentComponent,
@@ -280,37 +284,59 @@ export function TableEdit<TRow extends TableEditRowType>(
                         </MyTableHeader>
                     );
                 })}
-                myRows={(editable && !disableRowAdding
-                    ? [...rows, addRow]
-                    : rows
-                ).map((row) => (
-                    <TableEditRow<TRow>
-                        key={row === addRow ? row.id + 100 : row.id} // to avoid same-key problems when changing ids
-                        row={row}
-                        onAddClicked={
-                            row === addRow ? handleRowAdded : undefined
-                        }
-                        showSaveAction={upperTableEventTarget === null}
-                        onSaveClicked={handleRowSaved}
-                        onDeleteClicked={handleRowDeleted}
-                        actionButtonOrientation={rowActionButtonOrientation}
-                        stateProp={
-                            row === addRow
-                                ? "adding"
-                                : upperRowContext === null
-                                ? "viewing"
-                                : upperRowContext.state === "adding"
-                                ? "editing"
-                                : upperRowContext.state
-                        }
-                        editable={editable}
-                        inputsProps={rowInputsProps}
-                        ContentComponent={RowContentComponent}
-                        saveOnInputFocusOut={upperTableEventTarget !== null}
-                    />
-                ))}
                 {...myTableProps}
-            />
+            >
+                {isLoading
+                    ? new Array(15).fill(0).map((_, index) => (
+                          <MyTableRow key={index}>
+                              <MyTableCell colSpan={999} position="relative">
+                                  <Skeleton
+                                      width="full"
+                                      height="full"
+                                      minHeight="50px"
+                                  />
+                                  <Float placement="middle-center">
+                                      <Box>
+                                          <Spinner color="gray" />
+                                      </Box>
+                                  </Float>
+                              </MyTableCell>
+                          </MyTableRow>
+                      ))
+                    : (editable && !disableRowAdding
+                          ? [...rows, addRow]
+                          : rows
+                      ).map((row) => (
+                          <TableEditRow<TRow>
+                              key={row === addRow ? row.id + 100 : row.id} // to avoid same-key problems when changing ids
+                              row={row}
+                              onAddClicked={
+                                  row === addRow ? handleRowAdded : undefined
+                              }
+                              showSaveAction={upperTableEventTarget === null}
+                              onSaveClicked={handleRowSaved}
+                              onDeleteClicked={handleRowDeleted}
+                              actionButtonOrientation={
+                                  rowActionButtonOrientation
+                              }
+                              stateProp={
+                                  row === addRow
+                                      ? "adding"
+                                      : upperRowContext === null
+                                      ? "viewing"
+                                      : upperRowContext.state === "adding"
+                                      ? "editing"
+                                      : upperRowContext.state
+                              }
+                              editable={editable}
+                              inputsProps={rowInputsProps}
+                              ContentComponent={RowContentComponent}
+                              saveOnInputFocusOut={
+                                  upperTableEventTarget !== null
+                              }
+                          />
+                      ))}
+            </MyTable>
             {!hidePagination && (
                 <MyTable
                     myHeaders={[

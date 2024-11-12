@@ -10,6 +10,8 @@ export function MyTableCell({ children, ...props }: Table.CellProps) {
             borderColor={colorContext.border}
             fontSize="inherit"
             _selection={{ backgroundColor: colorContext.bg2 }}
+            padding="1 !important"
+            // height="40px"
             {...props}
         >
             {children}

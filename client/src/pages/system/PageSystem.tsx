@@ -1,5 +1,6 @@
 import {
     Heading,
+    Highlight,
     HStack,
     Link,
     List,
@@ -54,7 +55,7 @@ export function PageSystem() {
         const array: Entry[] = [
             {
                 label: "v0.2 Alpha",
-                date: new Date("2025-01-01"),
+                date: new Date("2025-01-07"),
                 description: "Pierwsza wersja próbna",
             },
             {
@@ -66,7 +67,7 @@ export function PageSystem() {
 
         for (let i = 0; i < array.length; i++) {
             const entry = array[i];
-            if (Date.now() > entry.date.getTime()) {
+            if (Date.now() >= entry.date.getTime()) {
                 array.splice(i, 0, {
                     label: entry.label,
                     date: new Date(Date.now()),
@@ -198,8 +199,30 @@ export function PageSystem() {
                 <List.Item>
                     Skrypt przenoszący dane z excela do bazy danych
                 </List.Item>
-                <List.Item>Generatory statystyk</List.Item>
-                <List.Item>Obsługa wszystkich typów rejestrów</List.Item>
+                <List.Item>
+                    <Highlight
+                        query="Generatory statystyk"
+                        styles={{
+                            px: "0.5",
+                            bg: "orange.subtle",
+                            color: "orange.fg",
+                        }}
+                    >
+                        Generatory statystyk
+                    </Highlight>
+                </List.Item>
+                <List.Item>
+                    <Highlight
+                        query="Filtry"
+                        styles={{
+                            px: "0.5",
+                            bg: "orange.subtle",
+                            color: "orange.fg",
+                        }}
+                    >
+                        Filtry 😱
+                    </Highlight>
+                </List.Item>
             </List.Root>
             <br />
 
