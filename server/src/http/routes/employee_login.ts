@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import { z } from "zod";
 import { resError, resErrorMessage, resGetAuthEmployee } from "../common";
 import { db } from "../..";
-import { DB } from "../../db/types";
+import { DB } from "@shared/db";
 import jwt from "jsonwebtoken";
 import { HTTP } from "../types";
 

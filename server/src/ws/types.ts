@@ -1,4 +1,4 @@
-import { DB } from "../db/types";
+import { DB } from "@shared/db";
 
 export namespace WS {
     export const SERVER_PORT = 3002;

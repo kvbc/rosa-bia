@@ -4,7 +4,7 @@
 
 create table investors(
     id integer primary key autoincrement,
-    `name` text not null unique,
+    `name` text not null,
     `address` text not null
 );
 
@@ -48,20 +48,20 @@ create table construction_divisions( -- dzialy budowlane
 );
 create table construction_groups( -- grupy budowlane
     id integer primary key autoincrement,
-    `name` text not null unique,
+    `name` text not null,
     division_id integer not null,
     foreign key(division_id) references construction_divisions(id)
 );
 create table construction_classes( -- klasy budowlane
     id integer primary key autoincrement,
-    `name` text not null unique,
+    `name` text not null,
     group_id integer not null,
-    pkob integer not null unique,
+    pkob integer not null,
     foreign key(group_id) references construction_groups(id)
 );
 create table construction_specs( -- wyszczegolnienia budowlane
     id integer primary key autoincrement,
-    `name` text not null unique,
+    `name` text not null,
     class_id integer not null,
     zl_class text not null, /* klasa zagrozenia ludzi */
     ob_cat text not null, /* kat. obiektu budowy */
@@ -107,7 +107,7 @@ create table registers(
     object_public_info boolean not null, -- informacja publiczna?
     object_localization_date_from date, -- data lokalizacji od 
     object_localization_date_to date, -- data lokalizacji do
-    object_neighbour_property_type text, -- dane nieruchomości sąsiedniej
+    object_neighbouring_property_type text, -- dane nieruchomości sąsiedniej
 
     admin_construction_journal_number integer not null, -- numer dziennika budowy
     admin_construction_journal_date date not null, -- data dziennika budowy
@@ -169,19 +169,20 @@ create table info_boards(
 );
 
 -- 
--- PrBud 
+-- Construction law (prawo budowlane)
 -- 
 
-create table prbud_types(
+create table construction_law_categories(
     id integer primary key autoincrement,
     register_type text not null,
     `name` text not null
 );
-create table prbud_intents(
+
+create table construction_law_intents(
     id integer primary key autoincrement,
-    type_id integer not null,
+    category_id integer not null,
     intent text not null,
     legal_basis text not null, -- podstawa prawna
     additional_requirements text not null, -- dodatkowe wymagania
-    foreign key(type_id) references prbud_types(id)
+    foreign key(category_id) references construction_law_categories(id)
 );

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { DB } from "../../db/types";
+import { DB } from "@shared/db";
 import { resErrorMessage } from "./resErrorMessage";
 
 export const resVerifyTableName = (

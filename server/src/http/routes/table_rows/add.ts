@@ -5,7 +5,7 @@ import {
     resVerifyTableName,
     resVerifyTableRow,
 } from "../../common";
-import { DB } from "../../../db/types";
+import { DB } from "@shared/db";
 import { db, wsServer } from "../../..";
 
 const router = Router();
@@ -40,7 +40,7 @@ router.post(
         }
 
         const keys = Object.keys(newRow).filter((key) =>
-            DB.Rows.getMeta(tableName).keys.includes(key)
+            DB.getRowMeta(tableName).keys.includes(key)
         );
         const sqlKeys = keys.map((key) => "`" + key + "`").join(", ");
         const sqlParams = keys.map((_) => "?").join(", ");

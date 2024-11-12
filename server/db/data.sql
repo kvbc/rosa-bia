@@ -168,7 +168,7 @@ insert into registers(
     object_public_info,
     object_localization_date_from,
     object_localization_date_to,
-    object_neighbour_property_type,
+    object_neighbouring_property_type,
 
     admin_construction_journal_number,
     admin_construction_journal_date,
@@ -369,7 +369,7 @@ insert into info_boards values(null, 'testowa zawartosc');
 -- PrBud
 -- 
 
-insert into prbud_types values
+insert into construction_law_categories values
     (null, 'Zg. Zwykłe (6743.2)', 'Budowa'),
     (null, 'Zg. Zwykłe (6743.2)', 'Przebudowa'),
     (null, 'Zg. Zwykłe (6743.2)', 'Remont'),

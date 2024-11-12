@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { z, ZodDiscriminatedUnionOption } from "zod";
-import { DB } from "../../../db/types";
+import { DB } from "@shared/db";
 import {
     resError,
     resErrorMessage,
@@ -23,8 +23,8 @@ export const FILTER_OPERATORS = [
 export type FilterOperator = (typeof FILTER_OPERATORS)[number];
 
 const createFiltersShape = (tableName: DB.TableName) => {
-    const rowMeta = DB.Rows.getMeta(tableName);
-    const keyRelations = rowMeta.keyRelations;
+    const rowMeta = DB.getRowMeta(tableName);
+    const keyRelations = rowMeta.keyTableRelations;
 
     const [firstKey, ...otherKeys] = keyRelations
         ? rowMeta.keys.filter((key) => !Object.keys(keyRelations).includes(key))
@@ -36,7 +36,7 @@ const createFiltersShape = (tableName: DB.TableName) => {
             (rowKey): ZodDiscriminatedUnionOption<"key"> =>
                 z.strictObject({
                     key: z.literal(rowKey),
-                    filters: createFiltersShape(keyRelations[rowKey]),
+                    filters: createFiltersShape(keyRelations[rowKey]!),
                 })
         );
     }
@@ -143,14 +143,14 @@ router.post(
         let sqlInnerJoins = "";
         let sqlWhere = "";
         const processFilters = (tableName: DB.TableName, filters: Filter[]) => {
-            const rowMeta = DB.Rows.getMeta(tableName);
+            const rowMeta = DB.getRowMeta(tableName);
             filters.forEach((filter, index) => {
                 if (
                     filter.filters &&
-                    rowMeta.keyRelations &&
-                    Object.keys(rowMeta.keyRelations).includes(filter.key)
+                    rowMeta.keyTableRelations &&
+                    Object.keys(rowMeta.keyTableRelations).includes(filter.key)
                 ) {
-                    const subTableName = rowMeta.keyRelations[filter.key];
+                    const subTableName = rowMeta.keyTableRelations[filter.key]!;
                     sqlInnerJoins += ` inner join ${subTableName} on ${tableName}.${filter.key} = ${subTableName}.id`;
                     processFilters(subTableName, filter.filters);
                 }
@@ -206,10 +206,10 @@ router.post(
                         }
 
                         Object.keys(row).forEach((key) => {
-                            const rowMeta = DB.Rows.getMeta(tableName);
+                            const rowMeta = DB.getRowMeta(tableName);
                             if (
                                 rowMeta.adminKeys &&
-                                rowMeta.adminKeys.includes(key) &&
+                                rowMeta.adminKeys.has(key) &&
                                 !isEmployeeAdmin
                             ) {
                                 row[key] = undefined;

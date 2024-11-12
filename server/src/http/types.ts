@@ -1,4 +1,4 @@
-import { DB } from "../db/types";
+import { DB } from "@shared/db";
 
 export namespace HTTP {
     export const SERVER_PORT = 3001;
