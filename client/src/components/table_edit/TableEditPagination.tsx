@@ -6,16 +6,16 @@ import React, {
     useMemo,
     useState,
 } from "react";
-import { Field } from "../ui/field";
+import { Field } from "@/components/ui/field";
 import {
     PaginationItems,
     PaginationNextTrigger,
     PaginationPrevTrigger,
     PaginationRoot,
-} from "../ui/pagination";
+} from "@/components/ui/pagination";
 import { TableEdit, TableEditRowType } from "./TableEdit";
-import { createMySelectOptions, MySelect } from "../MySelect";
-import { ColorContext } from "../../contexts/ColorContext";
+import { createMySelectOptions, MySelect } from "@/components/MySelect";
+import { ColorContext } from "@/contexts/ColorContext";
 
 export function TableEditPagination<TRow extends TableEditRowType>({
     totalRowCount,

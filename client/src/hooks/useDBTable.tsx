@@ -3,17 +3,17 @@
 //
 
 import { useCallback, useContext, useEffect, useState } from "react";
-import { DB } from "../../../server/src/db/types";
-import WebSocketContext from "../contexts/WebSocketContext";
+import * as DB from "@shared/db";
+import WebSocketContext from "@/contexts/WebSocketContext";
 import {
     apiAddTableRow,
     apiDeleteTableRow,
     apiGetTableRows,
     apiUpdateTableRow,
-} from "../api/http";
+} from "@/api/http";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { wsOnMessage } from "../api/ws";
-import { Filter } from "../../../server/src/http/routes/table_rows/get";
+import { wsOnMessage } from "@/api/ws";
+import { Filter } from "@server/http/routes/table_rows/get";
 
 export type DBTable<TRow extends DB.Row> = ReturnType<typeof useDBTable<TRow>>;
 

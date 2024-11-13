@@ -12,19 +12,19 @@ import {
     DialogHeader,
     DialogRoot,
     DialogTitle,
-} from "../../components/ui/dialog";
-import useAuthEmployee from "../../hooks/useAuthEmployee";
-import useDBTable from "../../hooks/useDBTable";
-import { DB } from "../../../../server/src/db/types";
+} from "@/components/ui/dialog";
+import useAuthEmployee from "@/hooks/useAuthEmployee";
+import useDBTable from "@/hooks/useDBTable";
+import * as DB from "@shared/db";
 import { Fieldset } from "@chakra-ui/react";
-import { Field } from "../../components/ui/field";
-import { Button } from "../../components/ui/button";
+import { Field } from "@/components/ui/field";
+import { Button } from "@/components/ui/button";
 import {
     NativeSelectField,
     NativeSelectRoot,
-} from "../../components/ui/native-select";
-import { Skeleton } from "../../components/ui/skeleton";
-import { PasswordInput } from "../../components/ui/password-input";
+} from "@/components/ui/native-select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export const AppNavbarEmployeeDialog: React.FC<PropsWithChildren> = ({
     children,

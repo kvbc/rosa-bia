@@ -1,17 +1,15 @@
-import { DB } from "../../../../../server/src/db/types";
-import {
-    DBTableEdit,
-    DBTableEditDefaultRow,
-} from "../../../components/DBTableEdit";
+import * as DB from "@shared/db";
+import { DBTableEdit, DBTableEditDefaultRow } from "@/components/DBTableEdit";
 import React, { useContext, useMemo } from "react";
-import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
-import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
-import { TableEditRowInputsProps } from "../../../components/table_edit/row/TableEditRow";
+import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
+import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
+import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
+import { ClientRegister } from "../PageRegisters";
 
 export default function RegisterPlotsDataTableEdit({
     row,
     plotType,
-}: TableEditRowContentComponentProps<DB.Rows.Register> & {
+}: TableEditRowContentComponentProps<ClientRegister> & {
     plotType: DB.Rows.RegisterPlotType;
 }) {
     const pageContext = useContext(PageRegistersContext)!;

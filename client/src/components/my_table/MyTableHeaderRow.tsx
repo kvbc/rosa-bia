@@ -1,5 +1,5 @@
 import React, { ComponentProps, useContext } from "react";
-import { ColorContext } from "../../contexts/ColorContext";
+import { ColorContext } from "@/contexts/ColorContext";
 import { MyTableCell } from "./MyTableCell";
 
 export function MyTableHeaderRow({

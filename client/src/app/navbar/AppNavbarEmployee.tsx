@@ -1,12 +1,12 @@
 import React from "react";
-import useAuthEmployee from "../../hooks/useAuthEmployee";
+import useAuthEmployee from "@/hooks/useAuthEmployee";
 import { Badge, Float, HStack, Icon, Text, VStack } from "@chakra-ui/react";
 import { LuLogIn, LuLogOut } from "react-icons/lu";
-import { Button } from "../../components/ui/button";
-import { DialogTrigger } from "../../components/ui/dialog";
-import { Tooltip } from "../../components/ui/tooltip";
-import { Skeleton, SkeletonCircle } from "../../components/ui/skeleton";
-import { EmployeeAvatar } from "../../components/EmployeeAvatar";
+import { Button } from "@/components/ui/button";
+import { DialogTrigger } from "@/components/ui/dialog";
+import { Tooltip } from "@/components/ui/tooltip";
+import { Skeleton, SkeletonCircle } from "@/components/ui/skeleton";
+import { EmployeeAvatar } from "@/components/EmployeeAvatar";
 
 export const AppNavbarEmployee: React.FC = () => {
     const { query: employeeQuery, logout: employeeLogout } = useAuthEmployee();

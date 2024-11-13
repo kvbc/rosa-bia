@@ -13,15 +13,15 @@ import React, {
     useState,
 } from "react";
 import { TableEditRow } from "./row/TableEditRow";
-import TableEditContext from "../../contexts/components/TableEditContext";
-import { Box, Float, Skeleton, Spinner, Stack } from "@chakra-ui/react";
-import { TableEditRowContext } from "../../contexts/components/TableEditRowContext";
+import TableEditContext from "@/contexts/components/TableEditContext";
+import { Center, Float, Skeleton, Spinner, Stack } from "@chakra-ui/react";
+import { TableEditRowContext } from "@/contexts/components/TableEditRowContext";
 // import { TableEditPagination } from "./TableEditPagination";
-import { MyTable } from "../my_table/MyTable";
-import { MyTableHeader } from "../my_table/MyTableHeader";
+import { MyTable } from "@/components/my_table/MyTable";
+import { MyTableHeader } from "@/components/my_table/MyTableHeader";
 import { TableEditPagination } from "./TableEditPagination";
-import { MyTableRow } from "../my_table/MyTableRow";
-import { MyTableCell } from "../my_table/MyTableCell";
+import { MyTableRow } from "@/components/my_table/MyTableRow";
+import { MyTableCell } from "@/components/my_table/MyTableCell";
 
 export type TableEditHeader =
     | {
@@ -293,12 +293,12 @@ export function TableEdit<TRow extends TableEditRowType>(
                                   <Skeleton
                                       width="full"
                                       height="full"
-                                      minHeight="50px"
+                                      minHeight="40px"
                                   />
                                   <Float placement="middle-center">
-                                      <Box>
-                                          <Spinner color="gray" />
-                                      </Box>
+                                      <Center>
+                                          <Spinner color="gray" size="sm" />
+                                      </Center>
                                   </Float>
                               </MyTableCell>
                           </MyTableRow>

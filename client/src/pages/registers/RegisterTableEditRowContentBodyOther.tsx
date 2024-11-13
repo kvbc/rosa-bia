@@ -1,13 +1,14 @@
 import React from "react";
-import { TableEditRowContentComponentProps } from "../../components/table_edit/row/TableEditRowContentComponent";
-import { DB } from "../../../../server/src/db/types";
-import { MyTable as Tb } from "../../components/my_table/MyTable";
-import { MyTableRow as Tr } from "../../components/my_table/MyTableRow";
-import { MyTableHeaderRow as ThRow } from "../../components/my_table/MyTableHeaderRow";
-import { MyTableCell as Tc } from "../../components/my_table/MyTableCell";
+import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
+import * as DB from "@shared/db";
+import { MyTable as Tb } from "@/components/my_table/MyTable";
+import { MyTableRow as Tr } from "@/components/my_table/MyTableRow";
+import { MyTableHeaderRow as ThRow } from "@/components/my_table/MyTableHeaderRow";
+import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
+import { ClientRegister } from "./PageRegisters";
 
 export function RegisterTableEditRowContentBodyOther(
-    props: TableEditRowContentComponentProps<DB.Rows.Register>
+    props: TableEditRowContentComponentProps<ClientRegister>
 ) {
     const { inputs } = props;
 

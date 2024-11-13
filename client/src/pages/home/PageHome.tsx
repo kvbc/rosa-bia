@@ -5,12 +5,12 @@ import {
     Separator,
     StackSeparator,
 } from "@chakra-ui/react";
-import PageRegisters from "../registers/PageRegisters";
+import PageRegisters from "@/pages/registers/PageRegisters";
 import InfoBoard from "./InfoBoard";
 import React, { useMemo } from "react";
-import useAuthEmployee from "../../hooks/useAuthEmployee";
-import { Filter } from "../../../../server/src/http/routes/table_rows/get";
-import { EmptyState } from "../../components/ui/empty-state";
+import useAuthEmployee from "@/hooks/useAuthEmployee";
+import { Filter } from "@server/http/routes/table_rows/get";
+import { EmptyState } from "@/components/ui/empty-state";
 import { LuEyeOff } from "react-icons/lu";
 
 export default function PageHome() {

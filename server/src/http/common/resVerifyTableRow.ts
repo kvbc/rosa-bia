@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { DB } from "@shared/db";
+import * as DB from "@shared/db";
 import { resErrorMessage } from "./resErrorMessage";
 
 // returns true if succeeded or false if not

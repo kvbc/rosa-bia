@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DB } from "..";
+import * as DB from "..";
 
 export const INFO_BOARDS_TABLE_NAMES = ["info_boards"] as const;
 

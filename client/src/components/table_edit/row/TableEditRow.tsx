@@ -23,10 +23,10 @@ import {
 } from "./TableEditRowContentComponent";
 import { Center, Group, IconButton, Stack } from "@chakra-ui/react";
 import { LuPencil, LuPlus, LuSave, LuTrash, LuX } from "react-icons/lu";
-import { TableEditRowContext } from "../../../contexts/components/TableEditRowContext";
-import { MyTableCell } from "../../my_table/MyTableCell";
-import { MyTableRow } from "../../my_table/MyTableRow";
-import { Tooltip } from "../../ui/tooltip";
+import { TableEditRowContext } from "@/contexts/components/TableEditRowContext";
+import { MyTableCell } from "@/components/my_table/MyTableCell";
+import { MyTableRow } from "@/components/my_table/MyTableRow";
+import { Tooltip } from "@/components/ui/tooltip";
 
 export type TableEditRowState = "viewing" | "editing" | "adding";
 

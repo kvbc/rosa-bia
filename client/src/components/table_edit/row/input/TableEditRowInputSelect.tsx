@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { TableEditRowInputProps } from "./TableEditRowInput";
-import { TableEditRowType } from "../../TableEdit";
-import { MySelect, MySelectOption } from "../../../MySelect";
+import { TableEditRowType } from "@/components/table_edit/TableEdit";
+import { MySelect, MySelectOption } from "@/components/MySelect";
 
 export function TableEditRowInputSelect<TRow extends TableEditRowType>({
     row,

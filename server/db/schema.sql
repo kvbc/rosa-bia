@@ -103,7 +103,7 @@ create table registers(
     object_demo_building_count integer not null, -- ilosc budynkow
     object_usage_change_from text not null, -- zm. sp. uzytk. z
     object_usage_change_to text not null, -- zm. sp. uzytk. na
-    object_prbud_intent_id integer not null, -- id zamierzenia budowlanego
+    object_construction_law_intent_id integer not null, -- id zamierzenia budowlanego
     object_public_info boolean not null, -- informacja publiczna?
     object_localization_date_from date, -- data lokalizacji od 
     object_localization_date_to date, -- data lokalizacji do
@@ -125,7 +125,7 @@ create table registers(
     foreign key(app_investor_id) references investors(id),
     foreign key(object_construction_spec_id) references construction_specs(id),
     foreign key(object_street_id) references streets(id),
-    foreign key(object_prbud_intent_id) references prbud_intents(id)
+    foreign key(object_construction_law_intent_id) references construction_law_intents(id)
 );
 
 create table registers_plots( -- rejestry: dzialki

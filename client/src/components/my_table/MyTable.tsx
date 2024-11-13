@@ -10,19 +10,19 @@ import React, {
     useMemo,
     useState,
 } from "react";
-import { ColorContext } from "../../contexts/ColorContext";
-import { MyTableContext } from "../../contexts/components/MyTableContext";
+import { ColorContext } from "@/contexts/ColorContext";
+import { MyTableContext } from "@/contexts/components/MyTableContext";
 import { MyTableRow } from "./MyTableRow";
 import { MyTableCell } from "./MyTableCell";
-import { EmptyState } from "../ui/empty-state";
+import { EmptyState } from "@/components/ui/empty-state";
 import { LuArrowDown, LuInbox } from "react-icons/lu";
 
 const colorPalettes: ColorPalette[] = [
     "gray",
     "blue",
     "green",
-    "purple",
     "orange",
+    "purple",
     "red",
     "yellow",
     "pink",

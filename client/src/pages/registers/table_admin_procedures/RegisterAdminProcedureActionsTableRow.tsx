@@ -1,12 +1,13 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { DB } from "../../../../../server/src/db/types";
-import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
+import * as DB from "@shared/db";
+import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import React from "react";
-import { MyTableCell as Tc } from "../../../components/my_table/MyTableCell";
-import { MyTableRow as Tr } from "../../../components/my_table/MyTableRow";
-import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
-import { TableEditRowInputCheckbox } from "../../../components/table_edit/row/input/TableEditRowInputCheckbox";
-import { TableEditRowInput } from "../../../components/table_edit/row/input/TableEditRowInput";
+import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
+import { MyTableRow as Tr } from "@/components/my_table/MyTableRow";
+import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
+import { TableEditRowInputCheckbox } from "@/components/table_edit/row/input/TableEditRowInputCheckbox";
+import { TableEditRowInput } from "@/components/table_edit/row/input/TableEditRowInput";
+import { ClientRegister } from "../PageRegisters";
 
 export default function RegisterAdminProcedureActionsTableRow({
     row,
@@ -16,7 +17,7 @@ export default function RegisterAdminProcedureActionsTableRow({
     onInputFocusOut,
 }: {
     actionType: DB.Rows.RegisterAdminActionType;
-} & TableEditRowContentComponentProps<DB.Rows.Register>) {
+} & TableEditRowContentComponentProps<ClientRegister>) {
     const pageContext = useContext(PageRegistersContext)!;
 
     const dbAction = useMemo(

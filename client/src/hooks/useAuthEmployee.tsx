@@ -3,8 +3,8 @@
 //
 
 import { useCallback } from "react";
-import { useAuthEmployeeStore } from "../stores/useAuthEmployeeStore";
-import { apiEmployeeLogin } from "../api/http";
+import { useAuthEmployeeStore } from "@/stores/useAuthEmployeeStore";
+import { apiEmployeeLogin } from "@/api/http";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function useAuthEmployee() {

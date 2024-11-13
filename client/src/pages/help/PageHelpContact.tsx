@@ -1,5 +1,5 @@
 import React from "react";
-import { ContactInformationBox } from "../../components/ContactInformationBox";
+import { ContactInformationBox } from "@/components/ContactInformationBox";
 
 export default function PageHelpContact() {
     return <ContactInformationBox />;

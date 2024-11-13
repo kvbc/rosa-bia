@@ -1,10 +1,10 @@
 // 1
 
-import { TableEditRowType } from "../../TableEdit";
+import { TableEditRowType } from "@/components/table_edit/TableEdit";
 import { TableEditRowInputProps } from "./TableEditRowInput";
-import { Checkbox } from "../../../ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox";
 import React, { useContext } from "react";
-import { ColorContext } from "../../../../contexts/ColorContext";
+import { ColorContext } from "@/contexts/ColorContext";
 
 export function TableEditRowInputCheckbox<TRow extends TableEditRowType>({
     disabled,

@@ -16,10 +16,12 @@ import {
     LuLaptop,
     LuPhoneCall,
     LuBookOpen,
+    LuBuilding,
+    LuBook,
 } from "react-icons/lu";
 import { AppNavbarLinkMenu } from "./AppNavbarLinkMenu";
-import useAuthEmployee from "../../hooks/useAuthEmployee";
-import { Tooltip } from "../../components/ui/tooltip";
+import useAuthEmployee from "@/hooks/useAuthEmployee";
+import { Tooltip } from "@/components/ui/tooltip";
 
 export const AppNavbarLinks: React.FC = () => {
     const authEmployee = useAuthEmployee();
@@ -148,15 +150,18 @@ export const AppNavbarLinks: React.FC = () => {
                         display: "Generator B-05",
                         tooltip:
                             "Sprawozdanie o wydanych pozwoleniach na budowę i zgłoszeniach z projektem budowlanym budowy obiektów budowlanych",
+                        Icon: LuFileText,
                     },
                     {
                         to: "/stats/b06",
                         display: "Generator B-06",
                         tooltip: "Meldunek o budownictwie mieszkaniowym",
+                        Icon: LuFileText,
                     },
                     {
                         to: "/stats/gunb3",
                         display: "Generator GUNB-03",
+                        Icon: LuFileText,
                     },
                 ]}
             />
@@ -171,6 +176,7 @@ export const AppNavbarLinks: React.FC = () => {
                         display: "Konwerter dokumentów",
                         tooltip: "Zmiana rozszerzenia dokumentu",
                         openInNewTab: true,
+                        Icon: LuFileText,
                     },
                 ]}
             />
@@ -185,10 +191,12 @@ export const AppNavbarLinks: React.FC = () => {
                             to: "/construction/pkob",
                             display: "PKOB",
                             tooltip: "Polska Klasyfikacja Obiektów Budowlanych",
+                            Icon: LuBuilding,
                         },
                         {
-                            to: "/construction/art-prbud",
-                            display: "Art. 29 Pr.bud.",
+                            to: "/construction/construction_laws",
+                            display: "Prawo budowlane",
+                            Icon: LuBook,
                         },
                     ]}
                 >

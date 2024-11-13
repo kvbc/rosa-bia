@@ -1,7 +1,7 @@
 import { Box, Heading, HStack } from "@chakra-ui/react";
 import { Link } from "@mui/joy";
 import React from "react";
-import { FeatureUnfinishedIcon } from "../../components/FeatureUnfinishedIcon";
+import { FeatureUnfinishedIcon } from "@/components/FeatureUnfinishedIcon";
 
 export default function PageStatsB06() {
     return (

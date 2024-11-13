@@ -1,10 +1,13 @@
 // 1
 
-import { NumberInputField, NumberInputRoot } from "../../../ui/number-input";
+import {
+    NumberInputField,
+    NumberInputRoot,
+} from "@/components/ui/number-input";
 import { TableEditRowType } from "../../TableEdit";
 import React, { useContext } from "react";
 import { TableEditRowInputProps } from "./TableEditRowInput";
-import { ColorContext } from "../../../../contexts/ColorContext";
+import { ColorContext } from "@/contexts/ColorContext";
 import { Input } from "@chakra-ui/react";
 
 export function TableEditRowInputNumber<TRow extends TableEditRowType>({

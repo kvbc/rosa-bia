@@ -1,5 +1,5 @@
 import { ComponentType, Dispatch, ReactNode, SetStateAction } from "react";
-import { TableEditRowType } from "../TableEdit";
+import { TableEditRowType } from "@/components/table_edit/TableEdit";
 
 export type TableEditRowContentComponentProps<TRow extends TableEditRowType> = {
     inputs: Partial<Record<keyof TRow & string, ReactNode>>;

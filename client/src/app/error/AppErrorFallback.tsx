@@ -1,6 +1,6 @@
 import { FallbackProps } from "react-error-boundary";
 import React from "react";
-import { ContactInformationBox } from "../../components/ContactInformationBox";
+import { ContactInformationBox } from "@/components/ContactInformationBox";
 import { Heading, Stack, Text } from "@chakra-ui/react";
 
 export const AppErrorFallback: React.FC<FallbackProps> = (

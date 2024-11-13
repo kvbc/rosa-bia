@@ -2,7 +2,7 @@
 
 import React, { HTMLProps, ReactNode, useContext } from "react";
 import { Box, BoxProps, HStack } from "@chakra-ui/react";
-import { ColorContext } from "../contexts/ColorContext";
+import { ColorContext } from "@/contexts/ColorContext";
 
 export type MySelectOption = {
     preNameNode?: ReactNode;

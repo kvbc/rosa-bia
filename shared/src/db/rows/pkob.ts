@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DB } from "..";
+import * as DB from "..";
 
 export const PKOB_TABLE_NAMES = [
     "construction_sections",

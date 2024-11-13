@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { REGISTER_TYPES } from "./registers";
-import { DB } from "..";
+import * as DB from "..";
 
 export const CONSTRUCTION_LAW_TABLE_NAMES = [
     "construction_law_categories",

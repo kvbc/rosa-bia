@@ -1,24 +1,21 @@
-import {
-    DBTableEdit,
-    DBTableEditDefaultRow,
-} from "../../components/DBTableEdit";
-import { DB } from "../../../../server/src/db/types";
+import { DBTableEdit, DBTableEditDefaultRow } from "@/components/DBTableEdit";
+import * as DB from "@shared/db";
 import React, { useContext, useMemo } from "react";
-import { TableEditHeader } from "../../components/table_edit/TableEdit";
+import { TableEditHeader } from "@/components/table_edit/TableEdit";
 import { Box, HStack } from "@chakra-ui/react";
-import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
+import { PageGeodesyContext } from "@/contexts/pages/PageGeodesyContext";
 import {
     AccordionItem,
     AccordionItemContent,
     AccordionItemTrigger,
     AccordionRoot,
-} from "../../components/ui/accordion";
-import { TableEditRowContentComponentProps } from "../../components/table_edit/row/TableEditRowContentComponent";
-import { TableEditRowInputsProps } from "../../components/table_edit/row/TableEditRow";
-import { MyTable } from "../../components/my_table/MyTable";
-import { MyTableHeader } from "../../components/my_table/MyTableHeader";
-import { MyTableRow } from "../../components/my_table/MyTableRow";
-import { MyTableCell } from "../../components/my_table/MyTableCell";
+} from "@/components/ui/accordion";
+import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
+import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
+import { MyTable } from "@/components/my_table/MyTable";
+import { MyTableHeader } from "@/components/my_table/MyTableHeader";
+import { MyTableRow } from "@/components/my_table/MyTableRow";
+import { MyTableCell } from "@/components/my_table/MyTableCell";
 import { FaRoad } from "react-icons/fa6";
 import { FaFileAlt, FaHome } from "react-icons/fa";
 import { FaMapMarkedAlt } from "react-icons/fa";

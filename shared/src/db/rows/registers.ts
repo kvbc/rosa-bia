@@ -1,5 +1,5 @@
 import { z, ZodEffects } from "zod";
-import { DB } from "..";
+import * as DB from "..";
 
 export const REGISTERS_TABLE_NAMES = [
     "registers",
@@ -259,7 +259,7 @@ export const registerShapeObject = z.strictObject({
     object_demo_building_count: z.number(),
     object_usage_change_from: z.string(),
     object_usage_change_to: z.string(),
-    object_prbud_intent_id: z.number(),
+    object_construction_law_intent_id: z.number(),
     object_public_info: z.number(),
     object_localization_date_from: z.string(),
     object_localization_date_to: z.string(),
@@ -303,7 +303,7 @@ const registerShape = registerShapeObject
 export type Register = z.infer<typeof registerShape>;
 export const REGISTER_KEY_TABLE_RELATIONS: DB.RowKeyTableRelations<Register> = {
     assigned_employee_id: "employees",
-    object_prbud_intent_id: "construction_law_intents",
+    object_construction_law_intent_id: "construction_law_intents",
     app_investor_id: "investors",
     object_construction_spec_id: "construction_specs",
     object_street_id: "streets",

@@ -1,6 +1,6 @@
 import React from "react";
 import { AppError } from "../App";
-import { ContactInformationBox } from "../../components/ContactInformationBox";
+import { ContactInformationBox } from "@/components/ContactInformationBox";
 import {
     DialogBody,
     DialogCloseTrigger,
@@ -9,7 +9,7 @@ import {
     DialogHeader,
     DialogRoot,
     DialogTitle,
-} from "../../components/ui/dialog";
+} from "@/components/ui/dialog";
 import { Code, Table } from "@chakra-ui/react";
 
 export const AppErrorDialog: React.FC<{

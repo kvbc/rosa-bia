@@ -1,20 +1,18 @@
 import React, { ComponentProps, useCallback, useContext, useMemo } from "react";
-import {
-    DBTableEdit,
-    DBTableEditDefaultRow,
-} from "../../components/DBTableEdit";
-import { DB } from "../../../../server/src/db/types";
+import { DBTableEdit, DBTableEditDefaultRow } from "@/components/DBTableEdit";
+import * as DB from "@shared/db";
 import RegisterTableEditRowContent from "./RegisterTableEditRowContent";
-import { TableEditRowInputsProps } from "../../components/table_edit/row/TableEditRow";
-import { MySelectOption } from "../../components/MySelect";
-import { PageRegistersContext } from "../../contexts/pages/PageRegistersContext";
-import { TableEditHeader } from "../../components/table_edit/TableEdit";
-import { EmployeeAvatar } from "../../components/EmployeeAvatar";
+import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
+import { MySelectOption } from "@/components/MySelect";
+import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
+import { TableEditHeader } from "@/components/table_edit/TableEdit";
+import { EmployeeAvatar } from "@/components/EmployeeAvatar";
 import { Badge } from "@chakra-ui/react";
+import { ClientRegister } from "./PageRegisters";
 
 export default function RegisterTableEdit(
     props: Omit<
-        ComponentProps<typeof DBTableEdit<DB.Rows.Register>>,
+        ComponentProps<typeof DBTableEdit<ClientRegister>>,
         | "dbTable"
         | "headers"
         | "defaultRow"
@@ -24,7 +22,7 @@ export default function RegisterTableEdit(
 ) {
     const pageContext = useContext(PageRegistersContext)!;
 
-    const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Register>>(
+    const defaultRow = useMemo<DBTableEditDefaultRow<ClientRegister>>(
         () => ({
             type: "PnB (6740)",
 
@@ -55,13 +53,13 @@ export default function RegisterTableEdit(
             object_pnb_acc_infra: 0,
             object_usage_change_from: "",
             object_usage_change_to: "",
-            object_prbud_intent_id: 1,
+            object_construction_law_intent_id: 1,
             object_public_info: 0,
             object_localization_date_from: "",
             object_localization_date_to: "",
-            object_neighbour_property_type: "Budynek",
+            object_neighbouring_property_type: "Budynek",
 
-            _object_prbud_intent_type_id: 1,
+            _object_construction_law_category_id: 1,
             _object_construction_division_id: 0,
             _object_construction_group_id: 0,
             _object_construction_class_id: 0,
@@ -87,12 +85,12 @@ export default function RegisterTableEdit(
     const headers = useMemo<TableEditHeader[]>(() => ["Rejestr"], []);
 
     const getSelectRowInputProps = useCallback(function <TOption>(
-        rowKey: TableEditRowInputsProps<DB.Rows.Register>[number]["rowKey"],
+        rowKey: TableEditRowInputsProps<ClientRegister>[number]["rowKey"],
         options:
             | readonly TOption[]
-            | ((row: DB.Rows.Register) => readonly TOption[]),
+            | ((row: ClientRegister) => readonly TOption[]),
         getOption: (option: TOption) => MySelectOption
-    ): TableEditRowInputsProps<DB.Rows.Register>[number] {
+    ): TableEditRowInputsProps<ClientRegister>[number] {
         return {
             rowKey,
             type: "select",
@@ -104,7 +102,7 @@ export default function RegisterTableEdit(
         };
     },
     []);
-    const rowInputsProps = useMemo<TableEditRowInputsProps<DB.Rows.Register>>(
+    const rowInputsProps = useMemo<TableEditRowInputsProps<ClientRegister>>(
         () => [
             getSelectRowInputProps("type", DB.Rows.REGISTER_TYPES, (type) => {
                 const match = type.match(/([^(]+)\(([^)]+)\)/);
@@ -136,14 +134,14 @@ export default function RegisterTableEdit(
             ),
             getSelectRowInputProps(
                 "app_decision_type",
-                row => DB.Rows.REGISTER_SUBTYPE_INFOS[DB.Rows.REGISTER_TYPE_INFOS[row.type].subtype].decisions, // prettier-ignore
+                (row) => DB.Rows.getRegisterDecisionTypes(row.type),
                 (type) => ({ value: type, name: type })
             ),
             { rowKey: "app_decision_number", type: "number" }, // prettier-ignore
             { rowKey: "app_decision_issue_date", type: "date" }, // prettier-ignore
             getSelectRowInputProps(
                 "app_resolution_type",
-                row => DB.Rows.REGISTER_SUBTYPE_INFOS[DB.Rows.REGISTER_TYPE_INFOS[row.type].subtype].resolutions, // prettier-ignore
+                (row) => DB.Rows.getRegisterResolutionTypes(row.type),
                 (type) => ({ value: type, name: type })
             ),
             { rowKey: "app_resolution_number", type: "number" }, // prettier-ignore
@@ -160,12 +158,12 @@ export default function RegisterTableEdit(
             ),
             getSelectRowInputProps(
                 "object_construction_form_type",
-                DB.Rows.REGISTER_CONSTRUCTION_FORMS, // prettier-ignore
+                DB.Rows.REGISTER_CONSTRUCTION_FORM_TYPES,
                 (type) => ({ value: type, name: type })
             ),
             getSelectRowInputProps(
                 "object_spatial_plan_type",
-                DB.Rows.REGISTER_SPATIAL_PLANS, // prettier-ignore
+                DB.Rows.REGISTER_SPATIAL_PLAN_TYPES,
                 (type) => ({ value: type, name: type })
             ),
             { rowKey: "object_number", type: "number" }, // prettier-ignore
@@ -175,7 +173,7 @@ export default function RegisterTableEdit(
                 (row) => ({ value: row.id, name: row.name })
             ),
             getSelectRowInputProps(
-                "object_neighbour_property_type",
+                "object_neighbouring_property_type",
                 DB.Rows.REGISTER_NEIGHBOURING_PROPERTY_TYPES,
                 (type) => ({ value: type, name: type })
             ),
@@ -203,18 +201,19 @@ export default function RegisterTableEdit(
             { rowKey: "other_case_comments", type: "text" },
 
             getSelectRowInputProps(
-                "object_prbud_intent_id",
+                "object_construction_law_intent_id",
                 (row) =>
-                    pageContext.prBudIntentsDBTable.rows.filter(
+                    pageContext.constructionLawIntentsDBTable.rows.filter(
                         (fRow) =>
-                            fRow.type_id === row._object_prbud_intent_type_id
+                            fRow.category_id ===
+                            row._object_construction_law_category_id
                     ),
                 (row) => ({ value: row.id, name: row.intent })
             ),
             getSelectRowInputProps(
-                "_object_prbud_intent_type_id",
+                "_object_construction_law_category_id",
                 (row) =>
-                    pageContext.prBudIntentTypesDBTable.rows.filter(
+                    pageContext.constructionLawCategoriesDBTable.rows.filter(
                         (fRow) => fRow.register_type === row.type
                     ),
                 (row) => ({ value: row.id, name: row.name })
@@ -264,13 +263,13 @@ export default function RegisterTableEdit(
             pageContext.investorsDBTable.rows,
             pageContext.placesDBTable.rows,
             pageContext.streetsDBTable.rows,
-            pageContext.prBudIntentTypesDBTable.rows,
-            pageContext.prBudIntentsDBTable.rows,
+            pageContext.constructionLawCategoriesDBTable.rows,
+            pageContext.constructionLawIntentsDBTable.rows,
         ]
     );
 
     return (
-        <DBTableEdit
+        <DBTableEdit<DB.Rows.Register, ClientRegister>
             dbTable={pageContext.registersDBTable}
             headers={headers}
             defaultRow={defaultRow}

@@ -1,12 +1,9 @@
-import { DB } from "../../../../server/src/db/types";
-import {
-    DBTableEdit,
-    DBTableEditDefaultRow,
-} from "../../components/DBTableEdit";
-import { TableEditRowInputsProps } from "../../components/table_edit/row/TableEditRow";
-import { TableEditHeader } from "../../components/table_edit/TableEdit";
-import { PageGeodesyContext } from "../../contexts/pages/PageGeodesyContext";
-import useDBTable from "../../hooks/useDBTable";
+import * as DB from "@shared/db";
+import { DBTableEdit, DBTableEditDefaultRow } from "@/components/DBTableEdit";
+import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
+import { TableEditHeader } from "@/components/table_edit/TableEdit";
+import { PageGeodesyContext } from "@/contexts/pages/PageGeodesyContext";
+import useDBTable from "@/hooks/useDBTable";
 import CommunesDBTableEditRowContent from "./CommunesDBTableEditRowContent";
 import React, { ContextType, useMemo } from "react";
 

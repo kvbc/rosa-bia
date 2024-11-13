@@ -24,21 +24,22 @@ import React, {
 import RegisterPropertyDataTableEdit from "./RegisterPropertyDataTableEdit";
 import RegisterPlotsDataTableEdit from "./RegisterPlotsTableEdit";
 import RegisterCharParamsTableEdit from "./RegisterCharParamsTableEdit";
-import { DB } from "../../../../../server/src/db/types";
-import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
-import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
-import { MyTable, MyTable as Tb } from "../../../components/my_table/MyTable";
-import { MyTableCell as Tc } from "../../../components/my_table/MyTableCell";
-import { MyTableHeader as Th } from "../../../components/my_table/MyTableHeader";
-import { MyTableRow as Tr } from "../../../components/my_table/MyTableRow";
-import { MyTableHeaderRow as ThRow } from "../../../components/my_table/MyTableHeaderRow";
+import * as DB from "@shared/db";
+import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
+import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
+import { MyTable, MyTable as Tb } from "@/components/my_table/MyTable";
+import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
+import { MyTableHeader as Th } from "@/components/my_table/MyTableHeader";
+import { MyTableRow as Tr } from "@/components/my_table/MyTableRow";
+import { MyTableHeaderRow as ThRow } from "@/components/my_table/MyTableHeaderRow";
 import { HStack, Text } from "@chakra-ui/react";
-import { FeatureUnfinishedIcon } from "../../../components/FeatureUnfinishedIcon";
+import { FeatureUnfinishedIcon } from "@/components/FeatureUnfinishedIcon";
 import { topRowHeight } from "../RegisterTableEditRowContent";
+import { ClientRegister } from "../PageRegisters";
 
 export default function RegisterConstructionIntentTableEdit(
     props: ComponentProps<typeof MyTable> &
-        TableEditRowContentComponentProps<DB.Rows.Register> & {
+        TableEditRowContentComponentProps<ClientRegister> & {
             showMore: boolean;
         }
 ) {
@@ -54,7 +55,7 @@ export default function RegisterConstructionIntentTableEdit(
     const place = useMemo(() => pageContext.placesDBTable.rows.find(fEntry => fEntry.id === street?.place_id), [street, pageContext.placesDBTable.rows]) // prettier-ignore
     // const commune = useMemo(() => pageContext.communesDBTable.rows.find(fEntry => fEntry.id === place?.commune_id), [place, pageContext.communesDBTable.rows]) // prettier-ignore
     const area = useMemo(() => pageContext.placesDBTable.rows.find(fEntry => fEntry.id === place?.area_place_id), [place, pageContext.placesDBTable.rows]) // prettier-ignore
-    const prBudIntent = useMemo(() => pageContext.prBudIntentsDBTable.rows.find(fRow => fRow.id === row.object_prbud_intent_id), [pageContext.prBudIntentsDBTable.rows, row.object_prbud_intent_id]) // prettier-ignore
+    const constructionLawIntent = useMemo(() => pageContext.constructionLawIntentsDBTable.rows.find(fRow => fRow.id === row.object_construction_law_intent_id), [pageContext.constructionLawIntentsDBTable.rows, row.object_construction_law_intent_id]) // prettier-ignore
 
     useEffect(() => setRow(row => ({...row, _object_construction_class_id: constructionSpec?.class_id ?? 0})), [setRow, constructionSpec?.class_id]); // prettier-ignore
     useEffect(() => setRow(row => ({...row, _object_construction_group_id: constructionClass?.group_id ?? 0})), [setRow, constructionClass?.group_id]); // prettier-ignore
@@ -70,14 +71,14 @@ export default function RegisterConstructionIntentTableEdit(
             "PnB (6740)": constructionGroup?.name ?? "-",
             "PnRozb. (6741)": "Rozbiórka budynku",
             "Zg. Rozb. (6743.1)": "Rozbiórka budynku",
-            "Zg. Zwykłe (6743.2)": inputs._object_prbud_intent_type_id,
+            "Zg. Zwykłe (6743.2)": inputs._object_construction_law_category_id,
             "Zm. Sp. Użytk. (6743.3)": "Zmiana sposobu użytkowania",
-            "BiP (6743.4)": inputs._object_prbud_intent_type_id,
+            "BiP (6743.4)": inputs._object_construction_law_category_id,
             "ZRiD (7012)": inputs.object_custom_construction_intent,
             "Pisma różne (670)": inputs.object_custom_construction_intent,
             "Samodz. Lokali (705)": inputs.object_custom_construction_intent,
             "Dz. bud": <FeatureUnfinishedIcon />,
-            "Tymczasowe (6743.5)": inputs._object_prbud_intent_type_id,
+            "Tymczasowe (6743.5)": inputs._object_construction_law_category_id,
             Uzupełniający: <FeatureUnfinishedIcon />,
             "Wejście na dz. sąsiednią": "Zgoda wejścia na działkę sąsiednią",
             "Konserwator (Inne)": <FeatureUnfinishedIcon />,
@@ -86,7 +87,7 @@ export default function RegisterConstructionIntentTableEdit(
         }),
         [
             constructionGroup?.name,
-            inputs._object_prbud_intent_type_id,
+            inputs._object_construction_law_category_id,
             inputs.object_custom_construction_intent,
         ]
     );
@@ -171,8 +172,8 @@ export default function RegisterConstructionIntentTableEdit(
             )}
             {showPrBud && (
                 <Tr height={topRowHeight}>
-                    <Tc>{inputs.object_prbud_intent_id}</Tc>
-                    <Tc>{prBudIntent?.legal_basis ?? "-"}</Tc>
+                    <Tc>{inputs.object_construction_law_intent_id}</Tc>
+                    <Tc>{constructionLawIntent?.legal_basis ?? "-"}</Tc>
                 </Tr>
             )}
             {showPublicInfo && (
@@ -184,7 +185,7 @@ export default function RegisterConstructionIntentTableEdit(
             {showNeighbouringPropertyType && (
                 <Tr height={topRowHeight}>
                     <Tc>Dane nieruchomości sąsiedniej</Tc>
-                    <Tc>{inputs.object_neighbour_property_type}</Tc>
+                    <Tc>{inputs.object_neighbouring_property_type}</Tc>
                 </Tr>
             )}
         </>

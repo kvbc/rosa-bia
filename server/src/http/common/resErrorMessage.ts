@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { HTTP } from "../types";
+import * as HTTP from "@http/types";
 
 export const resErrorMessage = (
     res: Response,

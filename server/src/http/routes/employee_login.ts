@@ -1,10 +1,10 @@
 import { Request, Response, Router } from "express";
 import { z } from "zod";
 import { resError, resErrorMessage, resGetAuthEmployee } from "../common";
-import { db } from "../..";
-import { DB } from "@shared/db";
+import { db } from "@";
+import * as DB from "@shared/db";
 import jwt from "jsonwebtoken";
-import { HTTP } from "../types";
+import * as HTTP from "@http/types";
 
 export const EmployeeLoginRequestShape = z.strictObject({
     employeeName: z.string(),
@@ -33,6 +33,7 @@ router.post(
             !req.body ||
             (typeof req.body === "object" &&
                 Object.keys(req.body).length === 0);
+
         if (isBodyEmpty) {
             const response: HTTP.Response = {
                 type: "login",

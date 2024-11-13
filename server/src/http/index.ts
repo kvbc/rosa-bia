@@ -6,7 +6,7 @@ import routeTableRowsAdd from "./routes/table_rows/add";
 import routeTableRowsDelete from "./routes/table_rows/delete";
 import routeTableRowsUpdate from "./routes/table_rows/update";
 import routeEmployeeLogin from "./routes/employee_login";
-import { HTTP } from "./types";
+import * as HTTP from "./types";
 
 export const startHttpServer = () => {
     const app = express();

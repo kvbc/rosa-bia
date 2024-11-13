@@ -9,12 +9,12 @@ import {
     MenuItem,
     MenuRoot,
     MenuTrigger,
-} from "../../components/ui/menu";
+} from "@/components/ui/menu";
 import { Box, HStack, Icon, VStack } from "@chakra-ui/react";
 import { LuChevronDown } from "react-icons/lu";
 import { AppNavbarLink } from "./AppNavbarLink";
 import { IconType } from "react-icons/lib";
-import { Tooltip } from "../../components/ui/tooltip";
+import { Tooltip } from "@/components/ui/tooltip";
 import { To } from "react-router-dom";
 
 export const AppNavbarLinkMenu: React.FC<

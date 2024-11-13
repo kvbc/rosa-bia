@@ -1,6 +1,6 @@
 import { Table } from "@chakra-ui/react";
 import React, { ComponentProps, useContext } from "react";
-import { ColorContext } from "../../contexts/ColorContext";
+import { ColorContext } from "@/contexts/ColorContext";
 
 export function MyTableHeader({
     children,

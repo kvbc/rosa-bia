@@ -1,10 +1,10 @@
 // 1
 
 import axios, { AxiosResponse } from "axios";
-import { HTTP } from "../../../server/src/http/types";
-import { EmployeeLoginRequest } from "../../../server/src/http/routes/employee_login";
-import { DB } from "../../../server/src/db/types";
-import { Filter } from "../../../server/src/http/routes/table_rows/get";
+import * as HTTP from "@server/http/types";
+import { EmployeeLoginRequest } from "@server/http/routes/employee_login";
+import * as DB from "@shared/db";
+import { Filter } from "@server/http/routes/table_rows/get";
 
 export const HTTP_SERVER_URL = "http://localhost:" + HTTP.SERVER_PORT;
 

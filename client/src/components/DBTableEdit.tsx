@@ -7,18 +7,21 @@
 
 import React, { ComponentProps, useCallback, useMemo } from "react";
 import { TableEdit } from "./table_edit/TableEdit";
-import { DB } from "../../../server/src/db/types";
-import { DBTable } from "../hooks/useDBTable";
+import * as DB from "@shared/db";
+import { DBTable } from "@/hooks/useDBTable";
 
 export type DBTableEditDefaultRow<TRow extends DB.Row> = Omit<TRow, "id">;
 
-export function DBTableEdit<TRow extends DB.Row>({
+export function DBTableEdit<
+    TDatabaseRow extends DB.Row,
+    TRow extends TDatabaseRow = TDatabaseRow
+>({
     dbTable,
     defaultRow: defaultRowProp,
     rows: customRows,
     ...restTableEditProps
 }: {
-    dbTable: DBTable<TRow>;
+    dbTable: DBTable<TDatabaseRow>;
     defaultRow: DBTableEditDefaultRow<TRow>;
     rows?: TRow[];
 } & Omit<
@@ -56,19 +59,37 @@ export function DBTableEdit<TRow extends DB.Row>({
         [defaultRowProp, topRowID]
     );
 
-    // useEffect(() => {
-    //     console.log(defaultRow);
-    // }, [defaultRow]);
+    const handleRowAddClicked = useCallback(
+        (row: TRow) => {
+            addRowMutation.mutate(row);
+        },
+        [addRowMutation]
+    );
+
+    const handleRowSaveClicked = useCallback(
+        (row: TRow) => {
+            updateRowMutation.mutate(row);
+        },
+        [updateRowMutation]
+    );
+
+    const handleRowDeleteClicked = useCallback(
+        (row: TRow) => {
+            deleteRowMutation.mutate(row.id);
+        },
+        [deleteRowMutation]
+    );
 
     return (
-        <TableEdit
-            rows={customRows ?? rows}
+        <TableEdit<TRow>
+            // FIXME: as?
+            rows={customRows ?? (rows as TRow[])}
             defaultRow={defaultRow}
             totalRowCount={totalRowCount}
             isLoading={rowsQuery.isFetching}
-            onRowAddClicked={addRowMutation.mutate}
-            onRowDeleteClicked={(row) => deleteRowMutation.mutate(row.id)}
-            onRowSaveClicked={updateRowMutation.mutate}
+            onRowAddClicked={handleRowAddClicked}
+            onRowDeleteClicked={handleRowDeleteClicked}
+            onRowSaveClicked={handleRowSaveClicked}
             onRowsRangeChanged={handleRowsRangeChanged}
             {...restTableEditProps}
         />

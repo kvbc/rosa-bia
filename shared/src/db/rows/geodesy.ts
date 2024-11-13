@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DB } from "..";
+import * as DB from "..";
 
 export const GEODESY_TABLE_NAMES = ["communes", "places", "streets"] as const;
 

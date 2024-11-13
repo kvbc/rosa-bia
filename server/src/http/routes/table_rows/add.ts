@@ -4,9 +4,9 @@ import {
     resGetAuthEmployee,
     resVerifyTableName,
     resVerifyTableRow,
-} from "../../common";
-import { DB } from "@shared/db";
-import { db, wsServer } from "../../..";
+} from "@http/common";
+import * as DB from "@shared/db";
+import { db, wsServer } from "@";
 
 const router = Router();
 

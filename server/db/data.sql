@@ -164,7 +164,7 @@ insert into registers(
     object_demo_building_count,
     object_usage_change_from,
     object_usage_change_to,
-    object_prbud_intent_id,
+    object_construction_law_intent_id,
     object_public_info,
     object_localization_date_from,
     object_localization_date_to,

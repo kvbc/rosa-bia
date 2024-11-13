@@ -4,9 +4,9 @@ import {
     resErrorMessage,
     resGetAuthEmployee,
     resVerifyTableName,
-} from "../../common";
-import { stringToInteger } from "../../../util";
-import { db, wsServer } from "../../..";
+} from "@http/common";
+import { stringToInteger } from "@/util";
+import { db, wsServer } from "@";
 
 const router = Router();
 

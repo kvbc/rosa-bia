@@ -11,7 +11,7 @@ import PageStatsB06 from "../pages/stats/PageStatsB06";
 import PageStatsGUNB3 from "../pages/stats/PageStatsGUNB3";
 import PageHelpContact from "../pages/help/PageHelpContact";
 import { PageDatabase } from "../pages/database/PageDatabase";
-import { PageArtPrBud } from "../pages/art_prbud/PageArtPrBud";
+import { PageConstructionLaws } from "../pages/construction_laws/PageConstructionLaws";
 import { PageSystem } from "../pages/system/PageSystem";
 import { AppPage } from "./AppPage";
 import { PageHelpUserManual } from "../pages/help/PageHelpUserManual";
@@ -105,10 +105,10 @@ export const AppPageRoutes: React.FC = () => {
                 }
             />
             <Route
-                path="/construction/art-prbud"
+                path="/construction/construction_laws"
                 element={
                     <AppPage>
-                        <PageArtPrBud />
+                        <PageConstructionLaws />
                     </AppPage>
                 }
             />

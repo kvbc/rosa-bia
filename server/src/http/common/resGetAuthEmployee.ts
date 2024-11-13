@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { DB } from "@shared/db";
+import * as DB from "@shared/db";
 import jwt from "jsonwebtoken";
-import { db } from "../..";
+import { db } from "@";
 import { resError } from "./resError";
 import { resErrorMessage } from "./resErrorMessage";
 

@@ -1,6 +1,6 @@
 import { createContext } from "react";
-import { DBTable } from "../../hooks/useDBTable";
-import { DB } from "../../../../server/src/db/types";
+import { DBTable } from "@/hooks/useDBTable";
+import * as DB from "@shared/db";
 
 export const PageRegistersContext = createContext<{
     registersDBTable: DBTable<DB.Rows.Register>;
@@ -16,6 +16,6 @@ export const PageRegistersContext = createContext<{
     registerPlotsDBTable: DBTable<DB.Rows.RegisterPlot>;
     registerAdminActionsDBTable: DBTable<DB.Rows.RegisterAdminAction>;
     employeesDBTable: DBTable<DB.Rows.Employee>;
-    prBudIntentTypesDBTable: DBTable<DB.Rows.PrBudType>;
-    prBudIntentsDBTable: DBTable<DB.Rows.PrBudIntent>;
+    constructionLawCategoriesDBTable: DBTable<DB.Rows.ConstructionLawCategory>;
+    constructionLawIntentsDBTable: DBTable<DB.Rows.ConstructionLawIntent>;
 } | null>(null);

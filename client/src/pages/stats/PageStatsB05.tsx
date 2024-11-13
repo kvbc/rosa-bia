@@ -13,8 +13,8 @@ import {
 } from "@mui/joy";
 import ErrorIcon from "@mui/icons-material/Error";
 import React, { useCallback, useMemo, useState } from "react";
-import useDBTable from "../../hooks/useDBTable";
-import { DB } from "../../../../server/src/db/types";
+import useDBTable from "@/hooks/useDBTable";
+import * as DB from "@shared/db";
 import { PDFDocument } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 

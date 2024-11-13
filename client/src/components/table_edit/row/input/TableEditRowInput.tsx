@@ -11,12 +11,12 @@ import React, {
     SetStateAction,
     useContext,
 } from "react";
-import { TableEditRowType } from "../../TableEdit";
+import { TableEditRowType } from "@/components/table_edit/TableEdit";
 import { Center, Input, InputProps } from "@chakra-ui/react";
 import { TableEditRowInputSelect } from "./TableEditRowInputSelect";
 import { TableEditRowInputCheckbox } from "./TableEditRowInputCheckbox";
-import { ColorContext } from "../../../../contexts/ColorContext";
-import { MySelectOption } from "../../../MySelect";
+import { ColorContext } from "@/contexts/ColorContext";
+import { MySelectOption } from "@/components/MySelect";
 
 export type TableEditRowInputProps<TRow extends TableEditRowType> = {
     type: HTMLInputTypeAttribute | "select";

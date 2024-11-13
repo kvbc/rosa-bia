@@ -10,7 +10,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import React, { useMemo } from "react";
-import { DataListItem, DataListRoot } from "../../components/ui/data-list";
+import { DataListItem, DataListRoot } from "@/components/ui/data-list";
 import {
     TimelineConnector,
     TimelineContent,
@@ -18,7 +18,7 @@ import {
     TimelineItem,
     TimelineRoot,
     TimelineTitle,
-} from "../../components/ui/timeline";
+} from "@/components/ui/timeline";
 import {
     LuCalendar,
     LuCpu,
@@ -42,7 +42,7 @@ import {
 } from "react-icons/fa6";
 import { IconType } from "react-icons/lib";
 import { FaShieldAlt, FaSyncAlt } from "react-icons/fa";
-import { Tooltip } from "../../components/ui/tooltip";
+import { Tooltip } from "@/components/ui/tooltip";
 
 export function PageSystem() {
     const versions = useMemo(() => {

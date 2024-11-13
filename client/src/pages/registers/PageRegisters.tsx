@@ -1,9 +1,19 @@
 import React, { ContextType, useMemo } from "react";
-import { PageRegistersContext } from "../../contexts/pages/PageRegistersContext";
+import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import RegisterTableEdit from "./RegisterTableEdit";
-import useDBTable from "../../hooks/useDBTable";
-import { DB } from "../../../../server/src/db/types";
-import { Filter } from "../../../../server/src/http/routes/table_rows/get";
+import useDBTable from "@/hooks/useDBTable";
+import * as DB from "@shared/db";
+import { Filter } from "@server/http/routes/table_rows/get";
+
+export type ClientRegister = DB.Rows.Register & {
+    _object_construction_law_category_id: number;
+    _object_construction_section_id: number;
+    _object_construction_division_id: number;
+    _object_construction_group_id: number;
+    _object_construction_class_id: number;
+    _object_commune_id: number;
+    _object_place_id: number;
+};
 
 export default function PageRegisters({
     registersFilters,
@@ -25,8 +35,8 @@ export default function PageRegisters({
     const registerPlotsDBTable = useDBTable<DB.Rows.RegisterPlot>("registers_plots"); // prettier-ignore
     const registerAdminActionsDBTable = useDBTable<DB.Rows.RegisterAdminAction>("registers_admin_actions"); // prettier-ignore
     const employeesDBTable = useDBTable<DB.Rows.Employee>("employees");
-    const prBudIntentTypesDBTable = useDBTable<DB.Rows.PrBudType>("prbud_types"); // prettier-ignore
-    const prBudIntentsDBTable = useDBTable<DB.Rows.PrBudIntent>("prbud_intents"); // prettier-ignore
+    const constructionLawCategoriesDBTable = useDBTable<DB.Rows.ConstructionLawCategory>("construction_law_categories"); // prettier-ignore
+    const constructionLawIntentsDBTable = useDBTable<DB.Rows.ConstructionLawIntent>("construction_law_intents"); // prettier-ignore
 
     const context = useMemo<ContextType<typeof PageRegistersContext>>(
         () => ({
@@ -43,8 +53,8 @@ export default function PageRegisters({
             registerPlotsDBTable,
             registerAdminActionsDBTable,
             employeesDBTable,
-            prBudIntentTypesDBTable,
-            prBudIntentsDBTable,
+            constructionLawCategoriesDBTable,
+            constructionLawIntentsDBTable,
         }),
         [
             registersDBTable,
@@ -60,8 +70,8 @@ export default function PageRegisters({
             registerPlotsDBTable,
             registerAdminActionsDBTable,
             employeesDBTable,
-            prBudIntentTypesDBTable,
-            prBudIntentsDBTable,
+            constructionLawCategoriesDBTable,
+            constructionLawIntentsDBTable,
         ]
     );
 

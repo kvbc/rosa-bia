@@ -4,15 +4,17 @@
  *
  */
 
-import { DB } from "../../../../../server/src/db/types";
+import * as DB from "@shared/db";
 import React, { ComponentProps, useContext, useMemo } from "react";
-import { PageRegistersContext } from "../../../contexts/pages/PageRegistersContext";
-import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
-import { MyTable, MyTable as Tb } from "../../../components/my_table/MyTable";
-import { MyTableHeader as Th } from "../../../components/my_table/MyTableHeader";
-import { MyTableRow as Tr } from "../../../components/my_table/MyTableRow";
-import { MyTableCell as Tc } from "../../../components/my_table/MyTableCell";
+import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
+import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
+import { MyTable, MyTable as Tb } from "@/components/my_table/MyTable";
+import { MyTableHeader as Th } from "@/components/my_table/MyTableHeader";
+import { MyTableRow as Tr } from "@/components/my_table/MyTableRow";
+import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
 import { topRowHeight } from "../RegisterTableEditRowContent";
+import { FeatureUnfinishedIcon } from "@/components/FeatureUnfinishedIcon";
+import { ClientRegister } from "../PageRegisters";
 
 export default function RegisterDataTableEdit({
     inputs,
@@ -21,7 +23,7 @@ export default function RegisterDataTableEdit({
     children,
     ...myTableProps
 }: ComponentProps<typeof MyTable> &
-    TableEditRowContentComponentProps<DB.Rows.Register> & {
+    TableEditRowContentComponentProps<ClientRegister> & {
         showMore: boolean;
     }) {
     const pageContext = useContext(PageRegistersContext)!;
@@ -34,7 +36,30 @@ export default function RegisterDataTableEdit({
         [pageContext.investorsDBTable.rows, row.app_investor_id]
     );
 
-    const subtype = DB.Rows.REGISTER_TYPE_INFOS[row.type].subtype;
+    const decisionTitle = useMemo(() => {
+        switch (row.type) {
+            case "PnB (6740)":
+            case "PnRozb. (6741)":
+            case "ZRiD (7012)":
+            case "Uzupełniający":
+            case "Wejście na dz. sąsiednią":
+                return "Decyzja Starosty Człuchowskiego";
+            case "Zg. Rozb. (6743.1)":
+            case "Zg. Zwykłe (6743.2)":
+            case "Zm. Sp. Użytk. (6743.3)":
+            case "BiP (6743.4)":
+            case "Samodz. Lokali (705)":
+            case "Tymczasowe (6743.5)":
+                return "Zaświadczenie / Decyzja";
+            case "Pisma różne (670)":
+                return "Odpowiedź";
+            case "Dz. bud":
+            case "Konserwator (Inne)":
+            case "Lokalizacja inwestycji (Inne)":
+            case "PiNB (Inne)":
+                return <FeatureUnfinishedIcon />;
+        }
+    }, [row.type]);
 
     return (
         <Tb
@@ -104,11 +129,7 @@ export default function RegisterDataTableEdit({
                                         myHeaders={
                                             <>
                                                 <Th colSpan={2}>
-                                                    {subtype === "Mayor"
-                                                        ? "Decyzja Starosty Człuchowskiego"
-                                                        : subtype === "Cert"
-                                                        ? "Zaświadczenie / Decyzja"
-                                                        : "Odpowiedź"}
+                                                    {decisionTitle}
                                                 </Th>
                                             </>
                                         }

@@ -1,5 +1,5 @@
 import WebSocket from "ws";
-import { WS } from "./types";
+import * as WS from "./types";
 
 export const startWebSocketServer = () => {
     const server = new WebSocket.Server({ port: WS.SERVER_PORT });

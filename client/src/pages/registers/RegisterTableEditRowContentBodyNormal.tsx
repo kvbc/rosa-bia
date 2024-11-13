@@ -1,16 +1,16 @@
 import React, { useCallback, useState } from "react";
 import { Float, HStack, Icon, IconButton } from "@chakra-ui/react";
 import RegisterDataTableEdit from "./table_app_data/RegisterDataTableEdit";
-import { TableEditRowContentComponentProps } from "../../components/table_edit/row/TableEditRowContentComponent";
-import { DB } from "../../../../server/src/db/types";
-import { Tooltip } from "../../components/ui/tooltip";
+import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
+import { Tooltip } from "@/components/ui/tooltip";
 import { LuArrowDown } from "react-icons/lu";
 import RegisterConstructionJournalTableEdit from "./table_construction_journal/RegisterConstructionJournalTableEdit";
 import RegisterConstructionIntentTableEdit from "./table_construction_intent/RegisterConstructionIntentTableEdit";
 import RegisterAdminProceduresTableEdit from "./table_admin_procedures/RegisterAdminProceduresTableEdit";
+import { ClientRegister } from "./PageRegisters";
 
 export function RegisterTableEditRowContentBodyNormal(
-    props: TableEditRowContentComponentProps<DB.Rows.Register>
+    props: TableEditRowContentComponentProps<ClientRegister>
 ) {
     const { row } = props;
 
@@ -25,7 +25,7 @@ export function RegisterTableEditRowContentBodyNormal(
             <RegisterDataTableEdit
                 {...props}
                 showMore={showMore}
-                customIndentLevel={2}
+                // customIndentLevel={2}
             >
                 {row.type !== "Dz. bud" && (
                     <Float
@@ -61,7 +61,7 @@ export function RegisterTableEditRowContentBodyNormal(
             </RegisterDataTableEdit>
             {row.type === "Dz. bud" && (
                 <RegisterConstructionJournalTableEdit
-                    customIndentLevel={4}
+                    // customIndentLevel={4}
                     {...props}
                 />
             )}
@@ -70,13 +70,13 @@ export function RegisterTableEditRowContentBodyNormal(
                     {row.type !== "Uzupełniający" && (
                         <RegisterConstructionIntentTableEdit
                             showMore={showMore}
-                            customIndentLevel={4}
+                            // customIndentLevel={4}
                             {...props}
                         />
                     )}
                     <RegisterAdminProceduresTableEdit
                         showMore={showMore}
-                        customIndentLevel={6}
+                        // customIndentLevel={6}
                         {...props}
                     />
                 </>

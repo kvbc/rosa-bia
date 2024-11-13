@@ -1,13 +1,14 @@
-import { DB } from "../../../../../server/src/db/types";
+import * as DB from "@shared/db";
 import React from "react";
-import { MyTable as Tb } from "../../../components/my_table/MyTable";
-import { MyTableCell as Tc } from "../../../components/my_table/MyTableCell";
-import { MyTableHeader as Th } from "../../../components/my_table/MyTableHeader";
-import { MyTableRow as Tr } from "../../../components/my_table/MyTableRow";
-import { TableEditRowContentComponentProps } from "../../../components/table_edit/row/TableEditRowContentComponent";
+import { MyTable as Tb } from "@/components/my_table/MyTable";
+import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
+import { MyTableHeader as Th } from "@/components/my_table/MyTableHeader";
+import { MyTableRow as Tr } from "@/components/my_table/MyTableRow";
+import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
+import { ClientRegister } from "../PageRegisters";
 
 export default function RegisterCharParamsTableEdit(
-    props: TableEditRowContentComponentProps<DB.Rows.Register>
+    props: TableEditRowContentComponentProps<ClientRegister>
 ) {
     const { inputs } = props;
 

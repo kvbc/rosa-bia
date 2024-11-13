@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DB } from "..";
+import * as DB from "..";
 
 export const INVESTORS_TABLE_NAMES = ["investors"] as const;
 

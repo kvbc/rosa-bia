@@ -1,4 +1,5 @@
 {
+    // https://marketplace.visualstudio.com/items?itemName=EthanSK.restore-terminals
     "restoreTerminals.terminals": [
         {
             "splitTerminals": [
