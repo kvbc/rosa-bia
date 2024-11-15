@@ -13,8 +13,9 @@ import {
 import { PageGeodesyContext } from "@/contexts/pages/PageGeodesyContext";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
-import { MySelectOption } from "@/components/MySelect";
+import { MySelectOption } from "@/components/my_input/MySelect";
 import { FaLandmark } from "react-icons/fa6";
+import { MyTableCell } from "@/components/my_table/MyTableCell";
 
 export default function CommunesDBTableEditRowContent({
     inputs,
@@ -66,29 +67,31 @@ export default function CommunesDBTableEditRowContent({
     );
 
     return (
-        <AccordionRoot collapsible variant="plain">
-            <AccordionItem value="1">
-                <AccordionItemTrigger>
-                    <FaLandmark />
-                    <Box>{inputs.name}</Box>
-                </AccordionItemTrigger>
-                <AccordionItemContent>
-                    <DBTableEdit
-                        hidePagination
-                        dbTable={pageGeodesyContext.placesDBTable}
-                        rows={pageGeodesyContext.placesDBTable.rows.filter(
-                            (fRow) => fRow.commune_id === row.id
-                        )}
-                        rowActionButtonOrientation="vertical"
-                        colorPalette="blue"
-                        editable={editable}
-                        headers={placesHeaders}
-                        defaultRow={placesDefaultRow}
-                        rowInputsProps={placesRowInputsProps}
-                        RowContentComponent={PlacesTableEditRowContent}
-                    />
-                </AccordionItemContent>
-            </AccordionItem>
-        </AccordionRoot>
+        <MyTableCell>
+            <AccordionRoot collapsible variant="plain">
+                <AccordionItem value="1">
+                    <AccordionItemTrigger>
+                        <FaLandmark />
+                        <Box>{inputs.name}</Box>
+                    </AccordionItemTrigger>
+                    <AccordionItemContent>
+                        <DBTableEdit
+                            hidePagination
+                            dbTable={pageGeodesyContext.placesDBTable}
+                            rows={pageGeodesyContext.placesDBTable.rows.filter(
+                                (fRow) => fRow.commune_id === row.id
+                            )}
+                            rowActionButtonOrientation="vertical"
+                            colorPalette="blue"
+                            editable={editable}
+                            headers={placesHeaders}
+                            defaultRow={placesDefaultRow}
+                            rowInputsProps={placesRowInputsProps}
+                            RowContentComponent={PlacesTableEditRowContent}
+                        />
+                    </AccordionItemContent>
+                </AccordionItem>
+            </AccordionRoot>
+        </MyTableCell>
     );
 }

@@ -47,6 +47,7 @@ export default function useDBTable<TRow extends DB.Row>(
         queryFn: () =>
             apiGetTableRows(tableName, startRowIndex, endRowIndex, filters),
     });
+    const { refetch: refetchRows } = rowsQuery;
 
     useEffect(() => {
         const data = rowsQuery.data;
@@ -65,9 +66,9 @@ export default function useDBTable<TRow extends DB.Row>(
                 queryKey: ["table_rows", tableName],
             });
         },
-        onError: () => {
-            setRows((rows) => [...rows]);
-        },
+        // onError: () => {
+        //     setRows((rows) => [...rows]);
+        // },
     });
 
     const deleteRowMutation = useMutation({
@@ -78,9 +79,9 @@ export default function useDBTable<TRow extends DB.Row>(
                 queryKey: ["table_rows", tableName],
             });
         },
-        onError: () => {
-            setRows((rows) => [...rows]);
-        },
+        // onError: () => {
+        //     setRows((rows) => [...rows]);
+        // },
     });
 
     const updateRowMutation = useMutation({
@@ -92,9 +93,9 @@ export default function useDBTable<TRow extends DB.Row>(
                 queryKey: ["table_rows", tableName],
             });
         },
-        onError: () => {
-            setRows((rows) => [...rows]);
-        },
+        // onError: () => {
+        //     setRows((rows) => [...rows]);
+        // },
     });
 
     const isRowIDInRange = useCallback(
@@ -147,7 +148,7 @@ export default function useDBTable<TRow extends DB.Row>(
     useEffect(() => {
         return wsOnMessage<TRow>(webSocket, (message) => {
             if (message.type === "server started") {
-                rowsQuery.refetch();
+                refetchRows();
                 return;
             }
             if (message.tableName !== tableName) {
@@ -165,7 +166,7 @@ export default function useDBTable<TRow extends DB.Row>(
                     break;
             }
         });
-    }, [webSocket, addRow, deleteRow, updateRow, tableName]);
+    }, [webSocket, addRow, deleteRow, updateRow, tableName, refetchRows]);
 
     return {
         tableName,

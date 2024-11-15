@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/accordion";
 import { Box } from "@chakra-ui/react";
 import { FaFolder } from "react-icons/fa6";
+import { MyTableCell } from "@/components/my_table/MyTableCell";
 
 export function ConstructionLawCategoriesDBTableEditRowContent({
     inputs,
@@ -63,26 +64,28 @@ export function ConstructionLawCategoriesDBTableEditRowContent({
     );
 
     return (
-        <AccordionRoot collapsible variant="plain">
-            <AccordionItem value="1">
-                <AccordionItemTrigger>
-                    <FaFolder />
-                    <Box>{inputs.name}</Box>
-                </AccordionItemTrigger>
-                <AccordionItemContent>
-                    <DBTableEdit
-                        hidePagination
-                        dbTable={pageContext.constructionLawIntentsDBTable}
-                        rows={pageContext.constructionLawIntentsDBTable.rows.filter(
-                            (fRow) => fRow.category_id === row.id
-                        )}
-                        editable={editable}
-                        headers={prBudIntentsHeaders}
-                        defaultRow={prBudIntentsDefaultRow}
-                        rowInputsProps={prBudIntentsRowInputsProps}
-                    />
-                </AccordionItemContent>
-            </AccordionItem>
-        </AccordionRoot>
+        <MyTableCell>
+            <AccordionRoot collapsible variant="plain">
+                <AccordionItem value="1">
+                    <AccordionItemTrigger>
+                        <FaFolder />
+                        <Box>{inputs.name}</Box>
+                    </AccordionItemTrigger>
+                    <AccordionItemContent>
+                        <DBTableEdit
+                            hidePagination
+                            dbTable={pageContext.constructionLawIntentsDBTable}
+                            rows={pageContext.constructionLawIntentsDBTable.rows.filter(
+                                (fRow) => fRow.category_id === row.id
+                            )}
+                            editable={editable}
+                            headers={prBudIntentsHeaders}
+                            defaultRow={prBudIntentsDefaultRow}
+                            rowInputsProps={prBudIntentsRowInputsProps}
+                        />
+                    </AccordionItemContent>
+                </AccordionItem>
+            </AccordionRoot>
+        </MyTableCell>
     );
 }

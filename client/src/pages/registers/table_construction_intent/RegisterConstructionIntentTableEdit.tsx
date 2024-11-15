@@ -17,9 +17,11 @@
 import React, {
     ComponentProps,
     ReactNode,
+    useCallback,
     useContext,
     useEffect,
     useMemo,
+    useState,
 } from "react";
 import RegisterPropertyDataTableEdit from "./RegisterPropertyDataTableEdit";
 import RegisterPlotsDataTableEdit from "./RegisterPlotsTableEdit";
@@ -36,6 +38,10 @@ import { HStack, Text } from "@chakra-ui/react";
 import { FeatureUnfinishedIcon } from "@/components/FeatureUnfinishedIcon";
 import { topRowHeight } from "../RegisterTableEditRowContent";
 import { ClientRegister } from "../PageRegisters";
+import {
+    MyInputSelect,
+    MySelectOption,
+} from "@/components/my_input/MyInputSelect";
 
 export default function RegisterConstructionIntentTableEdit(
     props: ComponentProps<typeof MyTable> &
@@ -43,42 +49,376 @@ export default function RegisterConstructionIntentTableEdit(
             showMore: boolean;
         }
 ) {
-    const { inputs, row, setRow, showMore, ...myTableProps } = props;
+    const {
+        inputs,
+        row,
+        setRow,
+        showMore,
+        editable,
+        onInputFocusOut,
+        ...myTableProps
+    } = props;
 
     const pageContext = useContext(PageRegistersContext)!;
 
-    const constructionSpec = useMemo(() => pageContext.constructionSpecsDBTable.rows.find((fEntry) => fEntry.id === row.object_construction_spec_id), [row.object_construction_spec_id, pageContext.constructionSpecsDBTable.rows]); // prettier-ignore
-    const constructionClass = useMemo(() => pageContext.constructionClassesDBTable.rows.find((fEntry) => fEntry.id === constructionSpec?.class_id), [constructionSpec, pageContext.constructionClassesDBTable.rows]); // prettier-ignore
-    const constructionGroup = useMemo(() => pageContext.constructionGroupsDBTable.rows.find(fEntry => fEntry.id === constructionClass?.group_id), [constructionClass, pageContext.constructionGroupsDBTable.rows]); // prettier-ignore
-    const constructionDivision = useMemo(() => pageContext.constructionDivisionsDBTable.rows.find(fEntry => fEntry.id === constructionGroup?.division_id), [constructionGroup, pageContext.constructionDivisionsDBTable.rows]); // prettier-ignore
-    const street = useMemo(() => pageContext.streetsDBTable.rows.find(fEntry => fEntry.id === row.object_street_id), [row.object_street_id, pageContext.streetsDBTable.rows]) // prettier-ignore
-    const place = useMemo(() => pageContext.placesDBTable.rows.find(fEntry => fEntry.id === street?.place_id), [street, pageContext.placesDBTable.rows]) // prettier-ignore
-    // const commune = useMemo(() => pageContext.communesDBTable.rows.find(fEntry => fEntry.id === place?.commune_id), [place, pageContext.communesDBTable.rows]) // prettier-ignore
-    const area = useMemo(() => pageContext.placesDBTable.rows.find(fEntry => fEntry.id === place?.area_place_id), [place, pageContext.placesDBTable.rows]) // prettier-ignore
-    const constructionLawIntent = useMemo(() => pageContext.constructionLawIntentsDBTable.rows.find(fRow => fRow.id === row.object_construction_law_intent_id), [pageContext.constructionLawIntentsDBTable.rows, row.object_construction_law_intent_id]) // prettier-ignore
+    const [constructionSectionID, setConstructionSectionID] = useState<number>(0); // prettier-ignore
+    const [constructionDivisionID, setConstructionDivisionID] = useState<number>(0); // prettier-ignore
+    const [constructionGroupID, setConstructionGroupID] = useState<number>(0);
+    const [constructionClassID, setConstructionClassID] = useState<number>(0);
+    const [constructionLawCategoryID, setConstructionLawCategoryID] = useState<number>(0); // prettier-ignore
 
-    useEffect(() => setRow(row => ({...row, _object_construction_class_id: constructionSpec?.class_id ?? 0})), [setRow, constructionSpec?.class_id]); // prettier-ignore
-    useEffect(() => setRow(row => ({...row, _object_construction_group_id: constructionClass?.group_id ?? 0})), [setRow, constructionClass?.group_id]); // prettier-ignore
-    useEffect(() => setRow(row => ({...row, _object_construction_division_id: constructionGroup?.division_id ?? 0})), [setRow, constructionGroup?.division_id]); // prettier-ignore
-    useEffect(() => setRow(row => ({...row, _object_construction_section_id: constructionDivision?.section_id ?? 0})), [setRow, constructionDivision?.section_id]); // prettier-ignore
-    useEffect(() => setRow(row => ({...row, _object_place_id: street?.place_id ?? 0})), [setRow, street?.place_id]) // prettier-ignore
-    useEffect(() => setRow(row => ({...row, _object_commune_id: place?.commune_id ?? 0})), [setRow, place?.commune_id]) // prettier-ignore
+    const constructionSpec = useMemo(
+        () =>
+            pageContext.constructionSpecsDBTable.rows.find(
+                (fEntry) => fEntry.id === row.object_construction_spec_id
+            ),
+        [
+            row.object_construction_spec_id,
+            pageContext.constructionSpecsDBTable.rows,
+        ]
+    );
+    const constructionClass = useMemo(
+        () =>
+            pageContext.constructionClassesDBTable.rows.find(
+                (fEntry) => fEntry.id === constructionClassID
+            ),
+        [constructionClassID, pageContext.constructionClassesDBTable.rows]
+    );
+    const constructionGroup = useMemo(
+        () =>
+            pageContext.constructionGroupsDBTable.rows.find(
+                (fEntry) => fEntry.id === constructionGroupID
+            ),
+        [constructionGroupID, pageContext.constructionGroupsDBTable.rows]
+    );
+    const constructionDivision = useMemo(
+        () =>
+            pageContext.constructionDivisionsDBTable.rows.find(
+                (fEntry) => fEntry.id === constructionDivisionID
+            ),
+        [constructionDivisionID, pageContext.constructionDivisionsDBTable.rows]
+    );
+    const constructionSection = useMemo(
+        () =>
+            pageContext.constructionSectionsDBTable.rows.find(
+                (fRow) => fRow.id === constructionSectionID
+            ),
+        [pageContext.constructionSectionsDBTable.rows, constructionSectionID]
+    );
+    //
+    const constructionLawIntent = useMemo(
+        () =>
+            pageContext.constructionLawIntentsDBTable.rows.find(
+                (fRow) => fRow.id === row.object_construction_law_intent_id
+            ),
+        [
+            pageContext.constructionLawIntentsDBTable.rows,
+            row.object_construction_law_intent_id,
+        ]
+    );
+    // const constructionLawCategory = useMemo(
+    //     () =>
+    //         pageContext.constructionLawCategoriesDBTable.rows.find(
+    //             (row) => row.id === constructionLawCategoryID
+    //         ),
+    //     [
+    //         pageContext.constructionLawCategoriesDBTable.rows,
+    //         constructionLawCategoryID,
+    //     ]
+    // );
+
+    //
+    //
+    //
+
+    useEffect(() => {
+        if (constructionSpec?.class_id) {
+            setConstructionClassID(constructionSpec.class_id);
+        }
+    }, [constructionSpec?.class_id]);
+    useEffect(() => {
+        if (constructionClass?.group_id) {
+            setConstructionGroupID(constructionClass.group_id);
+        }
+    }, [constructionClass?.group_id]);
+    useEffect(() => {
+        if (constructionGroup?.division_id) {
+            setConstructionDivisionID(constructionGroup.division_id);
+        }
+    }, [constructionGroup?.division_id]);
+    useEffect(() => {
+        if (constructionDivision?.section_id) {
+            setConstructionSectionID(constructionDivision.section_id);
+        }
+    }, [constructionDivision?.section_id]);
+    //
+    useEffect(() => {
+        if (constructionLawIntent?.category_id) {
+            setConstructionLawCategoryID(constructionLawIntent.category_id);
+        }
+    }, [constructionLawIntent?.category_id]);
+
+    //
+    //
+    //
+
+    const usersetFrom = useCallback(
+        (
+            from: ("section" | "division" | "group" | "class") | "law_category",
+            id: number
+        ) => {
+            /* eslint-disable no-fallthrough */
+            switch (from) {
+                case "section":
+                    setConstructionSectionID(id);
+                    id =
+                        pageContext.constructionDivisionsDBTable.rows.find(
+                            (row) => row.section_id === id
+                        )?.id ?? 0;
+                case "division":
+                    setConstructionDivisionID(id);
+                    id =
+                        pageContext.constructionGroupsDBTable.rows.find(
+                            (row) => row.division_id === id
+                        )?.id ?? 0;
+                case "group":
+                    setConstructionGroupID(id);
+                    id =
+                        pageContext.constructionClassesDBTable.rows.find(
+                            (row) => row.group_id === id
+                        )?.id ?? 0;
+                case "class":
+                    setConstructionClassID(id);
+                    setRow((row) => ({
+                        ...row,
+                        object_construction_spec_id:
+                            pageContext.constructionSpecsDBTable.rows.find(
+                                (fRow) => fRow.class_id === id
+                            )?.id ?? 0,
+                    }));
+            }
+            //
+            switch (from) {
+                case "law_category":
+                    setConstructionLawCategoryID(id);
+                    setRow((row) => ({
+                        ...row,
+                        object_construction_law_intent_id:
+                            pageContext.constructionLawIntentsDBTable.rows.find(
+                                (fRow) => fRow.category_id === id
+                            )?.id ?? 0,
+                    }));
+            }
+            /* eslint-enable no-fallthrough */
+        },
+        [
+            setRow,
+            pageContext.constructionDivisionsDBTable.rows,
+            pageContext.constructionGroupsDBTable.rows,
+            pageContext.constructionClassesDBTable.rows,
+            pageContext.constructionSpecsDBTable.rows,
+            pageContext.constructionLawIntentsDBTable.rows,
+        ]
+    );
+
+    //
+    //
+    //
+
+    const handleConstructionSectionIDChanged = useCallback(
+        (constructionSectionID: number) => {
+            usersetFrom("section", constructionSectionID);
+        },
+        [usersetFrom]
+    );
+    const handleConstructionDivisionIDChanged = useCallback(
+        (constructionDivisionID: number) => {
+            usersetFrom("division", constructionDivisionID);
+        },
+        [usersetFrom]
+    );
+    const handleConstructionGroupIDChanged = useCallback(
+        (constructionGroupID: number) => {
+            usersetFrom("group", constructionGroupID);
+        },
+        [usersetFrom]
+    );
+    const handleConstructionClassIDChanged = useCallback(
+        (constructionClassID: number) => {
+            usersetFrom("class", constructionClassID);
+        },
+        [usersetFrom]
+    );
+    const handleConstructionSpecIDChanged = useCallback(
+        (constructionSpecID: number) => {
+            setRow((row) => ({
+                ...row,
+                object_construction_spec_id: constructionSpecID,
+            }));
+        },
+        [setRow]
+    );
+    //
+    const handleConstructionLawCategoryIDChanged = useCallback(
+        (constructionLawCategoryID: number) => {
+            usersetFrom("law_category", constructionLawCategoryID);
+        },
+        [usersetFrom]
+    );
+    const handleConstructionLawIndentIDChanged = useCallback(
+        (constructionLawIndentID: number) => {
+            setRow((row) => ({
+                ...row,
+                object_construction_law_intent_id: constructionLawIndentID,
+            }));
+        },
+        [setRow]
+    );
+
+    //
+    //
+    //
+
+    const constructionSectionsSelectOptions = useMemo(
+        () =>
+            pageContext.constructionSectionsDBTable.rows.map<MySelectOption>(
+                (row) => ({
+                    name: row.name,
+                    value: row.id,
+                })
+            ),
+        [pageContext.constructionSectionsDBTable.rows]
+    );
+    const constructionDivisionsSelectOptions = useMemo(
+        () =>
+            pageContext.constructionDivisionsDBTable.rows
+                .filter((row) => row.section_id === constructionSectionID)
+                .map<MySelectOption>((row) => ({
+                    value: row.id,
+                    name: row.name,
+                })),
+        [constructionSectionID, pageContext.constructionDivisionsDBTable.rows]
+    );
+    const constructionGroupsSelectOptions = useMemo(
+        () =>
+            pageContext.constructionGroupsDBTable.rows
+                .filter((row) => row.division_id === constructionDivisionID)
+                .map<MySelectOption>((row) => ({
+                    value: row.id,
+                    name: row.name,
+                })),
+        [constructionDivisionID, pageContext.constructionGroupsDBTable.rows]
+    );
+    const constructionClassesSelectOptions = useMemo(
+        () =>
+            pageContext.constructionClassesDBTable.rows
+                .filter((row) => row.group_id === constructionGroupID)
+                .map<MySelectOption>((row) => ({
+                    value: row.id,
+                    name: row.name,
+                })),
+        [constructionGroupID, pageContext.constructionClassesDBTable.rows]
+    );
+    const constructionSpecsSelectOptions = useMemo(
+        () =>
+            pageContext.constructionSpecsDBTable.rows
+                .filter((row) => row.class_id === constructionClassID)
+                .map<MySelectOption>((row) => ({
+                    value: row.id,
+                    name: row.name,
+                })),
+        [constructionClassID, pageContext.constructionSpecsDBTable.rows]
+    );
+    //
+    const constructionLawCategoriesSelectOptions = useMemo(
+        () =>
+            pageContext.constructionLawCategoriesDBTable.rows.map<MySelectOption>(
+                (row) => ({
+                    value: row.id,
+                    name: row.name,
+                })
+            ),
+        [pageContext.constructionLawCategoriesDBTable.rows]
+    );
+    const constructionLawIntentsSelectOptions = useMemo(
+        () =>
+            pageContext.constructionLawIntentsDBTable.rows
+                .filter((row) => row.category_id === constructionLawCategoryID)
+                .map<MySelectOption>((row) => ({
+                    value: row.id,
+                    name: row.intent,
+                })),
+        [
+            constructionLawCategoryID,
+            pageContext.constructionLawIntentsDBTable.rows,
+        ]
+    );
+
+    //
+    //
+    //
+
+    let pnbConstructionIntent = "";
+    if (constructionSection) {
+        pnbConstructionIntent += constructionSection.name;
+    }
+    if (constructionDivision) {
+        pnbConstructionIntent += " " + constructionDivision.name;
+    }
+    if (constructionGroup) {
+        pnbConstructionIntent += " " + constructionGroup.name;
+    }
+    if (pnbConstructionIntent === "") {
+        pnbConstructionIntent = "-";
+    }
+
+    const constructionLawCategoryInput = useMemo(
+        () => (
+            <MyInputSelect
+                options={constructionLawCategoriesSelectOptions}
+                value={String(constructionLawCategoryID)}
+                onValueChanged={(value) =>
+                    handleConstructionLawCategoryIDChanged(Number(value))
+                }
+                disabled={!editable}
+                onBlur={onInputFocusOut}
+            />
+        ),
+        [
+            constructionLawCategoriesSelectOptions,
+            constructionLawCategoryID,
+            editable,
+            onInputFocusOut,
+            handleConstructionLawCategoryIDChanged,
+        ]
+    );
+    const constructionLawIntentInput = (
+        <MyInputSelect
+            options={constructionLawIntentsSelectOptions}
+            value={String(row.object_construction_law_intent_id)}
+            onValueChanged={(value) =>
+                handleConstructionLawIndentIDChanged(Number(value))
+            }
+            disabled={!editable}
+            onBlur={onInputFocusOut}
+        />
+    );
 
     const constructionIntentNodes: {
         [key in DB.Rows.RegisterType]: ReactNode;
     } = useMemo(
         () => ({
-            "PnB (6740)": constructionGroup?.name ?? "-",
+            "PnB (6740)": pnbConstructionIntent,
             "PnRozb. (6741)": "Rozbiórka budynku",
             "Zg. Rozb. (6743.1)": "Rozbiórka budynku",
-            "Zg. Zwykłe (6743.2)": inputs._object_construction_law_category_id,
+            "Zg. Zwykłe (6743.2)": constructionLawCategoryInput,
             "Zm. Sp. Użytk. (6743.3)": "Zmiana sposobu użytkowania",
-            "BiP (6743.4)": inputs._object_construction_law_category_id,
+            "BiP (6743.4)": constructionLawCategoryInput,
             "ZRiD (7012)": inputs.object_custom_construction_intent,
             "Pisma różne (670)": inputs.object_custom_construction_intent,
             "Samodz. Lokali (705)": inputs.object_custom_construction_intent,
             "Dz. bud": <FeatureUnfinishedIcon />,
-            "Tymczasowe (6743.5)": inputs._object_construction_law_category_id,
+            "Tymczasowe (6743.5)": constructionLawCategoryInput,
             Uzupełniający: <FeatureUnfinishedIcon />,
             "Wejście na dz. sąsiednią": "Zgoda wejścia na działkę sąsiednią",
             "Konserwator (Inne)": <FeatureUnfinishedIcon />,
@@ -86,9 +426,9 @@ export default function RegisterConstructionIntentTableEdit(
             "PiNB (Inne)": <FeatureUnfinishedIcon />,
         }),
         [
-            constructionGroup?.name,
-            inputs._object_construction_law_category_id,
+            constructionLawCategoryInput,
             inputs.object_custom_construction_intent,
+            pnbConstructionIntent,
         ]
     );
 
@@ -172,7 +512,7 @@ export default function RegisterConstructionIntentTableEdit(
             )}
             {showPrBud && (
                 <Tr height={topRowHeight}>
-                    <Tc>{inputs.object_construction_law_intent_id}</Tc>
+                    <Tc>{constructionLawIntentInput}</Tc>
                     <Tc>{constructionLawIntent?.legal_basis ?? "-"}</Tc>
                 </Tr>
             )}
@@ -230,41 +570,116 @@ export default function RegisterConstructionIntentTableEdit(
                                         <Tr>
                                             <ThRow>Sekcja</ThRow>
                                             <Tc>
-                                                {
-                                                    inputs._object_construction_section_id
-                                                }
+                                                <MyInputSelect
+                                                    options={
+                                                        constructionSectionsSelectOptions
+                                                    }
+                                                    value={String(
+                                                        constructionSectionID
+                                                    )}
+                                                    onValueChanged={(value) =>
+                                                        handleConstructionSectionIDChanged(
+                                                            Number(value)
+                                                        )
+                                                    }
+                                                    disabled={!editable}
+                                                    onBlur={onInputFocusOut}
+                                                />
+                                                {/* {
+                                                    inputs.CLIENT_object_construction_section_id
+                                                } */}
                                             </Tc>
                                         </Tr>
                                         <Tr>
                                             <ThRow>Dział</ThRow>
                                             <Tc>
-                                                {
-                                                    inputs._object_construction_division_id
-                                                }
+                                                <MyInputSelect
+                                                    options={
+                                                        constructionDivisionsSelectOptions
+                                                    }
+                                                    value={String(
+                                                        constructionDivisionID
+                                                    )}
+                                                    onValueChanged={(value) =>
+                                                        handleConstructionDivisionIDChanged(
+                                                            Number(value)
+                                                        )
+                                                    }
+                                                    disabled={!editable}
+                                                    onBlur={onInputFocusOut}
+                                                />
+                                                {/* {
+                                                    inputs.CLIENT_object_construction_division_id
+                                                } */}
                                             </Tc>
                                         </Tr>
                                         <Tr>
                                             <ThRow>Grupa</ThRow>
                                             <Tc>
-                                                {
-                                                    inputs._object_construction_group_id
-                                                }
+                                                <MyInputSelect
+                                                    options={
+                                                        constructionGroupsSelectOptions
+                                                    }
+                                                    value={String(
+                                                        constructionGroupID
+                                                    )}
+                                                    onValueChanged={(value) =>
+                                                        handleConstructionGroupIDChanged(
+                                                            Number(value)
+                                                        )
+                                                    }
+                                                    disabled={!editable}
+                                                    onBlur={onInputFocusOut}
+                                                />
+                                                {/* {
+                                                    inputs.CLIENT_object_construction_group_id
+                                                } */}
                                             </Tc>
                                         </Tr>
                                         <Tr>
                                             <ThRow>Klasa</ThRow>
                                             <Tc>
-                                                {
-                                                    inputs._object_construction_class_id
-                                                }
+                                                <MyInputSelect
+                                                    options={
+                                                        constructionClassesSelectOptions
+                                                    }
+                                                    value={String(
+                                                        constructionClassID
+                                                    )}
+                                                    onValueChanged={(value) =>
+                                                        handleConstructionClassIDChanged(
+                                                            Number(value)
+                                                        )
+                                                    }
+                                                    disabled={!editable}
+                                                    onBlur={onInputFocusOut}
+                                                />
+                                                {/* {
+                                                    inputs.CLIENT_object_construction_class_id
+                                                } */}
                                             </Tc>
                                         </Tr>
                                         <Tr>
                                             <ThRow>Wysz.</ThRow>
                                             <Tc>
-                                                {
+                                                <MyInputSelect
+                                                    options={
+                                                        constructionSpecsSelectOptions
+                                                    }
+                                                    value={String(
+                                                        row.object_construction_spec_id
+                                                    )}
+                                                    onValueChanged={(value) =>
+                                                        handleConstructionSpecIDChanged(
+                                                            Number(value)
+                                                        )
+                                                    }
+                                                    disabled={!editable}
+                                                    onBlur={onInputFocusOut}
+                                                />
+                                                {/* {
                                                     inputs.object_construction_spec_id
-                                                }
+                                                } */}
                                             </Tc>
                                         </Tr>
                                     </Tb>
@@ -493,11 +908,7 @@ export default function RegisterConstructionIntentTableEdit(
             {showPropertyData && (
                 <Tr>
                     <Tc colSpan={2}>
-                        <RegisterPropertyDataTableEdit
-                            {...props}
-                            place={place}
-                            area={area}
-                        />
+                        <RegisterPropertyDataTableEdit {...props} />
                     </Tc>
                 </Tr>
             )}

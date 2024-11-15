@@ -6,17 +6,17 @@
 //
 
 import React, {
+    ComponentProps,
     Dispatch,
     HTMLInputTypeAttribute,
     SetStateAction,
-    useContext,
 } from "react";
 import { TableEditRowType } from "@/components/table_edit/TableEdit";
-import { Center, Input, InputProps } from "@chakra-ui/react";
+import { Center } from "@chakra-ui/react";
 import { TableEditRowInputSelect } from "./TableEditRowInputSelect";
 import { TableEditRowInputCheckbox } from "./TableEditRowInputCheckbox";
-import { ColorContext } from "@/contexts/ColorContext";
-import { MySelectOption } from "@/components/MySelect";
+import { MySelectOption } from "@/components/my_input/MyInputSelect";
+import MyInput from "@/components/my_input/MyInput";
 
 export type TableEditRowInputProps<TRow extends TableEditRowType> = {
     type: HTMLInputTypeAttribute | "select";
@@ -30,7 +30,8 @@ export type TableEditRowInputProps<TRow extends TableEditRowType> = {
 };
 
 export function TableEditRowInput<TRow extends TableEditRowType>(
-    props: TableEditRowInputProps<TRow> & InputProps
+    props: TableEditRowInputProps<TRow> &
+        Omit<ComponentProps<typeof MyInput>, "value" | "onValueChanged">
 ) {
     const {
         row,
@@ -42,8 +43,6 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
         onFocusOut,
         ...inputProps
     } = props;
-
-    const colorContext = useContext(ColorContext);
 
     switch (type) {
         case "select":
@@ -59,38 +58,18 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
     }
 
     return (
-        <Input
-            size="sm"
-            fontSize="2xs"
-            type={type === "number" ? "text" : type}
-            // padding="0.5 !important"
-            margin="0 !important"
-            paddingLeft={type === "date" ? "0 !important" : "0.5 !important"}
-            height="100% !important"
+        <MyInput
+            type={type}
             value={row[rowKey] as string}
-            backgroundColor={colorContext.bg2}
-            borderRadius="none"
-            borderColor={colorContext.border}
-            variant="outline"
-            onChange={(e) => {
+            onValueChanged={(value) =>
                 setRow((row) => ({
                     ...row,
-                    [rowKey]:
-                        type === "number"
-                            ? e.target.valueAsNumber
-                            : e.target.value,
-                }));
-            }}
-            onBlur={onFocusOut}
+                    [rowKey]: type === "number" ? Number(value) : value,
+                }))
+            }
             disabled={disabled}
+            onBlur={onFocusOut}
             placeholder={placeholder}
-            _selection={{
-                backgroundColor: colorContext.border,
-            }}
-            //
-            // padding="0.5"
-            // height="auto"
-            //
             {...inputProps}
         />
     );

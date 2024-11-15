@@ -25,7 +25,7 @@ export function RegisterTableEditRowContentBodyNormal(
             <RegisterDataTableEdit
                 {...props}
                 showMore={showMore}
-                // customIndentLevel={2}
+                customIndentLevel={2}
             >
                 {row.type !== "Dz. bud" && (
                     <Float
@@ -61,7 +61,7 @@ export function RegisterTableEditRowContentBodyNormal(
             </RegisterDataTableEdit>
             {row.type === "Dz. bud" && (
                 <RegisterConstructionJournalTableEdit
-                    // customIndentLevel={4}
+                    customIndentLevel={4}
                     {...props}
                 />
             )}
@@ -70,13 +70,13 @@ export function RegisterTableEditRowContentBodyNormal(
                     {row.type !== "Uzupełniający" && (
                         <RegisterConstructionIntentTableEdit
                             showMore={showMore}
-                            // customIndentLevel={4}
+                            customIndentLevel={4}
                             {...props}
                         />
                     )}
                     <RegisterAdminProceduresTableEdit
                         showMore={showMore}
-                        // customIndentLevel={6}
+                        customIndentLevel={6}
                         {...props}
                     />
                 </>

@@ -20,18 +20,18 @@ export function createMySelectOptions(stringArray: string[]): MySelectOption[] {
 
 // const MyselectValueText;
 
-export function MySelect({
+export function MyInputSelect({
     options,
     value,
     onValueChanged,
     ...selectRootProps
 }: {
     options: MySelectOption[];
-    value: string;
-    onValueChanged: (value: string) => void;
+    value: string | number;
+    onValueChanged: (value: string | number) => void;
 } & Omit<
     BoxProps & HTMLProps<HTMLSelectElement>,
-    "collection" | "value" | "onValueChange"
+    "collection" | "value" | "onValueChanged"
 >) {
     const colorContext = useContext(ColorContext);
 

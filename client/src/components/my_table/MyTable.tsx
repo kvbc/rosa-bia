@@ -17,12 +17,15 @@ import { MyTableCell } from "./MyTableCell";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LuArrowDown, LuInbox } from "react-icons/lu";
 
-const colorPalettes: ColorPalette[] = [
+const colorPalettes: (ColorPalette | [ColorPalette, number])[] = [
     "gray",
     "blue",
     "green",
+    ["green", 1],
     "orange",
+    ["orange", 1],
     "purple",
+    ["purple", 1],
     "red",
     "yellow",
     "pink",
@@ -62,16 +65,24 @@ export function MyTable(
     const lowerIndentLevel = dontAdvanceIndentLevel
         ? indentLevel
         : indentLevel + 1;
-    const lowerColorContext = useMemo<ContextType<typeof ColorContext>>(
-        () => ({
-            bg1: colorPalettes[indentLevel] + ".100",
-            bg2: colorPalettes[indentLevel] + ".200",
-            border: colorPalettes[indentLevel] + ".300",
-            darkFg: colorPalettes[indentLevel] + ".600",
-            palette: colorPalettes[indentLevel],
-        }),
-        [indentLevel]
-    );
+    const lowerColorContext = useMemo<ContextType<typeof ColorContext>>(() => {
+        let colorPalette: ColorPalette;
+        let lvl = 0;
+        const info = colorPalettes[indentLevel];
+        if (Array.isArray(info)) {
+            colorPalette = info[0];
+            lvl = info[1];
+        } else {
+            colorPalette = info;
+        }
+        return {
+            bg1: colorPalette + "." + (100 + lvl * 100),
+            bg2: colorPalette + "." + (200 + lvl * 100),
+            border: colorPalette + "." + (300 + lvl * 100),
+            darkFg: colorPalette + "." + (600 + lvl * 100),
+            palette: colorPalette,
+        };
+    }, [indentLevel]);
 
     const areRowsEmpty = React.Children.count(myRows) === 0;
     const showBody = isCollapsible ? !isCollapsed : true;
@@ -144,7 +155,7 @@ export function MyTable(
                     {showBody && myRows && areRowsEmpty && (
                         <Table.Body>
                             <MyTableRow padding="0">
-                                <MyTableCell colSpan={3} padding="0">
+                                <MyTableCell colSpan={999} padding="0">
                                     <EmptyState
                                         icon={<LuInbox />}
                                         title="Brak danych"

@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import * as DB from "@shared/db";
 
-// TODO: ideal scenario would be using HTTP-only cookies to store the jwt token but oh well
+//
+// TODO: ideal scenario would be using HTTP-only cookies to store the jwt token
+//
 export const useAuthEmployeeStore = create<{
     employee: DB.Rows.Employee | null;
     jwtToken: string | null;

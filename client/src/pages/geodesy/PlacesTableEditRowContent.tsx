@@ -60,52 +60,54 @@ export default function PlacesTableEditRowContent({
     );
 
     return (
-        <AccordionRoot variant="plain" collapsible>
-            <AccordionItem value="1">
-                <AccordionItemTrigger>
-                    <FaHome />
-                    <Box>{inputs.name}</Box>
-                </AccordionItemTrigger>
-                <AccordionItemContent>
-                    <MyTable
-                        myHeaders={[
-                            <MyTableHeader key="1">
-                                <HStack>
-                                    <FaFileAlt />
-                                    Jednostka ewidencyjna
-                                </HStack>
-                            </MyTableHeader>,
-                            <MyTableHeader key="2">
-                                <HStack>
-                                    <FaMapMarkedAlt />
-                                    Obręb
-                                </HStack>
-                            </MyTableHeader>,
-                        ]}
-                        myRows={[
-                            <MyTableRow key="1">
-                                <MyTableCell>{inputs.cad_unit}</MyTableCell>
-                                <MyTableCell>
-                                    {inputs.area_place_id}
-                                </MyTableCell>
-                            </MyTableRow>,
-                        ]}
-                    />
-                    <br />
-                    <DBTableEdit
-                        dbTable={pageGeodesyContext.streetsDBTable}
-                        rows={pageGeodesyContext.streetsDBTable.rows.filter(
-                            (fRow) => fRow.place_id === row.id
-                        )}
-                        editable={editable}
-                        hidePagination
-                        headers={streetsHeaders}
-                        rowActionButtonOrientation="vertical"
-                        defaultRow={streetsDefaultRow}
-                        rowInputsProps={streetsRowInputsProps}
-                    />
-                </AccordionItemContent>
-            </AccordionItem>
-        </AccordionRoot>
+        <MyTableCell>
+            <AccordionRoot variant="plain" collapsible>
+                <AccordionItem value="1">
+                    <AccordionItemTrigger>
+                        <FaHome />
+                        <Box>{inputs.name}</Box>
+                    </AccordionItemTrigger>
+                    <AccordionItemContent>
+                        <MyTable
+                            myHeaders={[
+                                <MyTableHeader key="1">
+                                    <HStack>
+                                        <FaFileAlt />
+                                        Jednostka ewidencyjna
+                                    </HStack>
+                                </MyTableHeader>,
+                                <MyTableHeader key="2">
+                                    <HStack>
+                                        <FaMapMarkedAlt />
+                                        Obręb
+                                    </HStack>
+                                </MyTableHeader>,
+                            ]}
+                            myRows={[
+                                <MyTableRow key="1">
+                                    <MyTableCell>{inputs.cad_unit}</MyTableCell>
+                                    <MyTableCell>
+                                        {inputs.area_place_id}
+                                    </MyTableCell>
+                                </MyTableRow>,
+                            ]}
+                        />
+                        <br />
+                        <DBTableEdit
+                            dbTable={pageGeodesyContext.streetsDBTable}
+                            rows={pageGeodesyContext.streetsDBTable.rows.filter(
+                                (fRow) => fRow.place_id === row.id
+                            )}
+                            editable={editable}
+                            hidePagination
+                            headers={streetsHeaders}
+                            rowActionButtonOrientation="vertical"
+                            defaultRow={streetsDefaultRow}
+                            rowInputsProps={streetsRowInputsProps}
+                        />
+                    </AccordionItemContent>
+                </AccordionItem>
+            </AccordionRoot>
+        </MyTableCell>
     );
 }

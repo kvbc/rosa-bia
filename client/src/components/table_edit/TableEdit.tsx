@@ -44,7 +44,7 @@ export function TableEdit<TRow extends TableEditRowType>(
         rows: TRow[];
         headers: TableEditHeader[];
         totalRowCount: number;
-        defaultRow: TRow;
+        defaultRow?: TRow;
         editable?: boolean;
         showFooter?: boolean;
         title?: string;
@@ -95,9 +95,13 @@ export function TableEdit<TRow extends TableEditRowType>(
     // revertRows - rows used to revert the changes made to the table if this table is inside of any other table
     const [rows, setRows] = useState<TRow[]>([...rowsProp]);
     const [revertRows, setRevertRows] = useState<TRow[]>([...rowsProp]); // prettier-ignore
-    const [addRow, setAddRow] = useState<TRow>({
-        ...defaultRow,
-    });
+    const [addRow, setAddRow] = useState<TRow | undefined>(
+        defaultRow
+            ? {
+                  ...defaultRow,
+              }
+            : undefined
+    );
     const [totalAddedRowsCount, setTotalAddedRowsCount] = useState<number>(0);
     const [canCommit, setCanCommit] = useState<boolean>(false);
     const [eventTarget] = useState(new EventTarget());
@@ -119,24 +123,33 @@ export function TableEdit<TRow extends TableEditRowType>(
     );
 
     useEffect(() => {
-        setAddRow((addRow) => ({
-            ...addRow,
-            // id: defaultRow.id + rows.length - rowsProp.length,
-            // id: defaultRow.id + rows.length - revertRows.length,
-            id: defaultRow.id + totalAddedRowsCount,
-        }));
-        // }, [defaultRow.id, rowsProp.length, rows.length]);
-        // }, [defaultRow.id, revertRows.length, rows.length]);
-    }, [defaultRow.id, totalAddedRowsCount]);
+        if (defaultRow?.id !== undefined) {
+            setAddRow((addRow) =>
+                addRow
+                    ? {
+                          ...addRow,
+                          // id: defaultRow.id + rows.length - rowsProp.length,
+                          // id: defaultRow.id + rows.length - revertRows.length,
+                          id: defaultRow.id + totalAddedRowsCount,
+                      }
+                    : undefined
+            );
+            // }, [defaultRow.id, rowsProp.length, rows.length]);
+            // }, [defaultRow.id, revertRows.length, rows.length]);
+        }
+    }, [defaultRow?.id, totalAddedRowsCount]);
 
     useEffect(() => {
-        setAddRow((addRow) => ({
-            ...defaultRow,
-            id: addRow.id,
-        }));
+        if (defaultRow !== undefined) {
+            setAddRow((addRow) => ({
+                ...defaultRow,
+                id: addRow ? addRow.id : defaultRow.id,
+            }));
+        }
     }, [defaultRow]);
 
     useEffect(() => {
+        console.log("this problem?", rowsProp.at(0));
         setRevertRows([...rowsProp]);
         setRows([...rowsProp]);
     }, [rowsProp]);
@@ -148,6 +161,9 @@ export function TableEdit<TRow extends TableEditRowType>(
      */
 
     const commitChanges = useCallback(() => {
+        if (revertRows === rows) {
+            return;
+        }
         console.log(revertRows, "=>", rows);
         let anyChanges = false;
         rows.forEach((row) => {
@@ -158,6 +174,7 @@ export function TableEdit<TRow extends TableEditRowType>(
                     anyChanges = true;
                 }
             } else {
+                console.log("adding", row);
                 onRowAddClicked?.(row);
                 anyChanges = true;
             }
@@ -169,7 +186,7 @@ export function TableEdit<TRow extends TableEditRowType>(
             }
         });
         if (anyChanges) {
-            setRevertRows([...rows]);
+            setRevertRows(rows);
         }
         setTotalAddedRowsCount(0);
         eventTarget.dispatchEvent(new Event("changesCommited"));
@@ -200,6 +217,7 @@ export function TableEdit<TRow extends TableEditRowType>(
     }, [upperTableEventTarget, commitChanges, cancelChanges]);
 
     useEffect(() => {
+        console.log(canCommit);
         if (canCommit) {
             setCanCommit(false);
             commitChanges();
@@ -216,11 +234,11 @@ export function TableEdit<TRow extends TableEditRowType>(
         (addedRow: TRow) => {
             setRows((rows) => [...rows, { ...addedRow }]);
             setTotalAddedRowsCount((totalCount) => totalCount + 1);
-            if (!upperTableEventTarget) {
+            if (!upperTableEventTarget && !canCommit) {
                 setCanCommit(true);
             }
         },
-        [upperTableEventTarget]
+        [upperTableEventTarget, canCommit]
     );
 
     const handleRowSaved = useCallback(
@@ -228,21 +246,21 @@ export function TableEdit<TRow extends TableEditRowType>(
             setRows((rows) =>
                 rows.map((row) => (row.id === newRow.id ? newRow : row))
             );
-            if (!upperTableEventTarget) {
+            if (!upperTableEventTarget && !canCommit) {
                 setCanCommit(true);
             }
         },
-        [upperTableEventTarget]
+        [upperTableEventTarget, canCommit]
     );
 
     const handleRowDeleted = useCallback(
         (deletedRow: TRow) => {
             setRows((rows) => rows.filter((row) => row.id !== deletedRow.id));
-            if (!upperTableEventTarget) {
+            if (!upperTableEventTarget && !canCommit) {
                 setCanCommit(true);
             }
         },
-        [upperTableEventTarget]
+        [upperTableEventTarget, canCommit]
     );
 
     /*
@@ -304,7 +322,9 @@ export function TableEdit<TRow extends TableEditRowType>(
                           </MyTableRow>
                       ))
                     : (editable && !disableRowAdding
-                          ? [...rows, addRow]
+                          ? addRow
+                              ? [...rows, addRow]
+                              : rows
                           : rows
                       ).map((row) => (
                           <TableEditRow<TRow>

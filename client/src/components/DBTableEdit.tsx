@@ -5,7 +5,7 @@
 // 1
 //
 
-import React, { ComponentProps, useCallback, useMemo } from "react";
+import React, { ComponentProps, useCallback, useEffect, useMemo } from "react";
 import { TableEdit } from "./table_edit/TableEdit";
 import * as DB from "@shared/db";
 import { DBTable } from "@/hooks/useDBTable";
@@ -22,7 +22,7 @@ export function DBTableEdit<
     ...restTableEditProps
 }: {
     dbTable: DBTable<TDatabaseRow>;
-    defaultRow: DBTableEditDefaultRow<TRow>;
+    defaultRow?: DBTableEditDefaultRow<TRow>;
     rows?: TRow[];
 } & Omit<
     ComponentProps<typeof TableEdit<TRow>>,
@@ -53,24 +53,39 @@ export function DBTableEdit<
         [setStartRowIndex, setEndRowIndex]
     );
 
-    const defaultRow = useMemo<TRow>(
+    const defaultRow = useMemo<TRow | undefined>(
         // FIXME: as?
-        () => ({ ...defaultRowProp, id: topRowID + 1 } as TRow),
+        () =>
+            defaultRowProp
+                ? ({ ...defaultRowProp, id: topRowID + 1 } as TRow)
+                : undefined,
         [defaultRowProp, topRowID]
     );
 
+    const stripClientRowKeys = useCallback((row: TRow): TDatabaseRow => {
+        row = { ...row };
+        Object.keys(row).forEach((key) => {
+            if (key.startsWith("CLIENT_")) {
+                delete row[key];
+            }
+        });
+        return row;
+    }, []);
+
     const handleRowAddClicked = useCallback(
         (row: TRow) => {
-            addRowMutation.mutate(row);
+            const dbRow = stripClientRowKeys(row);
+            addRowMutation.mutate(dbRow);
         },
-        [addRowMutation]
+        [addRowMutation, stripClientRowKeys]
     );
 
     const handleRowSaveClicked = useCallback(
         (row: TRow) => {
-            updateRowMutation.mutate(row);
+            const dbRow = stripClientRowKeys(row);
+            updateRowMutation.mutate(dbRow);
         },
-        [updateRowMutation]
+        [updateRowMutation, stripClientRowKeys]
     );
 
     const handleRowDeleteClicked = useCallback(
@@ -79,6 +94,10 @@ export function DBTableEdit<
         },
         [deleteRowMutation]
     );
+
+    useEffect(() => {
+        console.log(">>huh", rows);
+    }, [rows]);
 
     return (
         <TableEdit<TRow>

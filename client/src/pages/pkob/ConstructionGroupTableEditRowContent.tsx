@@ -13,6 +13,7 @@ import {
 import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { ConstructionGroupIcon } from "./PagePKOB";
+import { MyTableCell } from "@/components/my_table/MyTableCell";
 
 export default function ConstructionGroupTableEditRowContent({
     inputs,
@@ -49,29 +50,31 @@ export default function ConstructionGroupTableEditRowContent({
     );
 
     return (
-        <AccordionRoot variant="plain" collapsible>
-            <AccordionItem value="1">
-                <AccordionItemTrigger>
-                    <ConstructionGroupIcon />
-                    <Box>{inputs.name}</Box>
-                </AccordionItemTrigger>
-                <AccordionItemContent>
-                    <DBTableEdit
-                        dbTable={pageContext.constructionClassesDBTable}
-                        rows={pageContext.constructionClassesDBTable.rows.filter(
-                            (fRow) => fRow.group_id === row.id
-                        )}
-                        editable={editable}
-                        headers={["Klasy Budowlane"]}
-                        hidePagination
-                        defaultRow={defaultRow}
-                        rowInputsProps={rowInputsProps}
-                        RowContentComponent={
-                            ConstructionClassTableEditRowContent
-                        }
-                    />
-                </AccordionItemContent>
-            </AccordionItem>
-        </AccordionRoot>
+        <MyTableCell>
+            <AccordionRoot variant="plain" collapsible>
+                <AccordionItem value="1">
+                    <AccordionItemTrigger>
+                        <ConstructionGroupIcon />
+                        <Box>{inputs.name}</Box>
+                    </AccordionItemTrigger>
+                    <AccordionItemContent>
+                        <DBTableEdit
+                            dbTable={pageContext.constructionClassesDBTable}
+                            rows={pageContext.constructionClassesDBTable.rows.filter(
+                                (fRow) => fRow.group_id === row.id
+                            )}
+                            editable={editable}
+                            headers={["Klasy Budowlane"]}
+                            hidePagination
+                            defaultRow={defaultRow}
+                            rowInputsProps={rowInputsProps}
+                            RowContentComponent={
+                                ConstructionClassTableEditRowContent
+                            }
+                        />
+                    </AccordionItemContent>
+                </AccordionItem>
+            </AccordionRoot>
+        </MyTableCell>
     );
 }

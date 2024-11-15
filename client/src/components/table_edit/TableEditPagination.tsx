@@ -14,7 +14,10 @@ import {
     PaginationRoot,
 } from "@/components/ui/pagination";
 import { TableEdit, TableEditRowType } from "./TableEdit";
-import { createMySelectOptions, MySelect } from "@/components/MySelect";
+import {
+    createMySelectOptions,
+    MyInputSelect,
+} from "@/components/my_input/MyInputSelect";
 import { ColorContext } from "@/contexts/ColorContext";
 
 export function TableEditPagination<TRow extends TableEditRowType>({
@@ -58,7 +61,7 @@ export function TableEditPagination<TRow extends TableEditRowType>({
                                 darkFg: "gray.600",
                             }}
                         >
-                            <MySelect
+                            <MyInputSelect
                                 color="black"
                                 options={rowsPerPageOptions}
                                 value={String(rowsPerPage)}

@@ -1,4 +1,4 @@
-import RegisterAdminProcedureActionsTable from "./RegisterAdminProcedureActionsTable";
+import RegisterAdminProcedureActionsDBTableEdit from "./RegisterAdminProcedureActionsDBTableEdit";
 import * as DB from "@shared/db";
 import React, { ComponentProps } from "react";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
@@ -54,7 +54,9 @@ export default function RegisterAdminProceduresTableEdit(
                 <>
                     <Tr>
                         <Tc colSpan={2}>
-                            <RegisterAdminProcedureActionsTable {...props} />
+                            <RegisterAdminProcedureActionsDBTableEdit
+                                {...props}
+                            />
                         </Tc>
                     </Tr>
                     {showConstructionJournal && (

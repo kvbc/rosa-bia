@@ -15,6 +15,7 @@ import { TableEditHeader } from "@/components/table_edit/TableEdit";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
 import { ConstructionSectionIcon } from "./PagePKOB";
+import { MyTableCell } from "@/components/my_table/MyTableCell";
 
 export default function ConstructionSectionTableEditRowContent({
     inputs,
@@ -48,29 +49,31 @@ export default function ConstructionSectionTableEditRowContent({
     );
 
     return (
-        <AccordionRoot collapsible variant="plain">
-            <AccordionItem value="1">
-                <AccordionItemTrigger>
-                    <ConstructionSectionIcon />
-                    <Box>{inputs.name}</Box>
-                </AccordionItemTrigger>
-                <AccordionItemContent>
-                    <DBTableEdit
-                        hidePagination
-                        dbTable={pageContext.constructionDivisionsDBTable}
-                        rows={pageContext.constructionDivisionsDBTable.rows.filter(
-                            (fRow) => fRow.section_id === row.id
-                        )}
-                        editable={editable}
-                        headers={headers}
-                        defaultRow={defaultRow}
-                        rowInputsProps={rowInputsProps}
-                        RowContentComponent={
-                            ConstructionDivisionTableEditRowContent
-                        }
-                    />
-                </AccordionItemContent>
-            </AccordionItem>
-        </AccordionRoot>
+        <MyTableCell>
+            <AccordionRoot collapsible variant="plain">
+                <AccordionItem value="1">
+                    <AccordionItemTrigger>
+                        <ConstructionSectionIcon />
+                        <Box>{inputs.name}</Box>
+                    </AccordionItemTrigger>
+                    <AccordionItemContent>
+                        <DBTableEdit
+                            hidePagination
+                            dbTable={pageContext.constructionDivisionsDBTable}
+                            rows={pageContext.constructionDivisionsDBTable.rows.filter(
+                                (fRow) => fRow.section_id === row.id
+                            )}
+                            editable={editable}
+                            headers={headers}
+                            defaultRow={defaultRow}
+                            rowInputsProps={rowInputsProps}
+                            RowContentComponent={
+                                ConstructionDivisionTableEditRowContent
+                            }
+                        />
+                    </AccordionItemContent>
+                </AccordionItem>
+            </AccordionRoot>
+        </MyTableCell>
     );
 }

@@ -58,57 +58,59 @@ export default function ConstructionClassTableEditRowContent({
     );
 
     return (
-        <AccordionRoot variant="plain" collapsible>
-            <AccordionItem value="1">
-                <AccordionItemTrigger>
-                    <ConstructionClassIcon />
-                    <Box>{inputs.name}</Box>
-                </AccordionItemTrigger>
-                <AccordionItemContent>
-                    <MyTable
-                        myHeaders={[
-                            <MyTableHeader key="1">PKOB</MyTableHeader>,
-                        ]}
-                        myRows={[
-                            <MyTableRow key="1">
-                                <MyTableCell>{inputs.pkob}</MyTableCell>
-                            </MyTableRow>,
-                        ]}
-                    />
-                    <br />
-                    <DBTableEdit
-                        dbTable={pageContext.constructionSpecsDBTable}
-                        rows={pageContext.constructionSpecsDBTable.rows.filter(
-                            (fRow) => fRow.class_id === row.id
-                        )}
-                        editable={editable}
-                        hidePagination
-                        defaultRow={defaultRow}
-                        rowInputsProps={rowInputsProps}
-                        title="Wyszczególnienia Budowlane"
-                        headers={[
-                            <MyTableHeader key="1">
-                                <HStack>
-                                    <ConstructionSpecIcon />
-                                    Wyszczególnienie Budowlane
-                                </HStack>
-                            </MyTableHeader>,
-                            <MyTableHeader key="2">
-                                <HStack>
-                                    <FaTags />
-                                    Kat. Obiektu
-                                </HStack>
-                            </MyTableHeader>,
-                            <MyTableHeader key="3">
-                                <HStack>
-                                    <FaExclamationTriangle />
-                                    Kat. Zagrożenia Ludzi
-                                </HStack>
-                            </MyTableHeader>,
-                        ]}
-                    />
-                </AccordionItemContent>
-            </AccordionItem>
-        </AccordionRoot>
+        <MyTableCell>
+            <AccordionRoot variant="plain" collapsible>
+                <AccordionItem value="1">
+                    <AccordionItemTrigger>
+                        <ConstructionClassIcon />
+                        <Box>{inputs.name}</Box>
+                    </AccordionItemTrigger>
+                    <AccordionItemContent>
+                        <MyTable
+                            myHeaders={[
+                                <MyTableHeader key="1">PKOB</MyTableHeader>,
+                            ]}
+                            myRows={[
+                                <MyTableRow key="1">
+                                    <MyTableCell>{inputs.pkob}</MyTableCell>
+                                </MyTableRow>,
+                            ]}
+                        />
+                        <br />
+                        <DBTableEdit
+                            dbTable={pageContext.constructionSpecsDBTable}
+                            rows={pageContext.constructionSpecsDBTable.rows.filter(
+                                (fRow) => fRow.class_id === row.id
+                            )}
+                            editable={editable}
+                            hidePagination
+                            defaultRow={defaultRow}
+                            rowInputsProps={rowInputsProps}
+                            title="Wyszczególnienia Budowlane"
+                            headers={[
+                                <MyTableHeader key="1">
+                                    <HStack>
+                                        <ConstructionSpecIcon />
+                                        Wyszczególnienie Budowlane
+                                    </HStack>
+                                </MyTableHeader>,
+                                <MyTableHeader key="2">
+                                    <HStack>
+                                        <FaTags />
+                                        Kat. Obiektu
+                                    </HStack>
+                                </MyTableHeader>,
+                                <MyTableHeader key="3">
+                                    <HStack>
+                                        <FaExclamationTriangle />
+                                        Kat. Zagrożenia Ludzi
+                                    </HStack>
+                                </MyTableHeader>,
+                            ]}
+                        />
+                    </AccordionItemContent>
+                </AccordionItem>
+            </AccordionRoot>
+        </MyTableCell>
     );
 }

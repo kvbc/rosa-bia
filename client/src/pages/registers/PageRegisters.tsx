@@ -5,15 +5,7 @@ import useDBTable from "@/hooks/useDBTable";
 import * as DB from "@shared/db";
 import { Filter } from "@server/http/routes/table_rows/get";
 
-export type ClientRegister = DB.Rows.Register & {
-    _object_construction_law_category_id: number;
-    _object_construction_section_id: number;
-    _object_construction_division_id: number;
-    _object_construction_group_id: number;
-    _object_construction_class_id: number;
-    _object_commune_id: number;
-    _object_place_id: number;
-};
+export type ClientRegister = DB.Rows.Register;
 
 export default function PageRegisters({
     registersFilters,
@@ -23,6 +15,7 @@ export default function PageRegisters({
     disableRegisterAdding?: boolean;
 }) {
     const registersDBTable = useDBTable<DB.Rows.Register>("registers", registersFilters); // prettier-ignore
+    // const registersDBTable = useDBTable<DB.Rows.Register>("registers"); // prettier-ignore
     const communesDBTable = useDBTable<DB.Rows.Commune>("communes"); // prettier-ignore
     const placesDBTable = useDBTable<DB.Rows.Place>("places"); // prettier-ignore
     const streetsDBTable = useDBTable<DB.Rows.Street>('streets'); // prettier-ignore

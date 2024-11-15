@@ -3,7 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { TableEditRowInputProps } from "./TableEditRowInput";
 import { TableEditRowType } from "@/components/table_edit/TableEdit";
-import { MySelect, MySelectOption } from "@/components/MySelect";
+import {
+    MyInputSelect,
+    MySelectOption,
+} from "@/components/my_input/MyInputSelect";
 
 export function TableEditRowInputSelect<TRow extends TableEditRowType>({
     row,
@@ -19,18 +22,17 @@ export function TableEditRowInputSelect<TRow extends TableEditRowType>({
         if (getSelectOptions) {
             setSelectOptions(getSelectOptions(row));
         }
-    }, [getSelectOptions, row]);
+    }, [getSelectOptions, row, rowKey]);
 
     return (
-        <MySelect
+        <MyInputSelect
             options={selectOptions}
-            value={String(row[rowKey])}
+            value={row[rowKey] as string | number}
             fontSize="inherit"
             onValueChanged={(value) =>
                 setRow((row) => ({
                     ...row,
-                    [rowKey]:
-                        typeof row[rowKey] === "number" ? Number(value) : value,
+                    [rowKey]: value,
                 }))
             }
             disabled={disabled}

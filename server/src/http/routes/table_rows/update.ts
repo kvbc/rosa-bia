@@ -46,7 +46,7 @@ router.post(
                 if (sqlParams.length > 0) {
                     sqlQuery += ", ";
                 }
-                sqlQuery += `${key}=?`;
+                sqlQuery += `\`${key}\`=?`;
                 sqlParams.push(newRow[key]);
             }
         }

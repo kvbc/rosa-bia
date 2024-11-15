@@ -75,7 +75,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
     const isActionAddButtonDisabled = upperRowContext?.state === "adding";
 
     useEffect(() => {
-        setRow({ ...rowProp });
+        setRow((row) => ({ ...row, ...rowProp }));
     }, [rowProp]);
 
     useEffect(() => {
@@ -123,17 +123,14 @@ export function TableEditRow<TRow extends TableEditRowType>({
             inputs[inputProps.rowKey] = renderInput(inputProps.rowKey);
         });
         content = (
-            <MyTableCell>
-                <ContentComponent
-                    key="1"
-                    inputs={inputs}
-                    row={row}
-                    setRow={setRow}
-                    editable={isContentEditable}
-                    onInputFocusOut={handleInputFocusOut}
-                    eventTarget={eventTarget}
-                />
-            </MyTableCell>
+            <ContentComponent
+                inputs={inputs}
+                row={row}
+                setRow={setRow}
+                editable={isContentEditable}
+                onInputFocusOut={handleInputFocusOut}
+                eventTarget={eventTarget}
+            />
         );
     } else {
         content = inputsProps.map((inputProps) => (
