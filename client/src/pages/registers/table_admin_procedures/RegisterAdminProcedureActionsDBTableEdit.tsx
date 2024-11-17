@@ -8,7 +8,7 @@ import { TableEditHeader } from "@/components/table_edit/TableEdit";
 import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
 import RegisterAdminProcedureActionsDBTableEditRowContent from "./RegisterAdminProcedureActionsDBTableEditRowContent";
 
-const registerTypeActionTypes: Record<
+const REGISTER_TYPE_ACTION_TYPES: Record<
     DB.Rows.RegisterType,
     DB.Rows.RegisterAdminActionType[]
 > = {
@@ -78,6 +78,35 @@ const registerTypeActionTypes: Record<
     "Lokalizacja inwestycji (Inne)": [],
 } as const;
 
+const ACTION_TYPES_EDITABLE_FIELDS: Record<
+    DB.Rows.RegisterAdminActionType,
+    (keyof DB.Rows.RegisterAdminAction)[]
+> = {
+    Wezwanie: ["deadline", "letter_date", "receipt_date", "reply_date"],
+    Zawiadomienie: ["letter_date", "receipt_date"],
+    Postanowienie: ["deadline", "letter_date", "receipt_date", "reply_date"],
+    Konserwator: ["letter_date", "receipt_date", "reply_date"],
+    "Zawieszenie postępowania": ["letter_date", "receipt_date", "reply_date"],
+    "Przedłużenie terminu": ["deadline"],
+    "Publiczna informacja": ["letter_date"],
+    "Wynik kontroli": [],
+    "Zawiadomienie o kontroli": [
+        "deadline",
+        "letter_date",
+        "receipt_date",
+        "reply_date",
+    ],
+    "Zawiadomienie o ponownej kontroli": [
+        "deadline",
+        "letter_date",
+        "receipt_date",
+        "reply_date",
+    ],
+    "Zgłoszenie rozbiórki": ["letter_date"],
+    Kontrola: ["deadline", "letter_date", "receipt_date", "reply_date"],
+    Upomnienie: ["deadline", "letter_date", "receipt_date", "reply_date"],
+};
+
 export default function RegisterAdminProcedureActionsDBTableEdit(
     props: TableEditRowContentComponentProps<ClientRegister>
 ) {
@@ -90,7 +119,7 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
     >([]);
 
     const actionTypes = useMemo(
-        () => registerTypeActionTypes[row.type],
+        () => REGISTER_TYPE_ACTION_TYPES[row.type],
         [row.type]
     );
 
@@ -117,18 +146,34 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
             {
                 rowKey: "deadline",
                 type: "number",
+                getIsDisabled: (row) =>
+                    !ACTION_TYPES_EDITABLE_FIELDS[row.type].includes(
+                        "deadline"
+                    ),
             },
             {
                 rowKey: "letter_date",
                 type: "date",
+                getIsDisabled: (row) =>
+                    !ACTION_TYPES_EDITABLE_FIELDS[row.type].includes(
+                        "letter_date"
+                    ),
             },
             {
                 rowKey: "receipt_date",
                 type: "date",
+                getIsDisabled: (row) =>
+                    !ACTION_TYPES_EDITABLE_FIELDS[row.type].includes(
+                        "letter_date"
+                    ),
             },
             {
                 rowKey: "reply_date",
                 type: "date",
+                getIsDisabled: (row) =>
+                    !ACTION_TYPES_EDITABLE_FIELDS[row.type].includes(
+                        "reply_date"
+                    ),
             },
         ],
         []
@@ -271,6 +316,7 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
     return (
         <DBTableEdit
             hidePagination
+            disableActions
             editable={editable}
             dbTable={pageContext.registerAdminActionsDBTable}
             headers={headers}

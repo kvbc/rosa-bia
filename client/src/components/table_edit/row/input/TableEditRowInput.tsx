@@ -10,6 +10,8 @@ import React, {
     Dispatch,
     HTMLInputTypeAttribute,
     SetStateAction,
+    useEffect,
+    useState,
 } from "react";
 import { TableEditRowType } from "@/components/table_edit/TableEdit";
 import { Center } from "@chakra-ui/react";
@@ -27,6 +29,7 @@ export type TableEditRowInputProps<TRow extends TableEditRowType> = {
     disabled?: boolean;
     onFocusOut: () => void;
     getSelectOptions?: (row: TRow) => MySelectOption[];
+    getIsDisabled?: (row: TRow) => boolean;
 };
 
 export function TableEditRowInput<TRow extends TableEditRowType>(
@@ -39,18 +42,34 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
         type,
         rowKey,
         placeholder,
-        disabled,
+        getIsDisabled,
+        disabled: disabledProp,
+
         onFocusOut,
         ...inputProps
     } = props;
 
+    const [isDisabled, setIsDisabled] = useState<boolean>(true);
+    useEffect(() => {
+        if (disabledProp === true) {
+            setIsDisabled(true);
+        } else if (getIsDisabled) {
+            setIsDisabled(getIsDisabled(row));
+        } else {
+            setIsDisabled(false);
+        }
+    }, [row, getIsDisabled, disabledProp]);
+
     switch (type) {
         case "select":
-            return <TableEditRowInputSelect {...props} />;
+            return <TableEditRowInputSelect {...props} disabled={isDisabled} />;
         case "checkbox":
             return (
                 <Center>
-                    <TableEditRowInputCheckbox {...props} />
+                    <TableEditRowInputCheckbox
+                        {...props}
+                        disabled={isDisabled}
+                    />
                 </Center>
             );
         // case "number":
@@ -67,7 +86,7 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
                     [rowKey]: type === "number" ? Number(value) : value,
                 }))
             }
-            disabled={disabled}
+            disabled={isDisabled}
             onBlur={onFocusOut}
             placeholder={placeholder}
             {...inputProps}

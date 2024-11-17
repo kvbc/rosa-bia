@@ -353,10 +353,14 @@ insert into registers(
 -- 
 
 insert into employees values
-    (null, 'Tomasz Jomasz', '', 0),
-    (null, 'Tymek Dymek', '', 0),
-    (null, 'Marek Zegarek', '123', 0),
-    (null, 'Arek Garek', '', 0),
+    (null, 'Elżbieta Dawidziak', '', 0),
+    (null, 'Krzysztof Czuryło', '', 0),
+    (null, 'Lucyna Spisak', '', 0),
+    (null, 'Edyta Drążek', '', 0),
+    (null, 'Małgorzata Marczak', '', 0),
+    (null, 'Roman Bębenek', '', 0),
+    (null, 'Marta Kozakiewicz', '', 0),
+    (null, 'Edyta Pałubicka', '', 0),
     (null, 'Admin', '12345', 1);
 
 -- 

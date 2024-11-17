@@ -53,6 +53,7 @@ export function TableEdit<TRow extends TableEditRowType>(
         baseRowKey?: number;
         disableRowAdding?: boolean;
         hidePagination?: boolean;
+        disableActions?: boolean;
         onRowDeleteClicked?: (row: TRow) => void;
         onRowAddClicked?: (row: TRow) => void;
         onRowSaveClicked?: (row: TRow) => void;
@@ -85,8 +86,9 @@ export function TableEdit<TRow extends TableEditRowType>(
         RowContentComponent,
         ...myTableProps
     } = props;
-    let { editable, showFooter, baseRowKey } = props;
+    let { editable, showFooter, baseRowKey, disableActions } = props;
 
+    disableActions = disableActions ?? false;
     baseRowKey = baseRowKey ?? 0;
     if (editable === undefined) {
         editable = true;
@@ -117,7 +119,7 @@ export function TableEdit<TRow extends TableEditRowType>(
 
     const headers = useMemo<TableEditHeader[]>(
         () =>
-            editable
+            editable && !disableActions
                 ? [
                       ...headersProp,
                       {
@@ -126,7 +128,7 @@ export function TableEdit<TRow extends TableEditRowType>(
                       },
                   ]
                 : headersProp,
-        [editable, headersProp]
+        [editable, headersProp, disableActions]
     );
 
     // useEffect(increaseRerenderCount);
@@ -343,6 +345,7 @@ export function TableEdit<TRow extends TableEditRowType>(
                                   (row === addRow ? row.id + 100 : row.id)
                               } // to avoid same-key problems when changing ids
                               row={row}
+                              disableActions={disableActions}
                               onAddClicked={
                                   row === addRow ? handleRowAdded : undefined
                               }

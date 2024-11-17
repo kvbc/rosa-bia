@@ -45,6 +45,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
     actionButtonOrientation = "horizontal",
     showSaveAction,
     inputsProps,
+    disableActions,
     ContentComponent,
     saveOnInputFocusOut,
 }: {
@@ -55,6 +56,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
     showSaveAction: boolean;
     editable: boolean;
     stateProp: TableEditRowState;
+    disableActions: boolean;
     actionButtonOrientation?: "horizontal" | "vertical";
     inputsProps: TableEditRowInputsProps<TRow>;
     ContentComponent?: TableEditRowContentComponent<TRow>;
@@ -252,7 +254,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
             <TableEditRowContext.Provider value={context}>
                 {content}
             </TableEditRowContext.Provider>
-            {editable && (
+            {editable && !disableActions && (
                 <>
                     {!showSaveAction && (
                         <MyTableCell>
