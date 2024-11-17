@@ -1,6 +1,6 @@
 // 1
 
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import * as HTTP from "@server/http/types";
 import { EmployeeLoginRequest } from "@server/http/routes/employee_login";
 import * as DB from "@shared/db";
@@ -51,32 +51,37 @@ export const apiEmployeeLogin = async (
  *
  */
 
-export const apiAddTableRow = async (
+export const apiAddTableRow = (
     tableName: DB.TableName,
-    newRow: DB.Row
+    newRow: DB.Row,
+    config?: AxiosRequestConfig
 ) => {
-    return await axios.post(
-        HTTP_SERVER_URL + "/table_rows/add/" + tableName,
-        newRow
-    );
+    return axios
+        .post(HTTP_SERVER_URL + "/table_rows/add/" + tableName, newRow, config)
+        .then((res) => res.data);
 };
 
 export const apiDeleteTableRow = async (
     tableName: DB.TableName,
-    rowID: number
+    rowID: number,
+    config?: AxiosRequestConfig
 ) => {
     return await axios.post(
-        HTTP_SERVER_URL + `/table_rows/delete/${tableName}/${rowID}`
+        HTTP_SERVER_URL + `/table_rows/delete/${tableName}/${rowID}`,
+        {},
+        config
     );
 };
 
 export const apiUpdateTableRow = async (
     tableName: DB.TableName,
-    updatedRow: DB.Row
+    updatedRow: DB.Row,
+    config?: AxiosRequestConfig
 ) => {
     return await axios.post(
         HTTP_SERVER_URL + "/table_rows/update/" + tableName,
-        updatedRow
+        updatedRow,
+        config
     );
 };
 
@@ -84,16 +89,21 @@ export const apiGetTableRows = async <TRow extends DB.Row>(
     tableName: DB.TableName,
     startRowIndex: number | null = null,
     endRowIndex: number | null = null,
-    filters: Filter[] = []
+    filters: Filter[] = [],
+    config?: AxiosRequestConfig
 ) => {
     let path = `/table_rows/get/${tableName}/`;
     if (startRowIndex !== null) {
         path += startRowIndex + "/" + endRowIndex!;
     }
     return await axios
-        .post<HTTP.Response<TRow>>(HTTP_SERVER_URL + path, {
-            filters,
-        })
+        .post<HTTP.Response<TRow>>(
+            HTTP_SERVER_URL + path,
+            {
+                filters,
+            },
+            config
+        )
         .then((res) => {
             const msg = res.data;
             if (msg.type === "fetch table rows") {

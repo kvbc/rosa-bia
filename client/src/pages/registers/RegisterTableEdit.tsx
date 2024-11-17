@@ -123,11 +123,11 @@ export default function RegisterTableEdit(
             rowKey,
             type: "select",
             getSelectOptions: (row) => {
-                console.log(
-                    rowKey,
-                    row.type,
-                    typeof options === "function" ? options(row) : options
-                );
+                // console.log(
+                //     rowKey,
+                //     row.type,
+                //     typeof options === "function" ? options(row) : options
+                // );
                 return (
                     typeof options === "function" ? options(row) : options
                 ).map<MySelectOption>((option) => getOption(option));

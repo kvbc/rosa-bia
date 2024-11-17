@@ -145,7 +145,8 @@ create table registers_admin_actions( -- rejestry: czynnosci administracyjne
     letter_date date not null, -- data pisma
     receipt_date date, -- data odebrania
     reply_date date, -- data odpowiedzi
-    foreign key(register_id) references registers(id)
+    foreign key(register_id) references registers(id),
+    CONSTRAINT uq UNIQUE(register_id, `type`) ON CONFLICT REPLACE
 );
 
 -- 

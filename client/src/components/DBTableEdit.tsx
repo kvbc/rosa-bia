@@ -95,9 +95,9 @@ export function DBTableEdit<
         [deleteRowMutation]
     );
 
-    useEffect(() => {
-        console.log(">>huh", rows);
-    }, [rows]);
+    // useEffect(() => {
+    //     console.log(">>huh", rows);
+    // }, [rows]);
 
     return (
         <TableEdit<TRow>

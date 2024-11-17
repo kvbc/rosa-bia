@@ -10,6 +10,7 @@ import React, {
     useContext,
     useEffect,
     useMemo,
+    useReducer,
     useState,
 } from "react";
 import { TableEditRow } from "./row/TableEditRow";
@@ -49,6 +50,7 @@ export function TableEdit<TRow extends TableEditRowType>(
         showFooter?: boolean;
         title?: string;
         isLoading?: boolean;
+        baseRowKey?: number;
         disableRowAdding?: boolean;
         hidePagination?: boolean;
         onRowDeleteClicked?: (row: TRow) => void;
@@ -83,8 +85,9 @@ export function TableEdit<TRow extends TableEditRowType>(
         RowContentComponent,
         ...myTableProps
     } = props;
-    let { editable, showFooter } = props;
+    let { editable, showFooter, baseRowKey } = props;
 
+    baseRowKey = baseRowKey ?? 0;
     if (editable === undefined) {
         editable = true;
     }
@@ -107,6 +110,10 @@ export function TableEdit<TRow extends TableEditRowType>(
     const [eventTarget] = useState(new EventTarget());
     const upperTableEventTarget = useContext(TableEditContext);
     const upperRowContext = useContext(TableEditRowContext);
+    // const [rerenderCount, increaseRerenderCount] = useReducer(
+    //     (count) => count + 1,
+    //     0
+    // );
 
     const headers = useMemo<TableEditHeader[]>(
         () =>
@@ -121,6 +128,8 @@ export function TableEdit<TRow extends TableEditRowType>(
                 : headersProp,
         [editable, headersProp]
     );
+
+    // useEffect(increaseRerenderCount);
 
     useEffect(() => {
         if (defaultRow?.id !== undefined) {
@@ -149,7 +158,7 @@ export function TableEdit<TRow extends TableEditRowType>(
     }, [defaultRow]);
 
     useEffect(() => {
-        console.log("this problem?", rowsProp.at(0));
+        // console.log("this problem?", rowsProp.at(0));
         setRevertRows([...rowsProp]);
         setRows([...rowsProp]);
     }, [rowsProp]);
@@ -217,7 +226,7 @@ export function TableEdit<TRow extends TableEditRowType>(
     }, [upperTableEventTarget, commitChanges, cancelChanges]);
 
     useEffect(() => {
-        console.log(canCommit);
+        // console.log(canCommit);
         if (canCommit) {
             setCanCommit(false);
             commitChanges();
@@ -328,7 +337,11 @@ export function TableEdit<TRow extends TableEditRowType>(
                           : rows
                       ).map((row) => (
                           <TableEditRow<TRow>
-                              key={row === addRow ? row.id + 100 : row.id} // to avoid same-key problems when changing ids
+                              key={
+                                  //   rerenderCount +
+                                  baseRowKey +
+                                  (row === addRow ? row.id + 100 : row.id)
+                              } // to avoid same-key problems when changing ids
                               row={row}
                               onAddClicked={
                                   row === addRow ? handleRowAdded : undefined

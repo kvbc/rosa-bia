@@ -29,6 +29,8 @@ export default function useDBTable<TRow extends DB.Row>(
     const [filters, setFilters] = useState<Filter[]>(filtersProp ?? []);
     const webSocket = useContext(WebSocketContext)!;
     const queryClient = useQueryClient();
+    const [addRowMutationAbortController, setAddRowMutationAbortController] =
+        useState(new AbortController());
 
     useEffect(() => {
         if (filtersProp) {
@@ -59,17 +61,33 @@ export default function useDBTable<TRow extends DB.Row>(
     }, [rowsQuery.data]);
 
     const addRowMutation = useMutation({
-        mutationFn: (newRow: TRow) => apiAddTableRow(tableName, newRow),
-        onSuccess: (_, newRow) => {
-            addRow(newRow);
-            queryClient.invalidateQueries({
-                queryKey: ["table_rows", tableName],
+        mutationKey: ["add_row_mutation", addRowMutationAbortController],
+        mutationFn: (newRow: TRow) => {
+            if (addRowMutationAbortController.signal.aborted) {
+                return Promise.resolve(null);
+            }
+            return apiAddTableRow(tableName, newRow, {
+                signal: addRowMutationAbortController.signal,
             });
         },
-        // onError: () => {
-        //     setRows((rows) => [...rows]);
+        onSuccess: (_, newRow) => {
+            if (newRow) {
+                addRow(newRow);
+                queryClient.invalidateQueries({
+                    queryKey: ["table_rows", tableName],
+                });
+            }
+        },
+        // onError: (error) => {
+        //     console.error(error);
+        //     // setRows((rows) => [...rows]);
         // },
     });
+
+    const abortAddRowMutation = useCallback(() => {
+        addRowMutationAbortController.abort();
+        setAddRowMutationAbortController(new AbortController());
+    }, [addRowMutationAbortController]);
 
     const deleteRowMutation = useMutation({
         mutationFn: (rowID: number) => apiDeleteTableRow(tableName, rowID),
@@ -183,5 +201,7 @@ export default function useDBTable<TRow extends DB.Row>(
         filters,
         setFilters,
         topRowID,
+        refetchRows,
+        abortAddRowMutation,
     };
 }

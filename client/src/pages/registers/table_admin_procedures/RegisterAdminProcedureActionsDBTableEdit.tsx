@@ -1,11 +1,8 @@
 import * as DB from "@shared/db";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import RegisterAdminProcedureActionsTableRow from "./RegisterAdminProcedureActionsTableRow";
-import { MyTable as Tb } from "@/components/my_table/MyTable";
-import { MyTableHeader as Th } from "@/components/my_table/MyTableHeader";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { ClientRegister } from "../PageRegisters";
-import { DBTableEdit, DBTableEditDefaultRow } from "@/components/DBTableEdit";
+import { DBTableEdit } from "@/components/DBTableEdit";
 import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import { TableEditHeader } from "@/components/table_edit/TableEdit";
 import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
@@ -85,11 +82,12 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
     props: TableEditRowContentComponentProps<ClientRegister>
 ) {
     const pageContext = useContext(PageRegistersContext)!;
+    // const queryClient = useQueryClient();
     const { row, editable } = props;
 
     const [actionTypesBeingAdded, setActionTypesBeingAdded] = useState<
-        Partial<Record<DB.Rows.RegisterAdminActionType, boolean>>
-    >({});
+        DB.Rows.RegisterAdminActionType[]
+    >([]);
 
     const actionTypes = useMemo(
         () => registerTypeActionTypes[row.type],
@@ -137,48 +135,135 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
     );
 
     useEffect(() => {
-        actionTypes.forEach(async (actionType) => {
-            console.log(actionType);
-            if (
-                !actionTypesBeingAdded[actionType] &&
-                pageContext.registerAdminActionsDBTable.rows.find(
-                    (actionRow) =>
-                        actionRow.type === actionType &&
-                        actionRow.register_id === row.id
-                ) === undefined
-            ) {
-                console.log("adding");
-                pageContext.registerAdminActionsDBTable.addRowMutation.mutate({
-                    id: pageContext.registerAdminActionsDBTable.topRowID + 1,
-                    deadline: 0,
-                    letter_date: "",
-                    receipt_date: "",
-                    register_id: row.id,
-                    reply_date: "",
-                    select: 0,
-                    type: actionType,
-                });
-                setActionTypesBeingAdded((actionTypesBeingAdded) => ({
-                    ...actionTypesBeingAdded,
-                    [actionType]: true,
-                }));
+        console.log(
+            ">Rows:",
+            pageContext.registerAdminActionsDBTable.rows.filter(
+                (fRow) => fRow.register_id === row.id
+            )
+        );
+    }, [pageContext.registerAdminActionsDBTable.rows, row.id]);
+
+    useEffect(() => {
+        console.log(">Init");
+    }, []);
+
+    useEffect(() => {
+        console.log(">Type is", row.type);
+        setActionTypesBeingAdded([]);
+    }, [row.type]);
+
+    useEffect(() => {
+        console.log(">>", actionTypes);
+
+        const offs = actionTypes.map(
+            (actionType: DB.Rows.RegisterAdminActionType, actionTypeIndex) => {
+                console.log(
+                    actionType,
+                    actionTypesBeingAdded.includes(actionType)
+                );
+                if (
+                    !actionTypesBeingAdded.includes(actionType) &&
+                    pageContext.registerAdminActionsDBTable.rows.find(
+                        (actionRow) =>
+                            actionRow.type === actionType &&
+                            actionRow.register_id === row.id
+                    ) === undefined
+                ) {
+                    console.log("adding");
+                    const id =
+                        pageContext.registerAdminActionsDBTable.topRowID +
+                        1 +
+                        actionTypeIndex;
+                    setActionTypesBeingAdded((actionTypesBeingAdded) => [
+                        ...actionTypesBeingAdded,
+                        actionType,
+                    ]);
+                    // if (
+                    //     pageContext.registerAdminActionsDBTable.rows.find(
+                    //         (fRow) => fRow.id === id
+                    //     ) === undefined
+                    // ) {
+                    pageContext.registerAdminActionsDBTable.addRowMutation.mutate(
+                        {
+                            id,
+                            deadline: 0,
+                            letter_date: "",
+                            receipt_date: "",
+                            register_id: row.id,
+                            reply_date: "",
+                            select: 0,
+                            type: actionType,
+                        }
+                    );
+                    // }
+                    return () => {
+                        // setActionTypesBeingAdded((actionTypesBeingAdded) =>
+                        //     actionTypesBeingAdded.filter(
+                        //         (type) => type !== actionType
+                        //     )
+                        // );
+                        // pageContext.registerAdminActionsDBTable.abortAddRowMutation();
+                        // pageContext.registerAdminActionsDBTable.deleteRowMutation.mutate(
+                        //     id
+                        // );
+                    };
+                    // return () => {
+                    //     pageContext.registerAdminActionsDBTable.deleteRowMutation.mutate(
+                    //         id
+                    //     );
+                    // };
+                    // return pageContext.registerAdminActionsDBTable
+                    //     .abortAddRowMutation;
+                    // return () => {
+                    //     pageContext.registerAdminActionsDBTable.addRowMutation.reset();
+                    // queryClient.invalidateQueries({
+                    //     queryKey: [
+                    //         "table_rows",
+                    //         "registers_admin_actions" satisfies DB.TableName,
+                    //     ],
+                    // });
+                    // };
+                }
             }
-        });
+        );
+
+        // let abort = false;
+        // for (const actionType of actionTypes) {
+        //     if (abort) {
+        //         break;
+        //     }
+        //     addActionRow(actionType);
+        // }
+        // return () => {
+        //     abort = true;
+        // };
+
+        // const offs = actionTypes.map(addActionRow);
+        return () => {
+            offs.forEach((off) => off?.());
+        };
     }, [
         actionTypes,
+        actionTypesBeingAdded,
+        // pageContext.registerAdminActionsDBTable,
         pageContext.registerAdminActionsDBTable.rows,
         pageContext.registerAdminActionsDBTable.addRowMutation,
+        // pageContext.registerAdminActionsDBTable.deleteRowMutation,
         pageContext.registerAdminActionsDBTable.topRowID,
         row.id,
-        actionTypesBeingAdded,
     ]);
 
     const rows = useMemo(
         () =>
             pageContext.registerAdminActionsDBTable.rows.filter(
-                (fRow) =>
+                (fRow, fRowIndex) =>
                     fRow.register_id === row.id &&
-                    actionTypes.includes(fRow.type)
+                    actionTypes.includes(fRow.type) &&
+                    pageContext.registerAdminActionsDBTable.rows.findIndex(
+                        (fRow2) =>
+                            fRow2.register_id === row.id &&
+                            fRow2.type === fRow.type
+                    ) === fRowIndex
             ),
         [pageContext.registerAdminActionsDBTable.rows, row.id, actionTypes]
     );
