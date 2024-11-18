@@ -100,38 +100,38 @@ insert into streets values
 -- PKOB
 -- 
 
-insert into construction_sections values
-    (null, 'Budynki'),
-    (null, 'Statki'),
-    (null, 'Pałace');
+-- insert into construction_sections values
+--     (null, 'Budynki'),
+--     (null, 'Statki'),
+--     (null, 'Pałace');
 
-insert into construction_divisions values
-    (null, 'mieszkalne', 1),
-    (null, 'niemieszkalne', 1),
-    (null, 'kosmiczne', 2),
-    (null, 'pasazerskie', 2),
-    (null, 'wakacyjne', 3),
-    (null, 'kultury', 3),
-    (null, 'sztuki', 3),
-    (null, 'nauki', 3);
+-- insert into construction_divisions values
+--     (null, 'mieszkalne', 1),
+--     (null, 'niemieszkalne', 1),
+--     (null, 'kosmiczne', 2),
+--     (null, 'pasazerskie', 2),
+--     (null, 'wakacyjne', 3),
+--     (null, 'kultury', 3),
+--     (null, 'sztuki', 3),
+--     (null, 'nauki', 3);
 
-insert into construction_groups values
-    (null, 'jednorodzinne', 1),
-    (null, 'wielorodzinne', 1),
-    (null, 'udekorowane', 2),
-    (null, 'nieudekorowane', 2),
-    (null, 'malarnej', 3),
-    (null, 'digitalnej', 3);
+-- insert into construction_groups values
+--     (null, 'jednorodzinne', 1),
+--     (null, 'wielorodzinne', 1),
+--     (null, 'udekorowane', 2),
+--     (null, 'nieudekorowane', 2),
+--     (null, 'malarnej', 3),
+--     (null, 'digitalnej', 3);
 
-insert into construction_classes values
-    (null, 'pawilon', 1, 1110),
-    (null, 'willa', 1, 1112);
+-- insert into construction_classes values
+--     (null, 'pawilon', 1, 1110),
+--     (null, 'willa', 1, 1112);
 
-insert into construction_specs values
-    (null, 'abc', 1, 'WR', 'XVI'),
-    (null, 'def', 2, 'FF', 'DOS'),
-    (null, 'ghi', 3, 'DE', 'LOS'),
-    (null, 'jkl', 4, 'DE', 'FAE');
+-- insert into construction_specs values
+--     (null, 'abc', 1, 'WR', 'XVI'),
+--     (null, 'def', 2, 'FF', 'DOS'),
+--     (null, 'ghi', 3, 'DE', 'LOS'),
+--     (null, 'jkl', 4, 'DE', 'FAE');
 
 -- 
 -- Registers

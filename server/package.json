@@ -8,7 +8,7 @@
         "build": "npx tsc",
         "start": "node dist/index.js",
         "dev": "nodemon src/index.ts",
-        "rebuild_db": "cd db && del db.db && sqlite3 -init schema.sql db.db \".read data.sql\" && cd ..",
+        "rebuild_db": "cd db && del db.db && sqlite3 -init schema.sql db.db \".read data.sql\" \".read odsgen.sql\" && cd ..",
         "redev": "npm run rebuild_db && npm run dev"
     },
     "keywords": [],
