@@ -197,9 +197,6 @@ export function PageSystem() {
                     usuwanie kopii)
                 </List.Item>
                 <List.Item>
-                    Skrypt przenoszący dane z excela do bazy danych
-                </List.Item>
-                <List.Item>
                     <Highlight
                         query="Generatory statystyk"
                         styles={{
