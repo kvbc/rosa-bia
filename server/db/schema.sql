@@ -21,7 +21,7 @@ create table places( -- miejscowosci
     `name` text not null,
     commune_id integer not null,
     area_place_id integer not null, -- obreb
-    cad_unit text not null unique, -- cadastral unit (jedn. ewid.),
+    cad_unit text not null, -- unique, -- cadastral unit (jedn. ewid.),
     foreign key(commune_id) references communes(id),
     foreign key(area_place_id) references places(id)
 );

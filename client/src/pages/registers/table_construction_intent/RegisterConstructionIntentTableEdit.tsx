@@ -98,13 +98,13 @@ export default function RegisterConstructionIntentTableEdit(
             ),
         [constructionDivisionID, pageContext.constructionDivisionsDBTable.rows]
     );
-    const constructionSection = useMemo(
-        () =>
-            pageContext.constructionSectionsDBTable.rows.find(
-                (fRow) => fRow.id === constructionSectionID
-            ),
-        [pageContext.constructionSectionsDBTable.rows, constructionSectionID]
-    );
+    // const constructionSection = useMemo(
+    //     () =>
+    //         pageContext.constructionSectionsDBTable.rows.find(
+    //             (fRow) => fRow.id === constructionSectionID
+    //         ),
+    //     [pageContext.constructionSectionsDBTable.rows, constructionSectionID]
+    // );
     //
     const constructionLawIntent = useMemo(
         () =>
@@ -358,19 +358,20 @@ export default function RegisterConstructionIntentTableEdit(
     //
     //
 
-    let pnbConstructionIntent = "";
-    if (constructionSection) {
-        pnbConstructionIntent += constructionSection.name;
-    }
-    if (constructionDivision) {
-        pnbConstructionIntent += " " + constructionDivision.name;
-    }
-    if (constructionGroup) {
-        pnbConstructionIntent += " " + constructionGroup.name;
-    }
-    if (pnbConstructionIntent === "") {
-        pnbConstructionIntent = "-";
-    }
+    const pnbConstructionIntent = constructionGroup?.name;
+    // let pnbConstructionIntent = "";
+    // if (constructionSection) {
+    //     pnbConstructionIntent += constructionSection.name;
+    // }
+    // if (constructionDivision) {
+    //     pnbConstructionIntent += " " + constructionDivision.name;
+    // }
+    // if (constructionGroup) {
+    //     pnbConstructionIntent += " " + constructionGroup.name;
+    // }
+    // if (pnbConstructionIntent === "") {
+    //     pnbConstructionIntent = "-";
+    // }
 
     const constructionLawCategoryInput = useMemo(
         () => (
@@ -481,7 +482,7 @@ export default function RegisterConstructionIntentTableEdit(
     const top = (
         <>
             <Tr height={topRowHeight}>
-                <Tc rowSpan={showUsageChange ? 2 : 1}>
+                <Tc rowSpan={showUsageChange ? 2 : 1} width="1/2">
                     Nazwa zamierzenia budowlanego
                 </Tc>
                 <Tc>{constructionIntentNodes[row.type]}</Tc>
@@ -512,8 +513,8 @@ export default function RegisterConstructionIntentTableEdit(
             )}
             {showPrBud && (
                 <Tr height={topRowHeight}>
-                    <Tc>{constructionLawIntentInput}</Tc>
                     <Tc>{constructionLawIntent?.legal_basis ?? "-"}</Tc>
+                    <Tc>{constructionLawIntentInput}</Tc>
                 </Tr>
             )}
             {showPublicInfo && (

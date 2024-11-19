@@ -53,7 +53,10 @@ export function MyInputSelect({
         >
             <select
                 value={value}
-                onChange={(e) => onValueChanged(e.target.value)}
+                onChange={(e) => {
+                    const newValue = e.target.value;
+                    return onValueChanged(typeof value === 'number' ? Number(newValue) : newValue);
+                }}
             >
                 {options.map((option) => (
                     <Box

@@ -165,10 +165,10 @@ export default function useDBTable<TRow extends DB.Row>(
 
     useEffect(() => {
         return wsOnMessage<TRow>(webSocket, (message) => {
-            if (message.type === "server started") {
-                refetchRows();
-                return;
-            }
+            // if (message.type === "server started") {
+            //     refetchRows();
+            //     return;
+            // }
             if (message.tableName !== tableName) {
                 return;
             }
