@@ -8,7 +8,7 @@ export default function MyInput({
     onValueChanged,
     ...inputProps
 }: {
-    type: Omit<HTMLInputTypeAttribute, "checkbox">;
+    type: Omit<HTMLInputTypeAttribute, "checkbox">; // there's a custom component for checkbox (MyInputCheckbox.tsx)
     value: string;
     onValueChanged: (value: string) => void;
 } & InputProps) {

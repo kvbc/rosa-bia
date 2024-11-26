@@ -62,7 +62,7 @@ export function TableEditPagination<TRow extends TableEditRowType>({
                             }}
                         >
                             <MyInputSelect
-                                color="black"
+                                // color="black"
                                 options={rowsPerPageOptions}
                                 value={String(rowsPerPage)}
                                 onValueChanged={(value) =>

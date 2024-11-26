@@ -28,14 +28,14 @@ export function TableEditRowInputSelect<TRow extends TableEditRowType>({
         <MyInputSelect
             options={selectOptions}
             value={row[rowKey] as string | number}
-            fontSize="inherit"
+            // fontSize="inherit"
             onValueChanged={(value) =>
                 setRow((row) => ({
                     ...row,
                     [rowKey]: value,
                 }))
             }
-            disabled={disabled}
+            isDisabled={disabled}
             onBlur={onFocusOut}
         />
     );

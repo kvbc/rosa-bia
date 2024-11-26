@@ -283,7 +283,7 @@ export default function RegisterConstructionIntentTableEdit(
         () =>
             pageContext.constructionSectionsDBTable.rows.map<MySelectOption>(
                 (row) => ({
-                    name: row.name,
+                    label: row.name,
                     value: row.id,
                 })
             ),
@@ -295,7 +295,7 @@ export default function RegisterConstructionIntentTableEdit(
                 .filter((row) => row.section_id === constructionSectionID)
                 .map<MySelectOption>((row) => ({
                     value: row.id,
-                    name: row.name,
+                    label: row.name,
                 })),
         [constructionSectionID, pageContext.constructionDivisionsDBTable.rows]
     );
@@ -305,7 +305,7 @@ export default function RegisterConstructionIntentTableEdit(
                 .filter((row) => row.division_id === constructionDivisionID)
                 .map<MySelectOption>((row) => ({
                     value: row.id,
-                    name: row.name,
+                    label: row.name,
                 })),
         [constructionDivisionID, pageContext.constructionGroupsDBTable.rows]
     );
@@ -315,7 +315,7 @@ export default function RegisterConstructionIntentTableEdit(
                 .filter((row) => row.group_id === constructionGroupID)
                 .map<MySelectOption>((row) => ({
                     value: row.id,
-                    name: row.name,
+                    label: row.name,
                 })),
         [constructionGroupID, pageContext.constructionClassesDBTable.rows]
     );
@@ -325,7 +325,7 @@ export default function RegisterConstructionIntentTableEdit(
                 .filter((row) => row.class_id === constructionClassID)
                 .map<MySelectOption>((row) => ({
                     value: row.id,
-                    name: row.name,
+                    label: row.name,
                 })),
         [constructionClassID, pageContext.constructionSpecsDBTable.rows]
     );
@@ -335,7 +335,7 @@ export default function RegisterConstructionIntentTableEdit(
             pageContext.constructionLawCategoriesDBTable.rows.map<MySelectOption>(
                 (row) => ({
                     value: row.id,
-                    name: row.name,
+                    label: row.name,
                 })
             ),
         [pageContext.constructionLawCategoriesDBTable.rows]
@@ -346,7 +346,7 @@ export default function RegisterConstructionIntentTableEdit(
                 .filter((row) => row.category_id === constructionLawCategoryID)
                 .map<MySelectOption>((row) => ({
                     value: row.id,
-                    name: row.intent,
+                    label: row.intent,
                 })),
         [
             constructionLawCategoryID,
@@ -381,7 +381,7 @@ export default function RegisterConstructionIntentTableEdit(
                 onValueChanged={(value) =>
                     handleConstructionLawCategoryIDChanged(Number(value))
                 }
-                disabled={!editable}
+                isDisabled={!editable}
                 onBlur={onInputFocusOut}
             />
         ),
@@ -400,7 +400,7 @@ export default function RegisterConstructionIntentTableEdit(
             onValueChanged={(value) =>
                 handleConstructionLawIndentIDChanged(Number(value))
             }
-            disabled={!editable}
+            isDisabled={!editable}
             onBlur={onInputFocusOut}
         />
     );
@@ -583,7 +583,7 @@ export default function RegisterConstructionIntentTableEdit(
                                                             Number(value)
                                                         )
                                                     }
-                                                    disabled={!editable}
+                                                    isDisabled={!editable}
                                                     onBlur={onInputFocusOut}
                                                 />
                                                 {/* {
@@ -606,7 +606,7 @@ export default function RegisterConstructionIntentTableEdit(
                                                             Number(value)
                                                         )
                                                     }
-                                                    disabled={!editable}
+                                                    isDisabled={!editable}
                                                     onBlur={onInputFocusOut}
                                                 />
                                                 {/* {
@@ -629,7 +629,7 @@ export default function RegisterConstructionIntentTableEdit(
                                                             Number(value)
                                                         )
                                                     }
-                                                    disabled={!editable}
+                                                    isDisabled={!editable}
                                                     onBlur={onInputFocusOut}
                                                 />
                                                 {/* {
@@ -652,7 +652,7 @@ export default function RegisterConstructionIntentTableEdit(
                                                             Number(value)
                                                         )
                                                     }
-                                                    disabled={!editable}
+                                                    isDisabled={!editable}
                                                     onBlur={onInputFocusOut}
                                                 />
                                                 {/* {
@@ -675,7 +675,7 @@ export default function RegisterConstructionIntentTableEdit(
                                                             Number(value)
                                                         )
                                                     }
-                                                    disabled={!editable}
+                                                    isDisabled={!editable}
                                                     onBlur={onInputFocusOut}
                                                 />
                                                 {/* {

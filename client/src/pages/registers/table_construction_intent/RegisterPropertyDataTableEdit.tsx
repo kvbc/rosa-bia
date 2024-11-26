@@ -147,7 +147,7 @@ export default function RegisterPropertyDataTableEdit({
     const communesSelectOptions = useMemo(
         () =>
             pageContext.communesDBTable.rows.map<MySelectOption>((row) => ({
-                name: row.name,
+                label: row.name,
                 value: row.id,
             })),
         [pageContext.communesDBTable.rows]
@@ -157,7 +157,7 @@ export default function RegisterPropertyDataTableEdit({
             pageContext.placesDBTable.rows
                 .filter((row) => row.commune_id === communeID)
                 .map<MySelectOption>((row) => ({
-                    name: row.name,
+                    label: row.name,
                     value: row.id,
                 })),
         [pageContext.placesDBTable.rows, communeID]
@@ -167,7 +167,7 @@ export default function RegisterPropertyDataTableEdit({
             pageContext.streetsDBTable.rows
                 .filter((row) => row.place_id === placeID)
                 .map<MySelectOption>((row) => ({
-                    name: row.name,
+                    label: row.name,
                     value: row.id,
                 })),
         [pageContext.streetsDBTable.rows, placeID]
@@ -195,7 +195,7 @@ export default function RegisterPropertyDataTableEdit({
                         onValueChanged={(value) =>
                             handleCommuneIDChanged(Number(value))
                         }
-                        disabled={!editable}
+                        isDisabled={!editable}
                         onBlur={onInputFocusOut}
                     />
                 </Tc>
@@ -211,7 +211,7 @@ export default function RegisterPropertyDataTableEdit({
                         onValueChanged={(value) =>
                             handlePlaceIDChanged(Number(value))
                         }
-                        disabled={!editable}
+                        isDisabled={!editable}
                         onBlur={onInputFocusOut}
                     />
                 </Tc>
@@ -227,7 +227,7 @@ export default function RegisterPropertyDataTableEdit({
                         onValueChanged={(value) =>
                             handleStreetIDChanged(Number(value))
                         }
-                        disabled={!editable}
+                        isDisabled={!editable}
                         onBlur={onInputFocusOut}
                     />
                 </Tc>

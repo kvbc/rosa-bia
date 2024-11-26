@@ -1,3 +1,5 @@
+// Icon used to mark yet unfinished features
+
 import React from "react";
 import { Center, Icon } from "@chakra-ui/react";
 import { Tooltip } from "./ui/tooltip";

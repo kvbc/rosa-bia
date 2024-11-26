@@ -31,14 +31,11 @@ export function EmployeeAvatar({
         fallback = fullName[0] + fullName[1];
     }
 
+    const colorPalette =
+        colorPalettes[fullName.charCodeAt(0) % colorPalettes.length];
+
     return (
-        <AvatarRoot
-            size="sm"
-            colorPalette={
-                colorPalettes[fullName.charCodeAt(0) % colorPalettes.length]
-            }
-            {...props}
-        >
+        <AvatarRoot size="sm" colorPalette={colorPalette} {...props}>
             <AvatarFallback>{fallback}</AvatarFallback>
             {children}
         </AvatarRoot>

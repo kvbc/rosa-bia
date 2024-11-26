@@ -1,5 +1,3 @@
-// 1
-
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import * as HTTP from "@server/http/types";
 import { EmployeeLoginRequest } from "@server/http/routes/employee_login";

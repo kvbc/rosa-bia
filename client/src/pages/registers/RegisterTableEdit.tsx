@@ -143,8 +143,10 @@ export default function RegisterTableEdit(
                 const id = match?.at(2);
                 return {
                     value: type,
-                    name,
-                    postNameNode: id && <Badge colorPalette="blue">{id}</Badge>,
+                    label: name,
+                    postLabelNode: id && (
+                        <Badge colorPalette="blue">{id}</Badge>
+                    ),
                 };
             }),
             getSelectRowInputProps(
@@ -152,8 +154,8 @@ export default function RegisterTableEdit(
                 pageContext.employeesDBTable.rows,
                 (row) => ({
                     value: row.id,
-                    name: row.name,
-                    preNameNode: (
+                    label: row.name,
+                    preLabelNode: (
                         <EmployeeAvatar fullName={row.name} size="2xs" />
                     ),
                 })
@@ -163,26 +165,26 @@ export default function RegisterTableEdit(
             getSelectRowInputProps(
                 "app_investor_id",
                 pageContext.investorsDBTable.rows,
-                (row) => ({ value: row.id, name: row.name })
+                (row) => ({ value: row.id, label: row.name })
             ),
             getSelectRowInputProps(
                 "app_decision_type",
                 (row) => DB.Rows.getRegisterDecisionTypes(row.type),
-                (type) => ({ value: type, name: type })
+                (type) => ({ value: type, label: type })
             ),
             { rowKey: "app_decision_number", type: "number" }, // prettier-ignore
             { rowKey: "app_decision_issue_date", type: "date" }, // prettier-ignore
             getSelectRowInputProps(
                 "app_resolution_type",
                 (row) => DB.Rows.getRegisterResolutionTypes(row.type),
-                (type) => ({ value: type, name: type })
+                (type) => ({ value: type, label: type })
             ),
             { rowKey: "app_resolution_number", type: "number" }, // prettier-ignore
             { rowKey: "app_resolution_issue_date", type: "date" }, // prettier-ignore
             getSelectRowInputProps(
                 "app_construction_journal_type",
                 DB.Rows.REGISTER_CONSTRUCTION_JOURNAL_TYPES,
-                (type) => ({ value: type, name: type })
+                (type) => ({ value: type, label: type })
             ),
             // getSelectRowInputProps(
             //     "object_construction_spec_id",
@@ -192,12 +194,12 @@ export default function RegisterTableEdit(
             getSelectRowInputProps(
                 "object_construction_form_type",
                 DB.Rows.REGISTER_CONSTRUCTION_FORM_TYPES,
-                (type) => ({ value: type, name: type })
+                (type) => ({ value: type, label: type })
             ),
             getSelectRowInputProps(
                 "object_spatial_plan_type",
                 DB.Rows.REGISTER_SPATIAL_PLAN_TYPES,
-                (type) => ({ value: type, name: type })
+                (type) => ({ value: type, label: type })
             ),
             { rowKey: "object_number", type: "number" }, // prettier-ignore
             // getSelectRowInputProps(
@@ -208,7 +210,7 @@ export default function RegisterTableEdit(
             getSelectRowInputProps(
                 "object_neighbouring_property_type",
                 DB.Rows.REGISTER_NEIGHBOURING_PROPERTY_TYPES,
-                (type) => ({ value: type, name: type })
+                (type) => ({ value: type, label: type })
             ),
             { rowKey: "object_custom_construction_intent", type: "text" }, // prettier-ignore
             { rowKey: "object_demo_building_count", type: "number" }, // prettier-ignore

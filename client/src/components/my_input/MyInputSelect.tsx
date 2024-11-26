@@ -1,205 +1,138 @@
 // 1
 
-import React, { HTMLProps, ReactNode, useContext } from "react";
-import { Box, BoxProps, HStack } from "@chakra-ui/react";
-import { ColorContext } from "@/contexts/ColorContext";
+import React, {
+    ComponentProps,
+    ReactNode,
+    useCallback,
+    useContext,
+    useMemo,
+} from "react";
+import { chakraColorToCSS, ColorContext } from "@/contexts/ColorContext";
+import Select, { SingleValue, StylesConfig } from "react-select";
+import { MyInputSelectOption } from "./MyInputSelectOption";
 
 export type MySelectOption = {
-    preNameNode?: ReactNode;
-    postNameNode?: ReactNode;
     value: string | number;
-    name: string;
+    preLabelNode?: ReactNode; // node displayed before the label
+    label: string;
+    postLabelNode?: ReactNode; // node displayed after the label
 };
 
 export function createMySelectOptions(stringArray: string[]): MySelectOption[] {
     return stringArray.map<MySelectOption>((str) => ({
         value: str,
-        name: str,
+        label: str,
     }));
 }
-
-// const MyselectValueText;
 
 export function MyInputSelect({
     options,
     value,
     onValueChanged,
-    ...selectRootProps
+    ...restSelectProps
 }: {
     options: MySelectOption[];
     value: string | number;
     onValueChanged: (value: string | number) => void;
 } & Omit<
-    BoxProps & HTMLProps<HTMLSelectElement>,
-    "collection" | "value" | "onValueChanged"
+    ComponentProps<typeof Select<MySelectOption>>,
+    "options" | "value" | "onChange" | "styles"
 >) {
     const colorContext = useContext(ColorContext);
 
-    return (
-        <Box
-            asChild
-            width="full"
-            backgroundColor={colorContext.bg2}
-            // backgroundColor={colorContext.bg1}
-            padding="1"
-            border="1px solid"
-            borderColor={colorContext.border}
-            role="group"
-            _disabled={{
-                opacity: "50%",
-            }}
-            boxShadow="none"
-            {...selectRootProps}
-        >
-            <select
-                value={value}
-                onChange={(e) => {
-                    const newValue = e.target.value;
-                    return onValueChanged(typeof value === 'number' ? Number(newValue) : newValue);
-                }}
-            >
-                {options.map((option) => (
-                    <Box
-                        asChild
-                        key={option.name}
-                        backgroundColor={colorContext.bg2}
-                        borderColor={colorContext.border}
-                        boxShadow="none"
-                        // FIXME: this fucking background color
-                        _hover={{
-                            boxShadow: "0 0 10px 100px green inset",
-                        }}
-                        _groupHover={{
-                            color: "red",
-                            // backgroundColor: colorContext.border,
-                        }}
-                    >
-                        <option value={option.value}>
-                            <HStack>
-                                {option.preNameNode}
-                                {option.name}
-                                {option.postNameNode}
-                            </HStack>
-                        </option>
-                    </Box>
-                ))}
-            </select>
-        </Box>
+    // const optionValue = options.find((option) => option.value === value);
+    const optionValue = useMemo(
+        () => options.find((option) => option.value == value), // TODO: "==" required instead of "==="
+        [options, value]
     );
 
-    // return (
-    //     <NativeSelectRoot
-    //         size="sm"
-    //         height="auto"
-    //         icon={
-    //             <Icon size="xs" bg="red">
-    //                 <LuChevronDown />
-    //             </Icon>
-    //         }
-    //         {...selectRootProps}
-    //     >
-    //         <NativeSelectField
-    //             value={value}
-    //             onChange={(e) => onValueChanged(e.currentTarget.value)}
-    //             fontSize="inherit"
-    //             border="1px solid"
-    //             borderRadius="sm"
-    //             borderColor={colorContext.border}
-    //             backgroundColor={colorContext.bg2}
-    //             // padding="0"
-    //             // padding="0"
-    //             paddingLeft="1"
-    //             paddingBottom="0"
-    //             paddingTop="0"
-    //             _disabled={{ opacity: "50%" }}
-    //         >
-    //             {options.map((option) => (
-    //                 <Box
-    //                     as="option"
-    //                     key={option.name}
-    //                     fontSize="inherit"
-    //                     _hover={{
-    //                         backgroundColor: colorContext.border,
-    //                     }}
-    //                 >
-    //                     {option.name}
-    //                 </Box>
-    //             ))}
-    //         </NativeSelectField>
-    //     </NativeSelectRoot>
-    // );
+    const handleOptionChanged = useCallback(
+        (option: SingleValue<MySelectOption>) => {
+            if (option) {
+                onValueChanged(option.value);
+            }
+        },
+        [onValueChanged]
+    );
 
-    // const collection = useMemo(
-    //     () =>
-    //         createListCollection({
-    //             items: options,
-    //             itemToString: (option) => option.name,
-    //             itemToValue: (option) => String(option.value),
-    //         }),
-    //     [options]
-    // );
+    const styles = useMemo<StylesConfig<MySelectOption>>(
+        () => ({
+            container: (base) => ({
+                ...base,
+                width: "100%",
+            }),
+            menu: (base) => ({
+                ...base,
+                zIndex: "1000",
+            }),
+            menuList: (base) => ({
+                ...base,
+                padding: "4px",
+                backgroundColor: chakraColorToCSS(colorContext.bg2),
+                borderRadius: "0px",
+            }),
+            control: (base, state) => ({
+                ...base,
+                minHeight: "0px",
+                borderRadius: "0px",
+                borderColor: chakraColorToCSS(colorContext.border),
+                backgroundColor: chakraColorToCSS(colorContext.bg2),
+                ":hover": {
+                    borderColor: chakraColorToCSS(colorContext.border),
+                },
+                boxShadow: "none",
+                fontSize: "inherit",
+                opacity: state.isDisabled ? "50%" : "100%",
+            }),
+            singleValue: (base) => ({
+                ...base,
+                color: "black",
+            }),
+            valueContainer: (base) => ({
+                ...base,
+                padding: "0px",
+            }),
+            dropdownIndicator: (base) => ({
+                ...base,
+                padding: "0px",
+                color: chakraColorToCSS(colorContext.border),
+                ":hover": {
+                    color: chakraColorToCSS(colorContext.border),
+                },
+            }),
+            input: (base) => ({
+                ...base,
+                margin: "0px",
+            }),
+            option: (base, state) => ({
+                ...base,
+                padding: "2px",
+                backgroundColor: chakraColorToCSS(
+                    state.isFocused ? colorContext.border : colorContext.bg2
+                ),
+                color: "black",
+                ":hover": {
+                    backgroundColor: chakraColorToCSS(colorContext.border),
+                },
+            }),
+            indicatorSeparator: (base) => ({
+                ...base,
+                visibility: "hidden",
+            }),
+        }),
+        [colorContext]
+    );
 
-    // return (
-    //     <SelectRoot
-    //         size="sm"
-    //         collection={collection}
-    //         value={[value]}
-    //         onValueChange={(e) => onValueChanged(e.value[0])}
-    //         variant="outline"
-    //         fontSize="inherit"
-    //         {...selectRootProps}
-    //     >
-    //         <SelectTrigger
-    //             fontSize="inherit"
-    //             border="1px solid"
-    //             borderRadius="sm"
-    //             borderColor={colorContext.border}
-    //             backgroundColor={colorContext.bg2}
-    //             padding="0 !important"
-    //             _disabled={{ opacity: "50%" }}
-    //         >
-    //             <SelectValueText
-    //                 // FIXME: font size does not inherit?
-    //                 // fontSize="inherit"
-    //                 fontSize="xs" // from MyTable.tsx
-    //                 bg="red"
-    //             >
-    //                 {(items) => {
-    //                     const item = items[0];
-    //                     return (
-    //                         <HStack>
-    //                             {item.preNameNode}
-    //                             {item.name}
-    //                             {item.postNameNode}
-    //                         </HStack>
-    //                     );
-    //                 }}
-    //             </SelectValueText>
-    //         </SelectTrigger>
-    //         <SelectContent
-    //             fontSize="inherit"
-    //             border="1px solid"
-    //             backgroundColor={colorContext.bg2}
-    //             borderColor={colorContext.border}
-    //         >
-    //             {options.map((option) => (
-    //                 <SelectItem
-    //                     // FIXME: same thing as above
-    //                     fontSize="xs"
-    //                     item={option}
-    //                     justifyContent="flex-start"
-    //                     key={option.name}
-    //                     backgroundColor={colorContext.bg2}
-    //                     _hover={{
-    //                         backgroundColor: colorContext.border,
-    //                     }}
-    //                 >
-    //                     {option.preNameNode}
-    //                     {option.name}
-    //                     {option.postNameNode}
-    //                 </SelectItem>
-    //             ))}
-    //         </SelectContent>
-    //     </SelectRoot>
-    // );
+    return (
+        <Select<MySelectOption>
+            options={options}
+            value={optionValue}
+            onChange={handleOptionChanged}
+            noOptionsMessage={() => "Brak wyników"}
+            styles={styles}
+            components={{ Option: MyInputSelectOption }}
+            placeholder="-"
+            {...restSelectProps}
+        />
+    );
 }

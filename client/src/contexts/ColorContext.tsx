@@ -1,6 +1,10 @@
 import { ColorPalette } from "@chakra-ui/react";
 import { createContext } from "react";
 
+export const chakraColorToCSS = (chakraColor: string): string => {
+    return `var(--chakra-colors-${chakraColor.replace(".", "-")})`;
+};
+
 export const ColorContext = createContext<{
     bg1: string;
     bg2: string;
