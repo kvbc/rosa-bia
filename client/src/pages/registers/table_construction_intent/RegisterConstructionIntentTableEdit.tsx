@@ -332,13 +332,13 @@ export default function RegisterConstructionIntentTableEdit(
     //
     const constructionLawCategoriesSelectOptions = useMemo(
         () =>
-            pageContext.constructionLawCategoriesDBTable.rows.map<MySelectOption>(
-                (row) => ({
+            pageContext.constructionLawCategoriesDBTable.rows
+                .filter((cRow) => cRow.register_type === row.type)
+                .map<MySelectOption>((row) => ({
                     value: row.id,
                     label: row.name,
-                })
-            ),
-        [pageContext.constructionLawCategoriesDBTable.rows]
+                })),
+        [pageContext.constructionLawCategoriesDBTable.rows, row.type]
     );
     const constructionLawIntentsSelectOptions = useMemo(
         () =>

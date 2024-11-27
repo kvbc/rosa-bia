@@ -188,7 +188,7 @@ insert into registers(
     1,
 
     '69',
-    '2006-12-19',
+    '2022-12-19',
     1,
     'Inne rozstrzygnięcie', 420, '2019-02-05',
     'Bez rozpatrzenia', 2137, '2011-07-23',
@@ -221,7 +221,7 @@ insert into registers(
     2,
 
     '69420',
-    '2007-12-19',
+    '2022-12-19',
     2,
     'Inne rozstrzygnięcie', 420, '2019-02-05',
     'Bez rozpatrzenia', 2137, '2011-07-23',
@@ -254,7 +254,7 @@ insert into registers(
     3,
 
     '2137',
-    '2008-12-19',
+    '2022-12-19',
     3,
     'Inne rozstrzygnięcie', 420, '2019-02-05',
     'Bez rozpatrzenia', 2137, '2011-07-23',
@@ -287,7 +287,7 @@ insert into registers(
     4,
 
     '666',
-    '2009-12-19',
+    '2023-12-19',
     4,
     'Inne rozstrzygnięcie', 420, '2019-02-05',
     'Bez rozpatrzenia', 2137, '2011-07-23',
@@ -320,7 +320,7 @@ insert into registers(
     5,
 
     '619',
-    '2010-12-19',
+    '2023-12-19',
     5,
     'Inne rozstrzygnięcie', 420, '2019-02-05',
     'Bez rozpatrzenia', 2137, '2011-07-23',

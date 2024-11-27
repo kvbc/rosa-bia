@@ -37,6 +37,7 @@ import {
     FaNetworkWired,
     FaPalette,
     FaPlug,
+    FaPython,
     FaReact,
     FaServer,
 } from "react-icons/fa6";
@@ -166,6 +167,12 @@ export function PageSystem() {
                 link: "https://www.docker.com/",
                 brief: "Platforma do tworzenia, wdrażania i uruchamiania aplikacji w kontenerach, które izolują środowisko wykonawcze, zapewniając przenośność i skalowalność.",
             },
+            {
+                Icon: FaPython,
+                label: "Python",
+                link: "https://www.python.org/",
+                brief: "Wszechstronny i intuicyjny język programowania wykorzystywany w aplikacjach webowych, analizie danych, AI i automatyzacji.",
+            },
         ],
         []
     );
@@ -263,7 +270,7 @@ export function PageSystem() {
             <Heading size="md">
                 <HStack>
                     <LuCpu />
-                    Użyte technologie
+                    Używane technologie
                 </HStack>
             </Heading>
             <Separator />
