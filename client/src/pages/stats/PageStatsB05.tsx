@@ -131,7 +131,26 @@ export default function PageStatsB05() {
                     font,
                 });
 
-                const getColumn1a = (pkob: number) => {
+                const isPKOBEqual = (
+                    pkob: number,
+                    pkobs: number | number[]
+                ): boolean => {
+                    const isEqual = (pkob1: number, pkob2: number): boolean => {
+                        return (
+                            String(pkob1).startsWith(String(pkob2)) ||
+                            String(pkob2).startsWith(String(pkob1))
+                        );
+                    };
+                    if (Array.isArray(pkobs)) {
+                        return pkobs.some((pkob2) => isEqual(pkob, pkob2));
+                    }
+                    return isEqual(pkob, pkobs);
+                };
+
+                const getColumn1a = (
+                    pkobs: number | number[],
+                    constructionCategoryName: string = "Budowa"
+                ) => {
                     return registersDBTable.rows.filter(
                         (rRow) =>
                             (rRow.type === "PnB (6740)" ||
@@ -144,7 +163,7 @@ export default function PageStatsB05() {
                                                     cliRow.id ===
                                                     rRow.object_construction_law_intent_id
                                             )?.category_id
-                                    )?.name === "Budowa")) &&
+                                    )?.name === constructionCategoryName)) &&
                             (() => {
                                 const date = new Date(rRow.app_submission_date);
                                 return (
@@ -166,20 +185,26 @@ export default function PageStatsB05() {
                                             )?.place_id
                                     )?.commune_id
                             )?.name === communeName &&
-                            constructionClassesDBTable.rows.find(
-                                (ccRow) =>
-                                    ccRow.id ===
-                                    constructionSpecsDBTable.rows.find(
-                                        (csRow) =>
-                                            csRow.id ===
-                                            rRow.object_construction_spec_id
-                                    )?.class_id
-                            )?.pkob === pkob
+                            isPKOBEqual(
+                                constructionClassesDBTable.rows.find(
+                                    (ccRow) =>
+                                        ccRow.id ===
+                                        constructionSpecsDBTable.rows.find(
+                                            (csRow) =>
+                                                csRow.id ===
+                                                rRow.object_construction_spec_id
+                                        )?.class_id
+                                )?.pkob ?? 0,
+                                pkobs
+                            )
                     );
                 };
 
-                const getColumn1b = (pkob: number) => {
-                    return getColumn1a(pkob).filter(
+                const getColumn1b = (
+                    pkobs: number | number[],
+                    constructionCategoryName: string = "Budowa"
+                ) => {
+                    return getColumn1a(pkobs, constructionCategoryName).filter(
                         (rRow) =>
                             rRow.object_construction_form_type ===
                             "Indywidualne"
@@ -242,9 +267,7 @@ export default function PageStatsB05() {
                         reduceBuildingCount(getColumn1a(pkob)),
                         reduceBuildingCount(filterMPZP(getColumn1a(pkob))),
                         apartmentCount,
-                        pkob === 1122
-                            ? "-"
-                            : reduceUsableArea(getColumn1a(pkob), pkob),
+                        reduceUsableArea(getColumn1a(pkob), pkob),
 
                         // row b
                         getColumn1b(pkob).length,
@@ -252,9 +275,7 @@ export default function PageStatsB05() {
                         reduceBuildingCount(getColumn1b(pkob)),
                         reduceBuildingCount(filterMPZP(getColumn1b(pkob))),
                         apartmentCount,
-                        pkob === 1122
-                            ? "-"
-                            : reduceUsableArea(getColumn1b(pkob), pkob)
+                        reduceUsableArea(getColumn1b(pkob), pkob)
                     );
                 });
                 for (let ix = 0; ix < 6; ix++) {
@@ -275,6 +296,109 @@ export default function PageStatsB05() {
                         });
                     }
                 }
+
+                //
+                // Dział 2
+                //
+                const tableSection2: (number | string)[] = [
+                    // rozbudowa
+
+                    getColumn1a([11, 12], "Rozbudowa").length,
+                    "-",
+                    "-",
+
+                    getColumn1b([11, 12], "Rozbudowa").length,
+                    "-",
+                    "-",
+
+                    // przebudowa
+
+                    getColumn1a([11, 12], "Przebudowa").length,
+                    "-",
+                    "-",
+
+                    getColumn1b([11, 12], "Przebudowa").length,
+                    "-",
+                    "-",
+
+                    // nowe
+
+                    "",
+                    "-",
+                    "-",
+
+                    "",
+                    "-",
+                    "-",
+                ];
+                for (let ix = 0; ix < 3; ix++) {
+                    for (let iy = 0; iy < 6; iy++) {
+                        const index = iy * 3 + ix;
+                        const value = tableSection2[index];
+                        const xOffset = [0, 138, 290][ix];
+                        const x = 441 + xOffset;
+                        pages[1].drawText(String(value), {
+                            x,
+                            y: pages[1].getHeight() - (120 + iy * 12.75),
+                            size: 10,
+                            font,
+                        });
+                    }
+                }
+
+                //
+                // Dział 3
+                //
+                // prettier-ignore
+                const tableSection3: (string | number)[] = [];
+                [113, 121, 122, 123, 124, 125, 126, 127, 2].forEach((pkob) => {
+                    // prettier-ignore
+                    tableSection3.push(
+                        // row a
+                        getColumn1a(pkob).length,
+                        filterMPZP(getColumn1a(pkob)).length,
+                        pkob === 2 ? "" : reduceBuildingCount(getColumn1a(pkob)),
+                        pkob === 2 ? "" : reduceBuildingCount(filterMPZP(getColumn1a(pkob))),
+                        pkob === 2 ? "" : reduceUsableArea(getColumn1a(pkob), pkob),
+                    );
+                });
+                for (let ix = 0; ix < 5; ix++) {
+                    for (let iy = 0; iy < 9; iy++) {
+                        const index = iy * 5 + ix;
+                        const value = tableSection3[index];
+                        const xOffset = [0, 65, 128, 192, 273][ix];
+                        let y = 333 + iy * 14.75;
+                        const x = 486.5 + xOffset;
+                        if (iy === 6) {
+                            y += 5;
+                        } else if (iy === 7) {
+                            y = 443;
+                        } else if (iy === 8) {
+                            y = 458;
+                        }
+                        pages[1].drawText(String(value), {
+                            x,
+                            y: pages[0].getHeight() - y,
+                            size: 10,
+                            font,
+                        });
+                    }
+                }
+
+                // end
+
+                pages[1].drawText("30", {
+                    x: 740,
+                    y: 115,
+                    size: 10,
+                    font,
+                });
+                pages[1].drawText("30", {
+                    x: 740,
+                    y: 102,
+                    size: 10,
+                    font,
+                });
 
                 return pdfDoc.save();
             })
@@ -318,7 +442,6 @@ export default function PageStatsB05() {
                         <ThRow style={submittionTableHeaderStyles}>Rok</ThRow>
                         <Tc>
                             <MyInputSelect
-                                className="w-full"
                                 placeholder="Rok"
                                 value={year}
                                 options={years.map<MySelectOption>((year) => ({

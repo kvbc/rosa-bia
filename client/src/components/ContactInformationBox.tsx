@@ -11,7 +11,8 @@ import { DataListItem, DataListRoot } from "./ui/data-list";
 export const ContactInformationBox: React.FC = () => {
     return (
         <Stack gap="1" bg="gray.100" padding="2" rounded="md" width="full">
-            <Text fontSize="lg" fontWeight="bold">
+            {/* <Heading>Kontakt</Heading> */}
+            <Text fontSize="lg" fontWeight="semibold">
                 Kontakt
             </Text>
             <Separator orientation="horizontal" />
