@@ -399,6 +399,19 @@ export default function PageStatsB05() {
                     size: 10,
                     font,
                 });
+                pages[1].drawText(
+                    `Człuchów, ${new Date().toLocaleDateString(undefined, {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                    })}`,
+                    {
+                        x: 470,
+                        y: 55,
+                        size: 10,
+                        font,
+                    }
+                );
 
                 return pdfDoc.save();
             })

@@ -6,3 +6,7 @@ export function getDaysPassed(
     const time2 = new Date(date2).getTime();
     return Math.floor(Math.abs(time1 - time2) / (24 * 60 * 60 * 1000));
 }
+
+export function getDateNow(): Date {
+    return new Date(Date.now());
+}
