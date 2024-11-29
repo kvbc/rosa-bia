@@ -26,17 +26,11 @@ import {
     ProgressCircleRoot,
 } from "@/components/ui/progress-circle";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ClientRegister } from "../registers/PageRegisters";
+import { useStats } from "@/hooks/useStats";
 
 export default function PageStatsB05() {
+    const stats = useStats();
     const communesDBTable = useDBTable<DB.Rows.Commune>("communes");
-    const placesDBTable = useDBTable<DB.Rows.Place>("places");
-    const constructionLawCategoriesDBTable = useDBTable<DB.Rows.ConstructionLawCategory>("construction_law_categories"); // prettier-ignore
-    const constructionLawIntentsDBTable = useDBTable<DB.Rows.ConstructionLawIntent>("construction_law_intents"); // prettier-ignore
-    const streetsDBTable = useDBTable<DB.Rows.Street>("streets");
-    const constructionSpecsDBTable = useDBTable<DB.Rows.ConstructionSpec>("construction_specs"); // prettier-ignore
-    const constructionClassesDBTable = useDBTable<DB.Rows.ConstructionClass>("construction_classes"); // prettier-ignore
-    const registersDBTable = useDBTable<DB.Rows.Register>("registers");
 
     const minYear = 2019;
     const maxYear = new Date().getFullYear();
@@ -131,127 +125,27 @@ export default function PageStatsB05() {
                     font,
                 });
 
-                const isPKOBEqual = (
-                    pkob: number,
-                    pkobs: number | number[]
-                ): boolean => {
-                    const isEqual = (pkob1: number, pkob2: number): boolean => {
-                        return (
-                            String(pkob1).startsWith(String(pkob2)) ||
-                            String(pkob2).startsWith(String(pkob1))
-                        );
-                    };
-                    if (Array.isArray(pkobs)) {
-                        return pkobs.some((pkob2) => isEqual(pkob, pkob2));
-                    }
-                    return isEqual(pkob, pkobs);
-                };
-
-                const getColumn1a = (
+                const getRowsA = (
                     pkobs: number | number[],
                     constructionCategoryName: string = "Budowa"
-                ) => {
-                    return registersDBTable.rows.filter(
-                        (rRow) =>
-                            (rRow.type === "PnB (6740)" ||
-                                (rRow.type === "Zg. Zwykłe (6743.2)" &&
-                                    constructionLawCategoriesDBTable.rows.find(
-                                        (clcRow) =>
-                                            clcRow.id ===
-                                            constructionLawIntentsDBTable.rows.find(
-                                                (cliRow) =>
-                                                    cliRow.id ===
-                                                    rRow.object_construction_law_intent_id
-                                            )?.category_id
-                                    )?.name === constructionCategoryName)) &&
-                            (() => {
-                                const date = new Date(rRow.app_submission_date);
-                                return (
-                                    date.getFullYear() === year &&
-                                    date.getMonth() >= (quarter - 1) * 3 &&
-                                    date.getMonth() < quarter * 3
-                                );
-                            })() &&
-                            communesDBTable.rows.find(
-                                (cRow) =>
-                                    cRow.id ===
-                                    placesDBTable.rows.find(
-                                        (pRow) =>
-                                            pRow.id ===
-                                            streetsDBTable.rows.find(
-                                                (sRow) =>
-                                                    sRow.id ===
-                                                    rRow.object_street_id
-                                            )?.place_id
-                                    )?.commune_id
-                            )?.name === communeName &&
-                            isPKOBEqual(
-                                constructionClassesDBTable.rows.find(
-                                    (ccRow) =>
-                                        ccRow.id ===
-                                        constructionSpecsDBTable.rows.find(
-                                            (csRow) =>
-                                                csRow.id ===
-                                                rRow.object_construction_spec_id
-                                        )?.class_id
-                                )?.pkob ?? 0,
-                                pkobs
-                            )
-                    );
-                };
-
-                const getColumn1b = (
-                    pkobs: number | number[],
-                    constructionCategoryName: string = "Budowa"
-                ) => {
-                    return getColumn1a(pkobs, constructionCategoryName).filter(
-                        (rRow) =>
-                            rRow.object_construction_form_type ===
-                            "Indywidualne"
-                    );
-                };
-
-                const filterMPZP = (arr: ClientRegister[]) =>
-                    arr.filter(
-                        (rRow) => rRow.object_spatial_plan_type === "MPZP"
-                    );
-
-                const reduceBuildingCount = (arr: ClientRegister[]) =>
-                    arr.reduce(
-                        (total, rRow) =>
-                            total + rRow.object_demo_building_count,
-                        0
-                    );
-
-                const reduceUsableArea = (
-                    arr: ClientRegister[],
-                    _pkob: number
                 ) =>
-                    arr.reduce((total, rRow) => {
-                        //
-                        // "W przypadku domków wypoczynkowych, domów letnich i rezydencji wiejskich, zaklasyfikowanych według PKOB jako budynki jednorodzinne, w których nie ma lokali (mieszkań) przeznaczonych na stały pobyt ludzi, należy
-                        // wykazać jedynie liczbę pozwoleń i zgłoszeń z projektem budowlanym oraz liczbę budynków; nie należy wykazywać liczby i powierzchni użytkowej mieszkań."
-                        //
-                        // if (pkob === 1110) {
-                        //     const constructionSpec =
-                        //         constructionSpecsDBTable.rows.find(
-                        //             (csRow) =>
-                        //                 csRow.id ===
-                        //                 rRow.object_construction_spec_id
-                        //         );
-                        //     if (
-                        //         constructionSpec?.name &&
-                        //         [
-                        //             "domki wypoczynkowe",
-                        //             "domy letnie",
-                        //             "rezydencje wiejskie",
-                        //         ].includes(constructionSpec.name)
-                        //     ) {
-                        //         return total;
-                        //     }
-                        // }
-                        return total + rRow.object_demo_usable_area;
-                    }, 0);
+                    stats.getRows(
+                        pkobs,
+                        year,
+                        (quarter - 1) * 3,
+                        quarter * 3 - 1,
+                        false,
+                        communeName,
+                        constructionCategoryName
+                    );
+
+                const getRowsB = (
+                    pkobs: number | number[],
+                    constructionCategoryName: string = "Budowa"
+                ) =>
+                    stats.filterIndividual(
+                        getRowsA(pkobs, constructionCategoryName)
+                    );
 
                 //
                 // Dział 1: PnB i Zg. Zwykle (tylko "Budowa")
@@ -262,20 +156,24 @@ export default function PageStatsB05() {
                     const apartmentCount = [1, 2, "-"][index];
                     tableSection1.push(
                         // row a
-                        getColumn1a(pkob).length,
-                        filterMPZP(getColumn1a(pkob)).length,
-                        reduceBuildingCount(getColumn1a(pkob)),
-                        reduceBuildingCount(filterMPZP(getColumn1a(pkob))),
+                        getRowsA(pkob).length,
+                        stats.filterMPZP(getRowsA(pkob)).length,
+                        stats.reduceBuildingCount(getRowsA(pkob)),
+                        stats.reduceBuildingCount(
+                            stats.filterMPZP(getRowsA(pkob))
+                        ),
                         apartmentCount,
-                        reduceUsableArea(getColumn1a(pkob), pkob),
+                        stats.reduceUsableArea(getRowsA(pkob), pkob),
 
                         // row b
-                        getColumn1b(pkob).length,
-                        filterMPZP(getColumn1b(pkob)).length,
-                        reduceBuildingCount(getColumn1b(pkob)),
-                        reduceBuildingCount(filterMPZP(getColumn1b(pkob))),
+                        getRowsB(pkob).length,
+                        stats.filterMPZP(getRowsB(pkob)).length,
+                        stats.reduceBuildingCount(getRowsB(pkob)),
+                        stats.reduceBuildingCount(
+                            stats.filterMPZP(getRowsB(pkob))
+                        ),
                         apartmentCount,
-                        reduceUsableArea(getColumn1b(pkob), pkob)
+                        stats.reduceUsableArea(getRowsB(pkob), pkob)
                     );
                 });
                 for (let ix = 0; ix < 6; ix++) {
@@ -303,21 +201,21 @@ export default function PageStatsB05() {
                 const tableSection2: (number | string)[] = [
                     // rozbudowa
 
-                    getColumn1a([11, 12], "Rozbudowa").length,
+                    getRowsA([11, 12], "Rozbudowa").length,
                     "-",
                     "-",
 
-                    getColumn1b([11, 12], "Rozbudowa").length,
+                    getRowsB([11, 12], "Rozbudowa").length,
                     "-",
                     "-",
 
                     // przebudowa
 
-                    getColumn1a([11, 12], "Przebudowa").length,
+                    getRowsA([11, 12], "Przebudowa").length,
                     "-",
                     "-",
 
-                    getColumn1b([11, 12], "Przebudowa").length,
+                    getRowsB([11, 12], "Przebudowa").length,
                     "-",
                     "-",
 
@@ -355,11 +253,11 @@ export default function PageStatsB05() {
                     // prettier-ignore
                     tableSection3.push(
                         // row a
-                        getColumn1a(pkob).length,
-                        filterMPZP(getColumn1a(pkob)).length,
-                        pkob === 2 ? "" : reduceBuildingCount(getColumn1a(pkob)),
-                        pkob === 2 ? "" : reduceBuildingCount(filterMPZP(getColumn1a(pkob))),
-                        pkob === 2 ? "" : reduceUsableArea(getColumn1a(pkob), pkob),
+                        getRowsA(pkob).length,
+                        stats.filterMPZP(getRowsA(pkob)).length,
+                        pkob === 2 ? "" : stats.reduceBuildingCount(getRowsA(pkob)),
+                        pkob === 2 ? "" : stats.reduceBuildingCount(stats.filterMPZP(getRowsA(pkob))),
+                        pkob === 2 ? "" : stats.reduceUsableArea(getRowsA(pkob), pkob),
                     );
                 });
                 for (let ix = 0; ix < 5; ix++) {
@@ -378,7 +276,7 @@ export default function PageStatsB05() {
                         }
                         pages[1].drawText(String(value), {
                             x,
-                            y: pages[0].getHeight() - y,
+                            y: pages[1].getHeight() - y,
                             size: 10,
                             font,
                         });
@@ -423,19 +321,7 @@ export default function PageStatsB05() {
                 setPDFObjectURL(objectURL);
                 setIsGenerating(false);
             });
-    }, [
-        year,
-        communeName,
-        quarter,
-        communesDBTable.rows,
-        constructionClassesDBTable.rows,
-        constructionLawCategoriesDBTable.rows,
-        constructionLawIntentsDBTable.rows,
-        constructionSpecsDBTable.rows,
-        placesDBTable.rows,
-        registersDBTable.rows,
-        streetsDBTable.rows,
-    ]);
+    }, [year, communeName, quarter, stats]);
 
     const submittionTableHeaderStyles: React.CSSProperties = {
         width: "30%",

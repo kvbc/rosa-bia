@@ -135,7 +135,7 @@ export default function PageStatsB06() {
                         const value = table[index];
                         pages[0].drawText(String(value), {
                             x: 359 + 129 * ix,
-                            y: pages[1].getHeight() - (338 + iy * 15),
+                            y: pages[0].getHeight() - (338 + iy * 15),
                             size: 10,
                             font,
                         });

@@ -21,12 +21,27 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDateNow } from "@/utils/time";
 import MyInput from "@/components/my_input/MyInput";
+import { useStats } from "@/hooks/useStats";
 
 export default function PageStatsGUNB3() {
     const [year, setYear] = useState<number>(getDateNow().getFullYear());
     const [semester, setSemester] = useState<1 | 2>(1);
     const [pdfObjectURL, setPDFObjectURL] = useState<string | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
+
+    const stats = useStats();
+
+    const getStatRows = useCallback(
+        (pkobs: number | number[], flipPKOBs: boolean = false) =>
+            stats.getRows(
+                pkobs,
+                year,
+                (semester - 1) * 6,
+                semester * 6 - 1,
+                flipPKOBs
+            ),
+        [semester, year, stats]
+    );
 
     const handleGenerateClicked = useCallback(() => {
         // const pdfFetchUrl = `https://form.stat.gov.pl/formularze/${year}/passive/B-05.pdf`;
@@ -79,24 +94,74 @@ export default function PageStatsGUNB3() {
                     }
                 );
 
-                // prettier-ignore
-                const table: (number | string)[] = [
-                    "-","-","-","-",
-                    "-","-","-","-",
-                    "-","-","-","-",
-                    "-","-","-","-",
-                    "","-","-","-",
-                    "-","-","-","-",
-                    "-","-","-","-",
-                    "-","-","-","-"
-                ]
-                for (let ix = 0; ix < 4; ix++) {
-                    for (let iy = 0; iy < 8; iy++) {
-                        const index = iy * 4 + ix;
+                const table: number[] = [];
+                const specifiedPKOBs: (number | number[])[] = [
+                    // 1
+                    1110,
+                    [1121, 1122],
+                    [1130, 1211, 1212],
+                    [
+                        1220, 1230, 1241, 1242, 1261, 1262, 1263, 1264, 1265,
+                        1272, 1273, 1274,
+                    ],
+                    1271,
+                    [1251, 1252],
+                    [2111, 2112, 2121, 2122, 2130, 2141, 2142],
+                    [2151, 2152, 2153],
+                    [2211, 2212, 2213, 2214, 2221, 2222, 2223, 2224],
+                    // 2
+                    [2111, 2112, 2141, 2142],
+                    [2151, 2152, 2420],
+                ];
+                specifiedPKOBs.forEach((pkobs) => {
+                    // prettier-ignore
+                    table.push(
+                        getStatRows(pkobs).length,
+                        stats.reduceBuildingCount(getStatRows(pkobs))
+                    );
+                });
+                const specPKOBsMerged = specifiedPKOBs.reduce<number[]>(
+                    (acc, pkobs) =>
+                        typeof pkobs === "number"
+                            ? [...acc, pkobs]
+                            : [...acc, ...pkobs],
+                    []
+                );
+                table.push(
+                    getStatRows(specPKOBsMerged, true).length,
+                    stats.reduceBuildingCount(
+                        getStatRows(specPKOBsMerged, true)
+                    )
+                );
+                table.push(
+                    table.reduce<number>(
+                        (acc, v, i) => (i % 2 === 0 ? acc + v : acc),
+                        0
+                    ),
+                    table.reduce<number>(
+                        (acc, v, i) => (i % 2 === 1 ? acc + v : acc),
+                        0
+                    )
+                );
+                for (let ix = 0; ix < 2; ix++) {
+                    for (let iy = 0; iy < 11; iy++) {
+                        const index = iy * 2 + ix;
                         const value = table[index];
                         pages[0].drawText(String(value), {
-                            x: 359 + 129 * ix,
-                            y: pages[1].getHeight() - (338 + iy * 15),
+                            x: 347 + 81 * ix,
+                            y: pages[0].getHeight() - (340 + iy * 34.5),
+                            size: 10,
+                            font,
+                        });
+                    }
+                }
+                for (let ix = 0; ix < 2; ix++) {
+                    for (let iy = 11; iy < 13; iy++) {
+                        const index = iy * 2 + ix;
+                        const value = table[index];
+                        pages[1].drawText(String(value), {
+                            x: 362 + 105 * ix,
+                            y: pages[1].getHeight() - (257 + (iy - 11) * 43),
                             size: 10,
                             font,
                         });
@@ -113,7 +178,7 @@ export default function PageStatsGUNB3() {
                 setPDFObjectURL(objectURL);
                 setIsGenerating(false);
             });
-    }, [year, semester]);
+    }, [year, semester, getStatRows, stats]);
 
     const submittionTableHeaderStyles: React.CSSProperties = {
         width: "30%",

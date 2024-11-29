@@ -219,18 +219,6 @@ export function PageSystem() {
                 </List.Item>
                 <List.Item>
                     <Highlight
-                        query="Generatory statystyk"
-                        styles={{
-                            px: "0.5",
-                            bg: "orange.subtle",
-                            color: "orange.fg",
-                        }}
-                    >
-                        Generatory statystyk
-                    </Highlight>
-                </List.Item>
-                <List.Item>
-                    <Highlight
                         query="Filtry"
                         styles={{
                             px: "0.5",

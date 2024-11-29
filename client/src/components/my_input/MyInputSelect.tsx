@@ -1,5 +1,3 @@
-// 1
-
 import React, {
     ComponentProps,
     ReactNode,
