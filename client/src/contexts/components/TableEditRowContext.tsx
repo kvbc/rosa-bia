@@ -3,4 +3,5 @@ import { TableEditRowState } from "@/components/table_edit/row/TableEditRow";
 
 export const TableEditRowContext = createContext<{
     state: TableEditRowState;
+    isFilterRow: boolean;
 } | null>(null);

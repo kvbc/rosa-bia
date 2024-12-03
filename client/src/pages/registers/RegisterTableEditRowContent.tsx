@@ -7,13 +7,15 @@ import { MyTableHeader } from "@/components/my_table/MyTableHeader";
 import { RegisterTableEditRowContentBodyOther } from "./RegisterTableEditRowContentBodyOther";
 import { RegisterTableEditRowContentBodyNormal } from "./RegisterTableEditRowContentBodyNormal";
 import { ClientRegister } from "./PageRegisters";
+import { FaBook, FaUserTie } from "react-icons/fa6";
+import { HStack } from "@chakra-ui/react";
 
 export const topRowHeight = "30px";
 
 export default function RegisterTableEditRowContent(
     props: TableEditRowContentComponentProps<ClientRegister>
 ) {
-    const { row, inputs } = props;
+    const { row, inputs, ftoggles } = props;
 
     const isRegisterOther =
         row.type === "Konserwator (Inne)" ||
@@ -22,14 +24,21 @@ export default function RegisterTableEditRowContent(
 
     return (
         <>
-            <MyTable
-                myHeaders={
-                    <>
-                        <MyTableHeader>Typ Rejestru</MyTableHeader>
-                        <MyTableHeader>Przydział</MyTableHeader>
-                    </>
-                }
-            >
+            <MyTable>
+                <MyTableHeader>
+                    <HStack gap="1">
+                        {ftoggles.type}
+                        <FaBook />
+                        Typ Rejestru
+                    </HStack>
+                </MyTableHeader>
+                <MyTableHeader>
+                    <HStack gap="1">
+                        {ftoggles.assigned_employee_id}
+                        <FaUserTie />
+                        Przydział
+                    </HStack>
+                </MyTableHeader>
                 <MyTableRow>
                     <MyTableCell>{inputs.type}</MyTableCell>
                     <MyTableCell>{inputs.assigned_employee_id}</MyTableCell>

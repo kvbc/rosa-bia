@@ -1,20 +1,29 @@
 import { ColorContext } from "@/contexts/ColorContext";
 import { Input, InputProps } from "@chakra-ui/react";
 import React, { HTMLInputTypeAttribute, useContext } from "react";
+import { MyInputLock } from "./MyInputLock";
 
 export default function MyInput({
     type,
     value,
     onValueChanged,
+    isLocked,
+    onLockClicked,
     ...inputProps
 }: {
     type?: Omit<HTMLInputTypeAttribute, "checkbox">; // there's a custom component for checkbox (MyInputCheckbox.tsx)
     value: string;
     onValueChanged: (value: string) => void;
+    isLocked?: boolean;
+    onLockClicked?: () => void;
 } & InputProps) {
     type = type ?? "text";
 
     const colorContext = useContext(ColorContext);
+
+    if (isLocked) {
+        return <MyInputLock onLockClicked={onLockClicked} />;
+    }
 
     return (
         <Input

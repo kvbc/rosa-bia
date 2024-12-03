@@ -1,14 +1,17 @@
-import { Box, Heading, HStack } from "@chakra-ui/react";
+import { Box, Heading, HStack, Text } from "@chakra-ui/react";
 import React from "react";
 import { FeatureUnfinishedIcon } from "@/components/FeatureUnfinishedIcon";
 
 export function PageDatabase() {
     return (
-        <HStack>
-            <Box>
-                <FeatureUnfinishedIcon />
-            </Box>
-            <Heading>Zarządzanie bazą danych</Heading>
-        </HStack>
+        <>
+            <Heading>
+                <HStack>
+                    <FeatureUnfinishedIcon />
+                    Zarządzanie bazą danych
+                </HStack>
+            </Heading>
+            <Text>Do zrobienia ...</Text>
+        </>
     );
 }

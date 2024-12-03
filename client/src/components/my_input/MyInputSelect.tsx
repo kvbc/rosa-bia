@@ -8,6 +8,8 @@ import React, {
 import { chakraColorToCSS, ColorContext } from "@/contexts/ColorContext";
 import Select, { SingleValue, StylesConfig } from "react-select";
 import { MyInputSelectOption } from "./MyInputSelectOption";
+import { MyInputSingleValue } from "./MyInputSingleValue";
+import { MyInputLock } from "./MyInputLock";
 
 export type MySelectOption = {
     value: string | number;
@@ -27,11 +29,15 @@ export function MyInputSelect({
     options,
     value,
     onValueChanged,
+    isLocked,
+    onLockClicked,
     ...restSelectProps
 }: {
     options: MySelectOption[];
     value: string | number;
     onValueChanged: (value: string | number) => void;
+    isLocked?: boolean;
+    onLockClicked?: () => void;
 } & Omit<
     ComponentProps<typeof Select<MySelectOption>>,
     "options" | "value" | "onChange" | "styles"
@@ -61,7 +67,7 @@ export function MyInputSelect({
             }),
             menu: (base) => ({
                 ...base,
-                zIndex: "1000",
+                zIndex: "10000",
             }),
             menuList: (base) => ({
                 ...base,
@@ -121,6 +127,10 @@ export function MyInputSelect({
         [colorContext]
     );
 
+    if (isLocked) {
+        return <MyInputLock onLockClicked={onLockClicked} />;
+    }
+
     return (
         <Select<MySelectOption>
             options={options}
@@ -128,7 +138,10 @@ export function MyInputSelect({
             onChange={handleOptionChanged}
             noOptionsMessage={() => "Brak wyników"}
             styles={styles}
-            components={{ Option: MyInputSelectOption }}
+            components={{
+                Option: MyInputSelectOption,
+                SingleValue: MyInputSingleValue,
+            }}
             placeholder="-"
             {...restSelectProps}
         />

@@ -1,4 +1,3 @@
-import * as DB from "@shared/db";
 import React, { ComponentProps } from "react";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { MyTable as Tb } from "@/components/my_table/MyTable";
@@ -13,15 +12,8 @@ export default function RegisterConstructionJournalTableEdit({
 }: ComponentProps<typeof Tb> &
     TableEditRowContentComponentProps<ClientRegister>) {
     return (
-        <Tb
-            isCollapsible
-            myHeaders={
-                <>
-                    <Th colSpan={2}>Dziennik budowy</Th>
-                </>
-            }
-            {...myTableProps}
-        >
+        <Tb isCollapsible {...myTableProps}>
+            <Th colSpan={2}>Dziennik budowy</Th>
             <Tr>
                 <Tc>Nr dziennika</Tc>
                 <Tc>{inputs.admin_construction_journal_number}</Tc>

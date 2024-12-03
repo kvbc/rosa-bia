@@ -15,6 +15,8 @@ export function TableEditRowInputSelect<TRow extends TableEditRowType>({
     disabled,
     onFocusOut,
     getSelectOptions,
+    isLocked,
+    onLockClicked,
 }: TableEditRowInputProps<TRow>) {
     const [selectOptions, setSelectOptions] = useState<MySelectOption[]>([]);
 
@@ -37,6 +39,8 @@ export function TableEditRowInputSelect<TRow extends TableEditRowType>({
             }
             isDisabled={disabled}
             onBlur={onFocusOut}
+            isLocked={isLocked}
+            onLockClicked={onLockClicked}
         />
     );
 }

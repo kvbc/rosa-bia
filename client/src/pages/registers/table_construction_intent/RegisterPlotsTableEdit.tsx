@@ -5,6 +5,10 @@ import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
 import { ClientRegister } from "../PageRegisters";
+import { TableEditHeader } from "@/components/table_edit/TableEdit";
+import { MyTableHeader } from "@/components/my_table/MyTableHeader";
+import { FaMap } from "react-icons/fa6";
+import { HStack } from "@chakra-ui/react";
 
 export default function RegisterPlotsDataTableEdit({
     row,
@@ -36,12 +40,27 @@ export default function RegisterPlotsDataTableEdit({
         []
     );
 
-    const plotTypeHeaders: Record<DB.Rows.RegisterPlotType, string> = {
-        app: "Działki objęte wnioskiem",
-        invest: "Działki objęte inwestycją",
-        road: "Działki w pasie drogi",
-        limited: "Działki z ograniczonym korzystaniem",
-    };
+    const plotTypeHeaders: Record<DB.Rows.RegisterPlotType, string> = useMemo(
+        () => ({
+            app: "Działki objęte wnioskiem",
+            invest: "Działki objęte inwestycją",
+            road: "Działki w pasie drogi",
+            limited: "Działki z ograniczonym korzystaniem",
+        }),
+        []
+    );
+
+    const headers = useMemo<TableEditHeader[]>(
+        () => [
+            <MyTableHeader key="1">
+                <HStack gap="1">
+                    <FaMap />
+                    {plotTypeHeaders[plotType]}
+                </HStack>
+            </MyTableHeader>,
+        ],
+        [plotType, plotTypeHeaders]
+    );
 
     return (
         <DBTableEdit
@@ -51,7 +70,7 @@ export default function RegisterPlotsDataTableEdit({
                 (fRow) => fRow.register_id === row.id && fRow.type === plotType
             )}
             defaultRow={defaultRow}
-            headers={[plotTypeHeaders[plotType]]}
+            headers={headers}
             rowInputsProps={rowInputsProps}
             isCollapsible
         />

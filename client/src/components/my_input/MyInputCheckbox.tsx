@@ -1,11 +1,26 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import React, { ComponentProps, useContext } from "react";
 import { ColorContext } from "@/contexts/ColorContext";
+import { MyInputLock } from "./MyInputLock";
 
-export function MyInputCheckbox(
-    checkboxProps: ComponentProps<typeof Checkbox>
-) {
+export function MyInputCheckbox({
+    isLocked,
+    onLockClicked,
+    ...checkboxProps
+}: {
+    isLocked?: boolean;
+    onLockClicked?: () => void;
+} & ComponentProps<typeof Checkbox>) {
     const colorContext = useContext(ColorContext);
+
+    if (isLocked) {
+        return (
+            <MyInputLock
+                onLockClicked={onLockClicked}
+                // aspectRatio="square"
+            />
+        );
+    }
 
     return (
         <Checkbox

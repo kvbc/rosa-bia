@@ -117,11 +117,13 @@ export default function RegisterTableEdit(
         options:
             | readonly TOption[]
             | ((row: ClientRegister) => readonly TOption[]),
-        getOption: (option: TOption) => MySelectOption
+        getOption: (option: TOption) => MySelectOption,
+        isFilterable: boolean = true
     ): TableEditRowInputsProps<ClientRegister>[number] {
         return {
             rowKey,
             type: "select",
+            isFilterable,
             getSelectOptions: (row) => {
                 // console.log(
                 //     rowKey,
@@ -160,8 +162,8 @@ export default function RegisterTableEdit(
                     ),
                 })
             ),
-            { rowKey: "app_number", type: "text" }, // prettier-ignore
-            { rowKey: "app_submission_date", type: "date" }, // prettier-ignore
+            { rowKey: "app_number", type: "text", isFilterable: true }, // prettier-ignore
+            { rowKey: "app_submission_date", type: "date", isFilterable: true }, // prettier-ignore
             getSelectRowInputProps(
                 "app_investor_id",
                 pageContext.investorsDBTable.rows,
@@ -172,15 +174,15 @@ export default function RegisterTableEdit(
                 (row) => DB.Rows.getRegisterDecisionTypes(row.type),
                 (type) => ({ value: type, label: type })
             ),
-            { rowKey: "app_decision_number", type: "number" }, // prettier-ignore
-            { rowKey: "app_decision_issue_date", type: "date" }, // prettier-ignore
+            { rowKey: "app_decision_number", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "app_decision_issue_date", type: "date", isFilterable: true }, // prettier-ignore
             getSelectRowInputProps(
                 "app_resolution_type",
                 (row) => DB.Rows.getRegisterResolutionTypes(row.type),
                 (type) => ({ value: type, label: type })
             ),
-            { rowKey: "app_resolution_number", type: "number" }, // prettier-ignore
-            { rowKey: "app_resolution_issue_date", type: "date" }, // prettier-ignore
+            { rowKey: "app_resolution_number", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "app_resolution_issue_date", type: "date", isFilterable: true }, // prettier-ignore
             getSelectRowInputProps(
                 "app_construction_journal_type",
                 DB.Rows.REGISTER_CONSTRUCTION_JOURNAL_TYPES,
@@ -201,7 +203,7 @@ export default function RegisterTableEdit(
                 DB.Rows.REGISTER_SPATIAL_PLAN_TYPES,
                 (type) => ({ value: type, label: type })
             ),
-            { rowKey: "object_number", type: "number" }, // prettier-ignore
+            { rowKey: "object_number", type: "number", isFilterable: true }, // prettier-ignore
             // getSelectRowInputProps(
             //     "object_street_id",
             //     (row) => pageContext.streetsDBTable.rows.filter((fRow) => fRow.place_id === row.CLIENT_object_place_id), // prettier-ignore
@@ -212,28 +214,36 @@ export default function RegisterTableEdit(
                 DB.Rows.REGISTER_NEIGHBOURING_PROPERTY_TYPES,
                 (type) => ({ value: type, label: type })
             ),
-            { rowKey: "object_custom_construction_intent", type: "text" }, // prettier-ignore
-            { rowKey: "object_demo_building_count", type: "number" }, // prettier-ignore
-            { rowKey: "object_demo_volume", type: "number" }, // prettier-ignore
-            { rowKey: "object_demo_usable_area", type: "number" }, // prettier-ignore
-            { rowKey: "object_demo_building_area", type: "number" }, // prettier-ignore
-            { rowKey: "object_demo_under_conservation_protection", type: "checkbox" }, // prettier-ignore
-            { rowKey: "object_pnb_acc_infra", type: "checkbox" }, // prettier-ignore
-            { rowKey: "object_usage_change_from", type: "text" }, // prettier-ignore
-            { rowKey: "object_usage_change_to", type: "text" }, // prettier-ignore
-            { rowKey: "object_public_info", type: "checkbox" }, // prettier-ignore
-            { rowKey: "admin_construction_journal_date", type: "date" }, // prettier-ignore
-            { rowKey: "admin_construction_journal_number", type: "number" }, // prettier-ignore
-            { rowKey: "object_localization_date_from", type: "date" }, // prettier-ignore
-            { rowKey: "object_localization_date_to", type: "date" }, // prettier-ignore
-            { rowKey: "admin_construction_journal_tome", type: "number" }, // prettier-ignore
-            { rowKey: "other_case_title", type: "text" },
-            { rowKey: "other_case_from", type: "text" },
-            { rowKey: "other_case_sign", type: "text" },
-            { rowKey: "other_case_date", type: "text" },
-            { rowKey: "other_case_init_date", type: "text" },
-            { rowKey: "other_case_settle_date", type: "text" },
-            { rowKey: "other_case_comments", type: "text" },
+            { rowKey: "object_custom_construction_intent", type: "text", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_demo_building_count", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_demo_volume", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_demo_usable_area", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_demo_building_area", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_demo_under_conservation_protection", type: "checkbox", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_pnb_acc_infra", type: "checkbox", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_usage_change_from", type: "text", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_usage_change_to", type: "text", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_public_info", type: "checkbox", isFilterable: true }, // prettier-ignore
+            { rowKey: "admin_construction_journal_date", type: "date", isFilterable: true }, // prettier-ignore
+            { rowKey: "admin_construction_journal_number", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_localization_date_from", type: "date", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_localization_date_to", type: "date", isFilterable: true }, // prettier-ignore
+            { rowKey: "admin_construction_journal_tome", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "other_case_title", type: "text", isFilterable: true },
+            { rowKey: "other_case_from", type: "text", isFilterable: true },
+            { rowKey: "other_case_sign", type: "text", isFilterable: true },
+            { rowKey: "other_case_date", type: "text", isFilterable: true },
+            {
+                rowKey: "other_case_init_date",
+                type: "text",
+                isFilterable: true,
+            },
+            {
+                rowKey: "other_case_settle_date",
+                type: "text",
+                isFilterable: true,
+            },
+            { rowKey: "other_case_comments", type: "text", isFilterable: true },
 
             // getSelectRowInputProps(
             //     "object_construction_law_intent_id",
@@ -355,6 +365,7 @@ export default function RegisterTableEdit(
             RowContentComponent={RegisterTableEditRowContent}
             rowActionButtonOrientation="vertical"
             overflow="visible"
+            showFilters
             {...props}
         />
     );

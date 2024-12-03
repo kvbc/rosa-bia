@@ -11,6 +11,8 @@ export function TableEditRowInputCheckbox<TRow extends TableEditRowType>({
     onFocusOut,
     setRow,
     rowKey,
+    isLocked,
+    onLockClicked,
 }: TableEditRowInputProps<TRow>) {
     return (
         <MyInputCheckbox
@@ -23,6 +25,8 @@ export function TableEditRowInputCheckbox<TRow extends TableEditRowType>({
             }
             onBlur={onFocusOut}
             disabled={disabled}
+            isLocked={isLocked}
+            onLockClicked={onLockClicked}
         />
     );
 }

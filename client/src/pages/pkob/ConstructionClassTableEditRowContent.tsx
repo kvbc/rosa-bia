@@ -66,16 +66,13 @@ export default function ConstructionClassTableEditRowContent({
                         <Box>{inputs.name}</Box>
                     </AccordionItemTrigger>
                     <AccordionItemContent>
-                        <MyTable
-                            myHeaders={[
-                                <MyTableHeader key="1">PKOB</MyTableHeader>,
-                            ]}
-                            myRows={[
-                                <MyTableRow key="1">
-                                    <MyTableCell>{inputs.pkob}</MyTableCell>
-                                </MyTableRow>,
-                            ]}
-                        />
+                        <MyTable>
+                            <MyTableHeader>PKOB</MyTableHeader>,
+                            <MyTableRow>
+                                <MyTableCell>{inputs.pkob}</MyTableCell>
+                            </MyTableRow>
+                            ,
+                        </MyTable>
                         <br />
                         <DBTableEdit
                             dbTable={pageContext.constructionSpecsDBTable}

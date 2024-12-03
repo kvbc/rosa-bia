@@ -12,6 +12,8 @@ import { isRegisterType } from "@/utils/array";
 import { ClientRegister } from "../PageRegisters";
 import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import { getDaysPassed } from "@/utils/time";
+import { FaBalanceScale } from "react-icons/fa";
+import { HStack } from "@chakra-ui/react";
 
 export default function RegisterAdminProceduresTableEdit(
     props: ComponentProps<typeof MyTable> &
@@ -111,21 +113,20 @@ export default function RegisterAdminProceduresTableEdit(
     }, [pageContext.registerAdminActionsDBTable.rows, row.id]);
 
     return (
-        <Tb
-            myHeaders={
-                <>
-                    <Th colSpan={2}>Postępowanie administracyjne</Th>
-                </>
-            }
-            {...myTableProps}
-        >
+        <Tb {...myTableProps}>
+            <Th colSpan={2}>
+                {/* <HStack gap="1">
+                    <FaBalanceScale /> Postępowanie administracyjne
+                </HStack> */}
+                Postępowanie administracyjne
+            </Th>
             <Tr height={topRowHeight}>
                 <Tc>Informacja o postępowaniu</Tc>
                 <Tc>{infoState}</Tc>
             </Tr>
             <Tr height={topRowHeight}>
                 <Tc>Upływający czas (dni)</Tc>
-                <Tc>{daysPassed}</Tc>
+                <Tc>{Number.isNaN(daysPassed) ? "-" : daysPassed}</Tc>
             </Tr>
             {showMore && (
                 <>
@@ -139,14 +140,8 @@ export default function RegisterAdminProceduresTableEdit(
                     {showConstructionJournal && (
                         <Tr>
                             <Tc colSpan={2}>
-                                <Tb
-                                    isCollapsible
-                                    myHeaders={
-                                        <>
-                                            <Th colSpan={2}>Dziennik budowy</Th>
-                                        </>
-                                    }
-                                >
+                                <Tb isCollapsible>
+                                    <Th colSpan={2}>Dziennik budowy</Th>
                                     <Tr>
                                         <Tc>Numer</Tc>
                                         <Tc>

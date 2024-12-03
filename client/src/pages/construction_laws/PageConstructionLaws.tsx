@@ -50,11 +50,9 @@ export const PageConstructionLaws: React.FC = () => {
 
     return (
         <PageConstructionLawsContext.Provider value={pageContext}>
-            <MyTable
-                myHeaders={[
-                    <MyTableHeader key="1">Typ rejestru</MyTableHeader>,
-                ]}
-                myRows={DB.Rows.REGISTER_TYPES.map((registerType) => (
+            <MyTable>
+                <MyTableHeader>Typ rejestru</MyTableHeader>,
+                {DB.Rows.REGISTER_TYPES.map((registerType) => (
                     <MyTableRow key={registerType}>
                         <MyTableCell>
                             <AccordionRoot collapsible variant="plain">
@@ -96,7 +94,7 @@ export const PageConstructionLaws: React.FC = () => {
                         </MyTableCell>
                     </MyTableRow>
                 ))}
-            />
+            </MyTable>
         </PageConstructionLawsContext.Provider>
     );
 };

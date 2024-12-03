@@ -14,9 +14,12 @@ import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
 import { topRowHeight } from "../RegisterTableEditRowContent";
 import { FeatureUnfinishedIcon } from "@/components/FeatureUnfinishedIcon";
 import { ClientRegister } from "../PageRegisters";
+import { HStack } from "@chakra-ui/react";
+import { FaFileSignature, FaUserTie } from "react-icons/fa6";
 
 export default function RegisterDataTableEdit({
     inputs,
+    ftoggles,
     row,
     showMore,
     children,
@@ -61,15 +64,15 @@ export default function RegisterDataTableEdit({
     }, [row.type]);
 
     return (
-        <Tb
-            myHeaders={[
-                <Th key="1" colSpan={2}>
+        <Tb overflow="visible" {...myTableProps}>
+            <Th colSpan={2}>
+                {/* <HStack gap="1">
+                    <FaFileAlt />
                     Dane wniosku
-                </Th>,
-            ]}
-            overflow="visible"
-            {...myTableProps}
-        >
+                </HStack> */}
+                Dane wniosku
+            </Th>
+            ,
             {row.type === "Dz. bud" && (
                 <>
                     <Tr>
@@ -89,12 +92,20 @@ export default function RegisterDataTableEdit({
             {row.type !== "Dz. bud" && (
                 <>
                     <Tr height={topRowHeight}>
-                        <Tc>Numer zgłoszenia</Tc>
+                        <Tc>
+                            <HStack gap="1">
+                                {ftoggles.app_number}
+                                Numer zgłoszenia
+                            </HStack>
+                        </Tc>
                         <Tc>{inputs.app_number}</Tc>
                     </Tr>
                     <Tr height={topRowHeight}>
                         <Tc position="relative">
-                            Data złożenia
+                            <HStack gap="1">
+                                {ftoggles.app_submission_date}
+                                Data złożenia
+                            </HStack>
                             {/* show more button */}
                             {children}
                         </Tc>
@@ -104,14 +115,14 @@ export default function RegisterDataTableEdit({
                         <>
                             <Tr>
                                 <Tc colSpan={2}>
-                                    <Tb
-                                        isCollapsible
-                                        myHeaders={
-                                            <>
-                                                <Th>Inwestor</Th>
-                                            </>
-                                        }
-                                    >
+                                    <Tb isCollapsible>
+                                        <Th>
+                                            <HStack gap="1">
+                                                {ftoggles.app_investor_id}
+                                                <FaUserTie />
+                                                Inwestor
+                                            </HStack>
+                                        </Th>
                                         <Tr>
                                             <Tc>{inputs.app_investor_id}</Tc>
                                         </Tr>
@@ -123,29 +134,42 @@ export default function RegisterDataTableEdit({
                             </Tr>
                             <Tr>
                                 <Tc colSpan={2}>
-                                    <Tb
-                                        isCollapsible
-                                        myHeaders={
-                                            <>
-                                                <Th colSpan={2}>
-                                                    {decisionTitle}
-                                                </Th>
-                                            </>
-                                        }
-                                    >
+                                    <Tb isCollapsible>
+                                        <Th colSpan={2}>
+                                            <HStack gap="1">
+                                                {ftoggles.app_decision_type}
+                                                <FaFileSignature />
+                                                {decisionTitle}
+                                            </HStack>
+                                        </Th>
                                         <Tr>
                                             <Tc colSpan={2}>
                                                 {inputs.app_decision_type}
                                             </Tc>
                                         </Tr>
                                         <Tr>
-                                            <Tc>Numer decyzji</Tc>
+                                            <Tc>
+                                                <HStack gap="1">
+                                                    {
+                                                        ftoggles.app_decision_number
+                                                    }
+                                                    Numer decyzji
+                                                </HStack>
+                                            </Tc>
+
                                             <Tc>
                                                 {inputs.app_decision_number}
                                             </Tc>
                                         </Tr>
                                         <Tr>
-                                            <Tc>Data wydania</Tc>
+                                            <Tc>
+                                                <HStack gap="1">
+                                                    {
+                                                        ftoggles.app_decision_issue_date
+                                                    }
+                                                    Data wydania
+                                                </HStack>
+                                            </Tc>
                                             <Tc>
                                                 {inputs.app_decision_issue_date}
                                             </Tc>
@@ -155,29 +179,41 @@ export default function RegisterDataTableEdit({
                             </Tr>
                             <Tr height="full">
                                 <Tc colSpan={2} height="full">
-                                    <Tb
-                                        isCollapsible
-                                        myHeaders={
-                                            <>
-                                                <Th colSpan={2}>
-                                                    Inne rozstrzygnięcie
-                                                </Th>
-                                            </>
-                                        }
-                                    >
+                                    <Tb isCollapsible>
+                                        <Th colSpan={2}>
+                                            <HStack gap="1">
+                                                {ftoggles.app_resolution_type}
+                                                <FaFileSignature />
+                                                Inne rozstrzygnięcie
+                                            </HStack>
+                                        </Th>
                                         <Tr>
                                             <Tc colSpan={2}>
                                                 {inputs.app_resolution_type}
                                             </Tc>
                                         </Tr>
                                         <Tr>
-                                            <Tc>Numer pisma</Tc>
+                                            <Tc>
+                                                <HStack gap="1">
+                                                    {
+                                                        ftoggles.app_resolution_number
+                                                    }
+                                                    Numer pisma
+                                                </HStack>
+                                            </Tc>
                                             <Tc>
                                                 {inputs.app_resolution_number}
                                             </Tc>
                                         </Tr>
                                         <Tr>
-                                            <Tc>Data wydania</Tc>
+                                            <Tc>
+                                                <HStack gap="1">
+                                                    {
+                                                        ftoggles.app_resolution_issue_date
+                                                    }
+                                                    Data wydania
+                                                </HStack>
+                                            </Tc>
                                             <Tc>
                                                 {
                                                     inputs.app_resolution_issue_date

@@ -34,7 +34,7 @@ import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
 import { MyTableHeader as Th } from "@/components/my_table/MyTableHeader";
 import { MyTableRow as Tr } from "@/components/my_table/MyTableRow";
 import { MyTableHeaderRow as ThRow } from "@/components/my_table/MyTableHeaderRow";
-import { HStack, Text } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { FeatureUnfinishedIcon } from "@/components/FeatureUnfinishedIcon";
 import { topRowHeight } from "../RegisterTableEditRowContent";
 import { ClientRegister } from "../PageRegisters";
@@ -42,6 +42,7 @@ import {
     MyInputSelect,
     MySelectOption,
 } from "@/components/my_input/MyInputSelect";
+import { FaMapMarkedAlt } from "react-icons/fa";
 
 export default function RegisterConstructionIntentTableEdit(
     props: ComponentProps<typeof MyTable> &
@@ -51,6 +52,7 @@ export default function RegisterConstructionIntentTableEdit(
 ) {
     const {
         inputs,
+        ftoggles,
         row,
         setRow,
         showMore,
@@ -489,13 +491,23 @@ export default function RegisterConstructionIntentTableEdit(
             </Tr>
             {showAccompanyInfrastructure && (
                 <Tr height={topRowHeight}>
-                    <Tc>Infrastruktura towarzysząca</Tc>
+                    <Tc>
+                        <HStack gap="1">
+                            {ftoggles.object_pnb_acc_infra}
+                            Infrastruktura towarzysząca
+                        </HStack>
+                    </Tc>
                     <Tc>{inputs.object_pnb_acc_infra}</Tc>
                 </Tr>
             )}
             {showUnderConservationProtection && (
                 <Tr height={topRowHeight}>
-                    <Tc>Obiekt objęty ochroną konserwatorską</Tc>
+                    <Tc>
+                        <HStack gap="1">
+                            {ftoggles.object_demo_under_conservation_protection}
+                            Obiekt objęty ochroną konserwatorską
+                        </HStack>
+                    </Tc>
                     <Tc>{inputs.object_demo_under_conservation_protection}</Tc>
                 </Tr>
             )}
@@ -503,9 +515,14 @@ export default function RegisterConstructionIntentTableEdit(
                 <Tr height={topRowHeight}>
                     <Tc>
                         <HStack alignItems="center">
-                            <Text>z</Text>
+                            <HStack gap="1">
+                                {ftoggles.object_usage_change_from}z
+                            </HStack>
                             {inputs.object_usage_change_from}
-                            <Text>na</Text>
+                            <HStack gap="1">
+                                {ftoggles.object_usage_change_to}
+                                na
+                            </HStack>
                             {inputs.object_usage_change_to}
                         </HStack>
                     </Tc>
@@ -519,13 +536,23 @@ export default function RegisterConstructionIntentTableEdit(
             )}
             {showPublicInfo && (
                 <Tr height={topRowHeight}>
-                    <Tc>Informacja publiczna</Tc>
+                    <Tc>
+                        <HStack gap="1">
+                            {ftoggles.object_public_info}
+                            Informacja publiczna
+                        </HStack>
+                    </Tc>
                     <Tc>{inputs.object_public_info}</Tc>
                 </Tr>
             )}
             {showNeighbouringPropertyType && (
                 <Tr height={topRowHeight}>
-                    <Tc>Dane nieruchomości sąsiedniej</Tc>
+                    <Tc>
+                        <HStack gap="1">
+                            {ftoggles.object_neighbouring_property_type}
+                            Dane nieruchomości sąsiedniej
+                        </HStack>
+                    </Tc>
                     <Tc>{inputs.object_neighbouring_property_type}</Tc>
                 </Tr>
             )}
@@ -540,12 +567,21 @@ export default function RegisterConstructionIntentTableEdit(
                     <Tc>
                         <Tb>
                             <Tr>
-                                <ThRow>od</ThRow>
+                                <ThRow>
+                                    <HStack gap="1">
+                                        {ftoggles.object_localization_date_from}
+                                        od
+                                    </HStack>
+                                </ThRow>
                                 <Tc>{inputs.object_localization_date_from}</Tc>
                             </Tr>
                             <Tr>
-                                <ThRow>do</ThRow>
-
+                                <ThRow>
+                                    <HStack gap="1">
+                                        {ftoggles.object_localization_date_to}
+                                        do
+                                    </HStack>
+                                </ThRow>
                                 <Tc>{inputs.object_localization_date_to}</Tc>
                             </Tr>
                         </Tb>
@@ -556,18 +592,19 @@ export default function RegisterConstructionIntentTableEdit(
                 <Tr>
                     <Tc colSpan={2}>
                         <Tb
-                            dontAdvanceIndentLevel
+                            // dontAdvanceIndentLevel
                             isCollapsible
                             // defaultIsCollapsed
-                            myHeaders={
-                                <>
-                                    <Th>Geodezja</Th>
-                                </>
-                            }
                         >
+                            <Th>
+                                <HStack gap="1">
+                                    <FaMapMarkedAlt />
+                                    Geodezja
+                                </HStack>
+                            </Th>
                             <Tr>
                                 <Tc>
-                                    <Tb>
+                                    <Tb customIndentLevel={4}>
                                         <Tr>
                                             <ThRow>Sekcja</ThRow>
                                             <Tc>
@@ -661,7 +698,14 @@ export default function RegisterConstructionIntentTableEdit(
                                             </Tc>
                                         </Tr>
                                         <Tr>
-                                            <ThRow>Wysz.</ThRow>
+                                            <ThRow>
+                                                <HStack gap="1">
+                                                    {
+                                                        ftoggles.object_construction_spec_id
+                                                    }
+                                                    Wysz.
+                                                </HStack>
+                                            </ThRow>
                                             <Tc>
                                                 <MyInputSelect
                                                     options={
@@ -744,15 +788,10 @@ export default function RegisterConstructionIntentTableEdit(
                             </Tr> */}
                             <Tr>
                                 <Tc>
-                                    <Tb
-                                        myHeaders={
-                                            <>
-                                                <Th>PKOB</Th>
-                                                <Th>Kat. Zag. Ludzi</Th>
-                                                <Th>Kat. Obiektu</Th>
-                                            </>
-                                        }
-                                    >
+                                    <Tb customIndentLevel={4}>
+                                        <Th>PKOB</Th>
+                                        <Th>Kat. Zag. Ludzi</Th>
+                                        <Th>Kat. Obiektu</Th>
                                         <Tr>
                                             <Tc>
                                                 {constructionClass?.pkob ?? "-"}
@@ -771,14 +810,23 @@ export default function RegisterConstructionIntentTableEdit(
                             </Tr>
                             <Tr>
                                 <Tc>
-                                    <Tb
-                                        myHeaders={
-                                            <>
-                                                <Th>Forma budownictwa</Th>
-                                                <Th>Planowanie przestrzenne</Th>
-                                            </>
-                                        }
-                                    >
+                                    <Tb customIndentLevel={4}>
+                                        <Th>
+                                            <HStack gap="1">
+                                                {
+                                                    ftoggles.object_construction_form_type
+                                                }
+                                                Forma budownictwa
+                                            </HStack>
+                                        </Th>
+                                        <Th>
+                                            <HStack gap="1">
+                                                {
+                                                    ftoggles.object_spatial_plan_type
+                                                }
+                                                Planowanie przestrzenne
+                                            </HStack>
+                                        </Th>
                                         <Tr>
                                             <Tc>
                                                 {
@@ -931,14 +979,16 @@ export default function RegisterConstructionIntentTableEdit(
 
     return (
         <Tb
-            myHeaders={
-                <>
-                    <Th colSpan={2}>Zamierzenie Budowlane</Th>
-                </>
-            }
             {...myTableProps}
             // sx={{ height: "100%" }}
         >
+            <Th colSpan={2}>
+                {/* <HStack gap="1">
+                    <FaHammer />
+                    Zamierzenie Budowlane
+                </HStack> */}
+                Zamierzenie Budowlane
+            </Th>
             {top}
             {body}
         </Tb>

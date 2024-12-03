@@ -1,6 +1,5 @@
 import {
     Heading,
-    Highlight,
     HStack,
     Link,
     List,
@@ -216,18 +215,6 @@ export function PageSystem() {
                 <List.Item>
                     System zarządzania bazą danych (przywracanie, tworzenie i
                     usuwanie kopii)
-                </List.Item>
-                <List.Item>
-                    <Highlight
-                        query="Filtry"
-                        styles={{
-                            px: "0.5",
-                            bg: "orange.subtle",
-                            color: "orange.fg",
-                        }}
-                    >
-                        Filtry 😱
-                    </Highlight>
                 </List.Item>
             </List.Root>
             <br />

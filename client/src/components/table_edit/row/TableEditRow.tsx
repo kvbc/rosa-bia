@@ -27,12 +27,13 @@ import { TableEditRowContext } from "@/contexts/components/TableEditRowContext";
 import { MyTableCell } from "@/components/my_table/MyTableCell";
 import { MyTableRow } from "@/components/my_table/MyTableRow";
 import { Tooltip } from "@/components/ui/tooltip";
+import { MyInputCheckbox } from "@/components/my_input/MyInputCheckbox";
 
 export type TableEditRowState = "viewing" | "editing" | "adding";
 
 export type TableEditRowInputsProps<TRow extends TableEditRowType> = Omit<
     TableEditRowInputProps<TRow>,
-    "row" | "setRow" | "onFocusOut" | "disabled"
+    "row" | "setRow" | "onFocusOut" | "disabled" | "isLocked" | "onLockClicked"
 >[];
 
 export function TableEditRow<TRow extends TableEditRowType>({
@@ -41,6 +42,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
     onAddClicked,
     stateProp,
     onSaveClicked,
+    isFilterRow: isFilterRowProp,
     editable,
     actionButtonOrientation = "horizontal",
     showSaveAction,
@@ -55,6 +57,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
     onSaveClicked?: (row: TRow) => void;
     showSaveAction: boolean;
     editable: boolean;
+    isFilterRow?: boolean;
     stateProp: TableEditRowState;
     disableActions: boolean;
     actionButtonOrientation?: "horizontal" | "vertical";
@@ -66,11 +69,14 @@ export function TableEditRow<TRow extends TableEditRowType>({
     const [state, setState] = useState<TableEditRowState>(stateProp);
     const [eventTarget] = useState(new EventTarget());
     const upperRowContext = useContext(TableEditRowContext);
+    const isFilterRow =
+        isFilterRowProp ?? upperRowContext?.isFilterRow ?? false;
     const context = useMemo<ContextType<typeof TableEditRowContext>>(
         () => ({
             state,
+            isFilterRow,
         }),
-        [state]
+        [state, isFilterRow]
     );
 
     const isContentEditable = state === "editing" || state === "adding";
@@ -97,8 +103,24 @@ export function TableEditRow<TRow extends TableEditRowType>({
      *
      */
 
+    const isKeyFiltered = useCallback(
+        (rowKey: keyof TRow & string): boolean =>
+            row["FILTER_" + rowKey] as boolean,
+        [row]
+    );
+
+    const setIsKeyFiltered = useCallback(
+        (rowKey: keyof TRow & string, isFiltered: boolean) => {
+            setRow((row) => ({
+                ...row,
+                ["FILTER_" + rowKey]: isFiltered,
+            }));
+        },
+        []
+    );
+
     const renderInput = useCallback(
-        (rowKey: keyof TRow) => {
+        (rowKey: keyof TRow & string) => {
             const inputProps = inputsProps.find(
                 (inputProps) => inputProps.rowKey === rowKey
             );
@@ -111,22 +133,65 @@ export function TableEditRow<TRow extends TableEditRowType>({
                     setRow={setRow}
                     disabled={!isContentEditable}
                     onFocusOut={handleInputFocusOut}
+                    isLocked={
+                        isFilterRow &&
+                        inputProps.isFilterable &&
+                        !isKeyFiltered(rowKey)
+                    }
+                    onLockClicked={() => setIsKeyFiltered(rowKey, true)}
                     {...inputProps}
                 />
             );
         },
-        [handleInputFocusOut, inputsProps, isContentEditable, row]
+        [
+            handleInputFocusOut,
+            inputsProps,
+            isContentEditable,
+            row,
+            isKeyFiltered,
+            isFilterRow,
+            setIsKeyFiltered,
+        ]
+    );
+
+    const renderFilterToggle = useCallback(
+        (rowKey: keyof TRow & string) => {
+            // TODO
+            return (
+                isFilterRow && (
+                    // <Checkbox
+                    //     size="xs"
+                    //     checked={isKeyFiltered(rowKey)}
+                    //     onCheckedChange={(e) =>
+                    //         setIsKeyFiltered(rowKey, !!e.checked)
+                    //     }
+                    // />
+                    <MyInputCheckbox
+                        size="xs"
+                        checked={isKeyFiltered(rowKey)}
+                        onCheckedChange={(e) =>
+                            setIsKeyFiltered(rowKey, !!e.checked)
+                        }
+                    />
+                )
+            );
+        },
+        [isFilterRow, setIsKeyFiltered, isKeyFiltered]
     );
 
     let content: ReactNode = "";
     if (ContentComponent) {
         const inputs: TableEditRowContentComponentProps<TRow>["inputs"] = {};
+        const ftoggles: TableEditRowContentComponentProps<TRow>["ftoggles"] =
+            {};
         inputsProps.forEach((inputProps) => {
             inputs[inputProps.rowKey] = renderInput(inputProps.rowKey);
+            ftoggles[inputProps.rowKey] = renderFilterToggle(inputProps.rowKey);
         });
         content = (
             <ContentComponent
                 inputs={inputs}
+                ftoggles={ftoggles}
                 row={row}
                 setRow={setRow}
                 editable={isContentEditable}

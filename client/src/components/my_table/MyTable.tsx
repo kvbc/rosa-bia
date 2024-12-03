@@ -4,7 +4,7 @@ import { ColorPalette, Float, Icon, IconButton, Table } from "@chakra-ui/react";
 import React, {
     ComponentProps,
     ContextType,
-    ReactNode,
+    ReactElement,
     useCallback,
     useContext,
     useMemo,
@@ -16,8 +16,10 @@ import { MyTableRow } from "./MyTableRow";
 import { MyTableCell } from "./MyTableCell";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LuArrowDown, LuInbox } from "react-icons/lu";
+import { MyTableHeader } from "./MyTableHeader";
+import { MyTableFooter } from "./MyTableFooter";
 
-const colorPalettes: (ColorPalette | [ColorPalette, number])[] = [
+const colorPalettes: (ColorPalette | [ColorPalette, number /* level */])[] = [
     "gray",
     "blue",
     "green",
@@ -32,64 +34,76 @@ const colorPalettes: (ColorPalette | [ColorPalette, number])[] = [
     "teal",
 ];
 
-export function MyTable(
-    props: {
-        myHeaders?: ReactNode;
-        myRows?: ReactNode;
-        myFooter?: ReactNode;
-        isCollapsible?: boolean;
-        defaultIsCollapsed?: boolean;
-        customIndentLevel?: number;
-        dontAdvanceIndentLevel?: boolean;
-    } & ComponentProps<typeof Table.Root>
-) {
-    const {
-        myHeaders,
-        myRows: _myRows,
-        myFooter,
-        isCollapsible,
-        defaultIsCollapsed,
-        children,
-        customIndentLevel,
-        dontAdvanceIndentLevel,
-        ...tableRootProps
-    } = props;
-    const myRows = _myRows ?? children;
-
+// FIXME header color should indent up
+export function MyTable({
+    isCollapsible,
+    defaultIsCollapsed,
+    children,
+    customIndentLevel,
+    keepIndentLevel,
+    showBody: showBodyProp,
+    ...tableRootProps
+}: {
+    showBody?: boolean;
+    isCollapsible?: boolean;
+    defaultIsCollapsed?: boolean;
+    customIndentLevel?: number;
+    keepIndentLevel?: boolean;
+} & ComponentProps<typeof Table.Root>) {
     const [isCollapsed, setIsCollapsed] = useState<boolean>(
         defaultIsCollapsed ?? false
     );
 
+    //
+
     const contextIndentLevel = useContext(MyTableContext);
     const indentLevel = customIndentLevel ?? contextIndentLevel;
-    const lowerIndentLevel = dontAdvanceIndentLevel
-        ? indentLevel
-        : indentLevel + 1;
     const lowerColorContext = useMemo<ContextType<typeof ColorContext>>(() => {
         let colorPalette: ColorPalette;
         let lvl = 0;
         const info = colorPalettes[indentLevel];
         if (Array.isArray(info)) {
             colorPalette = info[0];
-            lvl = info[1];
+            lvl = info[1] * 100;
         } else {
             colorPalette = info;
         }
         return {
-            bg1: colorPalette + "." + (100 + lvl * 100),
-            bg2: colorPalette + "." + (200 + lvl * 100),
-            border: colorPalette + "." + (300 + lvl * 100),
-            darkFg: colorPalette + "." + (600 + lvl * 100),
+            bg1: colorPalette + "." + (lvl + 100),
+            bg2: colorPalette + "." + (lvl + 200),
+            border: colorPalette + "." + (lvl + 300),
             palette: colorPalette,
         };
     }, [indentLevel]);
 
-    const areRowsEmpty = React.Children.count(myRows) === 0;
-    const showBody = isCollapsible ? !isCollapsed : true;
+    //
+
+    const filterChildrenByType = useCallback(
+        (type: ReactElement["type"]) =>
+            React.Children.toArray(children).filter(
+                (child) => React.isValidElement(child) && child.type === type
+            ),
+        [children]
+    );
+
+    const headers = filterChildrenByType(MyTableHeader);
+    const footer = filterChildrenByType(MyTableFooter);
+    const rows = React.Children.toArray(children).filter(
+        (child) =>
+            React.isValidElement(child) &&
+            child.type !== MyTableHeader &&
+            child.type !== MyTableFooter
+    );
+    const hasRows = rows.length > 0;
+    const showBody = showBodyProp ?? (isCollapsible ? !isCollapsed : true);
+
+    //
 
     const handleCollapseButtonClicked = useCallback(() => {
         setIsCollapsed((isCollapsed) => !isCollapsed);
     }, []);
+
+    //
 
     return (
         <Table.Root
@@ -103,13 +117,15 @@ export function MyTable(
             {...tableRootProps}
         >
             <ColorContext.Provider value={lowerColorContext}>
-                <MyTableContext.Provider value={lowerIndentLevel}>
+                <MyTableContext.Provider
+                    value={keepIndentLevel ? indentLevel : indentLevel + 1}
+                >
                     <Table.Header position="relative">
                         <Table.Row
                             zIndex={999}
                             backgroundColor={lowerColorContext.bg2}
                         >
-                            {myHeaders}
+                            {headers}
                         </Table.Row>
                         {isCollapsible && (
                             <Float placement="top-end" zIndex={100} offset="1">
@@ -130,49 +146,26 @@ export function MyTable(
                                         <LuArrowDown />
                                     </Icon>
                                 </IconButton>
-                                {/* <IconButton
-                                    size="2xs"
-                                    borderRadius="full"
-                                    variant="surface"
-                                    onClick={handleCollapseButtonClicked}
-                                >
-                                    <Icon
-                                        size="xs"
-                                        transition="transform"
-                                        transform={
-                                            !isCollapsed ? "rotate(180deg)" : ""
-                                        }
-                                    >
-                                        <LuArrowDown />
-                                    </Icon>
-                                </IconButton> */}
                             </Float>
                         )}
                     </Table.Header>
-                    {showBody && myRows && !areRowsEmpty && (
-                        <Table.Body fontSize="inherit">{myRows}</Table.Body>
+                    {showBody && hasRows && (
+                        <Table.Body fontSize="inherit">{rows}</Table.Body>
                     )}
-                    {showBody && myRows && areRowsEmpty && (
+                    {showBody && !hasRows && (
                         <Table.Body>
                             <MyTableRow padding="0">
                                 <MyTableCell colSpan={999} padding="0">
                                     <EmptyState
                                         icon={<LuInbox />}
                                         title="Brak danych"
-                                        // title=""
-                                        // description="Edytuj tabele aby dodać dane"
-                                        // description="Brak danych"
                                         description="Tabela jest pusta"
                                     />
                                 </MyTableCell>
                             </MyTableRow>
                         </Table.Body>
                     )}
-                    {myFooter && (
-                        <Table.Footer>
-                            <Table.Row>{myFooter}</Table.Row>
-                        </Table.Footer>
-                    )}
+                    {footer}
                 </MyTableContext.Provider>
             </ColorContext.Provider>
         </Table.Root>

@@ -48,7 +48,7 @@ export function TableEditPagination<TRow extends TableEditRowType>({
                     <Field
                         label="Wyniki na stronę"
                         orientation="horizontal"
-                        color={colorContext.darkFg}
+                        color="gray.600"
                         textWrap="balance"
                         // fontSize="inherit !important"
                     >
@@ -58,7 +58,6 @@ export function TableEditPagination<TRow extends TableEditRowType>({
                                 bg2: "gray.300",
                                 border: "gray.400",
                                 palette: "gray",
-                                darkFg: "gray.600",
                             }}
                         >
                             <MyInputSelect

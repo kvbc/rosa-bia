@@ -68,30 +68,27 @@ export default function PlacesTableEditRowContent({
                         <Box>{inputs.name}</Box>
                     </AccordionItemTrigger>
                     <AccordionItemContent>
-                        <MyTable
-                            myHeaders={[
-                                <MyTableHeader key="1">
-                                    <HStack>
-                                        <FaFileAlt />
-                                        Jednostka ewidencyjna
-                                    </HStack>
-                                </MyTableHeader>,
-                                <MyTableHeader key="2">
-                                    <HStack>
-                                        <FaMapMarkedAlt />
-                                        Obręb
-                                    </HStack>
-                                </MyTableHeader>,
-                            ]}
-                            myRows={[
-                                <MyTableRow key="1">
-                                    <MyTableCell>{inputs.cad_unit}</MyTableCell>
-                                    <MyTableCell>
-                                        {inputs.area_place_id}
-                                    </MyTableCell>
-                                </MyTableRow>,
-                            ]}
-                        />
+                        <MyTable>
+                            <MyTableHeader>
+                                <HStack>
+                                    <FaFileAlt />
+                                    Jednostka ewidencyjna
+                                </HStack>
+                            </MyTableHeader>
+                            <MyTableHeader>
+                                <HStack>
+                                    <FaMapMarkedAlt />
+                                    Obręb
+                                </HStack>
+                            </MyTableHeader>
+                            <MyTableRow>
+                                <MyTableCell>{inputs.cad_unit}</MyTableCell>
+                                <MyTableCell>
+                                    {inputs.area_place_id}
+                                </MyTableCell>
+                            </MyTableRow>
+                            ,
+                        </MyTable>
                         <br />
                         <DBTableEdit
                             dbTable={pageGeodesyContext.streetsDBTable}

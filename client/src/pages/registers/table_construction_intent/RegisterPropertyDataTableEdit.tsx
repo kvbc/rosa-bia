@@ -16,6 +16,8 @@ import {
     MyInputSelect,
     MySelectOption,
 } from "@/components/my_input/MyInputSelect";
+import { FaHome } from "react-icons/fa";
+import { HStack } from "@chakra-ui/react";
 
 export default function RegisterPropertyDataTableEdit({
     row,
@@ -178,14 +180,13 @@ export default function RegisterPropertyDataTableEdit({
     //
 
     return (
-        <Tb
-            isCollapsible
-            myHeaders={
-                <>
-                    <Th colSpan={4}>Dane nieruchomości</Th>
-                </>
-            }
-        >
+        <Tb isCollapsible>
+            <Th colSpan={4}>
+                <HStack gap="1">
+                    <FaHome />
+                    Dane nieruchomości
+                </HStack>
+            </Th>
             <Tr>
                 <Tc>Gmina</Tc>
                 <Tc>

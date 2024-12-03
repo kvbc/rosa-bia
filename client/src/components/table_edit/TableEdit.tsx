@@ -10,12 +10,11 @@ import React, {
     useContext,
     useEffect,
     useMemo,
-    useReducer,
     useState,
 } from "react";
 import { TableEditRow } from "./row/TableEditRow";
 import TableEditContext from "@/contexts/components/TableEditContext";
-import { Center, Float, Skeleton, Spinner, Stack } from "@chakra-ui/react";
+import { Box, Center, Float, Skeleton, Spinner, Stack } from "@chakra-ui/react";
 import { TableEditRowContext } from "@/contexts/components/TableEditRowContext";
 // import { TableEditPagination } from "./TableEditPagination";
 import { MyTable } from "@/components/my_table/MyTable";
@@ -23,6 +22,14 @@ import { MyTableHeader } from "@/components/my_table/MyTableHeader";
 import { TableEditPagination } from "./TableEditPagination";
 import { MyTableRow } from "@/components/my_table/MyTableRow";
 import { MyTableCell } from "@/components/my_table/MyTableCell";
+import { Range } from "@/utils/types";
+import {
+    AccordionItem,
+    AccordionItemContent,
+    AccordionItemTrigger,
+    AccordionRoot,
+} from "../ui/accordion";
+import { FaFilter } from "react-icons/fa6";
 
 export type TableEditHeader =
     | {
@@ -45,7 +52,7 @@ export function TableEdit<TRow extends TableEditRowType>(
         rows: TRow[];
         headers: TableEditHeader[];
         totalRowCount: number;
-        defaultRow?: TRow;
+        defaultRow: TRow;
         editable?: boolean;
         showFooter?: boolean;
         title?: string;
@@ -54,6 +61,7 @@ export function TableEdit<TRow extends TableEditRowType>(
         disableRowAdding?: boolean;
         hidePagination?: boolean;
         disableActions?: boolean;
+        showFilters?: boolean;
         onRowDeleteClicked?: (row: TRow) => void;
         onRowAddClicked?: (row: TRow) => void;
         onRowSaveClicked?: (row: TRow) => void;
@@ -82,6 +90,7 @@ export function TableEdit<TRow extends TableEditRowType>(
         title,
         isLoading,
         hidePagination,
+        showFilters,
         rowActionButtonOrientation,
         RowContentComponent,
         ...myTableProps
@@ -97,9 +106,35 @@ export function TableEdit<TRow extends TableEditRowType>(
         showFooter = true;
     }
 
+    //
+    // replace some inputs with ranges (number, date)
+    //
+    const updateFilterRow = useCallback((): TRow | undefined => {
+        if (!defaultRow) {
+            return undefined;
+        }
+        let row = { ...defaultRow };
+        rowInputsProps.forEach((inputProps) => {
+            if (inputProps.type === "date" || inputProps.type === "number") {
+                const key = inputProps.rowKey;
+                const value = row[key] as string | number;
+                row = {
+                    ...row,
+                    [key]: { from: value, to: value } satisfies Range<
+                        string | number
+                    >,
+                };
+            }
+        });
+        return row;
+    }, [defaultRow, rowInputsProps]);
+
     // revertRows - rows used to revert the changes made to the table if this table is inside of any other table
     const [rows, setRows] = useState<TRow[]>([...rowsProp]);
     const [revertRows, setRevertRows] = useState<TRow[]>([...rowsProp]); // prettier-ignore
+    const [filterRow, setFilterRow] = useState<TRow | undefined>(
+        updateFilterRow
+    );
     const [addRow, setAddRow] = useState<TRow | undefined>(
         defaultRow
             ? {
@@ -116,6 +151,10 @@ export function TableEdit<TRow extends TableEditRowType>(
     //     (count) => count + 1,
     //     0
     // );
+
+    // useEffect(() => {
+    //     setFilterRow(updateFilterRow());
+    // }, [updateFilterRow]);
 
     const headers = useMemo<TableEditHeader[]>(
         () =>
@@ -276,25 +315,45 @@ export function TableEdit<TRow extends TableEditRowType>(
 
     /*
      *
+     * Filters
+     *
+     */
+
+    useEffect(() => {
+        console.log(filterRow);
+    }, [filterRow]);
+
+    /*
+     *
      * TableEdit
      *
      */
 
+    const renderRows =
+        editable && !disableRowAdding
+            ? addRow
+                ? [...rows, addRow]
+                : rows
+            : rows;
+    // if (filterRow) {
+    //     renderRows = [filterRow, ...renderRows];
+    // }
+
     const content = (
         <Stack gap="0">
             {!hidePagination && (
-                <MyTable
-                    myHeaders={[
-                        <MyTableHeader key="1">
-                            <TableEditPagination {...props} />
-                        </MyTableHeader>,
-                    ]}
-                />
+                <MyTable showBody={false}>
+                    <MyTableHeader>
+                        <TableEditPagination {...props} />
+                    </MyTableHeader>
+                </MyTable>
             )}
             <MyTable
                 title={title}
                 stickyHeader={upperTableEventTarget === null}
-                myHeaders={headers.map((header) => {
+                {...myTableProps}
+            >
+                {headers.map((header) => {
                     let name,
                         width = "inherit";
                     if (typeof header === "string") {
@@ -313,74 +372,120 @@ export function TableEdit<TRow extends TableEditRowType>(
                         </MyTableHeader>
                     );
                 })}
-                {...myTableProps}
-            >
-                {isLoading
-                    ? new Array(15).fill(0).map((_, index) => (
-                          <MyTableRow key={index}>
-                              <MyTableCell colSpan={999} position="relative">
-                                  <Skeleton
-                                      width="full"
-                                      height="full"
-                                      minHeight="40px"
-                                  />
-                                  <Float placement="middle-center">
-                                      <Center>
-                                          <Spinner color="gray" size="sm" />
-                                      </Center>
-                                  </Float>
-                              </MyTableCell>
-                          </MyTableRow>
-                      ))
-                    : (editable && !disableRowAdding
-                          ? addRow
-                              ? [...rows, addRow]
-                              : rows
-                          : rows
-                      ).map((row) => (
-                          <TableEditRow<TRow>
-                              key={
-                                  //   rerenderCount +
-                                  baseRowKey +
-                                  (row === addRow ? row.id + 100 : row.id)
-                              } // to avoid same-key problems when changing ids
-                              row={row}
-                              disableActions={disableActions}
-                              onAddClicked={
-                                  row === addRow ? handleRowAdded : undefined
-                              }
-                              showSaveAction={upperTableEventTarget === null}
-                              onSaveClicked={handleRowSaved}
-                              onDeleteClicked={handleRowDeleted}
-                              actionButtonOrientation={
-                                  rowActionButtonOrientation
-                              }
-                              stateProp={
-                                  row === addRow
-                                      ? "adding"
-                                      : upperRowContext === null
-                                      ? "viewing"
-                                      : upperRowContext.state === "adding"
-                                      ? "editing"
-                                      : upperRowContext.state
-                              }
-                              editable={editable}
-                              inputsProps={rowInputsProps}
-                              ContentComponent={RowContentComponent}
-                              saveOnInputFocusOut={
-                                  upperTableEventTarget !== null
-                              }
-                          />
-                      ))}
+                {isLoading ? (
+                    new Array(15).fill(0).map((_, index) => (
+                        <MyTableRow key={index}>
+                            <MyTableCell colSpan={999} position="relative">
+                                <Skeleton
+                                    width="full"
+                                    height="full"
+                                    minHeight="40px"
+                                />
+                                <Float placement="middle-center">
+                                    <Center>
+                                        <Spinner color="gray" size="sm" />
+                                    </Center>
+                                </Float>
+                            </MyTableCell>
+                        </MyTableRow>
+                    ))
+                ) : (
+                    <>
+                        {showFilters && (
+                            <MyTableRow>
+                                <MyTableCell colSpan={999}>
+                                    {/* <TableEditFilters
+                                        rowInputsProps={rowInputsProps}
+                                        defaultRow={defaultRow}
+                                    /> */}
+                                    <AccordionRoot collapsible variant="plain">
+                                        <AccordionItem value="1">
+                                            <AccordionItemTrigger
+                                                fontSize="inherit"
+                                                padding="0"
+                                            >
+                                                <FaFilter />
+                                                <Box>Filtry</Box>
+                                            </AccordionItemTrigger>
+                                            <AccordionItemContent>
+                                                <MyTable keepIndentLevel>
+                                                    {filterRow && (
+                                                        <TableEditRow<TRow>
+                                                            row={filterRow}
+                                                            stateProp="editing"
+                                                            isFilterRow
+                                                            inputsProps={
+                                                                rowInputsProps
+                                                            }
+                                                            editable={true}
+                                                            showSaveAction={
+                                                                false
+                                                            }
+                                                            onSaveClicked={
+                                                                setFilterRow
+                                                            }
+                                                            disableActions={
+                                                                true
+                                                            }
+                                                            ContentComponent={
+                                                                RowContentComponent
+                                                            }
+                                                            saveOnInputFocusOut={
+                                                                true
+                                                            }
+                                                        />
+                                                    )}
+                                                </MyTable>
+                                            </AccordionItemContent>
+                                        </AccordionItem>
+                                    </AccordionRoot>
+                                </MyTableCell>
+                            </MyTableRow>
+                        )}
+                        {renderRows.map((row) => (
+                            <TableEditRow<TRow>
+                                key={
+                                    //   rerenderCount +
+                                    baseRowKey +
+                                    (row === addRow ? row.id + 100 : row.id)
+                                } // to avoid same-key problems when changing ids
+                                row={row}
+                                disableActions={disableActions}
+                                onAddClicked={
+                                    row === addRow ? handleRowAdded : undefined
+                                }
+                                showSaveAction={upperTableEventTarget === null}
+                                onSaveClicked={handleRowSaved}
+                                onDeleteClicked={handleRowDeleted}
+                                actionButtonOrientation={
+                                    rowActionButtonOrientation
+                                }
+                                stateProp={
+                                    row === addRow
+                                        ? "adding"
+                                        : upperRowContext === null
+                                        ? "viewing"
+                                        : upperRowContext.state === "adding"
+                                        ? "editing"
+                                        : upperRowContext.state
+                                }
+                                editable={editable}
+                                inputsProps={rowInputsProps}
+                                ContentComponent={RowContentComponent}
+                                saveOnInputFocusOut={
+                                    upperTableEventTarget !== null
+                                }
+                            />
+                        ))}
+                    </>
+                )}
             </MyTable>
             {!hidePagination && (
-                <MyTable
-                    myHeaders={[
-                        <MyTableHeader key="1">
-                            <TableEditPagination {...props} />
-                        </MyTableHeader>,
-                    ]}
-                />
+                <MyTable showBody={false}>
+                    <MyTableHeader>
+                        <TableEditPagination {...props} />
+                    </MyTableHeader>
+                </MyTable>
             )}
         </Stack>
     );
