@@ -18,6 +18,7 @@ import {
     LuBookOpen,
     LuBuilding,
     LuBook,
+    LuInfo,
 } from "react-icons/lu";
 import { AppNavbarLinkMenu } from "./AppNavbarLinkMenu";
 import useAuthEmployee from "@/hooks/useAuthEmployee";
@@ -131,6 +132,11 @@ export const AppNavbarLinks: React.FC = () => {
                         to: "/help/contact",
                         display: "Kontakt",
                         Icon: LuPhoneCall,
+                    },
+                    {
+                        to: "/help/program_info",
+                        display: "Informacje o programie",
+                        Icon: LuInfo,
                     },
                     {
                         to: "/help/user_manual",

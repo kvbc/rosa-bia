@@ -15,6 +15,7 @@ import { PageConstructionLaws } from "../pages/construction_laws/PageConstructio
 import { PageSystem } from "../pages/system/PageSystem";
 import { AppPage } from "./AppPage";
 import { PageHelpUserManual } from "../pages/help/PageHelpUserManual";
+import PageHelpProgramInfo from "@/pages/help/PageHelpProgramInfo";
 
 export const AppPageRoutes: React.FC = () => {
     return (
@@ -88,6 +89,14 @@ export const AppPageRoutes: React.FC = () => {
                 element={
                     <AppPage dontRequireLogin>
                         <PageHelpUserManual />
+                    </AppPage>
+                }
+            />
+            <Route
+                path="/help/program_info"
+                element={
+                    <AppPage dontRequireLogin>
+                        <PageHelpProgramInfo />
                     </AppPage>
                 }
             />
