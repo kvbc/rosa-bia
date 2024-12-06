@@ -1,6 +1,5 @@
 import React from "react";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
-import * as DB from "@shared/db";
 import { MyTable as Tb } from "@/components/my_table/MyTable";
 import { MyTableRow as Tr } from "@/components/my_table/MyTableRow";
 import { MyTableHeaderRow as ThRow } from "@/components/my_table/MyTableHeaderRow";

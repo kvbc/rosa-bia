@@ -169,6 +169,9 @@ export default function useDBTable<TRow extends DB.Row>(
             //     refetchRows();
             //     return;
             // }
+            if (message.type === "server started") {
+                return;
+            }
             if (message.tableName !== tableName) {
                 return;
             }

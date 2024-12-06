@@ -26,7 +26,7 @@ export default function PageHelpProgramInfo() {
                             <br />
                             <Text fontWeight="normal">
                                 Rejestr Ogólnych Spraw Administracyjnych
-                                Wydziału Budownictwa i Architektury
+                                wydziału Budownictwa i Architektury
                             </Text>
                         </Text>
                     }
@@ -57,7 +57,9 @@ export default function PageHelpProgramInfo() {
                             Roman Bębenek
                             <br />
                             <Text fontWeight="normal">
-                                r.bebenek@czluchow.org.pl
+                                <Link href="mailto:r.bebenek@czluchow.org.pl">
+                                    r.bebenek@czluchow.org.pl
+                                </Link>
                             </Text>
                         </Text>
                     }
@@ -65,12 +67,6 @@ export default function PageHelpProgramInfo() {
             </DataListRoot>
             <br />
             <Separator />
-            <br />
-            <Text>
-                Program w czasie użytkowania będzie stale się rozwijał i
-                udoskonal w celu zapewnienia prawidłowego funkcjonowania zgodnie
-                z przepisami prawa.
-            </Text>
             <br />
             <VStack alignItems="start" gap="1">
                 <Text>Program ma na celu:</Text>
@@ -210,6 +206,13 @@ export default function PageHelpProgramInfo() {
                     </List.Item>
                 </List.Root>
             </VStack>
+            <br />
+            <Text>
+                Program w czasie użytkowania będzie stale się rozwijał i
+                udoskonal w celu zapewnienia prawidłowego funkcjonowania zgodnie
+                z przepisami prawa.
+            </Text>
+            <br />
         </Box>
     );
 }

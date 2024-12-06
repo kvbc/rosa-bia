@@ -10,7 +10,6 @@ import {
     LuHelpCircle,
     LuHammer,
     LuDatabase,
-    LuKey,
     LuFileText,
     LuHardHat,
     LuLaptop,
@@ -19,6 +18,8 @@ import {
     LuBuilding,
     LuBook,
     LuInfo,
+    LuHistory,
+    LuKey,
 } from "react-icons/lu";
 import { AppNavbarLinkMenu } from "./AppNavbarLinkMenu";
 import useAuthEmployee from "@/hooks/useAuthEmployee";
@@ -84,6 +85,7 @@ export const AppNavbarLinks: React.FC = () => {
         setIsStatsMenuOpen(false);
         setIsConstructionMenuOpen(false);
         setIsToolsMenuOpen(false);
+        setIsHelpMenuOpen(false);
     }, []);
 
     return (
@@ -245,6 +247,19 @@ export const AppNavbarLinks: React.FC = () => {
                         <LuLaptop />
                     </Icon>
                     System
+                    {adminAccessIcon}
+                </AppNavbarLink>
+            )}
+            {isAdmin && (
+                <AppNavbarLink
+                    to="/event_log"
+                    position="relative"
+                    onMouseEnter={handleLinkMouseEntered}
+                >
+                    <Icon fontSize="md">
+                        <LuHistory />
+                    </Icon>
+                    Dziennik zdarzeń
                     {adminAccessIcon}
                 </AppNavbarLink>
             )}

@@ -2,16 +2,16 @@ import { Heading, HStack, Text } from "@chakra-ui/react";
 import React from "react";
 import { FeatureUnfinishedIcon } from "@/components/FeatureUnfinishedIcon";
 
-export function PageDatabase() {
+export const PageEventLog: React.FC = () => {
     return (
         <>
             <Heading>
                 <HStack>
                     <FeatureUnfinishedIcon />
-                    Zarządzanie bazą danych
+                    Dziennik zdarzeń
                 </HStack>
             </Heading>
             <Text>Do zrobienia ...</Text>
         </>
     );
-}
+};

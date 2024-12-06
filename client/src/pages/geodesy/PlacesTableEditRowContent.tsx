@@ -61,7 +61,7 @@ export default function PlacesTableEditRowContent({
 
     return (
         <MyTableCell>
-            <AccordionRoot variant="plain" collapsible>
+            <AccordionRoot variant="plain" collapsible lazyMount>
                 <AccordionItem value="1">
                     <AccordionItemTrigger>
                         <FaHome />
@@ -97,6 +97,8 @@ export default function PlacesTableEditRowContent({
                             )}
                             editable={editable}
                             hidePagination
+                            isCollapsible
+                            // defaultIsCollapsed={true}
                             headers={streetsHeaders}
                             rowActionButtonOrientation="vertical"
                             defaultRow={streetsDefaultRow}

@@ -16,6 +16,7 @@ import { PageSystem } from "../pages/system/PageSystem";
 import { AppPage } from "./AppPage";
 import { PageHelpUserManual } from "../pages/help/PageHelpUserManual";
 import PageHelpProgramInfo from "@/pages/help/PageHelpProgramInfo";
+import { PageEventLog } from "@/pages/eventlog/PageEventLog";
 
 export const AppPageRoutes: React.FC = () => {
     return (
@@ -142,6 +143,14 @@ export const AppPageRoutes: React.FC = () => {
                 element={
                     <AppPage isAdminOnly>
                         <PageSystem />
+                    </AppPage>
+                }
+            />
+            <Route
+                path="/event_log"
+                element={
+                    <AppPage isAdminOnly>
+                        <PageEventLog />
                     </AppPage>
                 }
             />

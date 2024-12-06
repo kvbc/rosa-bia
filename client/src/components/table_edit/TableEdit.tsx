@@ -293,10 +293,12 @@ export function TableEdit<TRow extends TableEditRowType>(
 
     const handleRowSaved = useCallback(
         (newRow: TRow) => {
+            console.log("handleRowSaved called");
             setRows((rows) =>
                 rows.map((row) => (row.id === newRow.id ? newRow : row))
             );
             if (!upperTableEventTarget && !canCommit) {
+                console.log("set canCommit to true");
                 setCanCommit(true);
             }
         },
@@ -320,7 +322,7 @@ export function TableEdit<TRow extends TableEditRowType>(
      */
 
     useEffect(() => {
-        console.log(filterRow);
+        // console.log(filterRow);
     }, [filterRow]);
 
     /*

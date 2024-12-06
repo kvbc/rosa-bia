@@ -1,4 +1,4 @@
-import { Fieldset, HStack } from "@chakra-ui/react";
+import { Box, HStack, Text } from "@chakra-ui/react";
 import React, {
     ComponentProps,
     useContext,
@@ -6,7 +6,6 @@ import React, {
     useMemo,
     useState,
 } from "react";
-import { Field } from "@/components/ui/field";
 import {
     PaginationItems,
     PaginationNextTrigger,
@@ -43,35 +42,32 @@ export function TableEditPagination<TRow extends TableEditRowType>({
 
     return (
         <HStack justify="end">
-            <Fieldset.Root>
-                <Fieldset.Content>
-                    <Field
-                        label="Wyniki na stronę"
-                        orientation="horizontal"
-                        color="gray.600"
-                        textWrap="balance"
-                        // fontSize="inherit !important"
+            <HStack>
+                <Text color="gray.600" minWidth="100px" textAlign="right">
+                    Wyniki na stronę:
+                </Text>
+                <Box minWidth="100px">
+                    <ColorContext.Provider
+                        value={{
+                            bg1: "gray.200",
+                            bg2: "gray.300",
+                            border: "gray.400",
+                            palette: "gray",
+                        }}
                     >
-                        <ColorContext.Provider
-                            value={{
-                                bg1: "gray.200",
-                                bg2: "gray.300",
-                                border: "gray.400",
-                                palette: "gray",
-                            }}
-                        >
-                            <MyInputSelect
-                                // color="black"
-                                options={rowsPerPageOptions}
-                                value={String(rowsPerPage)}
-                                onValueChanged={(value) =>
-                                    setRowsPerPage(Number(value))
-                                }
-                            />
-                        </ColorContext.Provider>
-                    </Field>
-                </Fieldset.Content>
-            </Fieldset.Root>
+                        <MyInputSelect
+                            // color="black"
+                            isSearchable={false}
+                            options={rowsPerPageOptions}
+                            value={String(rowsPerPage)}
+                            onValueChanged={(value) =>
+                                setRowsPerPage(Number(value))
+                            }
+                        />
+                    </ColorContext.Provider>
+                </Box>
+                <Text color="gray.600">na {totalRowCount}</Text>
+            </HStack>
             <PaginationRoot
                 colorPalette={colorContext.palette}
                 count={totalRowCount}

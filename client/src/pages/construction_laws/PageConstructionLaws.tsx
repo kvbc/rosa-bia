@@ -12,7 +12,6 @@ import {
     AccordionItemTrigger,
     AccordionRoot,
 } from "@/components/ui/accordion";
-import { FaFolder } from "react-icons/fa6";
 import { MyTable } from "@/components/my_table/MyTable";
 import { MyTableCell } from "@/components/my_table/MyTableCell";
 import { MyTableHeader } from "@/components/my_table/MyTableHeader";
@@ -55,13 +54,17 @@ export const PageConstructionLaws: React.FC = () => {
                 {DB.Rows.REGISTER_TYPES.map((registerType) => (
                     <MyTableRow key={registerType}>
                         <MyTableCell>
-                            <AccordionRoot collapsible variant="plain">
+                            <AccordionRoot
+                                collapsible
+                                variant="plain"
+                                lazyMount
+                            >
                                 <AccordionItem
                                     value={registerType}
                                     key={registerType}
                                 >
-                                    <AccordionItemTrigger>
-                                        <FaFolder />
+                                    <AccordionItemTrigger fontSize="inherit">
+                                        {/* <FaFolder /> */}
                                         {registerType}
                                     </AccordionItemTrigger>
                                     <AccordionItemContent>

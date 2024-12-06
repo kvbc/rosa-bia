@@ -5,7 +5,7 @@
 // 1
 //
 
-import React, { ComponentProps, useCallback, useEffect, useMemo } from "react";
+import React, { ComponentProps, useCallback, useMemo } from "react";
 import { TableEdit } from "./table_edit/TableEdit";
 import * as DB from "@shared/db";
 import { DBTable } from "@/hooks/useDBTable";
@@ -22,7 +22,7 @@ export function DBTableEdit<
     ...restTableEditProps
 }: {
     dbTable: DBTable<TDatabaseRow>;
-    defaultRow?: DBTableEditDefaultRow<TRow>;
+    defaultRow: DBTableEditDefaultRow<TRow>;
     rows?: TRow[];
 } & Omit<
     ComponentProps<typeof TableEdit<TRow>>,
@@ -53,12 +53,9 @@ export function DBTableEdit<
         [setStartRowIndex, setEndRowIndex]
     );
 
-    const defaultRow = useMemo<TRow | undefined>(
+    const defaultRow = useMemo<TRow>(
         // FIXME: as?
-        () =>
-            defaultRowProp
-                ? ({ ...defaultRowProp, id: topRowID + 1 } as TRow)
-                : undefined,
+        () => ({ ...defaultRowProp, id: topRowID + 1 } as TRow),
         [defaultRowProp, topRowID]
     );
 

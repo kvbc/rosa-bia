@@ -322,18 +322,20 @@ export function TableEditRow<TRow extends TableEditRowType>({
             {editable && !disableActions && (
                 <>
                     {!showSaveAction && (
-                        <MyTableCell>
-                            <Stack>
+                        <MyTableCell verticalAlign="top">
+                            <Stack position="sticky" left="0" top="50%">
                                 {state !== "adding" && actionDeleteButton}
                                 {state === "adding" && actionAddButton}
                             </Stack>
                         </MyTableCell>
                     )}
                     {showSaveAction && (
-                        <MyTableCell>
+                        <MyTableCell verticalAlign="top">
                             {state == "viewing" && (
                                 <Group
-                                    // attached
+                                    position="sticky"
+                                    left="0"
+                                    top="50%"
                                     orientation={actionButtonOrientation}
                                     grow
                                 >
@@ -343,7 +345,9 @@ export function TableEditRow<TRow extends TableEditRowType>({
                             )}
                             {state == "editing" && (
                                 <Group
-                                    // attached
+                                    position="sticky"
+                                    left="0"
+                                    top="50%"
                                     orientation={actionButtonOrientation}
                                     grow
                                 >
@@ -352,7 +356,9 @@ export function TableEditRow<TRow extends TableEditRowType>({
                                 </Group>
                             )}
                             {state == "adding" && (
-                                <Center>{actionAddButton}</Center>
+                                <Center position="sticky" left="0" top="50%">
+                                    {actionAddButton}
+                                </Center>
                             )}
                         </MyTableCell>
                     )}

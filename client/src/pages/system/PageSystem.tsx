@@ -216,6 +216,8 @@ export function PageSystem() {
                     System zarządzania bazą danych (przywracanie, tworzenie i
                     usuwanie kopii)
                 </List.Item>
+                <List.Item>Dziennik zdarzeń</List.Item>
+                <List.Item>Instrukcja obsługi</List.Item>
             </List.Root>
             <br />
 

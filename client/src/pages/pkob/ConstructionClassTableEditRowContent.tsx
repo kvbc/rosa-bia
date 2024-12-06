@@ -59,7 +59,7 @@ export default function ConstructionClassTableEditRowContent({
 
     return (
         <MyTableCell>
-            <AccordionRoot variant="plain" collapsible>
+            <AccordionRoot variant="plain" collapsible lazyMount>
                 <AccordionItem value="1">
                     <AccordionItemTrigger>
                         <ConstructionClassIcon />
