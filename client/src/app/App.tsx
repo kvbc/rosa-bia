@@ -20,6 +20,7 @@ import { Box, Stack } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppEmployee } from "./AppEmployee";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { AppFooter } from "./AppFooter";
 
 const queryClient = new QueryClient();
 
@@ -74,11 +75,14 @@ export const App: React.FC = () => {
                                     <Box
                                         as="main"
                                         padding="4"
-                                        height="100%"
+                                        flex="1"
+                                        alignItems="stretch"
+                                        // height="100%"
                                         fontSize="2xs"
                                     >
                                         <AppPageRoutes />
                                     </Box>
+                                    <AppFooter />
                                 </Stack>
                             </BrowserRouter>
                             {/* <Test /> */}

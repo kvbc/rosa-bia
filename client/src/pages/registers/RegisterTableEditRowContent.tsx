@@ -25,14 +25,14 @@ export default function RegisterTableEditRowContent(
     return (
         <>
             <MyTable>
-                <MyTableHeader>
+                <MyTableHeader width="1/2">
                     <HStack gap="1">
                         {ftoggles.type}
                         <FaBook />
                         Typ Rejestru
                     </HStack>
                 </MyTableHeader>
-                <MyTableHeader>
+                <MyTableHeader width="1/2">
                     <HStack gap="1">
                         {ftoggles.assigned_employee_id}
                         <FaUserTie />

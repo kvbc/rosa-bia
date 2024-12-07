@@ -54,6 +54,8 @@ export default function PlacesTableEditRowContent({
             {
                 type: "text",
                 rowKey: "name",
+                placeholder: "Ulica",
+                isFilterable: true,
             },
         ],
         []
@@ -97,6 +99,7 @@ export default function PlacesTableEditRowContent({
                             )}
                             editable={editable}
                             hidePagination
+                            showFilters
                             isCollapsible
                             // defaultIsCollapsed={true}
                             headers={streetsHeaders}

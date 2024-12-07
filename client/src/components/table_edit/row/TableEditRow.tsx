@@ -21,7 +21,7 @@ import {
     TableEditRowContentComponent,
     TableEditRowContentComponentProps,
 } from "./TableEditRowContentComponent";
-import { Center, Group, IconButton, Stack } from "@chakra-ui/react";
+import { Center, Group, HStack, IconButton, Stack } from "@chakra-ui/react";
 import { LuPencil, LuPlus, LuSave, LuTrash, LuX } from "react-icons/lu";
 import { TableEditRowContext } from "@/contexts/components/TableEditRowContext";
 import { MyTableCell } from "@/components/my_table/MyTableCell";
@@ -69,6 +69,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
     const [state, setState] = useState<TableEditRowState>(stateProp);
     const [eventTarget] = useState(new EventTarget());
     const upperRowContext = useContext(TableEditRowContext);
+    const [filterJustToggled, setFilterJustToggled] = useState<boolean>(false);
     const isFilterRow =
         isFilterRowProp ?? upperRowContext?.isFilterRow ?? false;
     const context = useMemo<ContextType<typeof TableEditRowContext>>(
@@ -115,9 +116,17 @@ export function TableEditRow<TRow extends TableEditRowType>({
                 ...row,
                 ["FILTER_" + rowKey]: isFiltered,
             }));
+            setFilterJustToggled(true);
         },
         []
     );
+
+    useEffect(() => {
+        if (filterJustToggled) {
+            setFilterJustToggled(false);
+            handleInputFocusOut();
+        }
+    }, [filterJustToggled, handleInputFocusOut]);
 
     const renderInput = useCallback(
         (rowKey: keyof TRow & string) => {
@@ -169,9 +178,9 @@ export function TableEditRow<TRow extends TableEditRowType>({
                     <MyInputCheckbox
                         size="xs"
                         checked={isKeyFiltered(rowKey)}
-                        onCheckedChange={(e) =>
-                            setIsKeyFiltered(rowKey, !!e.checked)
-                        }
+                        onCheckedChange={(e) => {
+                            setIsKeyFiltered(rowKey, !!e.checked);
+                        }}
                     />
                 )
             );
@@ -202,7 +211,10 @@ export function TableEditRow<TRow extends TableEditRowType>({
     } else {
         content = inputsProps.map((inputProps) => (
             <MyTableCell key={inputProps.rowKey}>
-                {renderInput(inputProps.rowKey)}
+                <HStack gap="1">
+                    {renderFilterToggle(inputProps.rowKey)}
+                    {renderInput(inputProps.rowKey)}
+                </HStack>
             </MyTableCell>
         ));
     }

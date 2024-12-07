@@ -12,8 +12,6 @@ import { isRegisterType } from "@/utils/array";
 import { ClientRegister } from "../PageRegisters";
 import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import { getDaysPassed } from "@/utils/time";
-import { FaBalanceScale } from "react-icons/fa";
-import { HStack } from "@chakra-ui/react";
 
 export default function RegisterAdminProceduresTableEdit(
     props: ComponentProps<typeof MyTable> &

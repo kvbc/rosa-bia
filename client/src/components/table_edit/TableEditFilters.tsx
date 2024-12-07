@@ -57,6 +57,7 @@ export function TableEditFilters<TRow extends TableEditRowType>({
         [rowInputsProps]
     );
 
+    // FIXME something wrong when expanding registers filter, maybe thees?
     const filterDefaultRow = useMemo<FilterRow<TRow>>(() => {
         const key = rowInputsProps[0].rowKey;
         const type = rowInputsProps[0].type;

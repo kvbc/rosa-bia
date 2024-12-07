@@ -41,7 +41,7 @@ export default function PageHome() {
     );
 
     return (
-        <HStack align="stretch" separator={<StackSeparator />}>
+        <HStack align="stretch" height="full" separator={<StackSeparator />}>
             <Box width="9/12">
                 <Heading>Przydzielone rejestry</Heading>
                 <Separator />

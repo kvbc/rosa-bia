@@ -23,10 +23,14 @@ export default function PageInvestors() {
             {
                 type: "text",
                 rowKey: "name",
+                placeholder: "Inwestor",
+                isFilterable: true,
             },
             {
                 type: "text",
                 rowKey: "address",
+                placeholder: "Adres",
+                isFilterable: true,
             },
         ],
         []
@@ -38,6 +42,7 @@ export default function PageInvestors() {
             headers={headers}
             defaultRow={defaultRow}
             rowInputsProps={rowInputsProps}
+            showFilters
         />
     );
 }

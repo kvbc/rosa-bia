@@ -32,6 +32,8 @@ export function DBTableEdit<
     | "onRowAddClicked"
     | "onRowDeleteClicked"
     | "onRowsRangeChanged"
+    | "setFilters"
+    | "filters"
 >) {
     const {
         totalRowCount,
@@ -43,6 +45,8 @@ export function DBTableEdit<
         setStartRowIndex,
         setEndRowIndex,
         topRowID,
+        setFilters,
+        filters,
     } = dbTable;
 
     const handleRowsRangeChanged = useCallback(
@@ -100,9 +104,12 @@ export function DBTableEdit<
         <TableEdit<TRow>
             // FIXME: as?
             rows={customRows ?? (rows as TRow[])}
+            filters={filters}
+            setFilters={setFilters}
             defaultRow={defaultRow}
             totalRowCount={totalRowCount}
-            isLoading={rowsQuery.isFetching}
+            // isLoading={rowsQuery.isFetching}
+            isLoading={false} // FIXME
             onRowAddClicked={handleRowAddClicked}
             onRowDeleteClicked={handleRowDeleteClicked}
             onRowSaveClicked={handleRowSaveClicked}

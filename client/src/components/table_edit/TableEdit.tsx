@@ -5,7 +5,9 @@
 
 import React, {
     ComponentProps,
+    Dispatch,
     ReactNode,
+    SetStateAction,
     useCallback,
     useContext,
     useEffect,
@@ -30,6 +32,7 @@ import {
     AccordionRoot,
 } from "../ui/accordion";
 import { FaFilter } from "react-icons/fa6";
+import { Filter, FilterOperator } from "@server/http/routes/table_rows/get";
 
 export type TableEditHeader =
     | {
@@ -60,6 +63,8 @@ export function TableEdit<TRow extends TableEditRowType>(
         baseRowKey?: number;
         disableRowAdding?: boolean;
         hidePagination?: boolean;
+        filters: Filter[];
+        setFilters: Dispatch<SetStateAction<Filter[]>>;
         disableActions?: boolean;
         showFilters?: boolean;
         onRowDeleteClicked?: (row: TRow) => void;
@@ -91,6 +96,8 @@ export function TableEdit<TRow extends TableEditRowType>(
         isLoading,
         hidePagination,
         showFilters,
+        filters,
+        setFilters,
         rowActionButtonOrientation,
         RowContentComponent,
         ...myTableProps
@@ -322,8 +329,50 @@ export function TableEdit<TRow extends TableEditRowType>(
      */
 
     useEffect(() => {
-        // console.log(filterRow);
-    }, [filterRow]);
+        console.log(filters);
+    }, [filters]);
+
+    useEffect(() => {
+        console.log("filter row: ", filterRow);
+
+        const newFilters: Filter[] = [];
+        for (const key in filterRow) {
+            const shouldFilter = filterRow["FILTER_" + key];
+            if (shouldFilter) {
+                const value = filterRow[key];
+                if (typeof value === "object") {
+                    // must be a Range
+                    const range = value as Range;
+                    newFilters.push({
+                        key,
+                        operator: ">=",
+                        value: String(range.from),
+                    });
+                    newFilters.push({
+                        key,
+                        operator: "<=",
+                        value: String(range.to),
+                    });
+                } else {
+                    let filterValue = String(value);
+                    let operator: FilterOperator = "=";
+                    if (
+                        typeof value === "string" ||
+                        typeof value === "number"
+                    ) {
+                        operator = "like";
+                        filterValue = "%" + String(value).trim() + "%";
+                    }
+                    newFilters.push({
+                        key,
+                        operator,
+                        value: filterValue,
+                    });
+                }
+            }
+        }
+        setFilters(newFilters);
+    }, [filterRow, setFilters]);
 
     /*
      *
@@ -374,24 +423,25 @@ export function TableEdit<TRow extends TableEditRowType>(
                         </MyTableHeader>
                     );
                 })}
-                {isLoading ? (
-                    new Array(15).fill(0).map((_, index) => (
-                        <MyTableRow key={index}>
-                            <MyTableCell colSpan={999} position="relative">
-                                <Skeleton
-                                    width="full"
-                                    height="full"
-                                    minHeight="40px"
-                                />
-                                <Float placement="middle-center">
-                                    <Center>
-                                        <Spinner color="gray" size="sm" />
-                                    </Center>
-                                </Float>
-                            </MyTableCell>
-                        </MyTableRow>
-                    ))
-                ) : (
+                {
+                    // isLoading ? (
+                    //     new Array(15).fill(0).map((_, index) => (
+                    //         <MyTableRow key={index}>
+                    //             <MyTableCell colSpan={999} position="relative">
+                    //                 <Skeleton
+                    //                     width="full"
+                    //                     height="full"
+                    //                     minHeight="40px"
+                    //                 />
+                    //                 <Float placement="middle-center">
+                    //                     <Center>
+                    //                         <Spinner color="gray" size="sm" />
+                    //                     </Center>
+                    //                 </Float>
+                    //             </MyTableCell>
+                    //         </MyTableRow>
+                    //     ))
+                    // ) :
                     <>
                         {showFilters && (
                             <MyTableRow>
@@ -480,7 +530,7 @@ export function TableEdit<TRow extends TableEditRowType>(
                             />
                         ))}
                     </>
-                )}
+                }
             </MyTable>
             {!hidePagination && (
                 <MyTable showBody={false}>
