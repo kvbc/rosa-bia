@@ -10,9 +10,9 @@ export const AppNavbarLink: React.FC<
             as={ReactLink}
             _hover={{
                 textDecoration: "underline",
-                textDecorationColor: "white",
+                textDecorationColor: "inherit",
             }}
-            color="white"
+            color="inherit"
             {...props}
         >
             <Stack align="center" gap="0.5">

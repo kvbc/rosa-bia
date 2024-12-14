@@ -41,12 +41,14 @@ export function MyTable({
     children,
     customIndentLevel,
     keepIndentLevel,
+    isEmpty,
     showBody: showBodyProp,
     ...tableRootProps
 }: {
     showBody?: boolean;
     isCollapsible?: boolean;
     defaultIsCollapsed?: boolean;
+    isEmpty?: boolean;
     customIndentLevel?: number;
     keepIndentLevel?: boolean;
 } & ComponentProps<typeof Table.Root>) {
@@ -140,7 +142,9 @@ export function MyTable({
                                         fontSize="8px !important"
                                         transition="transform"
                                         transform={
-                                            !isCollapsed ? "rotate(180deg)" : ""
+                                            !isCollapsed
+                                                ? "rotate(180deg)"
+                                                : "rotate(0.1deg)"
                                         }
                                     >
                                         <LuArrowDown />
@@ -149,11 +153,14 @@ export function MyTable({
                             </Float>
                         )}
                     </Table.Header>
-                    {showBody && hasRows && (
-                        <Table.Body fontSize="inherit">{rows}</Table.Body>
-                    )}
-                    {showBody && !hasRows && (
-                        <Table.Body>
+
+                    {/* <Table.Body
+                        fontSize="inherit"
+                        display={showBody ? "table-row-group" : "none"}
+                    >
+                        {hasRows ? (
+                            rows
+                        ) : (
                             <MyTableRow padding="0">
                                 <MyTableCell colSpan={999} padding="0">
                                     <EmptyState
@@ -163,8 +170,26 @@ export function MyTable({
                                     />
                                 </MyTableCell>
                             </MyTableRow>
+                        )}
+                    </Table.Body> */}
+
+                    {showBody && (
+                        <Table.Body fontSize="inherit">
+                            {hasRows && rows}
+                            {(isEmpty || !hasRows) && (
+                                <MyTableRow padding="0">
+                                    <MyTableCell colSpan={999} padding="0">
+                                        <EmptyState
+                                            icon={<LuInbox />}
+                                            title="Brak danych"
+                                            description="Tabela jest pusta"
+                                        />
+                                    </MyTableCell>
+                                </MyTableRow>
+                            )}
                         </Table.Body>
                     )}
+
                     {footer}
                 </MyTableContext.Provider>
             </ColorContext.Provider>

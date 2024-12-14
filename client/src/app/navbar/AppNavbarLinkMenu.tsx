@@ -68,6 +68,7 @@ export const AppNavbarLinkMenu: React.FC<
                     focusRing="none"
                     backgroundColor="blue.700"
                     onMouseLeave={close}
+                    zIndex={99999}
                 >
                     {links.map((link, linkIndex) => {
                         const body = (

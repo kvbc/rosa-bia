@@ -12,6 +12,7 @@ import { isRegisterType } from "@/utils/array";
 import { ClientRegister } from "../PageRegisters";
 import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import { getDaysPassed } from "@/utils/time";
+import useDBTable from "@/hooks/useDBTable";
 
 export default function RegisterAdminProceduresTableEdit(
     props: ComponentProps<typeof MyTable> &
@@ -19,7 +20,9 @@ export default function RegisterAdminProceduresTableEdit(
             showMore: boolean;
         }
 ) {
-    const pageContext = useContext(PageRegistersContext)!;
+    // const pageContext = useContext(PageRegistersContext)!;
+    const registerAdminActionsDBTable = useDBTable<DB.Rows.RegisterAdminAction>("registers_admin_actions"); // prettier-ignore
+
     const { inputs, row, showMore, ...myTableProps } = props;
 
     const [infoState, setInfoState] = useState<string>("w toku");
@@ -53,7 +56,7 @@ export default function RegisterAdminProceduresTableEdit(
             // if (od_czego === undefined) {
             //     od_czego = actionType.toLowerCase().slice(0, -1) + "a";
             // }
-            const action = pageContext.registerAdminActionsDBTable.rows.find(
+            const action = registerAdminActionsDBTable.rows.find(
                 (action) =>
                     action.type === actionType &&
                     action.register_id === row.id &&
@@ -108,7 +111,7 @@ export default function RegisterAdminProceduresTableEdit(
             (daysDiff) => `${daysDiff} dni od odebrania pisma od konserwatora`,
             () => "w toku"
         );
-    }, [pageContext.registerAdminActionsDBTable.rows, row.id]);
+    }, [registerAdminActionsDBTable.rows, row.id]);
 
     return (
         <Tb {...myTableProps}>

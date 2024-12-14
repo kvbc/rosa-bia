@@ -599,7 +599,7 @@ export default function RegisterConstructionIntentTableEdit(
                             <Th>
                                 <HStack gap="1">
                                     <FaMapMarkedAlt />
-                                    Geodezja
+                                    PKOB
                                 </HStack>
                             </Th>
                             <Tr>

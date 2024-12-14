@@ -4,6 +4,7 @@
 //
 
 import React, {
+    ComponentProps,
     ContextType,
     ReactNode,
     useCallback,
@@ -50,7 +51,8 @@ export function TableEditRow<TRow extends TableEditRowType>({
     disableActions,
     ContentComponent,
     saveOnInputFocusOut,
-}: {
+    ...myTableRowProps
+}: ComponentProps<typeof MyTableRow> & {
     row: TRow;
     onDeleteClicked?: (row: TRow) => void;
     onAddClicked?: (row: TRow) => void;
@@ -327,7 +329,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
      */
 
     return (
-        <MyTableRow>
+        <MyTableRow {...myTableRowProps}>
             <TableEditRowContext.Provider value={context}>
                 {content}
             </TableEditRowContext.Provider>
@@ -370,6 +372,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
                             {state == "adding" && (
                                 <Center position="sticky" left="0" top="50%">
                                     {actionAddButton}
+                                    Dodaj
                                 </Center>
                             )}
                         </MyTableCell>

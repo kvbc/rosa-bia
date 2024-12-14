@@ -1,5 +1,11 @@
 import * as DB from "@shared/db";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, {
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { ClientRegister } from "../PageRegisters";
 import { DBTableEdit } from "@/components/DBTableEdit";
@@ -7,6 +13,7 @@ import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import { TableEditHeader } from "@/components/table_edit/TableEdit";
 import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
 import RegisterAdminProcedureActionsDBTableEditRowContent from "./RegisterAdminProcedureActionsDBTableEditRowContent";
+import useDBTable from "@/hooks/useDBTable";
 
 const REGISTER_TYPE_ACTION_TYPES: Record<
     DB.Rows.RegisterType,
@@ -110,7 +117,9 @@ const ACTION_TYPES_EDITABLE_FIELDS: Record<
 export default function RegisterAdminProcedureActionsDBTableEdit(
     props: TableEditRowContentComponentProps<ClientRegister>
 ) {
-    const pageContext = useContext(PageRegistersContext)!;
+    // const pageContext = useContext(PageRegistersContext)!;
+    const registerAdminActionsDBTable = useDBTable<DB.Rows.RegisterAdminAction>("registers_admin_actions"); // prettier-ignore
+
     // const queryClient = useQueryClient();
     const { row, editable } = props;
 
@@ -135,6 +144,20 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
         []
     );
 
+    const isRowDisabled = useCallback(
+        (
+            row: DB.Rows.RegisterAdminAction,
+            rowKey: keyof DB.Rows.RegisterAdminAction
+        ) => {
+            if (row.type === undefined) {
+                return false; // FIXME wtf
+            }
+            // console.log(row, rowKey);
+            return !ACTION_TYPES_EDITABLE_FIELDS[row.type].includes(rowKey);
+        },
+        []
+    );
+
     const rowInputsProps = useMemo<
         TableEditRowInputsProps<DB.Rows.RegisterAdminAction>
     >(
@@ -146,77 +169,60 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
             {
                 rowKey: "deadline",
                 type: "number",
-                getIsDisabled: (row) =>
-                    !ACTION_TYPES_EDITABLE_FIELDS[row.type].includes(
-                        "deadline"
-                    ),
+                getIsDisabled: (row) => isRowDisabled(row, "deadline"),
             },
             {
                 rowKey: "letter_date",
                 type: "date",
-                getIsDisabled: (row) =>
-                    !ACTION_TYPES_EDITABLE_FIELDS[row.type].includes(
-                        "letter_date"
-                    ),
+                getIsDisabled: (row) => isRowDisabled(row, "letter_date"),
             },
             {
                 rowKey: "receipt_date",
                 type: "date",
-                getIsDisabled: (row) =>
-                    !ACTION_TYPES_EDITABLE_FIELDS[row.type].includes(
-                        "letter_date"
-                    ),
+                getIsDisabled: (row) => isRowDisabled(row, "receipt_date"),
             },
             {
                 rowKey: "reply_date",
                 type: "date",
-                getIsDisabled: (row) =>
-                    !ACTION_TYPES_EDITABLE_FIELDS[row.type].includes(
-                        "reply_date"
-                    ),
+                getIsDisabled: (row) => isRowDisabled(row, "reply_date"),
             },
         ],
-        []
+        [isRowDisabled]
     );
 
     useEffect(() => {
-        console.log(
-            ">Rows:",
-            pageContext.registerAdminActionsDBTable.rows.filter(
-                (fRow) => fRow.register_id === row.id
-            )
-        );
-    }, [pageContext.registerAdminActionsDBTable.rows, row.id]);
+        // console.log(">All Rows:", registerAdminActionsDBTable.rows);
+    }, [registerAdminActionsDBTable.rows]);
 
     useEffect(() => {
-        console.log(">Init");
+        // console.log(">Init");
     }, []);
 
     useEffect(() => {
-        console.log(">Type is", row.type);
+        // console.log(">Type is", row.type);
         setActionTypesBeingAdded([]);
     }, [row.type]);
 
     useEffect(() => {
-        console.log(">>", actionTypes);
+        // console.log(">>", actionTypes);
 
         const offs = actionTypes.map(
             (actionType: DB.Rows.RegisterAdminActionType, actionTypeIndex) => {
-                console.log(
-                    actionType,
-                    actionTypesBeingAdded.includes(actionType)
-                );
+                // console.log(
+                //     actionType,
+                //     actionTypesBeingAdded.includes(actionType)
+                // );
                 if (
                     !actionTypesBeingAdded.includes(actionType) &&
-                    pageContext.registerAdminActionsDBTable.rows.find(
+                    registerAdminActionsDBTable.rows.find(
                         (actionRow) =>
                             actionRow.type === actionType &&
                             actionRow.register_id === row.id
                     ) === undefined
                 ) {
-                    console.log("adding");
+                    // console.log("adding");
                     const id =
-                        pageContext.registerAdminActionsDBTable.topRowID +
+                        registerAdminActionsDBTable.topRowID +
                         1 +
                         actionTypeIndex;
                     setActionTypesBeingAdded((actionTypesBeingAdded) => [
@@ -228,18 +234,16 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
                     //         (fRow) => fRow.id === id
                     //     ) === undefined
                     // ) {
-                    pageContext.registerAdminActionsDBTable.addRowMutation.mutate(
-                        {
-                            id,
-                            deadline: 0,
-                            letter_date: "",
-                            receipt_date: "",
-                            register_id: row.id,
-                            reply_date: "",
-                            select: 0,
-                            type: actionType,
-                        }
-                    );
+                    registerAdminActionsDBTable.addRowMutation.mutate({
+                        id,
+                        deadline: 0,
+                        letter_date: "",
+                        receipt_date: "",
+                        register_id: row.id,
+                        reply_date: "",
+                        select: 0,
+                        type: actionType,
+                    });
                     // }
                     return () => {
                         // setActionTypesBeingAdded((actionTypesBeingAdded) =>
@@ -291,34 +295,34 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
         actionTypes,
         actionTypesBeingAdded,
         // pageContext.registerAdminActionsDBTable,
-        pageContext.registerAdminActionsDBTable.rows,
-        pageContext.registerAdminActionsDBTable.addRowMutation,
+        registerAdminActionsDBTable.rows,
+        registerAdminActionsDBTable.addRowMutation,
         // pageContext.registerAdminActionsDBTable.deleteRowMutation,
-        pageContext.registerAdminActionsDBTable.topRowID,
+        registerAdminActionsDBTable.topRowID,
         row.id,
     ]);
 
     const rows = useMemo(
         () =>
-            pageContext.registerAdminActionsDBTable.rows.filter(
+            registerAdminActionsDBTable.rows.filter(
                 (fRow, fRowIndex) =>
                     fRow.register_id === row.id &&
                     actionTypes.includes(fRow.type) &&
-                    pageContext.registerAdminActionsDBTable.rows.findIndex(
+                    registerAdminActionsDBTable.rows.findIndex(
                         (fRow2) =>
                             fRow2.register_id === row.id &&
                             fRow2.type === fRow.type
                     ) === fRowIndex
             ),
-        [pageContext.registerAdminActionsDBTable.rows, row.id, actionTypes]
+        [registerAdminActionsDBTable.rows, row.id, actionTypes]
     );
 
     return (
-        <DBTableEdit
+        <DBTableEdit<DB.Rows.RegisterAdminAction>
             hidePagination
             disableActions
             editable={editable}
-            dbTable={pageContext.registerAdminActionsDBTable}
+            dbTable={registerAdminActionsDBTable}
             headers={headers}
             rows={rows}
             rowInputsProps={rowInputsProps}

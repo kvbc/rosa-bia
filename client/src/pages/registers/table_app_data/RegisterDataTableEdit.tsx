@@ -4,6 +4,7 @@
  *
  */
 
+import * as DB from "@shared/db";
 import React, { ComponentProps, useContext, useMemo } from "react";
 import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
@@ -16,6 +17,7 @@ import { FeatureUnfinishedIcon } from "@/components/FeatureUnfinishedIcon";
 import { ClientRegister } from "../PageRegisters";
 import { HStack } from "@chakra-ui/react";
 import { FaFileSignature, FaUserTie } from "react-icons/fa6";
+import useDBTable from "@/hooks/useDBTable";
 
 export default function RegisterDataTableEdit({
     inputs,
@@ -28,14 +30,15 @@ export default function RegisterDataTableEdit({
     TableEditRowContentComponentProps<ClientRegister> & {
         showMore: boolean;
     }) {
-    const pageContext = useContext(PageRegistersContext)!;
+    // const pageContext = useContext(PageRegistersContext)!;
+    const investorsDBTable = useDBTable<DB.Rows.Investor>("investors"); // prettier-ignore
 
     const investor = useMemo(
         () =>
-            pageContext.investorsDBTable.rows.find(
+            investorsDBTable.rows.find(
                 (investor) => investor.id === row.app_investor_id
             ),
-        [pageContext.investorsDBTable.rows, row.app_investor_id]
+        [investorsDBTable.rows, row.app_investor_id]
     );
 
     const decisionTitle = useMemo(() => {
@@ -95,7 +98,7 @@ export default function RegisterDataTableEdit({
                         <Tc>
                             <HStack gap="1">
                                 {ftoggles.app_number}
-                                Numer zgłoszenia
+                                Numer wniosku
                             </HStack>
                         </Tc>
                         <Tc>{inputs.app_number}</Tc>

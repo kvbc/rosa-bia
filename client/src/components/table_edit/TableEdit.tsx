@@ -16,7 +16,14 @@ import React, {
 } from "react";
 import { TableEditRow } from "./row/TableEditRow";
 import TableEditContext from "@/contexts/components/TableEditContext";
-import { Box, Center, Float, Skeleton, Spinner, Stack } from "@chakra-ui/react";
+import {
+    AccordionValueChangeDetails,
+    Box,
+    HStack,
+    Icon,
+    IconButton,
+    Stack,
+} from "@chakra-ui/react";
 import { TableEditRowContext } from "@/contexts/components/TableEditRowContext";
 // import { TableEditPagination } from "./TableEditPagination";
 import { MyTable } from "@/components/my_table/MyTable";
@@ -31,14 +38,16 @@ import {
     AccordionItemTrigger,
     AccordionRoot,
 } from "../ui/accordion";
-import { FaFilter } from "react-icons/fa6";
+import { FaFilter, FaPlus } from "react-icons/fa6";
 import { Filter, FilterOperator } from "@server/http/routes/table_rows/get";
+import { Tooltip } from "../ui/tooltip";
+import { LuRefreshCw } from "react-icons/lu";
+import { chakraColorToCSS } from "@/contexts/ColorContext";
 
 export type TableEditHeader =
-    | {
+    | ({
           name: string;
-          width?: string;
-      }
+      } & ComponentProps<typeof MyTableHeader>)
     | string
     | ReactNode;
 
@@ -133,8 +142,39 @@ export function TableEdit<TRow extends TableEditRowType>(
                 };
             }
         });
+        filters.forEach((filter) => {
+            if ("operator" in filter) {
+                row = { ...row, ["FILTER_" + filter.key]: true };
+                switch (filter.operator) {
+                    case ">=":
+                        (row[filter.key] as Range).from = filter.value;
+                        break;
+                    case "<=":
+                        (row[filter.key] as Range).to = filter.value;
+                        break;
+                    case "=":
+                        row = { ...row, [filter.key]: filter.value };
+                        break;
+                    case "like":
+                        row = {
+                            ...row,
+                            [filter.key]: (filter.value as string).replace(
+                                /%/g,
+                                ""
+                            ),
+                        };
+                        break;
+                }
+            } else {
+                console.error("oopsie");
+            }
+        });
         return row;
-    }, [defaultRow, rowInputsProps]);
+    }, [defaultRow, rowInputsProps, filters]);
+
+    // useEffect(() => {
+    //     setFilterRow(updateFilterRow());
+    // }, [updateFilterRow]);
 
     // revertRows - rows used to revert the changes made to the table if this table is inside of any other table
     const [rows, setRows] = useState<TRow[]>([...rowsProp]);
@@ -149,6 +189,12 @@ export function TableEdit<TRow extends TableEditRowType>(
               }
             : undefined
     );
+    const [addRowAccordionValue, setAddRowAccordionValue] = useState<string[]>(
+        []
+    );
+    const [filterRowAccordionValue, setFilterRowAccordionValue] = useState<
+        string[]
+    >([]);
     const [totalAddedRowsCount, setTotalAddedRowsCount] = useState<number>(0);
     const [canCommit, setCanCommit] = useState<boolean>(false);
     const [eventTarget] = useState(new EventTarget());
@@ -221,7 +267,7 @@ export function TableEdit<TRow extends TableEditRowType>(
         if (revertRows === rows) {
             return;
         }
-        console.log(revertRows, "=>", rows);
+        // console.log(revertRows, "=>", rows);
         let anyChanges = false;
         rows.forEach((row) => {
             const rrow = revertRows.find((rrow) => rrow.id === row.id);
@@ -231,7 +277,7 @@ export function TableEdit<TRow extends TableEditRowType>(
                     anyChanges = true;
                 }
             } else {
-                console.log("adding", row);
+                // console.log("adding", row);
                 onRowAddClicked?.(row);
                 anyChanges = true;
             }
@@ -300,12 +346,12 @@ export function TableEdit<TRow extends TableEditRowType>(
 
     const handleRowSaved = useCallback(
         (newRow: TRow) => {
-            console.log("handleRowSaved called");
+            // console.log("handleRowSaved called");
             setRows((rows) =>
                 rows.map((row) => (row.id === newRow.id ? newRow : row))
             );
             if (!upperTableEventTarget && !canCommit) {
-                console.log("set canCommit to true");
+                // console.log("set canCommit to true");
                 setCanCommit(true);
             }
         },
@@ -322,15 +368,29 @@ export function TableEdit<TRow extends TableEditRowType>(
         [upperTableEventTarget, canCommit]
     );
 
+    const handleAddRowAccordionValueChanged = useCallback(
+        (e: AccordionValueChangeDetails) => {
+            setAddRowAccordionValue(e.value);
+        },
+        []
+    );
+
+    const handleFilterRowAccordionValueChanged = useCallback(
+        (e: AccordionValueChangeDetails) => {
+            setFilterRowAccordionValue(e.value);
+        },
+        []
+    );
+
     /*
      *
      * Filters
      *
      */
 
-    useEffect(() => {
-        console.log(filters);
-    }, [filters]);
+    // useEffect(() => {
+    //     console.log(filters);
+    // }, [filters]);
 
     useEffect(() => {
         console.log("filter row: ", filterRow);
@@ -374,6 +434,10 @@ export function TableEdit<TRow extends TableEditRowType>(
         setFilters(newFilters);
     }, [filterRow, setFilters]);
 
+    const handleFilterResetButtonClicked = useCallback(() => {
+        setFilterRow(updateFilterRow());
+    }, [updateFilterRow]);
+
     /*
      *
      * TableEdit
@@ -383,7 +447,7 @@ export function TableEdit<TRow extends TableEditRowType>(
     const renderRows =
         editable && !disableRowAdding
             ? addRow
-                ? [...rows, addRow]
+                ? [addRow, ...rows]
                 : rows
             : rows;
     // if (filterRow) {
@@ -402,23 +466,25 @@ export function TableEdit<TRow extends TableEditRowType>(
             <MyTable
                 title={title}
                 stickyHeader={upperTableEventTarget === null}
+                isEmpty={rows.length === 0}
                 {...myTableProps}
             >
                 {headers.map((header) => {
-                    let name,
-                        width = "inherit";
+                    let props: ComponentProps<typeof MyTableHeader> = {};
+                    let name;
                     if (typeof header === "string") {
                         name = header;
                     } else if (React.isValidElement(header)) {
                         return header;
                     } else {
-                        // @ts-expect-error we check if is react element already
-                        name = header.name;
-                        // @ts-expect-error we check if is react element already
-                        width = header.width ?? "inherit";
+                        const propsHeader = header as {
+                            name: string;
+                        } & ComponentProps<typeof MyTableHeader>;
+                        name = propsHeader.name;
+                        props = propsHeader;
                     }
                     return (
-                        <MyTableHeader key={name} width={width}>
+                        <MyTableHeader key={name} {...props}>
                             {name}
                         </MyTableHeader>
                     );
@@ -444,20 +510,68 @@ export function TableEdit<TRow extends TableEditRowType>(
                     // ) :
                     <>
                         {showFilters && (
-                            <MyTableRow>
+                            <MyTableRow
+                                position="relative"
+                                zIndex={29999}
+                                // marginBottom={
+                                //     filterRowAccordionValue.length > 0
+                                //         ? "1"
+                                //         : "0"
+                                // }
+                                {...(filterRowAccordionValue.length > 0 && {
+                                    backgroundColor: "bg.info",
+                                })}
+                                outline={
+                                    filterRowAccordionValue.length > 0
+                                        ? `.15rem dotted ${chakraColorToCSS(
+                                              "fg.info"
+                                          )}`
+                                        : "none"
+                                }
+                            >
                                 <MyTableCell colSpan={999}>
                                     {/* <TableEditFilters
                                         rowInputsProps={rowInputsProps}
                                         defaultRow={defaultRow}
                                     /> */}
-                                    <AccordionRoot collapsible variant="plain">
+                                    <AccordionRoot
+                                        collapsible
+                                        variant="plain"
+                                        value={filterRowAccordionValue}
+                                        onValueChange={
+                                            handleFilterRowAccordionValueChanged
+                                        }
+                                    >
                                         <AccordionItem value="1">
                                             <AccordionItemTrigger
                                                 fontSize="inherit"
                                                 padding="0"
                                             >
-                                                <FaFilter />
+                                                <Icon color="fg.info">
+                                                    <FaFilter />
+                                                </Icon>
                                                 <Box>Filtry</Box>
+                                                <HStack
+                                                    justifyContent="end"
+                                                    flex="1"
+                                                >
+                                                    <Tooltip content="Wyczyść filtry">
+                                                        <IconButton
+                                                            variant="plain"
+                                                            size="2xs"
+                                                            onClick={
+                                                                handleFilterResetButtonClicked
+                                                            }
+                                                        >
+                                                            <Icon
+                                                                size="xs"
+                                                                color="fg.subtle"
+                                                            >
+                                                                <LuRefreshCw />
+                                                            </Icon>
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </HStack>
                                             </AccordionItemTrigger>
                                             <AccordionItemContent>
                                                 <MyTable keepIndentLevel>
@@ -494,41 +608,119 @@ export function TableEdit<TRow extends TableEditRowType>(
                                 </MyTableCell>
                             </MyTableRow>
                         )}
-                        {renderRows.map((row) => (
-                            <TableEditRow<TRow>
-                                key={
-                                    //   rerenderCount +
-                                    baseRowKey +
-                                    (row === addRow ? row.id + 100 : row.id)
-                                } // to avoid same-key problems when changing ids
-                                row={row}
-                                disableActions={disableActions}
-                                onAddClicked={
-                                    row === addRow ? handleRowAdded : undefined
-                                }
-                                showSaveAction={upperTableEventTarget === null}
-                                onSaveClicked={handleRowSaved}
-                                onDeleteClicked={handleRowDeleted}
-                                actionButtonOrientation={
-                                    rowActionButtonOrientation
-                                }
-                                stateProp={
-                                    row === addRow
-                                        ? "adding"
-                                        : upperRowContext === null
-                                        ? "viewing"
-                                        : upperRowContext.state === "adding"
-                                        ? "editing"
-                                        : upperRowContext.state
-                                }
-                                editable={editable}
-                                inputsProps={rowInputsProps}
-                                ContentComponent={RowContentComponent}
-                                saveOnInputFocusOut={
-                                    upperTableEventTarget !== null
-                                }
-                            />
-                        ))}
+                        {renderRows.map((row) => {
+                            const node = (
+                                <TableEditRow<TRow>
+                                    key={
+                                        //   rerenderCount +
+                                        baseRowKey +
+                                        (row === addRow ? row.id + 100 : row.id)
+                                    } // +100 to avoid same-key problems when changing ids
+                                    row={row}
+                                    disableActions={disableActions}
+                                    onAddClicked={
+                                        row === addRow
+                                            ? handleRowAdded
+                                            : undefined
+                                    }
+                                    showSaveAction={
+                                        upperTableEventTarget === null
+                                    }
+                                    onSaveClicked={handleRowSaved}
+                                    onDeleteClicked={handleRowDeleted}
+                                    actionButtonOrientation={
+                                        rowActionButtonOrientation
+                                    }
+                                    // position={
+                                    //     row === addRow ? "relative" : "static" // (default)
+                                    // }
+                                    // zIndex={row === addRow ? 1 : 0}
+                                    // outline={
+                                    //     row === addRow
+                                    //         ? `.15rem dotted ${chakraColorToCSS(
+                                    //               "fg.success"
+                                    //           )}`
+                                    //         : "none"
+                                    // }
+
+                                    stateProp={
+                                        row === addRow
+                                            ? "adding"
+                                            : upperRowContext === null
+                                            ? "viewing"
+                                            : upperRowContext.state === "adding"
+                                            ? "editing"
+                                            : upperRowContext.state
+                                    }
+                                    editable={editable}
+                                    inputsProps={rowInputsProps}
+                                    ContentComponent={RowContentComponent}
+                                    saveOnInputFocusOut={
+                                        upperTableEventTarget !== null
+                                    }
+                                />
+                            );
+                            if (row === addRow) {
+                                return (
+                                    <MyTableRow
+                                        key={node.key}
+                                        position="relative"
+                                        zIndex={
+                                            filterRowAccordionValue.length > 0
+                                                ? 29998
+                                                : 30000
+                                        }
+                                        // marginBottom={
+                                        //     addRowAccordionValue.length > 0
+                                        //         ? "1"
+                                        //         : "0"
+                                        // }
+                                        {...(addRowAccordionValue.length >
+                                            0 && {
+                                            backgroundColor: "bg.success",
+                                        })}
+                                        outline={
+                                            addRowAccordionValue.length > 0
+                                                ? `.15rem dotted ${chakraColorToCSS(
+                                                      "fg.success"
+                                                  )}`
+                                                : "none"
+                                        }
+                                    >
+                                        <MyTableCell colSpan={999}>
+                                            <AccordionRoot
+                                                collapsible
+                                                variant="plain"
+                                                value={addRowAccordionValue}
+                                                onValueChange={
+                                                    handleAddRowAccordionValueChanged
+                                                }
+                                            >
+                                                <AccordionItem value="1">
+                                                    <AccordionItemTrigger
+                                                        fontSize="inherit"
+                                                        padding="0"
+                                                    >
+                                                        <Icon color="fg.success">
+                                                            <FaPlus />
+                                                        </Icon>
+                                                        <Box>Wprowadź nowy</Box>
+                                                    </AccordionItemTrigger>
+                                                    <AccordionItemContent>
+                                                        <MyTable
+                                                            keepIndentLevel
+                                                        >
+                                                            {node}
+                                                        </MyTable>
+                                                    </AccordionItemContent>
+                                                </AccordionItem>
+                                            </AccordionRoot>
+                                        </MyTableCell>
+                                    </MyTableRow>
+                                );
+                            }
+                            return node;
+                        })}
                     </>
                 }
             </MyTable>

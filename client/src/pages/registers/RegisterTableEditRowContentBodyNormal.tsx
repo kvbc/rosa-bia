@@ -32,7 +32,7 @@ export function RegisterTableEditRowContentBodyNormal(
                         placement="bottom-start"
                         // offsetX="2"
                         // offset="1"
-                        // offsetX="1"
+                        // offsetX="-1"
                         // offsetY="1"
                         width="full"
                         zIndex={100}
@@ -43,14 +43,19 @@ export function RegisterTableEditRowContentBodyNormal(
                             <IconButton
                                 size="2xs"
                                 minWidth="0 !important"
-                                width="16px !important"
-                                height="16px !important"
+                                width="20px !important"
+                                height="20px !important"
+                                opacity="90%"
                                 onClick={handleShowMoreButtonClicked}
                             >
                                 <Icon
                                     fontSize="8px"
                                     transition="transform"
-                                    transform={showMore ? "rotate(180deg)" : ""}
+                                    transform={
+                                        showMore
+                                            ? "rotate(180deg)"
+                                            : "rotate(0.1deg)"
+                                    }
                                 >
                                     <LuArrowDown />
                                 </Icon>

@@ -14,7 +14,7 @@ export const PageRegistersContext = createContext<{
     constructionSpecsDBTable: DBTable<DB.Rows.ConstructionSpec>;
     investorsDBTable: DBTable<DB.Rows.Investor>;
     registerPlotsDBTable: DBTable<DB.Rows.RegisterPlot>;
-    registerAdminActionsDBTable: DBTable<DB.Rows.RegisterAdminAction>;
+    // registerAdminActionsDBTable: DBTable<DB.Rows.RegisterAdminAction>;
     employeesDBTable: DBTable<DB.Rows.Employee>;
     constructionLawCategoriesDBTable: DBTable<DB.Rows.ConstructionLawCategory>;
     constructionLawIntentsDBTable: DBTable<DB.Rows.ConstructionLawIntent>;

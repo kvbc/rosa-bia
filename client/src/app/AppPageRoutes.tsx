@@ -17,6 +17,7 @@ import { AppPage } from "./AppPage";
 import { PageHelpUserManual } from "../pages/help/PageHelpUserManual";
 import PageHelpProgramInfo from "@/pages/help/PageHelpProgramInfo";
 import { PageEventLog } from "@/pages/eventlog/PageEventLog";
+import { REGISTER_TYPES } from "@shared/db/rows";
 
 export const AppPageRoutes: React.FC = () => {
     return (
@@ -101,6 +102,30 @@ export const AppPageRoutes: React.FC = () => {
                     </AppPage>
                 }
             />
+            {/*
+             *
+             * Register type-specific
+             *
+             */}
+            {REGISTER_TYPES.map((registerType, index) => (
+                <Route
+                    key={registerType}
+                    path={`/registers/${index}`}
+                    element={
+                        <AppPage dontRequireLogin>
+                            <PageRegisters
+                                registersFilters={[
+                                    {
+                                        key: "type",
+                                        operator: "=",
+                                        value: registerType,
+                                    },
+                                ]}
+                            />
+                        </AppPage>
+                    }
+                />
+            ))}
             {/*
              *
              * Admin-only

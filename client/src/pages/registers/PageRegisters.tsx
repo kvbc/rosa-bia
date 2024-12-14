@@ -8,14 +8,13 @@ import { Filter } from "@server/http/routes/table_rows/get";
 export type ClientRegister = DB.Rows.Register;
 
 export default function PageRegisters({
-    registersFilters,
+    registersFilters: initialRegistersFilters = [],
     disableRegisterAdding,
 }: {
     registersFilters?: Filter[];
     disableRegisterAdding?: boolean;
 }) {
-    const registersDBTable = useDBTable<DB.Rows.Register>("registers", registersFilters); // prettier-ignore
-    // const registersDBTable = useDBTable<DB.Rows.Register>("registers"); // prettier-ignore
+    const registersDBTable = useDBTable<DB.Rows.Register>("registers", initialRegistersFilters); // prettier-ignore
     const communesDBTable = useDBTable<DB.Rows.Commune>("communes"); // prettier-ignore
     const placesDBTable = useDBTable<DB.Rows.Place>("places"); // prettier-ignore
     const streetsDBTable = useDBTable<DB.Rows.Street>('streets'); // prettier-ignore
@@ -26,7 +25,7 @@ export default function PageRegisters({
     const constructionSpecsDBTable = useDBTable<DB.Rows.ConstructionSpec>("construction_specs"); // prettier-ignore
     const investorsDBTable = useDBTable<DB.Rows.Investor>("investors"); // prettier-ignore
     const registerPlotsDBTable = useDBTable<DB.Rows.RegisterPlot>("registers_plots"); // prettier-ignore
-    const registerAdminActionsDBTable = useDBTable<DB.Rows.RegisterAdminAction>("registers_admin_actions"); // prettier-ignore
+    // const registerAdminActionsDBTable = useDBTable<DB.Rows.RegisterAdminAction>("registers_admin_actions"); // prettier-ignore
     const employeesDBTable = useDBTable<DB.Rows.Employee>("employees");
     const constructionLawCategoriesDBTable = useDBTable<DB.Rows.ConstructionLawCategory>("construction_law_categories"); // prettier-ignore
     const constructionLawIntentsDBTable = useDBTable<DB.Rows.ConstructionLawIntent>("construction_law_intents"); // prettier-ignore
@@ -44,7 +43,7 @@ export default function PageRegisters({
             constructionSpecsDBTable,
             investorsDBTable,
             registerPlotsDBTable,
-            registerAdminActionsDBTable,
+            // registerAdminActionsDBTable,
             employeesDBTable,
             constructionLawCategoriesDBTable,
             constructionLawIntentsDBTable,
@@ -61,7 +60,7 @@ export default function PageRegisters({
             constructionSpecsDBTable,
             investorsDBTable,
             registerPlotsDBTable,
-            registerAdminActionsDBTable,
+            // registerAdminActionsDBTable,
             employeesDBTable,
             constructionLawCategoriesDBTable,
             constructionLawIntentsDBTable,

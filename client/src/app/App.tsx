@@ -75,6 +75,7 @@ export const App: React.FC = () => {
                                     <Box
                                         as="main"
                                         padding="4"
+                                        backgroundColor="white"
                                         flex="1"
                                         alignItems="stretch"
                                         // height="100%"

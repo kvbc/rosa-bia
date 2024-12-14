@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { FaFilter } from "react-icons/fa6";
+import { FaFilter, FaRepeat } from "react-icons/fa6";
 import {
     AccordionItem,
     AccordionItemContent,
@@ -78,6 +78,7 @@ export function TableEditFilters<TRow extends TableEditRowType>({
                 <AccordionItemTrigger fontSize="inherit" padding="0">
                     <FaFilter />
                     <Box>Filtry</Box>
+                    <FaRepeat />
                 </AccordionItemTrigger>
                 <AccordionItemContent>
                     <TableEdit<FilterRow<TRow>>
