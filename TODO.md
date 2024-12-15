@@ -7,16 +7,17 @@
 -   [ ] dont run 2 separate queries in server/http/routes/table_rows/get
 
 easiest
+[x] means prioritize now
 
--   [ ] dodac ilosc lokali do rejestru
 -   [ ] puste pola
 -   [ ] sprawdzanie pól (na czerwono)
 -   [ ] jednolity navbar (wszystkie opcje pod)
--   [ ] dodac filtry wszedzie gdzie trzeba do RowContent'ów
+-   [x] dodac filtry wszedzie gdzie trzeba do RowContent'ów
 -   [ ] zupdatowac statystyki (ilosc lokali)
--   [ ] generowanie bip tabelka: osoba prawna, fizyczna (lista rozwijana)
+-   [x] generowanie bip tabelka: osoba prawna, fizyczna (lista rozwijana)
 -   [ ] info o roznych info (np. dzialkach) w innych rejestrach
--   [ ] dodawanie działek
+-   [x] dodawanie działek (odrazu?)
 -   [ ] inwestorow dodawac odrazu
+-   [x] performance
 
 hardest

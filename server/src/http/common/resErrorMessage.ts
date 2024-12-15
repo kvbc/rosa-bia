@@ -10,6 +10,6 @@ export const resErrorMessage = (
         type: "error",
         message: errorMessage,
     };
-    console.error(errorMessage);
+    console.log("Error: ", errorMessage);
     res.status(statusCode).json(errorResponse);
 };

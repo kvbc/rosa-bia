@@ -38,6 +38,10 @@ export default function RegisterCharParamsTableEdit(
                 <Tc>Ilość budynków [szt.]</Tc>
                 <Tc>{inputs.object_demo_building_count}</Tc>
             </Tr>
+            <Tr>
+                <Tc>Ilość lokali [szt.]</Tc>
+                <Tc>{inputs.object_demo_premises_count}</Tc>
+            </Tr>
         </Tb>
     );
 }

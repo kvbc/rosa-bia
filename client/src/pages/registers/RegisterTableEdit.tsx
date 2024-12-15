@@ -46,6 +46,7 @@ export default function RegisterTableEdit(
             object_number: "",
             object_street_id: 1,
             object_demo_building_count: 0,
+            object_demo_premises_count: 1,
             object_demo_volume: 0,
             object_demo_usable_area: 0,
             object_demo_building_area: 0,
@@ -216,6 +217,7 @@ export default function RegisterTableEdit(
             ),
             { rowKey: "object_custom_construction_intent", type: "text", isFilterable: true }, // prettier-ignore
             { rowKey: "object_demo_building_count", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "object_demo_premises_count", type: "number", isFilterable: true }, // prettier-ignore
             { rowKey: "object_demo_volume", type: "number", isFilterable: true }, // prettier-ignore
             { rowKey: "object_demo_usable_area", type: "number", isFilterable: true }, // prettier-ignore
             { rowKey: "object_demo_building_area", type: "number", isFilterable: true }, // prettier-ignore

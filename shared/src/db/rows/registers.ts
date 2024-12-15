@@ -257,6 +257,7 @@ export const registerShapeObject = z.strictObject({
     object_demo_usable_area: z.number(),
     object_demo_volume: z.number(),
     object_demo_building_count: z.number(),
+    object_demo_premises_count: z.number(),
     object_usage_change_from: z.string(),
     object_usage_change_to: z.string(),
     object_construction_law_intent_id: z.number(),

@@ -101,6 +101,7 @@ create table registers(
     object_demo_usable_area integer not null, -- powierzchnia uzytkowa
     object_demo_volume integer not null, -- kubatura
     object_demo_building_count integer not null, -- ilosc budynkow
+    object_demo_premises_count integer not null, -- ilosc lokali
     object_usage_change_from text not null, -- zm. sp. uzytk. z
     object_usage_change_to text not null, -- zm. sp. uzytk. na
     object_construction_law_intent_id integer not null, -- id zamierzenia budowlanego

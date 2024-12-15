@@ -25,7 +25,7 @@ export const AppEmployee: React.FC<
     }, [authEmployee.query.data]);
 
     useEffect(() => {
-        axios.interceptors.response.use(null, (error) => {
+        const id = axios.interceptors.response.use(null, (error) => {
             const req: XMLHttpRequest = error.request;
             const res: HTTP.Response = error.response.data;
             if (res.type === "error") {
@@ -37,6 +37,9 @@ export const AppEmployee: React.FC<
                 return Promise.reject(error);
             }
         });
+        return () => {
+            axios.interceptors.response.eject(id);
+        };
     }, [addError]);
 
     return children;
