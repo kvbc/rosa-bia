@@ -9,6 +9,7 @@ import { TableEditHeader } from "@/components/table_edit/TableEdit";
 import { MyTableHeader } from "@/components/my_table/MyTableHeader";
 import { FaMap } from "react-icons/fa6";
 import { HStack } from "@chakra-ui/react";
+import useDBTable from "@/hooks/useDBTable";
 
 export default function RegisterPlotsDataTableEdit({
     row,
@@ -16,7 +17,8 @@ export default function RegisterPlotsDataTableEdit({
 }: TableEditRowContentComponentProps<ClientRegister> & {
     plotType: DB.Rows.RegisterPlotType;
 }) {
-    const pageContext = useContext(PageRegistersContext)!;
+    // const pageContext = useContext(PageRegistersContext)!;
+    const registerPlotsDBTable = useDBTable<DB.Rows.RegisterPlot>("registers_plots"); // prettier-ignore
 
     const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.RegisterPlot>>(
         () => ({
@@ -65,11 +67,12 @@ export default function RegisterPlotsDataTableEdit({
     return (
         <DBTableEdit
             hidePagination
-            dbTable={pageContext.registerPlotsDBTable}
-            rows={pageContext.registerPlotsDBTable.rows.filter(
+            dbTable={registerPlotsDBTable}
+            rows={registerPlotsDBTable.rows.filter(
                 (fRow) => fRow.register_id === row.id && fRow.type === plotType
             )}
             defaultRow={defaultRow}
+            showEmptyState={false}
             headers={headers}
             rowInputsProps={rowInputsProps}
             isCollapsible

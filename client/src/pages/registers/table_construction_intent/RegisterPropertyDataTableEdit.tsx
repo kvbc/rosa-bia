@@ -5,6 +5,7 @@ import React, {
     useMemo,
     useState,
 } from "react";
+import * as DB from "@shared/db";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { MyTable as Tb } from "@/components/my_table/MyTable";
 import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
@@ -18,6 +19,7 @@ import {
 } from "@/components/my_input/MyInputSelect";
 import { FaHome } from "react-icons/fa";
 import { HStack } from "@chakra-ui/react";
+import useDBTable from "@/hooks/useDBTable";
 
 export default function RegisterPropertyDataTableEdit({
     row,
@@ -26,7 +28,10 @@ export default function RegisterPropertyDataTableEdit({
     onInputFocusOut,
     inputs,
 }: TableEditRowContentComponentProps<ClientRegister>) {
-    const pageContext = useContext(PageRegistersContext)!;
+    // const pageContext = useContext(PageRegistersContext)!;
+    const communesDBTable = useDBTable<DB.Rows.Commune>("communes"); // prettier-ignore
+    const placesDBTable = useDBTable<DB.Rows.Place>("places"); // prettier-ignore
+    const streetsDBTable = useDBTable<DB.Rows.Street>('streets'); // prettier-ignore
 
     const [communeID, setCommuneID] = useState<number>(0);
     const [placeID, setPlaceID] = useState<number>(0);
@@ -37,31 +42,28 @@ export default function RegisterPropertyDataTableEdit({
 
     const street = useMemo(
         () =>
-            pageContext.streetsDBTable.rows.find(
+            streetsDBTable.rows.find(
                 (fEntry) => fEntry.id === row.object_street_id
             ),
-        [row.object_street_id, pageContext.streetsDBTable.rows]
+        [row.object_street_id, streetsDBTable.rows]
     );
     const place = useMemo(
-        () =>
-            pageContext.placesDBTable.rows.find(
-                (fEntry) => fEntry.id === placeID
-            ),
-        [pageContext.placesDBTable.rows, placeID]
+        () => placesDBTable.rows.find((fEntry) => fEntry.id === placeID),
+        [placesDBTable.rows, placeID]
     );
     // const commune = useMemo(
     //     () =>
-    //         pageContext.communesDBTable.rows.find(
+    //         communesDBTable.rows.find(
     //             (fEntry) => fEntry.id === communeID
     //         ),
-    //     [pageContext.communesDBTable.rows, communeID]
+    //     [communesDBTable.rows, communeID]
     // );
     const area = useMemo(
         () =>
-            pageContext.placesDBTable.rows.find(
+            placesDBTable.rows.find(
                 (fEntry) => fEntry.id === place?.area_place_id
             ),
-        [place, pageContext.placesDBTable.rows]
+        [place, placesDBTable.rows]
     );
 
     //
@@ -90,16 +92,15 @@ export default function RegisterPropertyDataTableEdit({
                 case "commune": {
                     setCommuneID(id);
                     id =
-                        pageContext.placesDBTable.rows.find(
-                            (row) => row.commune_id === id
-                        )?.id ?? 0;
+                        placesDBTable.rows.find((row) => row.commune_id === id)
+                            ?.id ?? 0;
                 }
                 case "place": {
                     setPlaceID(id);
                     setRow((row) => ({
                         ...row,
                         object_street_id:
-                            pageContext.streetsDBTable.rows.find(
+                            streetsDBTable.rows.find(
                                 (fRow) => fRow.place_id === id
                             )?.id ?? 0,
                     }));
@@ -107,11 +108,7 @@ export default function RegisterPropertyDataTableEdit({
             }
             /* eslint-enable no-fallthrough */
         },
-        [
-            setRow,
-            pageContext.placesDBTable.rows,
-            pageContext.streetsDBTable.rows,
-        ]
+        [setRow, placesDBTable.rows, streetsDBTable.rows]
     );
 
     //
@@ -148,31 +145,31 @@ export default function RegisterPropertyDataTableEdit({
 
     const communesSelectOptions = useMemo(
         () =>
-            pageContext.communesDBTable.rows.map<MySelectOption>((row) => ({
+            communesDBTable.rows.map<MySelectOption>((row) => ({
                 label: row.name,
                 value: row.id,
             })),
-        [pageContext.communesDBTable.rows]
+        [communesDBTable.rows]
     );
     const placesSelectOptions = useMemo(
         () =>
-            pageContext.placesDBTable.rows
+            placesDBTable.rows
                 .filter((row) => row.commune_id === communeID)
                 .map<MySelectOption>((row) => ({
                     label: row.name,
                     value: row.id,
                 })),
-        [pageContext.placesDBTable.rows, communeID]
+        [placesDBTable.rows, communeID]
     );
     const streetsSelectOptions = useMemo(
         () =>
-            pageContext.streetsDBTable.rows
+            streetsDBTable.rows
                 .filter((row) => row.place_id === placeID)
                 .map<MySelectOption>((row) => ({
                     label: row.name,
                     value: row.id,
                 })),
-        [pageContext.streetsDBTable.rows, placeID]
+        [streetsDBTable.rows, placeID]
     );
 
     //

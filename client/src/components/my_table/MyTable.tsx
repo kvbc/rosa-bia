@@ -42,6 +42,7 @@ export function MyTable({
     customIndentLevel,
     keepIndentLevel,
     isEmpty,
+    showEmptyState: showEmptyStateProp,
     showBody: showBodyProp,
     ...tableRootProps
 }: {
@@ -49,9 +50,11 @@ export function MyTable({
     isCollapsible?: boolean;
     defaultIsCollapsed?: boolean;
     isEmpty?: boolean;
+    showEmptyState?: boolean;
     customIndentLevel?: number;
     keepIndentLevel?: boolean;
 } & ComponentProps<typeof Table.Root>) {
+    const showEmptyState = showEmptyStateProp ?? true;
     const [isCollapsed, setIsCollapsed] = useState<boolean>(
         defaultIsCollapsed ?? false
     );
@@ -176,7 +179,7 @@ export function MyTable({
                     {showBody && (
                         <Table.Body fontSize="inherit">
                             {hasRows && rows}
-                            {(isEmpty || !hasRows) && (
+                            {(isEmpty || !hasRows) && showEmptyState && (
                                 <MyTableRow padding="0">
                                     <MyTableCell colSpan={999} padding="0">
                                         <EmptyState

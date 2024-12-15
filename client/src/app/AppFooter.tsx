@@ -1,10 +1,13 @@
 import { getDateNow } from "@/utils/time";
-import { HStack, Text } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { Box, HStack, IconButton, Text } from "@chakra-ui/react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AppNavbarLink } from "./navbar/AppNavbarLink";
+import { LuMaximize, LuMinimize } from "react-icons/lu";
+import { useFullscreen } from "@/hooks/useFullscreen";
 
 export const AppFooter: React.FC = () => {
     const [dateString, setDateString] = useState<string>("");
+    const { isFullscreen, setIsFullscreen } = useFullscreen();
 
     useEffect(() => {
         const id = setInterval(() => {
@@ -24,19 +27,37 @@ export const AppFooter: React.FC = () => {
         };
     }, []);
 
+    const handleFullscreenButtonClicked = useCallback(() => {
+        setIsFullscreen(!isFullscreen);
+    }, [setIsFullscreen, isFullscreen]);
+
     return (
         <HStack
             width="full"
             backgroundColor="blue.700"
             color="blue.100"
+            position="sticky"
+            as="footer"
+            bottom="0px"
             fontSize="xs"
             padding="1"
+            zIndex={50000}
             justifyContent="space-between"
         >
             <AppNavbarLink to="/help/program_info" color="blue.100">
                 R.O.S.A. BiA
             </AppNavbarLink>
-            <Text>{dateString}</Text>
+            <HStack>
+                <Text>{dateString}</Text>
+                <IconButton
+                    size="2xs"
+                    variant="plain"
+                    color="white"
+                    onClick={handleFullscreenButtonClicked}
+                >
+                    {isFullscreen ? <LuMinimize /> : <LuMaximize />}
+                </IconButton>
+            </HStack>
         </HStack>
     );
 };

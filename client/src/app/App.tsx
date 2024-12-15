@@ -64,7 +64,7 @@ export const App: React.FC = () => {
                     <ErrorBoundary FallbackComponent={AppErrorFallback}>
                         <WebSocketContext.Provider value={webSocket}>
                             <BrowserRouter>
-                                <ReactQueryDevtools buttonPosition="bottom-right" />
+                                {/* <ReactQueryDevtools buttonPosition="bottom-right" /> */}
                                 <Toaster />
                                 <AppErrorDialog
                                     error={openedError}

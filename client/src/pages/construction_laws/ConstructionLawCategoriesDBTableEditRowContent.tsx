@@ -14,13 +14,15 @@ import {
 import { Box } from "@chakra-ui/react";
 import { FaFolder } from "react-icons/fa6";
 import { MyTableCell } from "@/components/my_table/MyTableCell";
+import useDBTable from "@/hooks/useDBTable";
 
 export function ConstructionLawCategoriesDBTableEditRowContent({
     inputs,
     row,
     editable,
 }: TableEditRowContentComponentProps<DB.Rows.ConstructionLawCategory>) {
-    const pageContext = useContext(PageConstructionLawsContext)!;
+    // const pageContext = useContext(PageConstructionLawsContext)!;
+    const constructionLawIntentsDBTable = useDBTable<DB.Rows.ConstructionLawIntent>("construction_law_intents"); // prettier-ignore
 
     const prBudIntentsHeaders = useMemo<TableEditHeader[]>(
         () => [
@@ -74,8 +76,8 @@ export function ConstructionLawCategoriesDBTableEditRowContent({
                     <AccordionItemContent>
                         <DBTableEdit
                             hidePagination
-                            dbTable={pageContext.constructionLawIntentsDBTable}
-                            rows={pageContext.constructionLawIntentsDBTable.rows.filter(
+                            dbTable={constructionLawIntentsDBTable}
+                            rows={constructionLawIntentsDBTable.rows.filter(
                                 (fRow) => fRow.category_id === row.id
                             )}
                             editable={editable}

@@ -6,7 +6,9 @@
 
 -   [ ] dont run 2 separate queries in server/http/routes/table_rows/get
 
-easiest
+right now ig make sure everything kinda works and fix the infinite saving bug
+
+from easiest
 [x] means prioritize now
 
 -   [ ] puste pola
@@ -18,6 +20,5 @@ easiest
 -   [ ] info o roznych info (np. dzialkach) w innych rejestrach
 -   [x] dodawanie działek (odrazu?)
 -   [ ] inwestorow dodawac odrazu
--   [x] performance
 
-hardest
+to hardest

@@ -43,6 +43,7 @@ import {
     MySelectOption,
 } from "@/components/my_input/MyInputSelect";
 import { FaMapMarkedAlt } from "react-icons/fa";
+import useDBTable from "@/hooks/useDBTable";
 
 export default function RegisterConstructionIntentTableEdit(
     props: ComponentProps<typeof MyTable> &
@@ -61,7 +62,14 @@ export default function RegisterConstructionIntentTableEdit(
         ...myTableProps
     } = props;
 
-    const pageContext = useContext(PageRegistersContext)!;
+    // const pageContext = useContext(PageRegistersContext)!;
+    const constructionClassesDBTable = useDBTable<DB.Rows.ConstructionClass>("construction_classes"); // prettier-ignore
+    const constructionSectionsDBTable = useDBTable<DB.Rows.ConstructionSection>("construction_sections"); // prettier-ignore
+    const constructionGroupsDBTable = useDBTable<DB.Rows.ConstructionGroup>("construction_groups"); // prettier-ignore
+    const constructionDivisionsDBTable = useDBTable<DB.Rows.ConstructionDivision>("construction_divisions"); // prettier-ignore
+    const constructionSpecsDBTable = useDBTable<DB.Rows.ConstructionSpec>("construction_specs"); // prettier-ignore
+    const constructionLawCategoriesDBTable = useDBTable<DB.Rows.ConstructionLawCategory>("construction_law_categories"); // prettier-ignore
+    const constructionLawIntentsDBTable = useDBTable<DB.Rows.ConstructionLawIntent>("construction_law_intents"); // prettier-ignore
 
     const [constructionSectionID, setConstructionSectionID] = useState<number>(0); // prettier-ignore
     const [constructionDivisionID, setConstructionDivisionID] = useState<number>(0); // prettier-ignore
@@ -71,60 +79,57 @@ export default function RegisterConstructionIntentTableEdit(
 
     const constructionSpec = useMemo(
         () =>
-            pageContext.constructionSpecsDBTable.rows.find(
+            constructionSpecsDBTable.rows.find(
                 (fEntry) => fEntry.id === row.object_construction_spec_id
             ),
-        [
-            row.object_construction_spec_id,
-            pageContext.constructionSpecsDBTable.rows,
-        ]
+        [row.object_construction_spec_id, constructionSpecsDBTable.rows]
     );
     const constructionClass = useMemo(
         () =>
-            pageContext.constructionClassesDBTable.rows.find(
+            constructionClassesDBTable.rows.find(
                 (fEntry) => fEntry.id === constructionClassID
             ),
-        [constructionClassID, pageContext.constructionClassesDBTable.rows]
+        [constructionClassID, constructionClassesDBTable.rows]
     );
     const constructionGroup = useMemo(
         () =>
-            pageContext.constructionGroupsDBTable.rows.find(
+            constructionGroupsDBTable.rows.find(
                 (fEntry) => fEntry.id === constructionGroupID
             ),
-        [constructionGroupID, pageContext.constructionGroupsDBTable.rows]
+        [constructionGroupID, constructionGroupsDBTable.rows]
     );
     const constructionDivision = useMemo(
         () =>
-            pageContext.constructionDivisionsDBTable.rows.find(
+            constructionDivisionsDBTable.rows.find(
                 (fEntry) => fEntry.id === constructionDivisionID
             ),
-        [constructionDivisionID, pageContext.constructionDivisionsDBTable.rows]
+        [constructionDivisionID, constructionDivisionsDBTable.rows]
     );
     // const constructionSection = useMemo(
     //     () =>
-    //         pageContext.constructionSectionsDBTable.rows.find(
+    //         constructionSectionsDBTable.rows.find(
     //             (fRow) => fRow.id === constructionSectionID
     //         ),
-    //     [pageContext.constructionSectionsDBTable.rows, constructionSectionID]
+    //     [constructionSectionsDBTable.rows, constructionSectionID]
     // );
     //
     const constructionLawIntent = useMemo(
         () =>
-            pageContext.constructionLawIntentsDBTable.rows.find(
+            constructionLawIntentsDBTable.rows.find(
                 (fRow) => fRow.id === row.object_construction_law_intent_id
             ),
         [
-            pageContext.constructionLawIntentsDBTable.rows,
+            constructionLawIntentsDBTable.rows,
             row.object_construction_law_intent_id,
         ]
     );
     // const constructionLawCategory = useMemo(
     //     () =>
-    //         pageContext.constructionLawCategoriesDBTable.rows.find(
+    //         constructionLawCategoriesDBTable.rows.find(
     //             (row) => row.id === constructionLawCategoryID
     //         ),
     //     [
-    //         pageContext.constructionLawCategoriesDBTable.rows,
+    //         constructionLawCategoriesDBTable.rows,
     //         constructionLawCategoryID,
     //     ]
     // );
@@ -174,19 +179,19 @@ export default function RegisterConstructionIntentTableEdit(
                 case "section":
                     setConstructionSectionID(id);
                     id =
-                        pageContext.constructionDivisionsDBTable.rows.find(
+                        constructionDivisionsDBTable.rows.find(
                             (row) => row.section_id === id
                         )?.id ?? 0;
                 case "division":
                     setConstructionDivisionID(id);
                     id =
-                        pageContext.constructionGroupsDBTable.rows.find(
+                        constructionGroupsDBTable.rows.find(
                             (row) => row.division_id === id
                         )?.id ?? 0;
                 case "group":
                     setConstructionGroupID(id);
                     id =
-                        pageContext.constructionClassesDBTable.rows.find(
+                        constructionClassesDBTable.rows.find(
                             (row) => row.group_id === id
                         )?.id ?? 0;
                 case "class":
@@ -194,7 +199,7 @@ export default function RegisterConstructionIntentTableEdit(
                     setRow((row) => ({
                         ...row,
                         object_construction_spec_id:
-                            pageContext.constructionSpecsDBTable.rows.find(
+                            constructionSpecsDBTable.rows.find(
                                 (fRow) => fRow.class_id === id
                             )?.id ?? 0,
                     }));
@@ -206,7 +211,7 @@ export default function RegisterConstructionIntentTableEdit(
                     setRow((row) => ({
                         ...row,
                         object_construction_law_intent_id:
-                            pageContext.constructionLawIntentsDBTable.rows.find(
+                            constructionLawIntentsDBTable.rows.find(
                                 (fRow) => fRow.category_id === id
                             )?.id ?? 0,
                     }));
@@ -215,11 +220,11 @@ export default function RegisterConstructionIntentTableEdit(
         },
         [
             setRow,
-            pageContext.constructionDivisionsDBTable.rows,
-            pageContext.constructionGroupsDBTable.rows,
-            pageContext.constructionClassesDBTable.rows,
-            pageContext.constructionSpecsDBTable.rows,
-            pageContext.constructionLawIntentsDBTable.rows,
+            constructionDivisionsDBTable.rows,
+            constructionGroupsDBTable.rows,
+            constructionClassesDBTable.rows,
+            constructionSpecsDBTable.rows,
+            constructionLawIntentsDBTable.rows,
         ]
     );
 
@@ -283,77 +288,72 @@ export default function RegisterConstructionIntentTableEdit(
 
     const constructionSectionsSelectOptions = useMemo(
         () =>
-            pageContext.constructionSectionsDBTable.rows.map<MySelectOption>(
-                (row) => ({
-                    label: row.name,
-                    value: row.id,
-                })
-            ),
-        [pageContext.constructionSectionsDBTable.rows]
+            constructionSectionsDBTable.rows.map<MySelectOption>((row) => ({
+                label: row.name,
+                value: row.id,
+            })),
+        [constructionSectionsDBTable.rows]
     );
     const constructionDivisionsSelectOptions = useMemo(
         () =>
-            pageContext.constructionDivisionsDBTable.rows
+            constructionDivisionsDBTable.rows
                 .filter((row) => row.section_id === constructionSectionID)
                 .map<MySelectOption>((row) => ({
                     value: row.id,
                     label: row.name,
                 })),
-        [constructionSectionID, pageContext.constructionDivisionsDBTable.rows]
+        [constructionSectionID, constructionDivisionsDBTable.rows]
     );
     const constructionGroupsSelectOptions = useMemo(
         () =>
-            pageContext.constructionGroupsDBTable.rows
+            constructionGroupsDBTable.rows
                 .filter((row) => row.division_id === constructionDivisionID)
                 .map<MySelectOption>((row) => ({
                     value: row.id,
                     label: row.name,
                 })),
-        [constructionDivisionID, pageContext.constructionGroupsDBTable.rows]
+        [constructionDivisionID, constructionGroupsDBTable.rows]
     );
     const constructionClassesSelectOptions = useMemo(
         () =>
-            pageContext.constructionClassesDBTable.rows
+            constructionClassesDBTable.rows
                 .filter((row) => row.group_id === constructionGroupID)
                 .map<MySelectOption>((row) => ({
                     value: row.id,
                     label: row.name,
                 })),
-        [constructionGroupID, pageContext.constructionClassesDBTable.rows]
+        [constructionGroupID, constructionClassesDBTable.rows]
     );
     const constructionSpecsSelectOptions = useMemo(
         () =>
-            pageContext.constructionSpecsDBTable.rows
+            constructionSpecsDBTable.rows
                 .filter((row) => row.class_id === constructionClassID)
                 .map<MySelectOption>((row) => ({
                     value: row.id,
                     label: row.name,
                 })),
-        [constructionClassID, pageContext.constructionSpecsDBTable.rows]
+        [constructionClassID, constructionSpecsDBTable.rows]
     );
     //
     const constructionLawCategoriesSelectOptions = useMemo(
         () =>
-            pageContext.constructionLawCategoriesDBTable.rows
+            constructionLawCategoriesDBTable.rows
                 .filter((cRow) => cRow.register_type === row.type)
                 .map<MySelectOption>((row) => ({
                     value: row.id,
                     label: row.name,
                 })),
-        [pageContext.constructionLawCategoriesDBTable.rows, row.type]
+        [constructionLawCategoriesDBTable.rows, row.type]
     );
     const constructionLawIntentsSelectOptions = useMemo(
         () =>
-            pageContext.constructionLawIntentsDBTable.rows
+            constructionLawIntentsDBTable.rows
                 .filter((row) => row.category_id === constructionLawCategoryID)
                 .map<MySelectOption>((row) => ({
                     value: row.id,
                     label: row.intent,
                 })),
-        [
-            constructionLawCategoryID,
-            pageContext.constructionLawIntentsDBTable.rows,
-        ]
+        [constructionLawCategoryID, constructionLawIntentsDBTable.rows]
     );
 
     //
@@ -623,6 +623,7 @@ export default function RegisterConstructionIntentTableEdit(
                                                     }
                                                     isDisabled={!editable}
                                                     onBlur={onInputFocusOut}
+                                                    maxWidth="300px"
                                                 />
                                                 {/* {
                                                     inputs.CLIENT_object_construction_section_id
@@ -646,6 +647,7 @@ export default function RegisterConstructionIntentTableEdit(
                                                     }
                                                     isDisabled={!editable}
                                                     onBlur={onInputFocusOut}
+                                                    maxWidth="300px"
                                                 />
                                                 {/* {
                                                     inputs.CLIENT_object_construction_division_id
@@ -669,6 +671,7 @@ export default function RegisterConstructionIntentTableEdit(
                                                     }
                                                     isDisabled={!editable}
                                                     onBlur={onInputFocusOut}
+                                                    maxWidth="300px"
                                                 />
                                                 {/* {
                                                     inputs.CLIENT_object_construction_group_id
@@ -692,6 +695,7 @@ export default function RegisterConstructionIntentTableEdit(
                                                     }
                                                     isDisabled={!editable}
                                                     onBlur={onInputFocusOut}
+                                                    maxWidth="300px"
                                                 />
                                                 {/* {
                                                     inputs.CLIENT_object_construction_class_id
@@ -722,6 +726,7 @@ export default function RegisterConstructionIntentTableEdit(
                                                     }
                                                     isDisabled={!editable}
                                                     onBlur={onInputFocusOut}
+                                                    maxWidth="300px"
                                                 />
                                                 {/* {
                                                     inputs.object_construction_spec_id

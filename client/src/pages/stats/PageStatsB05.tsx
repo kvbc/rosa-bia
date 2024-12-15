@@ -152,8 +152,7 @@ export default function PageStatsB05() {
                 //
                 // prettier-ignore
                 const tableSection1: (string | number)[] = [];
-                [1110, 1121, 1122].forEach((pkob, index) => {
-                    const apartmentCount = [1, 2, "-"][index];
+                [1110, 1121, 1122].forEach((pkob) => {
                     tableSection1.push(
                         // row a
                         getRowsA(pkob).length,
@@ -162,7 +161,7 @@ export default function PageStatsB05() {
                         stats.reduceBuildingCount(
                             stats.filterMPZP(getRowsA(pkob))
                         ),
-                        apartmentCount,
+                        stats.reducePremisesCount(getRowsA(pkob)),
                         stats.reduceUsableArea(getRowsA(pkob), pkob),
 
                         // row b
@@ -172,7 +171,7 @@ export default function PageStatsB05() {
                         stats.reduceBuildingCount(
                             stats.filterMPZP(getRowsB(pkob))
                         ),
-                        apartmentCount,
+                        stats.reducePremisesCount(getRowsB(pkob)),
                         stats.reduceUsableArea(getRowsB(pkob), pkob)
                     );
                 });

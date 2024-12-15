@@ -96,6 +96,9 @@ export const useStats = () => {
     const reduceBuildingCount = (arr: ClientRegister[]) =>
         arr.reduce((total, rRow) => total + rRow.object_demo_building_count, 0);
 
+    const reducePremisesCount = (arr: ClientRegister[]) =>
+        arr.reduce((total, rRow) => total + rRow.object_demo_premises_count, 0);
+
     const reduceUsableArea = (arr: ClientRegister[], _pkob: number) =>
         arr.reduce((total, rRow) => {
             //
@@ -128,6 +131,7 @@ export const useStats = () => {
         filterIndividual,
         filterMPZP,
         reduceBuildingCount,
+        reducePremisesCount,
         reduceUsableArea,
         isPKOBEqual,
     };

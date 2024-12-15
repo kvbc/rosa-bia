@@ -9,18 +9,24 @@ import { TableEditHeader } from "@/components/table_edit/TableEdit";
 import { EmployeeAvatar } from "@/components/EmployeeAvatar";
 import { Badge } from "@chakra-ui/react";
 import { ClientRegister } from "./PageRegisters";
+import useDBTable from "@/hooks/useDBTable";
+import { Filter } from "@server/http/routes/table_rows/get";
 
-export default function RegisterTableEdit(
-    props: Omit<
-        ComponentProps<typeof DBTableEdit<ClientRegister>>,
-        | "dbTable"
-        | "headers"
-        | "defaultRow"
-        | "rowInputsProps"
-        | "RowContentComponent"
-    >
-) {
-    const pageContext = useContext(PageRegistersContext)!;
+export default function RegisterTableEdit({
+    initialRegistersFilters,
+    ...props
+}: { initialRegistersFilters: Filter[] } & Omit<
+    ComponentProps<typeof DBTableEdit<ClientRegister>>,
+    | "dbTable"
+    | "headers"
+    | "defaultRow"
+    | "rowInputsProps"
+    | "RowContentComponent"
+>) {
+    // const pageContext = useContext(PageRegistersContext)!;
+    const registersDBTable = useDBTable<DB.Rows.Register>("registers", initialRegistersFilters); // prettier-ignore
+    const employeesDBTable = useDBTable<DB.Rows.Employee>("employees"); // prettier-ignore
+    const investorsDBTable = useDBTable<DB.Rows.Investor>("investors"); // prettier-ignore
 
     const defaultRow = useMemo<DBTableEditDefaultRow<ClientRegister>>(
         () => ({
@@ -154,7 +160,7 @@ export default function RegisterTableEdit(
             }),
             getSelectRowInputProps(
                 "assigned_employee_id",
-                pageContext.employeesDBTable.rows,
+                employeesDBTable.rows,
                 (row) => ({
                     value: row.id,
                     label: row.name,
@@ -167,7 +173,7 @@ export default function RegisterTableEdit(
             { rowKey: "app_submission_date", type: "date", isFilterable: true }, // prettier-ignore
             getSelectRowInputProps(
                 "app_investor_id",
-                pageContext.investorsDBTable.rows,
+                investorsDBTable.rows,
                 (row) => ({ value: row.id, label: row.name })
             ),
             getSelectRowInputProps(
@@ -300,12 +306,12 @@ export default function RegisterTableEdit(
         ],
         [
             getSelectRowInputProps,
-            pageContext.employeesDBTable.rows,
+            employeesDBTable.rows,
             // pageContext.communesDBTable.rows,
             // pageContext.constructionClassesDBTable.rows,
             // pageContext.constructionSectionsDBTable.rows,
             // pageContext.constructionSpecsDBTable.rows,
-            pageContext.investorsDBTable.rows,
+            investorsDBTable.rows,
             // pageContext.placesDBTable.rows,
             // pageContext.streetsDBTable.rows,
             // pageContext.constructionLawCategoriesDBTable.rows,
@@ -358,7 +364,7 @@ export default function RegisterTableEdit(
     // );
 
     const rows = useMemo(() => {
-        const newRows = [...pageContext.registersDBTable.rows];
+        const newRows = [...registersDBTable.rows];
 
         newRows.sort(
             (a, b) =>
@@ -367,11 +373,11 @@ export default function RegisterTableEdit(
         );
 
         return newRows;
-    }, [pageContext.registersDBTable.rows]);
+    }, [registersDBTable.rows]);
 
     return (
         <DBTableEdit<DB.Rows.Register, ClientRegister>
-            dbTable={pageContext.registersDBTable}
+            dbTable={registersDBTable}
             headers={headers}
             rows={rows}
             defaultRow={defaultRow}

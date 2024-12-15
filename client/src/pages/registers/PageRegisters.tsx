@@ -14,62 +14,62 @@ export default function PageRegisters({
     registersFilters?: Filter[];
     disableRegisterAdding?: boolean;
 }) {
-    const registersDBTable = useDBTable<DB.Rows.Register>("registers", initialRegistersFilters); // prettier-ignore
-    const communesDBTable = useDBTable<DB.Rows.Commune>("communes"); // prettier-ignore
-    const placesDBTable = useDBTable<DB.Rows.Place>("places"); // prettier-ignore
-    const streetsDBTable = useDBTable<DB.Rows.Street>('streets'); // prettier-ignore
-    const constructionClassesDBTable = useDBTable<DB.Rows.ConstructionClass>("construction_classes"); // prettier-ignore
-    const constructionSectionsDBTable = useDBTable<DB.Rows.ConstructionSection>("construction_sections"); // prettier-ignore
-    const constructionGroupsDBTable = useDBTable<DB.Rows.ConstructionGroup>("construction_groups"); // prettier-ignore
-    const constructionDivisionsDBTable = useDBTable<DB.Rows.ConstructionDivision>("construction_divisions"); // prettier-ignore
-    const constructionSpecsDBTable = useDBTable<DB.Rows.ConstructionSpec>("construction_specs"); // prettier-ignore
-    const investorsDBTable = useDBTable<DB.Rows.Investor>("investors"); // prettier-ignore
-    const registerPlotsDBTable = useDBTable<DB.Rows.RegisterPlot>("registers_plots"); // prettier-ignore
-    // const registerAdminActionsDBTable = useDBTable<DB.Rows.RegisterAdminAction>("registers_admin_actions"); // prettier-ignore
-    const employeesDBTable = useDBTable<DB.Rows.Employee>("employees");
-    const constructionLawCategoriesDBTable = useDBTable<DB.Rows.ConstructionLawCategory>("construction_law_categories"); // prettier-ignore
-    const constructionLawIntentsDBTable = useDBTable<DB.Rows.ConstructionLawIntent>("construction_law_intents"); // prettier-ignore
+    // const registersDBTable = useDBTable<DB.Rows.Register>("registers", initialRegistersFilters); // prettier-ignore
+    // const communesDBTable = useDBTable<DB.Rows.Commune>("communes"); // prettier-ignore
+    // const placesDBTable = useDBTable<DB.Rows.Place>("places"); // prettier-ignore
+    // const streetsDBTable = useDBTable<DB.Rows.Street>('streets'); // prettier-ignore
+    // const constructionClassesDBTable = useDBTable<DB.Rows.ConstructionClass>("construction_classes"); // prettier-ignore
+    // const constructionSectionsDBTable = useDBTable<DB.Rows.ConstructionSection>("construction_sections"); // prettier-ignore
+    // const constructionGroupsDBTable = useDBTable<DB.Rows.ConstructionGroup>("construction_groups"); // prettier-ignore
+    // const constructionDivisionsDBTable = useDBTable<DB.Rows.ConstructionDivision>("construction_divisions"); // prettier-ignore
+    // const constructionSpecsDBTable = useDBTable<DB.Rows.ConstructionSpec>("construction_specs"); // prettier-ignore
+    // const investorsDBTable = useDBTable<DB.Rows.Investor>("investors"); // prettier-ignore
+    // const registerPlotsDBTable = useDBTable<DB.Rows.RegisterPlot>("registers_plots"); // prettier-ignore
+    // // const registerAdminActionsDBTable = useDBTable<DB.Rows.RegisterAdminAction>("registers_admin_actions"); // prettier-ignore
+    // const employeesDBTable = useDBTable<DB.Rows.Employee>("employees");
+    // const constructionLawCategoriesDBTable = useDBTable<DB.Rows.ConstructionLawCategory>("construction_law_categories"); // prettier-ignore
+    // const constructionLawIntentsDBTable = useDBTable<DB.Rows.ConstructionLawIntent>("construction_law_intents"); // prettier-ignore
 
-    const context = useMemo<ContextType<typeof PageRegistersContext>>(
-        () => ({
-            registersDBTable,
-            communesDBTable,
-            placesDBTable,
-            streetsDBTable,
-            constructionClassesDBTable,
-            constructionSectionsDBTable,
-            constructionGroupsDBTable,
-            constructionDivisionsDBTable,
-            constructionSpecsDBTable,
-            investorsDBTable,
-            registerPlotsDBTable,
-            // registerAdminActionsDBTable,
-            employeesDBTable,
-            constructionLawCategoriesDBTable,
-            constructionLawIntentsDBTable,
-        }),
-        [
-            registersDBTable,
-            communesDBTable,
-            placesDBTable,
-            streetsDBTable,
-            constructionClassesDBTable,
-            constructionSectionsDBTable,
-            constructionGroupsDBTable,
-            constructionDivisionsDBTable,
-            constructionSpecsDBTable,
-            investorsDBTable,
-            registerPlotsDBTable,
-            // registerAdminActionsDBTable,
-            employeesDBTable,
-            constructionLawCategoriesDBTable,
-            constructionLawIntentsDBTable,
-        ]
-    );
+    // const context = useMemo<ContextType<typeof PageRegistersContext>>(
+    //     () => ({
+    //         registersDBTable,
+    //         communesDBTable,
+    //         placesDBTable,
+    //         streetsDBTable,
+    //         constructionClassesDBTable,
+    //         constructionSectionsDBTable,
+    //         constructionGroupsDBTable,
+    //         constructionDivisionsDBTable,
+    //         constructionSpecsDBTable,
+    //         investorsDBTable,
+    //         registerPlotsDBTable,
+    //         // registerAdminActionsDBTable,
+    //         employeesDBTable,
+    //         constructionLawCategoriesDBTable,
+    //         constructionLawIntentsDBTable,
+    //     }),
+    //     [
+    //         registersDBTable,
+    //         communesDBTable,
+    //         placesDBTable,
+    //         streetsDBTable,
+    //         constructionClassesDBTable,
+    //         constructionSectionsDBTable,
+    //         constructionGroupsDBTable,
+    //         constructionDivisionsDBTable,
+    //         constructionSpecsDBTable,
+    //         investorsDBTable,
+    //         registerPlotsDBTable,
+    //         // registerAdminActionsDBTable,
+    //         employeesDBTable,
+    //         constructionLawCategoriesDBTable,
+    //         constructionLawIntentsDBTable,
+    //     ]
+    // );
 
     return (
-        <PageRegistersContext.Provider value={context}>
-            <RegisterTableEdit disableRowAdding={disableRegisterAdding} />
-        </PageRegistersContext.Provider>
+        // <PageRegistersContext.Provider value={context}>
+        <RegisterTableEdit disableRowAdding={disableRegisterAdding} />
+        // </PageRegistersContext.Provider>
     );
 }
