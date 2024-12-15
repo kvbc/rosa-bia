@@ -355,11 +355,23 @@ export default function RegisterTableEdit(
     //     ]
     // );
 
+    const rows = useMemo(() => {
+        const newRows = [...pageContext.registersDBTable.rows];
+
+        newRows.sort(
+            (a, b) =>
+                new Date(b.app_submission_date).getTime() -
+                new Date(a.app_submission_date).getTime()
+        );
+
+        return newRows;
+    }, [pageContext.registersDBTable.rows]);
+
     return (
         <DBTableEdit<DB.Rows.Register, ClientRegister>
             dbTable={pageContext.registersDBTable}
             headers={headers}
-            // rows={rows}
+            rows={rows}
             defaultRow={defaultRow}
             rowInputsProps={rowInputsProps}
             RowContentComponent={RegisterTableEditRowContent}

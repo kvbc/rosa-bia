@@ -32,13 +32,6 @@ export default function RegisterAdminProceduresTableEdit(
 
     const showCharParamsTable = row.type === "PnB (6740)";
 
-    const showConstructionJournal = isRegisterType(
-        row.type,
-        "PnRozb. (6741)",
-        "BiP (6743.4)",
-        "ZRiD (7012)"
-    );
-
     useEffect(() => {
         const trySetInfoState = (infoState: string | null | undefined) => {
             if (infoState !== null && infoState !== undefined) {
@@ -138,31 +131,6 @@ export default function RegisterAdminProceduresTableEdit(
                             />
                         </Tc>
                     </Tr>
-                    {showConstructionJournal && (
-                        <Tr>
-                            <Tc colSpan={2}>
-                                <Tb isCollapsible>
-                                    <Th colSpan={2}>Dziennik budowy</Th>
-                                    <Tr>
-                                        <Tc>Numer</Tc>
-                                        <Tc>
-                                            {
-                                                inputs.admin_construction_journal_number
-                                            }
-                                        </Tc>
-                                    </Tr>
-                                    <Tr>
-                                        <Tc>Z dnia</Tc>
-                                        <Tc>
-                                            {
-                                                inputs.admin_construction_journal_date
-                                            }
-                                        </Tc>
-                                    </Tr>
-                                </Tb>
-                            </Tc>
-                        </Tr>
-                    )}
                     {showCharParamsTable && (
                         <Tr>
                             <Tc colSpan={2}>

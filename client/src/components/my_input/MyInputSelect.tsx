@@ -31,9 +31,11 @@ export function MyInputSelect({
     onValueChanged,
     isLocked,
     onLockClicked,
+    maxWidth,
     ...restSelectProps
 }: {
     options: MySelectOption[];
+    maxWidth?: string;
     value: string | number;
     onValueChanged: (value: string | number) => void;
     isLocked?: boolean;
@@ -87,6 +89,7 @@ export function MyInputSelect({
                 boxShadow: "none",
                 fontSize: "inherit",
                 opacity: state.isDisabled ? "50%" : "100%",
+                maxWidth: maxWidth ?? "100%",
             }),
             singleValue: (base) => ({
                 ...base,

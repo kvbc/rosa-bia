@@ -18,6 +18,7 @@ import { ClientRegister } from "../PageRegisters";
 import { HStack } from "@chakra-ui/react";
 import { FaFileSignature, FaUserTie } from "react-icons/fa6";
 import useDBTable from "@/hooks/useDBTable";
+import { isRegisterType } from "@/utils/array";
 
 export default function RegisterDataTableEdit({
     inputs,
@@ -39,6 +40,14 @@ export default function RegisterDataTableEdit({
                 (investor) => investor.id === row.app_investor_id
             ),
         [investorsDBTable.rows, row.app_investor_id]
+    );
+
+    const showConstructionJournal = isRegisterType(
+        row.type,
+        "PnB (6740)",
+        "PnRozb. (6741)",
+        "BiP (6743.4)",
+        "ZRiD (7012)"
     );
 
     const decisionTitle = useMemo(() => {
@@ -226,6 +235,31 @@ export default function RegisterDataTableEdit({
                                     </Tb>
                                 </Tc>
                             </Tr>
+                            {showConstructionJournal && (
+                                <Tr>
+                                    <Tc colSpan={2}>
+                                        <Tb isCollapsible>
+                                            <Th colSpan={2}>Dziennik budowy</Th>
+                                            <Tr>
+                                                <Tc>Numer</Tc>
+                                                <Tc>
+                                                    {
+                                                        inputs.admin_construction_journal_number
+                                                    }
+                                                </Tc>
+                                            </Tr>
+                                            <Tr>
+                                                <Tc>Z dnia</Tc>
+                                                <Tc>
+                                                    {
+                                                        inputs.admin_construction_journal_date
+                                                    }
+                                                </Tc>
+                                            </Tr>
+                                        </Tb>
+                                    </Tc>
+                                </Tr>
+                            )}
                         </>
                     )}
                 </>

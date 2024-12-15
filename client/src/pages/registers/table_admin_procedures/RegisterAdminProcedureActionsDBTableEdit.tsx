@@ -114,6 +114,22 @@ const ACTION_TYPES_EDITABLE_FIELDS: Record<
     Upomnienie: ["deadline", "letter_date", "receipt_date", "reply_date"],
 };
 
+const ACTION_TYPES_DISPLAY_ORDER: DB.Rows.RegisterAdminActionType[] = [
+    "Wezwanie",
+    "Zawiadomienie",
+    "Postanowienie",
+    "Konserwator",
+    "Zawieszenie postępowania",
+    "Przedłużenie terminu",
+    "Zawiadomienie o kontroli",
+    "Zgłoszenie rozbiórki",
+    "Kontrola",
+    "Wynik kontroli",
+    "Upomnienie",
+    "Zawiadomienie o ponownej kontroli",
+    "Publiczna informacja",
+];
+
 export default function RegisterAdminProcedureActionsDBTableEdit(
     props: TableEditRowContentComponentProps<ClientRegister>
 ) {
@@ -302,20 +318,23 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
         row.id,
     ]);
 
-    const rows = useMemo(
-        () =>
-            registerAdminActionsDBTable.rows.filter(
-                (fRow, fRowIndex) =>
-                    fRow.register_id === row.id &&
-                    actionTypes.includes(fRow.type) &&
-                    registerAdminActionsDBTable.rows.findIndex(
-                        (fRow2) =>
-                            fRow2.register_id === row.id &&
-                            fRow2.type === fRow.type
-                    ) === fRowIndex
-            ),
-        [registerAdminActionsDBTable.rows, row.id, actionTypes]
-    );
+    const rows = useMemo(() => {
+        const newRows = registerAdminActionsDBTable.rows.filter(
+            (fRow, fRowIndex) =>
+                fRow.register_id === row.id &&
+                actionTypes.includes(fRow.type) &&
+                registerAdminActionsDBTable.rows.findIndex(
+                    (fRow2) =>
+                        fRow2.register_id === row.id && fRow2.type === fRow.type
+                ) === fRowIndex
+        );
+        newRows.sort(
+            (a, b) =>
+                ACTION_TYPES_DISPLAY_ORDER.indexOf(a.type) -
+                ACTION_TYPES_DISPLAY_ORDER.indexOf(b.type)
+        );
+        return newRows;
+    }, [registerAdminActionsDBTable.rows, row.id, actionTypes]);
 
     return (
         <DBTableEdit<DB.Rows.RegisterAdminAction>

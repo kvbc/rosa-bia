@@ -404,6 +404,7 @@ export default function RegisterConstructionIntentTableEdit(
             }
             isDisabled={!editable}
             onBlur={onInputFocusOut}
+            maxWidth="200px"
         />
     );
 
