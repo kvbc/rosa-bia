@@ -3,7 +3,6 @@
 import { TableEditRowType } from "@/components/table_edit/TableEdit";
 import { TableEditRowInputProps } from "./TableEditRowInput";
 import { MyInputCheckbox } from "@/components/my_input/MyInputCheckbox";
-import React from "react";
 
 export function TableEditRowInputCheckbox<TRow extends TableEditRowType>({
     disabled,

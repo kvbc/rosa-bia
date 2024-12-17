@@ -14,11 +14,10 @@
  *
  */
 
-import React, {
+import {
     ComponentProps,
     ReactNode,
     useCallback,
-    useContext,
     useEffect,
     useMemo,
     useState,
@@ -27,7 +26,6 @@ import RegisterPropertyDataTableEdit from "./RegisterPropertyDataTableEdit";
 import RegisterPlotsDataTableEdit from "./RegisterPlotsTableEdit";
 import RegisterCharParamsTableEdit from "./RegisterCharParamsTableEdit";
 import * as DB from "@shared/db";
-import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { MyTable, MyTable as Tb } from "@/components/my_table/MyTable";
 import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
@@ -360,7 +358,7 @@ export default function RegisterConstructionIntentTableEdit(
     //
     //
 
-    const pnbConstructionIntent = constructionGroup?.name;
+    // const pnbConstructionIntent = constructionGroup?.name;
     // let pnbConstructionIntent = "";
     // if (constructionSection) {
     //     pnbConstructionIntent += constructionSection.name;
@@ -412,7 +410,7 @@ export default function RegisterConstructionIntentTableEdit(
         [key in DB.Rows.RegisterType]: ReactNode;
     } = useMemo(
         () => ({
-            "PnB (6740)": pnbConstructionIntent,
+            "PnB (6740)": inputs.object_custom_construction_intent, // pnbConstructionIntent,
             "PnRozb. (6741)": "Rozbiórka budynku",
             "Zg. Rozb. (6743.1)": "Rozbiórka budynku",
             "Zg. Zwykłe (6743.2)": constructionLawCategoryInput,
@@ -432,7 +430,7 @@ export default function RegisterConstructionIntentTableEdit(
         [
             constructionLawCategoryInput,
             inputs.object_custom_construction_intent,
-            pnbConstructionIntent,
+            // pnbConstructionIntent,
         ]
     );
 

@@ -144,7 +144,7 @@ router.post(
         let sqlWhere = "";
         const processFilters = (tableName: DB.TableName, filters: Filter[]) => {
             const rowMeta = DB.getRowMeta(tableName);
-            filters.forEach((filter, index) => {
+            filters.forEach((filter) => {
                 if (
                     filter.filters &&
                     rowMeta.keyTableRelations &&
@@ -182,53 +182,60 @@ router.post(
         );
         // console.dir(body, { depth: Infinity });
 
-        db.all<DB.Row>(sqlQuery, sqlFilterValues, (error, rows) => {
-            if (error) {
-                resError(res, 500, error);
-                return;
-            }
-            db.get<{ total_row_count: number; max_id: number }>(
-                `select count(*) as total_row_count, max(${tableName}.id) as max_id from ${tableName}` +
-                    sqlFilterQuery,
-                sqlFilterValues,
-                (error, row) => {
-                    if (error) {
-                        resError(res, 500, error);
-                        return;
-                    }
-
-                    rows.forEach((row) => {
-                        if (tableName === "employees") {
-                            const employeeRow = row as DB.Rows.Employee;
-                            employeeRow.has_password =
-                                typeof employeeRow.password === "string" &&
-                                employeeRow.password.length > 0;
+        db.all(
+            sqlQuery,
+            sqlFilterValues,
+            (error: Error | null, rows: DB.Row[]) => {
+                if (error) {
+                    resError(res, 500, error);
+                    return;
+                }
+                db.get(
+                    `select count(*) as total_row_count, max(${tableName}.id) as max_id from ${tableName}` +
+                        sqlFilterQuery,
+                    sqlFilterValues,
+                    (
+                        error: Error | null,
+                        row: { total_row_count: number; max_id: number }
+                    ) => {
+                        if (error) {
+                            resError(res, 500, error);
+                            return;
                         }
 
-                        Object.keys(row).forEach((key) => {
-                            const rowMeta = DB.getRowMeta(tableName);
-                            if (
-                                rowMeta.adminKeys &&
-                                rowMeta.adminKeys.has(key) &&
-                                !isEmployeeAdmin
-                            ) {
-                                row[key] = undefined;
+                        rows.forEach((row) => {
+                            if (tableName === "employees") {
+                                const employeeRow = row as DB.Rows.Employee;
+                                employeeRow.has_password =
+                                    typeof employeeRow.password === "string" &&
+                                    employeeRow.password.length > 0;
                             }
-                        });
-                    });
 
-                    const totalCount = row.total_row_count;
-                    const topRowID = row.max_id;
-                    const response: HTTP.Response = {
-                        type: "fetch table rows",
-                        totalCount,
-                        rows,
-                        topRowID,
-                    };
-                    res.status(200).json(response);
-                }
-            );
-        });
+                            Object.keys(row).forEach((key) => {
+                                const rowMeta = DB.getRowMeta(tableName);
+                                if (
+                                    rowMeta.adminKeys &&
+                                    rowMeta.adminKeys.has(key) &&
+                                    !isEmployeeAdmin
+                                ) {
+                                    row[key] = undefined;
+                                }
+                            });
+                        });
+
+                        const totalCount = row.total_row_count;
+                        const topRowID = row.max_id;
+                        const response: HTTP.Response = {
+                            type: "fetch table rows",
+                            totalCount,
+                            rows,
+                            topRowID,
+                        };
+                        res.status(200).json(response);
+                    }
+                );
+            }
+        );
     }
 );
 

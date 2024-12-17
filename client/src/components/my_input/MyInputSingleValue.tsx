@@ -1,4 +1,3 @@
-import React from "react";
 import { SingleValueProps, components } from "react-select";
 import { MySelectOption } from "./MyInputSelect";
 import { HStack } from "@chakra-ui/react";

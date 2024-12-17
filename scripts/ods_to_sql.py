@@ -45,8 +45,8 @@ class ConstructionClass:
     def __init__(self, name, pkob):
         self.name = name
         self.id = ConstructionClass.next_id
-        self.specs = []
         self.pkob = pkob
+        self.specs = [ConstructionSpec("-", "-", "-")]
         ConstructionClass.next_id += 1
 
 class ConstructionGroup:
@@ -55,7 +55,7 @@ class ConstructionGroup:
     def __init__(self, name):
         self.name = name
         self.id = ConstructionGroup.next_id
-        self.classes = []
+        self.classes = [ConstructionClass("-", 0)]
         ConstructionGroup.next_id += 1
 
 class ConstructionDivision:
@@ -64,7 +64,7 @@ class ConstructionDivision:
     def __init__(self, name):
         self.name = name
         self.id = ConstructionDivision.next_id
-        self.groups = []
+        self.groups = [ConstructionGroup("-")]
         ConstructionDivision.next_id += 1
 
 class ConstructionSection:
@@ -73,10 +73,12 @@ class ConstructionSection:
     def __init__(self, name):
         self.name = name
         self.id = ConstructionSection.next_id
-        self.divisions = []
+        self.divisions = [ConstructionDivision("-")]
         ConstructionSection.next_id += 1
 
-construction_sections: List[ConstructionSection] = []
+construction_sections: List[ConstructionSection] = [
+    ConstructionSection("-")
+]
 
 df = pandas.read_excel('BiA_KOMBAJN_NACZELNIK.ods', engine="odf", sheet_name="PKOB")
 
@@ -171,8 +173,8 @@ class Place:
         self.name = name
         self.area_place_name = area_place_name
         self.cad_unit = cad_unit
-        self.streets = []
         self.id = Place.next_id
+        self.streets = [Street("-")]
         Place.next_id += 1
 
 class Commune:
@@ -181,10 +183,12 @@ class Commune:
     def __init__(self, name):
         self.name = name
         self.id = Commune.next_id
-        self.places = []
+        self.places = [Place("-", "-", "-")]
         Commune.next_id += 1
 
-communes: List[Commune] = []
+communes: List[Commune] = [
+    Commune("-")
+]
 
 df = pandas.read_excel('BiA_KOMBAJN_NACZELNIK.ods', engine="odf", sheet_name="GEODEZJA")
 

@@ -5,8 +5,7 @@
  */
 
 import * as DB from "@shared/db";
-import React, { ComponentProps, useContext, useMemo } from "react";
-import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
+import { ComponentProps, useMemo } from "react";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { MyTable, MyTable as Tb } from "@/components/my_table/MyTable";
 import { MyTableHeader as Th } from "@/components/my_table/MyTableHeader";

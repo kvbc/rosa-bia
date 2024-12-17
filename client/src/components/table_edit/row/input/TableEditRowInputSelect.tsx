@@ -1,6 +1,6 @@
 // 1
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TableEditRowInputProps } from "./TableEditRowInput";
 import { TableEditRowType } from "@/components/table_edit/TableEdit";
 import {

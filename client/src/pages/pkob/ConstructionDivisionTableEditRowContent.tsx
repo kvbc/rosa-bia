@@ -3,7 +3,6 @@ import ConstructionGroupTableEditRowContent from "./ConstructionGroupTableEditRo
 import * as DB from "@shared/db";
 import { useContext, useMemo } from "react";
 import { PagePKOBContext } from "@/contexts/pages/PagePKOBContext";
-import React from "react";
 import { Box } from "@chakra-ui/react";
 import {
     AccordionItem,

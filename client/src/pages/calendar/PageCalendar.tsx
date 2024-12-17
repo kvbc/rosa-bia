@@ -1,13 +1,13 @@
 import { Heading, HStack, Text } from "@chakra-ui/react";
 import { FeatureUnfinishedIcon } from "@/components/FeatureUnfinishedIcon";
 
-export function PageDatabase() {
+export function PageCalendar() {
     return (
         <>
             <Heading>
                 <HStack>
                     <FeatureUnfinishedIcon />
-                    Zarządzanie bazą danych
+                    Kalendarz
                 </HStack>
             </Heading>
             <Text>Do zrobienia ...</Text>

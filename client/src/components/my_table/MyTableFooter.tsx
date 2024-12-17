@@ -1,5 +1,5 @@
 import { Table } from "@chakra-ui/react";
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 
 export function MyTableFooter({
     children,

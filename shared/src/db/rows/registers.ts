@@ -1,4 +1,4 @@
-import { z, ZodEffects } from "zod";
+import { z } from "zod";
 import * as DB from "..";
 
 export const REGISTERS_TABLE_NAMES = [
@@ -101,6 +101,7 @@ export type RegisterType = (typeof REGISTER_TYPES)[number];
 export const registerTypeShape = z.enum(REGISTER_TYPES);
 
 export const REGISTER_CONSTRUCTION_FORM_TYPES = [
+    "-",
     "Indywidualne",
     "Spółdzielcze",
     "Sprzedaż",
@@ -112,7 +113,7 @@ export const REGISTER_CONSTRUCTION_FORM_TYPES = [
 export type RegisterConstructionFormType = (typeof REGISTER_CONSTRUCTION_FORM_TYPES)[number]; // prettier-ignore
 export const registerConstructionFormTypeShape = z.enum(REGISTER_CONSTRUCTION_FORM_TYPES); // prettier-ignore
 
-export const REGISTER_SPATIAL_PLAN_TYPES = ["MPZP", "WZ"] as const;
+export const REGISTER_SPATIAL_PLAN_TYPES = ["-", "MPZP", "WZ"] as const;
 export type RegisterSpatialPlanType = (typeof REGISTER_SPATIAL_PLAN_TYPES)[number]; // prettier-ignore
 export const registerConstructionSpatialPlanTypeShape = z.enum(REGISTER_SPATIAL_PLAN_TYPES); // prettier-ignore
 
@@ -129,6 +130,7 @@ export const registerConstructionJournalTypeShape = z.enum(REGISTER_CONSTRUCTION
 // prettier-ignore
 const REGISTER_DECISION_TYPES = [
     // decyzja starosty
+    "-",
     "Umarzająca",
     "Pozytywna",            // {
     "Sprzeciwu",            //   zaświadczenie/decyzja i odpowiedź (wniosek tymczasowy)
@@ -147,18 +149,26 @@ export function getRegisterDecisionTypes(
         "Wejście na dz. sąsiednią",
     ];
     if (mayorRegisterTypes.includes(registerType)) {
-        return ["Umarzająca", "Pozytywna", "Sprzeciwu", "Inne rozstrzygnięcie"];
+        return [
+            "-",
+            "Umarzająca",
+            "Pozytywna",
+            "Sprzeciwu",
+            "Inne rozstrzygnięcie",
+        ];
     }
-    return ["Pozytywna", "Sprzeciwu", "Inne rozstrzygnięcie"];
+    return ["-", "Pozytywna", "Sprzeciwu", "Inne rozstrzygnięcie"];
 }
 
 const REGISTER_RESOLUTION_TYPES = [
+    "-",
     "Wygaśnięcia",
     "Bez rozpatrzenia",
     "Uchylająca",
     "Utrzymana w mocy",
     "Zmiana 155 k.pa.", // PnRozb.
     "Wycofanie zgłoszenia",
+    "Uchylenie z art. 36a ust. 2",
     // tymczasowy
     "Kasacja",
     "Pozwolenie na budowę",
@@ -171,10 +181,19 @@ export function getRegisterResolutionTypes(
 ): RegisterResolutionType[] {
     switch (registerType) {
         case "PnB (6740)":
+            return [
+                "-",
+                "Wygaśnięcia",
+                "Bez rozpatrzenia",
+                "Uchylająca",
+                "Utrzymana w mocy",
+                "Uchylenie z art. 36a ust. 2",
+            ];
         case "ZRiD (7012)":
         case "Uzupełniający":
         case "Wejście na dz. sąsiednią":
             return [
+                "-",
                 "Wygaśnięcia",
                 "Bez rozpatrzenia",
                 "Uchylająca",
@@ -182,6 +201,7 @@ export function getRegisterResolutionTypes(
             ];
         case "PnRozb. (6741)":
             return [
+                "-",
                 "Wygaśnięcia",
                 "Bez rozpatrzenia",
                 "Uchylająca",
@@ -194,15 +214,17 @@ export function getRegisterResolutionTypes(
         case "BiP (6743.4)":
         case "Samodz. Lokali (705)":
             return [
+                "-",
                 "Wycofanie zgłoszenia",
                 "Bez rozpatrzenia",
                 "Uchylająca",
                 "Utrzymana w mocy",
             ];
         case "Pisma różne (670)":
-            return ["Uchylająca", "Utrzymana w mocy"];
+            return ["-", "Uchylająca", "Utrzymana w mocy"];
         case "Tymczasowe (6743.5)":
             return [
+                "-",
                 "Wycofanie zgłoszenia",
                 "Bez rozpatrzenia",
                 "Kasacja",

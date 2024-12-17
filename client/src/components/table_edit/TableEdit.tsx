@@ -512,7 +512,7 @@ export function TableEdit<TRow extends TableEditRowType>(
                         {showFilters && (
                             <MyTableRow
                                 position="relative"
-                                zIndex={29999}
+                                zIndex={803}
                                 // marginBottom={
                                 //     filterRowAccordionValue.length > 0
                                 //         ? "1"
@@ -667,18 +667,18 @@ export function TableEdit<TRow extends TableEditRowType>(
                                         position="relative"
                                         zIndex={
                                             filterRowAccordionValue.length > 0
-                                                ? 29998
-                                                : 30000
+                                                ? 801
+                                                : 804
                                         }
                                         // marginBottom={
                                         //     addRowAccordionValue.length > 0
                                         //         ? "1"
                                         //         : "0"
                                         // }
-                                        {...(addRowAccordionValue.length >
-                                            0 && {
-                                            backgroundColor: "bg.success",
-                                        })}
+                                        // {...(addRowAccordionValue.length >
+                                        //     0 && {
+                                        //     backgroundColor: "bg.success",
+                                        // })}
                                         outline={
                                             addRowAccordionValue.length > 0
                                                 ? `.15rem dotted ${chakraColorToCSS(

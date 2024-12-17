@@ -2,7 +2,7 @@ import { DBTableEdit, DBTableEditDefaultRow } from "@/components/DBTableEdit";
 import ConstructionClassTableEditRowContent from "./ConstructionClassTableEditRowContent";
 import { Box } from "@mui/joy";
 import * as DB from "@shared/db";
-import React, { useContext, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { PagePKOBContext } from "@/contexts/pages/PagePKOBContext";
 import {
     AccordionItem,

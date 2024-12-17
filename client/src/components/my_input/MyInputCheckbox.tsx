@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import React, { ComponentProps, useContext } from "react";
+import { ComponentProps, useContext } from "react";
 import { ColorContext } from "@/contexts/ColorContext";
 import { MyInputLock } from "./MyInputLock";
 

@@ -35,6 +35,8 @@ export default [
     {
         rules: {
             "@typescript-eslint/no-namespace": "off",
+            "react/jsx-uses-react": "off",
+            "react/react-in-jsx-scope": "off",
         },
     },
 ];

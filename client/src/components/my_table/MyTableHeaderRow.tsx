@@ -1,4 +1,4 @@
-import React, { ComponentProps, useContext } from "react";
+import { ComponentProps, useContext } from "react";
 import { ColorContext } from "@/contexts/ColorContext";
 import { MyTableCell } from "./MyTableCell";
 

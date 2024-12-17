@@ -1,5 +1,5 @@
 import { DBTableEdit, DBTableEditDefaultRow } from "@/components/DBTableEdit";
-import React, { useContext, useMemo } from "react";
+import { useContext, useMemo } from "react";
 
 import * as DB from "@shared/db";
 import { PagePKOBContext } from "@/contexts/pages/PagePKOBContext";

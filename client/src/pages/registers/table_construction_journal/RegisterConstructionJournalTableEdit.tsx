@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { MyTable as Tb } from "@/components/my_table/MyTable";
 import { MyTableHeader as Th } from "@/components/my_table/MyTableHeader";

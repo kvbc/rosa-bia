@@ -1,6 +1,6 @@
 import RegisterAdminProcedureActionsDBTableEdit from "./RegisterAdminProcedureActionsDBTableEdit";
 import * as DB from "@shared/db";
-import React, { ComponentProps, useContext, useEffect, useState } from "react";
+import { ComponentProps, useEffect, useState } from "react";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { MyTable, MyTable as Tb } from "@/components/my_table/MyTable";
 import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
@@ -8,9 +8,7 @@ import { MyTableHeader as Th } from "@/components/my_table/MyTableHeader";
 import { MyTableRow as Tr } from "@/components/my_table/MyTableRow";
 import RegisterCharParamsTableEdit from "../table_construction_intent/RegisterCharParamsTableEdit";
 import { topRowHeight } from "../RegisterTableEditRowContent";
-import { isRegisterType } from "@/utils/array";
 import { ClientRegister } from "../PageRegisters";
-import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import { getDaysPassed } from "@/utils/time";
 import useDBTable from "@/hooks/useDBTable";
 

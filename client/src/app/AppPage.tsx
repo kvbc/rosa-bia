@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import useAuthEmployee from "@/hooks/useAuthEmployee";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LuAlertTriangle, LuEyeOff, LuLock } from "react-icons/lu";

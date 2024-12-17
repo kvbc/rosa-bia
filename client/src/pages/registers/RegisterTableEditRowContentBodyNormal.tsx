@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { Float, HStack, Icon, IconButton } from "@chakra-ui/react";
 import RegisterDataTableEdit from "./table_app_data/RegisterDataTableEdit";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";

@@ -1,6 +1,6 @@
 import { DBTableEdit, DBTableEditDefaultRow } from "@/components/DBTableEdit";
 import * as DB from "@shared/db";
-import React, { useContext, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import PlacesTableEditRowContent from "./PlacesTableEditRowContent";
 import { Box } from "@chakra-ui/react";
 import { TableEditHeader } from "@/components/table_edit/TableEdit";

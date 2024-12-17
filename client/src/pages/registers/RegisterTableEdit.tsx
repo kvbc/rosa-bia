@@ -1,10 +1,9 @@
-import React, { ComponentProps, useCallback, useContext, useMemo } from "react";
+import { ComponentProps, useCallback, useMemo } from "react";
 import { DBTableEdit, DBTableEditDefaultRow } from "@/components/DBTableEdit";
 import * as DB from "@shared/db";
 import RegisterTableEditRowContent from "./RegisterTableEditRowContent";
 import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
 import { MySelectOption } from "@/components/my_input/MyInputSelect";
-import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import { TableEditHeader } from "@/components/table_edit/TableEdit";
 import { EmployeeAvatar } from "@/components/EmployeeAvatar";
 import { Badge } from "@chakra-ui/react";
@@ -30,29 +29,41 @@ export default function RegisterTableEdit({
 
     const defaultRow = useMemo<DBTableEditDefaultRow<ClientRegister>>(
         () => ({
-            type: "PnB (6740)",
+            // type: "PnB (6740)",
+            type: ((): ClientRegister["type"] => {
+                const typeFilter = initialRegistersFilters.find(
+                    (filter) =>
+                        filter.key === "type" &&
+                        "operator" in filter &&
+                        filter.operator === "="
+                );
+                if (typeFilter && "value" in typeFilter) {
+                    return typeFilter.value as ClientRegister["type"];
+                }
+                return "PnB (6740)";
+            })(),
 
             assigned_employee_id: 1,
 
             app_number: "0",
             app_submission_date: "",
             app_investor_id: 1,
-            app_decision_type: "Pozytywna",
+            app_decision_type: "-",
             app_decision_number: 0,
             app_decision_issue_date: "",
-            app_resolution_type: "Bez rozpatrzenia",
+            app_resolution_type: "-",
             app_resolution_number: 0,
             app_resolution_issue_date: "",
             app_construction_journal_type: "Elektroniczny",
 
             object_construction_spec_id: 1,
             object_custom_construction_intent: "",
-            object_construction_form_type: "Indywidualne",
-            object_spatial_plan_type: "MPZP",
+            object_construction_form_type: "-",
+            object_spatial_plan_type: "-",
             object_number: "",
             object_street_id: 1,
             object_demo_building_count: 0,
-            object_demo_premises_count: 1,
+            object_demo_premises_count: 0,
             object_demo_volume: 0,
             object_demo_usable_area: 0,
             object_demo_building_area: 0,
@@ -86,7 +97,7 @@ export default function RegisterTableEdit({
             other_case_settle_date: "",
             other_case_comments: "",
         }),
-        []
+        [initialRegistersFilters]
     );
 
     const headers = useMemo<TableEditHeader[]>(() => ["Rejestr"], []);

@@ -1,5 +1,5 @@
 import { DBTableEdit, DBTableEditDefaultRow } from "@/components/DBTableEdit";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import useDBTable from "@/hooks/useDBTable";
 import * as DB from "@shared/db";
 import { TableEditHeader } from "@/components/table_edit/TableEdit";

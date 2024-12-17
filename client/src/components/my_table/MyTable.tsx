@@ -127,7 +127,7 @@ export function MyTable({
                 >
                     <Table.Header position="relative">
                         <Table.Row
-                            zIndex={999}
+                            zIndex={800}
                             backgroundColor={lowerColorContext.bg2}
                         >
                             {headers}

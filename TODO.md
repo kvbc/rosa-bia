@@ -8,17 +8,11 @@
 
 right now ig make sure everything kinda works and fix the infinite saving bug
 
-from easiest
-[x] means prioritize now
-
--   [ ] puste pola
--   [ ] sprawdzanie pól (na czerwono)
+-   [ ] statystyki - suma wnioskow dla przydzialow tabelka (tylko admin)
+-   [ ] rejestr uzupelniajacy zrobic
 -   [ ] jednolity navbar (wszystkie opcje pod)
--   [x] dodac filtry wszedzie gdzie trzeba do RowContent'ów
+-   [ ] dodac filtry wszedzie gdzie trzeba do RowContent'ów
 -   [ ] zupdatowac statystyki (ilosc lokali)
--   [x] generowanie bip tabelka: osoba prawna, fizyczna (lista rozwijana)
+-   [ ] generowanie bip tabelka: osoba prawna, fizyczna (lista rozwijana)
 -   [ ] info o roznych info (np. dzialkach) w innych rejestrach
--   [x] dodawanie działek (odrazu?)
--   [ ] inwestorow dodawac odrazu
-
-to hardest
+-   [ ] dodawanie wnioskow odrazu obok selectów (jakis popup dialog do dodania)

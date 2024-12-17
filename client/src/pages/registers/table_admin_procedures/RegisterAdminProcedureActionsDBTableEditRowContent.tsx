@@ -1,6 +1,5 @@
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import * as DB from "@shared/db";
-import React from "react";
 import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
 
 export default function RegisterAdminProcedureActionsDBTableEditRowContent({

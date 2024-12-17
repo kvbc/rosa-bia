@@ -5,13 +5,16 @@
 // 1
 //
 
-import React, {
+import {
     ComponentProps,
+    ContextType,
     Dispatch,
     HTMLInputTypeAttribute,
+    ReactNode,
     SetStateAction,
     useCallback,
     useEffect,
+    useMemo,
     useState,
 } from "react";
 import { TableEditRowType } from "@/components/table_edit/TableEdit";
@@ -21,6 +24,7 @@ import { TableEditRowInputCheckbox } from "./TableEditRowInputCheckbox";
 import { MySelectOption } from "@/components/my_input/MyInputSelect";
 import MyInput from "@/components/my_input/MyInput";
 import { Range } from "@/utils/types";
+import { ColorContext } from "@/contexts/ColorContext";
 
 export type TableEditRowInputProps<
     TRow extends TableEditRowType,
@@ -34,6 +38,7 @@ export type TableEditRowInputProps<
     placeholder?: string;
     isFilterable?: boolean;
     displayName?: string;
+    getIfShouldHighlightError?: (row: TRow) => boolean;
     disabled?: boolean;
     onFocusOut: () => void;
     getSelectOptions?: (row: TRow) => MySelectOption[];
@@ -57,12 +62,24 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
         getIsDisabled,
         disabled: disabledProp,
         onFocusOut,
+        getIfShouldHighlightError,
         _rangeKey,
         ...inputProps
     } = props;
 
     const [type, setType] = useState<typeof typeProp>(typeProp);
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
+    const [shouldHighlightError, setShouldHighlightError] =
+        useState<boolean>(true);
+    const errorColorContext = useMemo<ContextType<typeof ColorContext>>(
+        () => ({
+            bg1: "white", // dont matter
+            bg2: "red.300",
+            border: "red.500",
+            palette: "white", // dont matter
+        }),
+        []
+    );
 
     const value = row[rowKey];
     const isValueRange =
@@ -86,6 +103,12 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
         }
     }, [typeProp, getType, row]);
 
+    useEffect(() => {
+        if (getIfShouldHighlightError) {
+            setShouldHighlightError(getIfShouldHighlightError(row));
+        }
+    }, [getIfShouldHighlightError, row]);
+
     const setValue = useCallback(
         (newStringValue: string) => {
             const newValue =
@@ -106,9 +129,31 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
         [_rangeKey, rowKey, setRow, type, value, isValueRange]
     );
 
+    const isEmptyDate = type === "date" && value === "";
+    const isEmptyNumber = type === "number" && value === 0;
+    const isEmptyString = type === "text" && (value === "" || value === "0");
+    const isEmptySelect = type === "select" && (value === "-" || value == 1);
+    const hasError =
+        (shouldHighlightError ?? true) &&
+        (isEmptyDate || isEmptyNumber || isEmptyString || isEmptySelect);
+
+    const wrapInput = (inputNode: ReactNode): ReactNode => {
+        if (hasError) {
+            return (
+                <ColorContext.Provider value={errorColorContext}>
+                    {inputNode}
+                </ColorContext.Provider>
+            );
+        }
+
+        return inputNode;
+    };
+
     switch (type) {
         case "select":
-            return <TableEditRowInputSelect {...props} disabled={isDisabled} />;
+            return wrapInput(
+                <TableEditRowInputSelect {...props} disabled={isDisabled} />
+            );
         case "checkbox":
             return (
                 <Center>
@@ -132,7 +177,7 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
         );
     }
 
-    return (
+    const input = (
         <MyInput
             type={type}
             value={(isValueRange ? value[_rangeKey!] : value) as string}
@@ -140,7 +185,17 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
             disabled={isDisabled}
             onBlur={onFocusOut}
             placeholder={placeholder}
+            autoFocus
+            _placeholder={
+                hasError
+                    ? {
+                          color: "red.500",
+                      }
+                    : {}
+            }
             {...inputProps}
         />
     );
+
+    return wrapInput(input);
 }

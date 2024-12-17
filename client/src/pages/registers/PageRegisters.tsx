@@ -1,7 +1,4 @@
-import React, { ContextType, useMemo } from "react";
-import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import RegisterTableEdit from "./RegisterTableEdit";
-import useDBTable from "@/hooks/useDBTable";
 import * as DB from "@shared/db";
 import { Filter } from "@server/http/routes/table_rows/get";
 
@@ -69,7 +66,10 @@ export default function PageRegisters({
 
     return (
         // <PageRegistersContext.Provider value={context}>
-        <RegisterTableEdit disableRowAdding={disableRegisterAdding} />
+        <RegisterTableEdit
+            disableRowAdding={disableRegisterAdding}
+            initialRegistersFilters={initialRegistersFilters}
+        />
         // </PageRegistersContext.Provider>
     );
 }

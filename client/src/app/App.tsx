@@ -19,7 +19,7 @@ import { Toaster, toaster } from "@/components/ui/toaster";
 import { Box, Stack } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppEmployee } from "./AppEmployee";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AppFooter } from "./AppFooter";
 
 const queryClient = new QueryClient();

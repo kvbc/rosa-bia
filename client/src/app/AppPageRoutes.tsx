@@ -18,6 +18,8 @@ import { PageHelpUserManual } from "../pages/help/PageHelpUserManual";
 import PageHelpProgramInfo from "@/pages/help/PageHelpProgramInfo";
 import { PageEventLog } from "@/pages/eventlog/PageEventLog";
 import { REGISTER_TYPES } from "@shared/db/rows";
+import { PageCalendar } from "@/pages/calendar/PageCalendar";
+import { PageTools } from "@/pages/tools/PageTools";
 
 export const AppPageRoutes: React.FC = () => {
     return (
@@ -27,6 +29,14 @@ export const AppPageRoutes: React.FC = () => {
                 element={
                     <AppPage dontRequireLogin>
                         <PageHome />
+                    </AppPage>
+                }
+            />
+            <Route
+                path="/tools"
+                element={
+                    <AppPage dontRequireLogin>
+                        <PageTools />
                     </AppPage>
                 }
             />
@@ -99,6 +109,14 @@ export const AppPageRoutes: React.FC = () => {
                 element={
                     <AppPage dontRequireLogin>
                         <PageHelpProgramInfo />
+                    </AppPage>
+                }
+            />
+            <Route
+                path="/calendar"
+                element={
+                    <AppPage dontRequireLogin>
+                        <PageCalendar />
                     </AppPage>
                 }
             />

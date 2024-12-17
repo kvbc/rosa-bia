@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import * as DB from "@shared/db";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { MyTable as Tb } from "@/components/my_table/MyTable";
@@ -12,7 +6,6 @@ import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
 import { MyTableHeader as Th } from "@/components/my_table/MyTableHeader";
 import { MyTableRow as Tr } from "@/components/my_table/MyTableRow";
 import { ClientRegister } from "../PageRegisters";
-import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import {
     MyInputSelect,
     MySelectOption,
@@ -195,6 +188,7 @@ export default function RegisterPropertyDataTableEdit({
                         }
                         isDisabled={!editable}
                         onBlur={onInputFocusOut}
+                        minWidth="100px"
                     />
                 </Tc>
                 <Tc>Jedn. ewid.</Tc>
@@ -211,6 +205,7 @@ export default function RegisterPropertyDataTableEdit({
                         }
                         isDisabled={!editable}
                         onBlur={onInputFocusOut}
+                        minWidth="100px"
                     />
                 </Tc>
                 <Tc>Obręb</Tc>
@@ -227,6 +222,7 @@ export default function RegisterPropertyDataTableEdit({
                         }
                         isDisabled={!editable}
                         onBlur={onInputFocusOut}
+                        minWidth="100px"
                     />
                 </Tc>
                 <Tc>Nr</Tc>

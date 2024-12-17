@@ -13,13 +13,11 @@ import {
     LuFileText,
     LuHardHat,
     LuLaptop,
-    LuPhoneCall,
-    LuBookOpen,
     LuBuilding,
     LuBook,
-    LuInfo,
     LuHistory,
     LuKey,
+    LuCalendar,
 } from "react-icons/lu";
 import { AppNavbarLinkMenu } from "./AppNavbarLinkMenu";
 import useAuthEmployee from "@/hooks/useAuthEmployee";
@@ -66,7 +64,7 @@ export const AppNavbarLinks: React.FC = () => {
 
     const adminAccessIcon = (
         <Tooltip
-            content="Dostęp tylko dla administratorów"
+            content="Dostęp wyłącznie dla administratorów"
             showArrow
             openDelay={100}
             closeDelay={100}
@@ -124,7 +122,31 @@ export const AppNavbarLinks: React.FC = () => {
                 </Icon>
                 Inwestorzy
             </AppNavbarLink>
-            <AppNavbarLinkMenu
+            <AppNavbarLink to="/calendar" onMouseEnter={handleLinkMouseEntered}>
+                <Icon fontSize="md">
+                    <LuCalendar />
+                </Icon>
+                Kalendarz
+            </AppNavbarLink>
+            <AppNavbarLink
+                to="/help/program_info"
+                onMouseEnter={handleLinkMouseEntered}
+            >
+                <Icon fontSize="md">
+                    <LuHelpCircle />
+                </Icon>
+                Pomoc
+            </AppNavbarLink>
+            <AppNavbarLink
+                to="/stats/b05"
+                onMouseEnter={handleLinkMouseEntered}
+            >
+                <Icon fontSize="md">
+                    <LuFileBarChart />
+                </Icon>
+                Statystyka
+            </AppNavbarLink>
+            {/* <AppNavbarLinkMenu
                 isOpen={isHelpMenuOpen}
                 setIsOpen={setIsHelpMenuOpen}
                 Icon={LuHelpCircle}
@@ -146,8 +168,8 @@ export const AppNavbarLinks: React.FC = () => {
                         Icon: LuBookOpen,
                     },
                 ]}
-            />
-            <AppNavbarLinkMenu
+            /> */}
+            {/* <AppNavbarLinkMenu
                 isOpen={isStatsMenuOpen}
                 setIsOpen={setIsStatsMenuOpen}
                 Icon={LuFileBarChart}
@@ -172,8 +194,14 @@ export const AppNavbarLinks: React.FC = () => {
                         Icon: LuFileText,
                     },
                 ]}
-            />
-            <AppNavbarLinkMenu
+            /> */}
+            <AppNavbarLink to="/tools" onMouseEnter={handleLinkMouseEntered}>
+                <Icon fontSize="md">
+                    <LuHammer />
+                </Icon>
+                Narzędzia
+            </AppNavbarLink>
+            {/* <AppNavbarLinkMenu
                 isOpen={isToolsMenuOpen}
                 setIsOpen={setIsToolsMenuOpen}
                 Icon={LuHammer}
@@ -187,7 +215,7 @@ export const AppNavbarLinks: React.FC = () => {
                         Icon: LuFileText,
                     },
                 ]}
-            />
+            /> */}
             {isAdmin && (
                 <AppNavbarLinkMenu
                     isOpen={isConstructionMenuOpen}

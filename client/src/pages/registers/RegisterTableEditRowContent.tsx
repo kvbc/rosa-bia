@@ -1,4 +1,3 @@
-import React from "react";
 import { MyTableCell } from "@/components/my_table/MyTableCell";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { MyTable } from "@/components/my_table/MyTable";

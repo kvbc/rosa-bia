@@ -7,6 +7,8 @@
 -- Investors
 -- 
 
+insert into investors values
+    (null, '-', '-');
 -- insert into investors values
 --     (null, '"ODEJEWSKI - ODAN" Sp.  Z o.o.', 'blah blah blah'),
 --     (null, '"ROLA" Sp. z o.o.', 'blah blah blah'),
@@ -354,6 +356,7 @@ insert into registers(
 -- 
 
 insert into employees values
+    (null, '-', '-', 0),
     (null, 'Elżbieta Dawidziak', '', 0),
     (null, 'Krzysztof Czuryło', '', 0),
     (null, 'Lucyna Spisak', '', 0),

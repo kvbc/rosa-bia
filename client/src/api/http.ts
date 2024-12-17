@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import * as HTTP from "@server/http/types";
 import { EmployeeLoginRequest } from "@server/http/routes/employee_login";
 import * as DB from "@shared/db";
+// FIXME: all these imports from server should be shared, there should be no @server.
 import { Filter } from "@server/http/routes/table_rows/get";
 
 export const HTTP_SERVER_URL = "http://localhost:" + HTTP.SERVER_PORT;

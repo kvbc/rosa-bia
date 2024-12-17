@@ -1,7 +1,7 @@
 import { DBTableEdit, DBTableEditDefaultRow } from "@/components/DBTableEdit";
 import ConstructionSectionTableEditRowContent from "./ConstructionSectionTableEditRowContent";
 import * as DB from "@shared/db";
-import React, { ContextType, useMemo } from "react";
+import { ContextType, useMemo } from "react";
 import { PagePKOBContext } from "@/contexts/pages/PagePKOBContext";
 import useDBTable from "@/hooks/useDBTable";
 import { TableEditHeader } from "@/components/table_edit/TableEdit";

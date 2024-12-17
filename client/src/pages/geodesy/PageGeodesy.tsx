@@ -5,7 +5,7 @@ import { TableEditHeader } from "@/components/table_edit/TableEdit";
 import { PageGeodesyContext } from "@/contexts/pages/PageGeodesyContext";
 import useDBTable from "@/hooks/useDBTable";
 import CommunesDBTableEditRowContent from "./CommunesDBTableEditRowContent";
-import React, { ContextType, useMemo } from "react";
+import { ContextType, useMemo } from "react";
 
 export default function PageGeodesy() {
     const communesDBTable = useDBTable<DB.Rows.Commune>("communes");

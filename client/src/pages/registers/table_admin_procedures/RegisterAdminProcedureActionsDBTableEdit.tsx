@@ -1,15 +1,8 @@
 import * as DB from "@shared/db";
-import React, {
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { TableEditRowContentComponentProps } from "@/components/table_edit/row/TableEditRowContentComponent";
 import { ClientRegister } from "../PageRegisters";
 import { DBTableEdit } from "@/components/DBTableEdit";
-import { PageRegistersContext } from "@/contexts/pages/PageRegistersContext";
 import { TableEditHeader } from "@/components/table_edit/TableEdit";
 import { TableEditRowInputsProps } from "@/components/table_edit/row/TableEditRow";
 import RegisterAdminProcedureActionsDBTableEditRowContent from "./RegisterAdminProcedureActionsDBTableEditRowContent";
@@ -186,21 +179,25 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
                 rowKey: "deadline",
                 type: "number",
                 getIsDisabled: (row) => isRowDisabled(row, "deadline"),
+                getIfShouldHighlightError: (row) => Boolean(row.select),
             },
             {
                 rowKey: "letter_date",
                 type: "date",
                 getIsDisabled: (row) => isRowDisabled(row, "letter_date"),
+                getIfShouldHighlightError: (row) => Boolean(row.select),
             },
             {
                 rowKey: "receipt_date",
                 type: "date",
                 getIsDisabled: (row) => isRowDisabled(row, "receipt_date"),
+                getIfShouldHighlightError: (row) => Boolean(row.select),
             },
             {
                 rowKey: "reply_date",
                 type: "date",
                 getIsDisabled: (row) => isRowDisabled(row, "reply_date"),
+                getIfShouldHighlightError: (row) => Boolean(row.select),
             },
         ],
         [isRowDisabled]
@@ -340,6 +337,8 @@ export default function RegisterAdminProcedureActionsDBTableEdit(
         <DBTableEdit<DB.Rows.RegisterAdminAction>
             hidePagination
             disableActions
+            disableRowAdding
+            // FIXME defaultRow (?) - dont require it
             editable={editable}
             dbTable={registerAdminActionsDBTable}
             headers={headers}

@@ -1,4 +1,3 @@
-import React from "react";
 import {
     AvatarFallback,
     AvatarRoot,
@@ -27,8 +26,10 @@ export function EmployeeAvatar({
     const nameWords = fullName.split(" ");
     if (nameWords.length >= 2) {
         fallback = nameWords[0][0] + nameWords[1][0];
-    } else {
+    } else if (fullName.length >= 2) {
         fallback = fullName[0] + fullName[1];
+    } else if (fullName === "-") {
+        fallback = "...";
     }
 
     const colorPalette =

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { resError, resErrorMessage, resGetAuthEmployee } from "../common";
 import { db } from "@";
 import * as DB from "@shared/db";
-import jwt from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
 import * as HTTP from "@http/types";
 
 export const EmployeeLoginRequestShape = z.strictObject({
@@ -57,10 +57,10 @@ router.post(
 
         console.log(`[POST /login]`);
 
-        db.get<DB.Rows.Employee | undefined>(
+        db.get(
             sqlQuery,
             sqlParams,
-            (error, row) => {
+            (error: Error | null, row: DB.Rows.Employee | undefined) => {
                 if (error) {
                     resError(res, 500, error);
                     return;
@@ -69,7 +69,10 @@ router.post(
                     resErrorMessage(res, 400, "Invalid username or password");
                     return;
                 }
-                const jwtToken = jwt.sign(row.name, process.env.JWT_SECRET);
+                const jwtToken = jwt.sign(
+                    row.name,
+                    process.env.JWT_SECRET as Secret
+                );
                 const response: HTTP.Response = {
                     type: "login",
                     jwtToken,

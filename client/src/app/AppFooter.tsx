@@ -1,9 +1,10 @@
 import { getDateNow } from "@/utils/time";
-import { Box, HStack, IconButton, Text } from "@chakra-ui/react";
+import { HStack, IconButton, Text } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { AppNavbarLink } from "./navbar/AppNavbarLink";
 import { LuMaximize, LuMinimize } from "react-icons/lu";
 import { useFullscreen } from "@/hooks/useFullscreen";
+import { Tooltip } from "@/components/ui/tooltip";
 
 export const AppFooter: React.FC = () => {
     const [dateString, setDateString] = useState<string>("");
@@ -49,14 +50,22 @@ export const AppFooter: React.FC = () => {
             </AppNavbarLink>
             <HStack>
                 <Text>{dateString}</Text>
-                <IconButton
-                    size="2xs"
-                    variant="plain"
-                    color="white"
-                    onClick={handleFullscreenButtonClicked}
+                <Tooltip
+                    content={
+                        isFullscreen
+                            ? "Zminimalizuj widok"
+                            : "Zmaksymalizuj widok"
+                    }
                 >
-                    {isFullscreen ? <LuMinimize /> : <LuMaximize />}
-                </IconButton>
+                    <IconButton
+                        size="2xs"
+                        variant="plain"
+                        color="white"
+                        onClick={handleFullscreenButtonClicked}
+                    >
+                        {isFullscreen ? <LuMinimize /> : <LuMaximize />}
+                    </IconButton>
+                </Tooltip>
             </HStack>
         </HStack>
     );

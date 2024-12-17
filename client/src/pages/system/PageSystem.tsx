@@ -8,7 +8,7 @@ import {
     Stack,
     Text,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { DataListItem, DataListRoot } from "@/components/ui/data-list";
 import {
     TimelineConnector,

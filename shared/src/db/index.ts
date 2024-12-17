@@ -2,7 +2,7 @@
 // database table typings
 //
 
-import { AnyZodObject, z, ZodType } from "zod";
+import { ZodType } from "zod";
 import * as Rows from "./rows";
 export * as Rows from "./rows";
 

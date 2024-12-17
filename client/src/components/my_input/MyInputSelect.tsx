@@ -1,4 +1,4 @@
-import React, {
+import {
     ComponentProps,
     ReactNode,
     useCallback,
@@ -32,10 +32,12 @@ export function MyInputSelect({
     isLocked,
     onLockClicked,
     maxWidth,
+    minWidth,
     ...restSelectProps
 }: {
     options: MySelectOption[];
     maxWidth?: string;
+    minWidth?: string;
     value: string | number;
     onValueChanged: (value: string | number) => void;
     isLocked?: boolean;
@@ -89,6 +91,7 @@ export function MyInputSelect({
                 boxShadow: "none",
                 fontSize: "inherit",
                 opacity: state.isDisabled ? "50%" : "100%",
+                minWidth: minWidth ?? "auto",
                 maxWidth: maxWidth ?? "100%",
             }),
             singleValue: (base) => ({
@@ -127,7 +130,7 @@ export function MyInputSelect({
                 visibility: "hidden",
             }),
         }),
-        [colorContext]
+        [colorContext, maxWidth, minWidth]
     );
 
     if (isLocked) {

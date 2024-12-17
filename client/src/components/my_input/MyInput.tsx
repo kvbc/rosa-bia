@@ -1,6 +1,6 @@
 import { ColorContext } from "@/contexts/ColorContext";
 import { Input, InputProps } from "@chakra-ui/react";
-import React, { HTMLInputTypeAttribute, useContext } from "react";
+import { HTMLInputTypeAttribute, useContext } from "react";
 import { MyInputLock } from "./MyInputLock";
 
 export default function MyInput({

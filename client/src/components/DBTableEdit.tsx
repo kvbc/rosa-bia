@@ -5,7 +5,7 @@
 // 1
 //
 
-import React, { ComponentProps, useCallback, useMemo } from "react";
+import { ComponentProps, useCallback, useMemo } from "react";
 import { TableEdit } from "./table_edit/TableEdit";
 import * as DB from "@shared/db";
 import { DBTable } from "@/hooks/useDBTable";
@@ -22,7 +22,7 @@ export function DBTableEdit<
     ...restTableEditProps
 }: {
     dbTable: DBTable<TDatabaseRow>;
-    defaultRow: DBTableEditDefaultRow<TRow>;
+    defaultRow?: DBTableEditDefaultRow<TRow>;
     rows?: TRow[];
 } & Omit<
     ComponentProps<typeof TableEdit<TRow>>,
@@ -38,7 +38,7 @@ export function DBTableEdit<
     const {
         totalRowCount,
         rows,
-        rowsQuery,
+        // rowsQuery,
         addRowMutation,
         deleteRowMutation,
         updateRowMutation,

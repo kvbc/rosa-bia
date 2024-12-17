@@ -3,7 +3,7 @@
 // Row component for the TableEdit component
 //
 
-import React, {
+import {
     ComponentProps,
     ContextType,
     ReactNode,

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useDBTable from "@/hooks/useDBTable";
 import * as DB from "@shared/db";
-import React from "react";
 import {
     Box,
     Group,

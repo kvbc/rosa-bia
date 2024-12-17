@@ -1,7 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./app/App.tsx";
-import React from "react";
 import "./index.css";
 
 // import whyDidYouRender from "@welldone-software/why-did-you-render";

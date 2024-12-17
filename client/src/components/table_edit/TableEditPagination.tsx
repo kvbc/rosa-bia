@@ -1,5 +1,5 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
-import React, {
+import {
     ComponentProps,
     useContext,
     useEffect,
