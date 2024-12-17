@@ -11,7 +11,6 @@ right now ig make sure everything kinda works and fix the infinite saving bug
 -   [ ] statystyki - suma wnioskow dla przydzialow tabelka (tylko admin)
 -   [ ] rejestr uzupelniajacy zrobic
 -   [ ] rok pod rejestrami i opis typow rejestru
--   [ ] jednolity navbar (wszystkie opcje pod)
 -   [ ] dodac filtry wszedzie gdzie trzeba do RowContent'ów
 -   [ ] zupdatowac statystyki (ilosc lokali)
 -   [ ] generowanie bip tabelka: osoba prawna, fizyczna (lista rozwijana)

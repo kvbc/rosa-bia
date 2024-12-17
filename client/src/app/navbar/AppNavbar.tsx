@@ -13,7 +13,7 @@ import { AppNavbarLink } from "./AppNavbarLink";
 import { useLocation } from "react-router-dom";
 import { Tooltip } from "@/components/ui/tooltip";
 
-const SUBROUTES = ["registers", "help", "stats"] as const;
+const SUBROUTES = ["registers", "help", "stats", "construction"] as const;
 type SubrouteType = (typeof SUBROUTES)[number] | "none";
 
 export const AppNavbar: React.FC = () => {
@@ -138,6 +138,25 @@ export const AppNavbar: React.FC = () => {
                             renderLink(
                                 entry.display,
                                 "/stats/" + entry.route,
+                                entry.tooltip
+                            )
+                        )}
+                    {subnavType === "construction" &&
+                        [
+                            {
+                                route: "pkob",
+                                display: "PKOB",
+                                tooltip:
+                                    "Polska Klasyfikacja Obiektów Budowlanych",
+                            },
+                            {
+                                route: "construction_laws",
+                                display: "Prawo Budowlane",
+                            },
+                        ].map((entry) =>
+                            renderLink(
+                                entry.display,
+                                "/construction/" + entry.route,
                                 entry.tooltip
                             )
                         )}

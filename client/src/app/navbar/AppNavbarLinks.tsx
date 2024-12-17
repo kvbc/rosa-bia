@@ -13,13 +13,10 @@ import {
     LuFileText,
     LuHardHat,
     LuLaptop,
-    LuBuilding,
-    LuBook,
     LuHistory,
     LuKey,
     LuCalendar,
 } from "react-icons/lu";
-import { AppNavbarLinkMenu } from "./AppNavbarLinkMenu";
 import useAuthEmployee from "@/hooks/useAuthEmployee";
 import { Tooltip } from "@/components/ui/tooltip";
 
@@ -217,6 +214,19 @@ export const AppNavbarLinks: React.FC = () => {
                 ]}
             /> */}
             {isAdmin && (
+                <AppNavbarLink
+                    to="/construction/pkob"
+                    onMouseEnter={handleLinkMouseEntered}
+                    position="relative"
+                >
+                    <Icon fontSize="md">
+                        <LuHardHat />
+                    </Icon>
+                    Budowlanka
+                    {adminAccessIcon}
+                </AppNavbarLink>
+            )}
+            {/* {isAdmin && (
                 <AppNavbarLinkMenu
                     isOpen={isConstructionMenuOpen}
                     setIsOpen={setIsConstructionMenuOpen}
@@ -238,7 +248,7 @@ export const AppNavbarLinks: React.FC = () => {
                 >
                     {adminAccessIcon}
                 </AppNavbarLinkMenu>
-            )}
+            )} */}
             {isAdmin && (
                 <AppNavbarLink
                     to="/employees"
