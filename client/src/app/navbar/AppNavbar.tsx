@@ -130,6 +130,10 @@ export const AppNavbar: React.FC = () => {
                                 route: "gunb3",
                                 display: "Generator GUNB-03",
                             },
+                            {
+                                route: "assigned",
+                                display: "Przydział",
+                            },
                         ].map((entry) =>
                             renderLink(
                                 entry.display,
