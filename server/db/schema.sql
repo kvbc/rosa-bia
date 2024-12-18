@@ -78,7 +78,7 @@ create table registers(
 
     assigned_employee_id integer, -- przypisany pracownik (przydzial)
 
-    app_number text not null, -- numer wniosku
+    app_number text not null unique, -- numer wniosku
     app_submission_date date not null, -- data zlozenia
     app_investor_id integer not null,
     app_decision_type text,

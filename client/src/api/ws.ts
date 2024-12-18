@@ -1,7 +1,7 @@
 // 1
 
 import * as DB from "@shared/db";
-import * as WS from "@server/ws/types";
+import * as WS from "@shared/ws";
 
 export const WS_SERVER_URL = "http://localhost:" + WS.SERVER_PORT;
 

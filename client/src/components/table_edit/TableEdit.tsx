@@ -39,10 +39,10 @@ import {
     AccordionRoot,
 } from "../ui/accordion";
 import { FaFilter, FaPlus } from "react-icons/fa6";
-import { Filter, FilterOperator } from "@server/http/routes/table_rows/get";
 import { Tooltip } from "../ui/tooltip";
 import { LuRefreshCw } from "react-icons/lu";
 import { chakraColorToCSS } from "@/contexts/ColorContext";
+import { Filter, FilterOperator } from "@shared/http";
 
 export type TableEditHeader =
     | ({
@@ -263,44 +263,48 @@ export function TableEdit<TRow extends TableEditRowType>(
      *
      */
 
-    const commitChanges = useCallback(() => {
-        if (revertRows === rows) {
-            return;
-        }
-        // console.log(revertRows, "=>", rows);
-        let anyChanges = false;
-        rows.forEach((row) => {
-            const rrow = revertRows.find((rrow) => rrow.id === row.id);
-            if (rrow) {
-                if (rrow !== row) {
-                    onRowSaveClicked?.(row);
+    const commitChanges = useCallback(
+        (newRows: TRow[] | undefined = undefined) => {
+            const _rows = newRows ?? rows;
+            if (revertRows === _rows) {
+                return;
+            }
+            // console.log(revertRows, "=>", rows);
+            let anyChanges = false;
+            _rows.forEach((row) => {
+                const rrow = revertRows.find((rrow) => rrow.id === row.id);
+                if (rrow) {
+                    if (rrow !== row) {
+                        onRowSaveClicked?.(row);
+                        anyChanges = true;
+                    }
+                } else {
+                    // console.log("adding", row);
+                    onRowAddClicked?.(row);
                     anyChanges = true;
                 }
-            } else {
-                // console.log("adding", row);
-                onRowAddClicked?.(row);
-                anyChanges = true;
+            });
+            revertRows.forEach((rrow) => {
+                if (!_rows.find((row) => row.id === rrow.id)) {
+                    onRowDeleteClicked?.(rrow);
+                    anyChanges = true;
+                }
+            });
+            if (anyChanges) {
+                setRevertRows(_rows);
             }
-        });
-        revertRows.forEach((rrow) => {
-            if (!rows.find((row) => row.id === rrow.id)) {
-                onRowDeleteClicked?.(rrow);
-                anyChanges = true;
-            }
-        });
-        if (anyChanges) {
-            setRevertRows(rows);
-        }
-        setTotalAddedRowsCount(0);
-        eventTarget.dispatchEvent(new Event("changesCommited"));
-    }, [
-        onRowAddClicked,
-        onRowSaveClicked,
-        onRowDeleteClicked,
-        revertRows,
-        eventTarget,
-        rows,
-    ]);
+            setTotalAddedRowsCount(0);
+            eventTarget.dispatchEvent(new Event("changesCommited"));
+        },
+        [
+            onRowAddClicked,
+            onRowSaveClicked,
+            onRowDeleteClicked,
+            revertRows,
+            eventTarget,
+            rows,
+        ]
+    );
 
     const cancelChanges = useCallback(() => {
         setRows([...revertRows]);
@@ -310,10 +314,11 @@ export function TableEdit<TRow extends TableEditRowType>(
 
     useEffect(() => {
         if (upperTableEventTarget) {
-            upperTableEventTarget.addEventListener('changesCommited', commitChanges); // prettier-ignore
+            const onChangesCommited = () => commitChanges();
+            upperTableEventTarget.addEventListener('changesCommited', onChangesCommited); // prettier-ignore
             upperTableEventTarget.addEventListener('changesCanceled', cancelChanges); // prettier-ignore
             return () => {
-                upperTableEventTarget.removeEventListener('changesCommited', commitChanges); // prettier-ignore
+                upperTableEventTarget.removeEventListener('changesCommited', onChangesCommited); // prettier-ignore
                 upperTableEventTarget.removeEventListener('changesCanceled', cancelChanges); // prettier-ignore
             };
         }
@@ -335,37 +340,55 @@ export function TableEdit<TRow extends TableEditRowType>(
 
     const handleRowAdded = useCallback(
         (addedRow: TRow) => {
-            setRows((rows) => [...rows, { ...addedRow }]);
+            setRows((rows) => {
+                const newRows = [...rows, { ...addedRow }];
+                if (!upperTableEventTarget) {
+                    commitChanges(newRows);
+                }
+                return newRows;
+            });
             setTotalAddedRowsCount((totalCount) => totalCount + 1);
-            if (!upperTableEventTarget && !canCommit) {
-                setCanCommit(true);
-            }
+            // if (!upperTableEventTarget && !canCommit) {
+            //     setCanCommit(true);
+            // }
         },
-        [upperTableEventTarget, canCommit]
+        [upperTableEventTarget, commitChanges]
     );
 
     const handleRowSaved = useCallback(
         (newRow: TRow) => {
             // console.log("handleRowSaved called");
-            setRows((rows) =>
-                rows.map((row) => (row.id === newRow.id ? newRow : row))
-            );
-            if (!upperTableEventTarget && !canCommit) {
-                // console.log("set canCommit to true");
-                setCanCommit(true);
-            }
+            setRows((rows) => {
+                const newRows = rows.map((row) =>
+                    row.id === newRow.id ? newRow : row
+                );
+                if (!upperTableEventTarget) {
+                    commitChanges(newRows);
+                }
+                return newRows;
+            });
+            // if (!upperTableEventTarget && !canCommit) {
+            //     // console.log("set canCommit to true");
+            //     setCanCommit(true);
+            // }
         },
-        [upperTableEventTarget, canCommit]
+        [upperTableEventTarget, commitChanges]
     );
 
     const handleRowDeleted = useCallback(
         (deletedRow: TRow) => {
-            setRows((rows) => rows.filter((row) => row.id !== deletedRow.id));
-            if (!upperTableEventTarget && !canCommit) {
-                setCanCommit(true);
-            }
+            setRows((rows) => {
+                const newRows = rows.filter((row) => row.id !== deletedRow.id);
+                if (!upperTableEventTarget) {
+                    commitChanges(newRows);
+                }
+                return newRows;
+            });
+            // if (!upperTableEventTarget && !canCommit) {
+            //     setCanCommit(true);
+            // }
         },
-        [upperTableEventTarget, canCommit]
+        [upperTableEventTarget, commitChanges]
     );
 
     const handleAddRowAccordionValueChanged = useCallback(

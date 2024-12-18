@@ -1,10 +1,11 @@
-version: "3.8"
 services:
     client:
-        build: "./client"
+        build:
+            context: . # Ensure this is the root of your project
+            dockerfile: ./client/Dockerfile
         container_name: client
         ports:
-            - "5173:5173"
+            - "3000:80"
     server:
         build: "./server"
         container_name: server

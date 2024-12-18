@@ -20,12 +20,23 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": false,
 
-        "baseUrl": "./",
+        "composite": true,
+        // "declaration": true, // Generate .d.ts files
+        // "declarationMap": true, // Optional: Generate .d.ts map files
+        "outDir": "./dist",
+        "rootDir": "../",
+        "baseUrl": ".",
+        "forceConsistentCasingInFileNames": true,
         "paths": {
             "@/*": ["./src/*"],
-            "@server/*": ["../server/src/*"],
             "@shared/*": ["../shared/src/*"]
         }
     },
-    "include": ["src"]
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "environment.d.ts",
+        "../shared/src/**/*.ts"
+    ],
+    "exclude": ["node_modules", "dist"]
 }

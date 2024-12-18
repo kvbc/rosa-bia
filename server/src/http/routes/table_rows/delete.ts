@@ -46,7 +46,7 @@ router.post(
         const sqlQuery = `delete from ${tableName} where id = ?`;
         const sqlParams = [rowID];
 
-        console.log(`[POST /table_rows/delete/${tableName}/${rowID}]`);
+        // console.log(`[POST /table_rows/delete/${tableName}/${rowID}]`);
 
         db.run(sqlQuery, sqlParams, (error) => {
             if (error) {

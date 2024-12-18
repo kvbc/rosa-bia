@@ -53,9 +53,9 @@ router.post(
         sqlQuery += " where id=?";
         sqlParams.push(newRow.id);
 
-        console.log(
-            `[POST /table_rows/update/${tableName}] \n| Query: "${sqlQuery}"`
-        );
+        // console.log(
+        //     `[POST /table_rows/update/${tableName}] \n| Query: "${sqlQuery}"`
+        // );
 
         db.run(sqlQuery, sqlParams, (error) => {
             if (error) {

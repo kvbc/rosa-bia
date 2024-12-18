@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect } from "react";
 import useAuthEmployee from "@/hooks/useAuthEmployee";
 import axios from "axios";
-import * as HTTP from "@server/http/types";
+import * as HTTP from "@shared/http";
 import { AppError } from "./App";
 
 export const AppEmployee: React.FC<

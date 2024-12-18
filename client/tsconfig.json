@@ -5,9 +5,17 @@
         { "path": "./tsconfig.node.json" }
     ],
     "compilerOptions": {
+        "composite": true,
+
         "module": "ESNext",
         "moduleResolution": "Bundler",
         "skipLibCheck": true,
-        "noFallthroughCasesInSwitch": false
+        "noFallthroughCasesInSwitch": false,
+
+        "declaration": true, // Generate .d.ts files
+        "declarationMap": true, // Optional: Generate .d.ts map files
+        "outDir": "./dist",
+        "rootDir": "../",
+        "baseUrl": "./"
     }
 }

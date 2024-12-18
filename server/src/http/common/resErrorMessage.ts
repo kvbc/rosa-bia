@@ -1,5 +1,5 @@
 import { Response } from "express";
-import * as HTTP from "@http/types";
+import * as HTTP from "@shared/http";
 
 export const resErrorMessage = (
     res: Response,

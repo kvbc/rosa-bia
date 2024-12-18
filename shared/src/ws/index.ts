@@ -1,4 +1,4 @@
-import * as DB from "@shared/db";
+import * as DB from "../db";
 
 export const SERVER_PORT = 3002;
 

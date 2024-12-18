@@ -103,13 +103,13 @@ export default function RegisterConstructionIntentTableEdit(
             ),
         [constructionDivisionID, constructionDivisionsDBTable.rows]
     );
-    // const constructionSection = useMemo(
-    //     () =>
-    //         constructionSectionsDBTable.rows.find(
-    //             (fRow) => fRow.id === constructionSectionID
-    //         ),
-    //     [constructionSectionsDBTable.rows, constructionSectionID]
-    // );
+    const constructionSection = useMemo(
+        () =>
+            constructionSectionsDBTable.rows.find(
+                (fRow) => fRow.id === constructionSectionID
+            ),
+        [constructionSectionsDBTable.rows, constructionSectionID]
+    );
     //
     const constructionLawIntent = useMemo(
         () =>
@@ -359,19 +359,39 @@ export default function RegisterConstructionIntentTableEdit(
     //
 
     // const pnbConstructionIntent = constructionGroup?.name;
-    // let pnbConstructionIntent = "";
-    // if (constructionSection) {
-    //     pnbConstructionIntent += constructionSection.name;
-    // }
-    // if (constructionDivision) {
-    //     pnbConstructionIntent += " " + constructionDivision.name;
-    // }
-    // if (constructionGroup) {
-    //     pnbConstructionIntent += " " + constructionGroup.name;
-    // }
-    // if (pnbConstructionIntent === "") {
-    //     pnbConstructionIntent = "-";
-    // }
+    let pnbConstructionIntent = "";
+    if (constructionSection) {
+        pnbConstructionIntent += constructionSection.name;
+    }
+    if (constructionDivision) {
+        pnbConstructionIntent += " " + constructionDivision.name;
+    }
+    if (constructionGroup) {
+        pnbConstructionIntent += " " + constructionGroup.name;
+    }
+    if (pnbConstructionIntent === "") {
+        pnbConstructionIntent = "-";
+    }
+
+    useEffect(() => {
+        if (
+            row.object_custom_construction_intent === "" ||
+            row.object_custom_construction_intent === "-"
+        ) {
+            // FIXME yeah
+            setRow((row) => ({
+                ...row,
+                object_custom_construction_intent: pnbConstructionIntent,
+            }));
+        }
+    }, [
+        pnbConstructionIntent,
+        constructionSection?.name,
+        constructionDivision?.name,
+        constructionGroup?.name,
+        row.object_custom_construction_intent,
+        setRow,
+    ]);
 
     const constructionLawCategoryInput = useMemo(
         () => (

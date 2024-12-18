@@ -13,7 +13,7 @@ import {
 } from "@/api/http";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { wsOnMessage } from "@/api/ws";
-import { Filter } from "@server/http/routes/table_rows/get";
+import { Filter } from "@shared/http";
 
 export type DBTable<TRow extends DB.Row> = ReturnType<typeof useDBTable<TRow>>;
 

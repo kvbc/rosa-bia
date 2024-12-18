@@ -1,6 +1,6 @@
+import { Filter } from "@shared/http";
 import RegisterTableEdit from "./RegisterTableEdit";
 import * as DB from "@shared/db";
-import { Filter } from "@server/http/routes/table_rows/get";
 
 export type ClientRegister = DB.Rows.Register;
 

@@ -9,18 +9,7 @@ import {
 } from "@http/common";
 import { stringToInteger } from "@/util";
 import { db } from "@";
-import * as HTTP from "@http/types";
-
-export const FILTER_OPERATORS = [
-    "=",
-    ">",
-    ">=",
-    "<",
-    "<=",
-    "<>",
-    "like",
-] as const;
-export type FilterOperator = (typeof FILTER_OPERATORS)[number];
+import * as HTTP from "@shared/http";
 
 const createFiltersShape = (tableName: DB.TableName) => {
     const rowMeta = DB.getRowMeta(tableName);
@@ -45,7 +34,7 @@ const createFiltersShape = (tableName: DB.TableName) => {
         z.discriminatedUnion("key", [
             z.strictObject({
                 key: z.enum([firstKey!, ...otherKeys]),
-                operator: z.enum(FILTER_OPERATORS),
+                operator: z.enum(HTTP.FILTER_OPERATORS),
                 value: z.string(),
             }),
             ...rowOptions,
@@ -62,23 +51,9 @@ const createRequestBodyShape = (tableName: DB.TableName) =>
 
 export type RequestBody =
     | {
-          filters?: Filter[];
+          filters?: HTTP.Filter[];
       }
     | undefined;
-
-// example "id" ">=" "10"
-// export type Filter = NonNullable<NonNullable<RequestBody>["filters"]>[number];
-export type Filter =
-    | {
-          key: string;
-          operator: FilterOperator;
-          value: string;
-          filters?: Filter[];
-      }
-    | {
-          key: string;
-          filters: Filter[];
-      };
 
 const router = Router();
 
@@ -142,7 +117,10 @@ router.post(
         const sqlFilterValues: any[] = [];
         let sqlInnerJoins = "";
         let sqlWhere = "";
-        const processFilters = (tableName: DB.TableName, filters: Filter[]) => {
+        const processFilters = (
+            tableName: DB.TableName,
+            filters: HTTP.Filter[]
+        ) => {
             const rowMeta = DB.getRowMeta(tableName);
             filters.forEach((filter) => {
                 if (
@@ -175,11 +153,11 @@ router.post(
             sqlQuery += "-1";
         }
 
-        console.log(
-            `[POST /table_rows/get/${tableName}/${startIndex}/${
-                endIndex ?? "-"
-            }]\n| Query: "${sqlQuery}"\n| Values: ${sqlFilterValues}`
-        );
+        // console.log(
+        //     `[POST /table_rows/get/${tableName}/${startIndex}/${
+        //         endIndex ?? "-"
+        //     }]\n| Query: "${sqlQuery}"\n| Values: ${sqlFilterValues}`
+        // );
         // console.dir(body, { depth: Infinity });
 
         db.all(

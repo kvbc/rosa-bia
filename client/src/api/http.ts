@@ -1,9 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import * as HTTP from "@server/http/types";
-import { EmployeeLoginRequest } from "@server/http/routes/employee_login";
+import * as HTTP from "@shared/http";
 import * as DB from "@shared/db";
 // FIXME: all these imports from server should be shared, there should be no @server.
-import { Filter } from "@server/http/routes/table_rows/get";
 
 export const HTTP_SERVER_URL = "http://localhost:" + HTTP.SERVER_PORT;
 
@@ -14,14 +12,14 @@ export const HTTP_SERVER_URL = "http://localhost:" + HTTP.SERVER_PORT;
  */
 
 export const apiEmployeeLogin = async (
-    req?: EmployeeLoginRequest,
+    req?: HTTP.EmployeeLoginRequest,
     jwtToken?: string
 ) => {
     return await axios
         .post<
             HTTP.Response,
             AxiosResponse<HTTP.Response, unknown>,
-            EmployeeLoginRequest
+            HTTP.EmployeeLoginRequest
         >(
             HTTP_SERVER_URL + "/login",
             req ?? {},
@@ -88,7 +86,7 @@ export const apiGetTableRows = async <TRow extends DB.Row>(
     tableName: DB.TableName,
     startRowIndex: number | null = null,
     endRowIndex: number | null = null,
-    filters: Filter[] = [],
+    filters: HTTP.Filter[] = [],
     config?: AxiosRequestConfig
 ) => {
     let path = `/table_rows/get/${tableName}/`;

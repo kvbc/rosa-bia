@@ -9,7 +9,7 @@ import { EmployeeAvatar } from "@/components/EmployeeAvatar";
 import { Badge } from "@chakra-ui/react";
 import { ClientRegister } from "./PageRegisters";
 import useDBTable from "@/hooks/useDBTable";
-import { Filter } from "@server/http/routes/table_rows/get";
+import { Filter } from "@shared/http";
 
 export default function RegisterTableEdit({
     initialRegistersFilters,

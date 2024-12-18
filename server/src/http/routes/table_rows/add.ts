@@ -47,11 +47,11 @@ router.post(
         const sqlValues = keys.map((key) => key === "id" ? null : newRow[key]); // prettier-ignore
         const sqlQuery = `insert into ${tableName}(${sqlKeys}) values(${sqlParams})`;
 
-        console.log(
-            `[POST /table_rows/add/${tableName}] \n| Query: "${sqlQuery}" \n| Values: ${sqlValues.join(
-                ", "
-            )}`
-        );
+        // console.log(
+        //     `[POST /table_rows/add/${tableName}] \n| Query: "${sqlQuery}" \n| Values: ${sqlValues.join(
+        //         ", "
+        //     )}`
+        // );
 
         db.run(sqlQuery, sqlValues, (error) => {
             if (error) {

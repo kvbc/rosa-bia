@@ -4,15 +4,7 @@ import { resError, resErrorMessage, resGetAuthEmployee } from "../common";
 import { db } from "@";
 import * as DB from "@shared/db";
 import jwt, { Secret } from "jsonwebtoken";
-import * as HTTP from "@http/types";
-
-export const EmployeeLoginRequestShape = z.strictObject({
-    employeeName: z.string(),
-    employeePassword: z.string(),
-});
-export type EmployeeLoginRequest =
-    | z.infer<typeof EmployeeLoginRequestShape>
-    | Record<PropertyKey, never>;
+import * as HTTP from "@shared/http";
 
 const router = Router();
 
@@ -22,7 +14,7 @@ const router = Router();
 //
 router.post(
     "/login",
-    async (req: Request<EmployeeLoginRequest>, res: Response) => {
+    async (req: Request<HTTP.EmployeeLoginRequest>, res: Response) => {
         const { employee, jwtToken } = await resGetAuthEmployee(
             req,
             res,
@@ -45,7 +37,7 @@ router.post(
         }
 
         // verify body
-        const ret = EmployeeLoginRequestShape.safeParse(req.body);
+        const ret = HTTP.EmployeeLoginRequestShape.safeParse(req.body);
         if (!ret.success) {
             resErrorMessage(res, 400, ret.error.message);
             return;
@@ -55,7 +47,7 @@ router.post(
         const sqlQuery = "select * from employees where name = ? and password = ?"; // prettier-ignore
         const sqlParams = [body.employeeName, body.employeePassword];
 
-        console.log(`[POST /login]`);
+        // console.log(`[POST /login]`);
 
         db.get(
             sqlQuery,
