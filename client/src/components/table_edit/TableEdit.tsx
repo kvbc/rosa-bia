@@ -12,6 +12,7 @@ import React, {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from "react";
 import { TableEditRow } from "./row/TableEditRow";
@@ -182,6 +183,8 @@ export function TableEdit<TRow extends TableEditRowType>(
     const [filterRow, setFilterRow] = useState<TRow | undefined>(
         updateFilterRow
     );
+    const rowsRef = useRef<Record<number, HTMLTableRowElement>>({});
+    const [rowIDToScrollTo, setRowIDToScrollTo] = useState<number | null>(null);
     const [addRow, setAddRow] = useState<TRow | undefined>(
         defaultRow
             ? {
@@ -338,6 +341,24 @@ export function TableEdit<TRow extends TableEditRowType>(
      *
      */
 
+    const scrollToRow = useCallback((rowID: number) => {
+        const el = rowsRef.current[rowID];
+        if (el) {
+            el.scrollIntoView({
+                behavior: "smooth", // Smooth scrolling
+                block: "center", // Scroll so that the row is in the center
+            });
+        }
+    }, []);
+
+    // TODO not sure if needed
+    useEffect(() => {
+        if (rowIDToScrollTo !== null) {
+            scrollToRow(rowIDToScrollTo);
+            setRowIDToScrollTo(null);
+        }
+    }, [rowIDToScrollTo, scrollToRow]);
+
     const handleRowAdded = useCallback(
         (addedRow: TRow) => {
             setRows((rows) => {
@@ -348,6 +369,9 @@ export function TableEdit<TRow extends TableEditRowType>(
                 return newRows;
             });
             setTotalAddedRowsCount((totalCount) => totalCount + 1);
+            // scrollToRow(addedRow.id);
+            setRowIDToScrollTo(addedRow.id);
+            setAddRowAccordionValue([]); // close it
             // if (!upperTableEventTarget && !canCommit) {
             //     setCanCommit(true);
             // }
@@ -640,6 +664,13 @@ export function TableEdit<TRow extends TableEditRowType>(
                                         (row === addRow ? row.id + 100 : row.id)
                                     } // +100 to avoid same-key problems when changing ids
                                     row={row}
+                                    myRef={(el) => {
+                                        if (el) {
+                                            rowsRef.current[row.id] = el;
+                                        } else {
+                                            delete rowsRef.current[row.id];
+                                        }
+                                    }}
                                     disableActions={disableActions}
                                     onAddClicked={
                                         row === addRow

@@ -119,21 +119,6 @@ export const AppNavbarLinks: React.FC = () => {
                 </Icon>
                 Inwestorzy
             </AppNavbarLink>
-            <AppNavbarLink to="/calendar" onMouseEnter={handleLinkMouseEntered}>
-                <Icon fontSize="md">
-                    <LuCalendar />
-                </Icon>
-                Kalendarz
-            </AppNavbarLink>
-            <AppNavbarLink
-                to="/help/program_info"
-                onMouseEnter={handleLinkMouseEntered}
-            >
-                <Icon fontSize="md">
-                    <LuHelpCircle />
-                </Icon>
-                Pomoc
-            </AppNavbarLink>
             <AppNavbarLink
                 to="/stats/b05"
                 onMouseEnter={handleLinkMouseEntered}
@@ -213,6 +198,21 @@ export const AppNavbarLinks: React.FC = () => {
                     },
                 ]}
             /> */}
+            <AppNavbarLink to="/calendar" onMouseEnter={handleLinkMouseEntered}>
+                <Icon fontSize="md">
+                    <LuCalendar />
+                </Icon>
+                Kalendarz
+            </AppNavbarLink>
+            <AppNavbarLink
+                to="/help/program_info"
+                onMouseEnter={handleLinkMouseEntered}
+            >
+                <Icon fontSize="md">
+                    <LuHelpCircle />
+                </Icon>
+                Pomoc
+            </AppNavbarLink>
             {isAdmin && (
                 <AppNavbarLink
                     to="/construction/pkob"

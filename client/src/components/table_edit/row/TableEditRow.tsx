@@ -3,7 +3,7 @@
 // Row component for the TableEdit component
 //
 
-import {
+import React, {
     ComponentProps,
     ContextType,
     ReactNode,
@@ -51,6 +51,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
     disableActions,
     ContentComponent,
     saveOnInputFocusOut,
+    myRef,
     ...myTableRowProps
 }: ComponentProps<typeof MyTableRow> & {
     row: TRow;
@@ -66,6 +67,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
     inputsProps: TableEditRowInputsProps<TRow>;
     ContentComponent?: TableEditRowContentComponent<TRow>;
     saveOnInputFocusOut: boolean;
+    myRef?: React.Ref<HTMLTableRowElement>;
 }) {
     const [row, setRow] = useState<TRow>({ ...rowProp });
     const [state, setState] = useState<TableEditRowState>(stateProp);
@@ -329,7 +331,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
      */
 
     return (
-        <MyTableRow {...myTableRowProps}>
+        <MyTableRow {...myTableRowProps} ref={myRef}>
             <TableEditRowContext.Provider value={context}>
                 {content}
             </TableEditRowContext.Provider>

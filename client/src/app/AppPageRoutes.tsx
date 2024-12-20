@@ -17,9 +17,9 @@ import { AppPage } from "./AppPage";
 import { PageHelpUserManual } from "../pages/help/PageHelpUserManual";
 import PageHelpProgramInfo from "@/pages/help/PageHelpProgramInfo";
 import { PageEventLog } from "@/pages/eventlog/PageEventLog";
-import { REGISTER_TYPES } from "@shared/db/rows";
 import { PageCalendar } from "@/pages/calendar/PageCalendar";
 import { PageTools } from "@/pages/tools/PageTools";
+import { PageStatsEmployees } from "@/pages/stats/PageStatsEmployees";
 
 export const AppPageRoutes: React.FC = () => {
     return (
@@ -89,6 +89,14 @@ export const AppPageRoutes: React.FC = () => {
                 }
             />
             <Route
+                path="/stats/employees"
+                element={
+                    <AppPage>
+                        <PageStatsEmployees />
+                    </AppPage>
+                }
+            />
+            <Route
                 path="/help/contact"
                 element={
                     <AppPage dontRequireLogin>
@@ -125,7 +133,7 @@ export const AppPageRoutes: React.FC = () => {
              * Register type-specific
              *
              */}
-            {REGISTER_TYPES.map((registerType, index) => (
+            {/* {REGISTER_TYPES.map((registerType, index) => (
                 <Route
                     key={registerType}
                     path={`/registers/${index}`}
@@ -143,7 +151,16 @@ export const AppPageRoutes: React.FC = () => {
                         </AppPage>
                     }
                 />
-            ))}
+            ))} */}
+            <Route
+                path="/registers/:type?/:year?"
+                element={
+                    <AppPage dontRequireLogin>
+                        <PageRegisters />
+                    </AppPage>
+                }
+            />
+
             {/*
              *
              * Admin-only

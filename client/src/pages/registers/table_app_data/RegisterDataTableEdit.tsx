@@ -14,10 +14,23 @@ import { MyTableCell as Tc } from "@/components/my_table/MyTableCell";
 import { topRowHeight } from "../RegisterTableEditRowContent";
 import { FeatureUnfinishedIcon } from "@/components/FeatureUnfinishedIcon";
 import { ClientRegister } from "../PageRegisters";
-import { HStack } from "@chakra-ui/react";
+import { HStack, IconButton } from "@chakra-ui/react";
 import { FaFileSignature, FaUserTie } from "react-icons/fa6";
 import useDBTable from "@/hooks/useDBTable";
 import { isRegisterType } from "@/utils/array";
+import { LuPlus } from "react-icons/lu";
+import {
+    DialogBody,
+    DialogCloseTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogRoot,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import PageInvestors from "@/pages/investors/PageInvestors";
+import { MyTableContext } from "@/contexts/components/MyTableContext";
+import TableEditContext from "@/contexts/components/TableEditContext";
 
 export default function RegisterDataTableEdit({
     inputs,
@@ -132,6 +145,46 @@ export default function RegisterDataTableEdit({
                                                 {ftoggles.app_investor_id}
                                                 <FaUserTie />
                                                 Inwestor
+                                                {/* <Button
+                                                    size="2xs"
+                                                    variant="subtle"
+                                                    fontSize="md"
+                                                    borderRadius="full"
+                                                    // fontSize="inherit"
+                                                    colorPalette="green"
+                                                >
+                                                    +
+                                                </Button> */}
+                                                <DialogRoot size="xl">
+                                                    <DialogTrigger asChild>
+                                                        <IconButton
+                                                            size="2xs"
+                                                            colorPalette="green"
+                                                            variant="plain"
+                                                        >
+                                                            <LuPlus />
+                                                        </IconButton>
+                                                    </DialogTrigger>
+                                                    <DialogContent>
+                                                        <DialogCloseTrigger />
+                                                        <DialogHeader>
+                                                            <DialogTitle>
+                                                                Inwestorzy
+                                                            </DialogTitle>
+                                                        </DialogHeader>
+                                                        <DialogBody>
+                                                            <MyTableContext.Provider
+                                                                value={0}
+                                                            >
+                                                                <TableEditContext.Provider
+                                                                    value={null}
+                                                                >
+                                                                    <PageInvestors />
+                                                                </TableEditContext.Provider>
+                                                            </MyTableContext.Provider>
+                                                        </DialogBody>
+                                                    </DialogContent>
+                                                </DialogRoot>
                                             </HStack>
                                         </Th>
                                         <Tr>

@@ -1,4 +1,5 @@
 import { DataListItem, DataListRoot } from "@/components/ui/data-list";
+import { REGISTER_TYPE_DESCRIPTIONS } from "@/constants/registers";
 import {
     Box,
     Heading,
@@ -114,48 +115,44 @@ export default function PageHelpProgramInfo() {
                         <strong>705</strong> - Samodzielność lokali mieszkalnych
                     </List.Item>
                     <List.Item>
-                        <strong>6740</strong> - Pozwolenia na budowę, przebudowę
-                        i rozbudowę obiektów budowlanych oraz zmiany sposobu
-                        użytkowania obiektów budowlanych lub ich części
+                        <strong>6740</strong> -{" "}
+                        {REGISTER_TYPE_DESCRIPTIONS["PnB (6740)"]}
                     </List.Item>
                     <List.Item>
-                        <strong>6741</strong> - Rozbiórki obiektów budowlanych
+                        <strong>6741</strong> -{" "}
+                        {REGISTER_TYPE_DESCRIPTIONS["PnRozb. (6741)"]}
                     </List.Item>
                     <List.Item>
-                        <strong>6742</strong> - Zezwolenia na wejście w teren
-                        sąsiedniej nieruchomości w celu wykonania niezbędnych
-                        robót budowlanych
+                        <strong>6742</strong> -{" "}
+                        {REGISTER_TYPE_DESCRIPTIONS["Wejście na dz. sąsiednią"]}
                     </List.Item>
                     <List.Item>
-                        <strong>6743.1</strong> - Zgłoszenie rozbiórki obiektów
-                        budowlanych
+                        <strong>6743.1</strong> -{" "}
+                        {REGISTER_TYPE_DESCRIPTIONS["Zg. Rozb. (6743.1)"]}
                     </List.Item>
                     <List.Item>
-                        <strong>6743.2</strong> - Zgłoszenie budowy lub
-                        wykonywania innych robót budowlanych (zwykłe)
+                        <strong>6743.2</strong> -{" "}
+                        {REGISTER_TYPE_DESCRIPTIONS["Zg. Zwykłe (6743.2)"]}
                     </List.Item>
                     <List.Item>
-                        <strong>6743.3</strong> - Zgłoszenie zmiany sposobu
-                        użytkowania obiektu budowlanego lub jego części
+                        <strong>6743.3</strong> -{" "}
+                        {REGISTER_TYPE_DESCRIPTIONS["Zm. Sp. Użytk. (6743.3)"]}
                     </List.Item>
                     <List.Item>
-                        <strong>6743.4</strong> - Zgłoszenia robót budowlanych
-                        wymagające projektu budowlanego (BiP)
+                        <strong>6743.4</strong> -{" "}
+                        {REGISTER_TYPE_DESCRIPTIONS["BiP (6743.4)"]}
                     </List.Item>
                     <List.Item>
-                        <strong>6743.5</strong> - Zgłoszenia robót budowlanych
-                        tymczasowych obiektów budowlanych (Zgodnie z §1 pkt 1
-                        Zarządzenia Starosty Człuchowskiego Nr 6/2022 z dnia 18
-                        lutego 2022r.)
+                        <strong>6743.5</strong> -{" "}
+                        {REGISTER_TYPE_DESCRIPTIONS["Tymczasowe (6743.5)"]}
                     </List.Item>
                     <List.Item>
-                        <strong>7012</strong> - Przygotowania i realizacji
-                        inwestycji w zakresie dróg publicznych (ZRID)
+                        <strong>7012</strong> -{" "}
+                        {REGISTER_TYPE_DESCRIPTIONS["ZRiD (7012)"]}
                     </List.Item>
                     <List.Item>
-                        <strong>Dz.Bud</strong> - Wydawanie rejestru dziennika
-                        budowy - Art. 47g Ustawy z dnia 7 lipca 1994 r. Prawo
-                        budowlane
+                        <strong>Dz.Bud</strong> -{" "}
+                        {REGISTER_TYPE_DESCRIPTIONS["Dz. bud"]}
                     </List.Item>
                     <List.Item>
                         <strong>Rejestry uzupełniające:</strong>
@@ -190,12 +187,20 @@ export default function PageHelpProgramInfo() {
                         <strong>Rejestry wewnętrzne ogólne</strong>
                         <List.Root ps="5">
                             <List.Item>
-                                <strong>4121</strong> - Współdziałanie z
-                                wojewódzkim konserwatorem zabytków i
-                                otrzymywanie informacji z rejestrów zabytków
+                                <strong>4121</strong> -{" "}
+                                {
+                                    REGISTER_TYPE_DESCRIPTIONS[
+                                        "Konserwator (Inne)"
+                                    ]
+                                }
                             </List.Item>
                             <List.Item>
-                                <strong>673</strong> - Lokalizacja inwestycji
+                                <strong>673</strong> -{" "}
+                                {
+                                    REGISTER_TYPE_DESCRIPTIONS[
+                                        "Lokalizacja inwestycji (Inne)"
+                                    ]
+                                }
                             </List.Item>
                             <List.Item>
                                 Pisma z Powiatowego Inspektoratu Nadzoru

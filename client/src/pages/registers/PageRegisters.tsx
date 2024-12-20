@@ -1,16 +1,24 @@
-import { Filter } from "@shared/http";
+import { Heading, Highlight, Separator, Text } from "@chakra-ui/react";
 import RegisterTableEdit from "./RegisterTableEdit";
 import * as DB from "@shared/db";
+import { REGISTER_TYPES } from "@shared/db/rows";
+import { Filter, FilterOperator } from "@shared/http";
+import { useParams } from "react-router-dom";
+import { REGISTER_TYPE_DESCRIPTIONS } from "@/constants/registers";
 
 export type ClientRegister = DB.Rows.Register;
 
 export default function PageRegisters({
-    registersFilters: initialRegistersFilters = [],
     disableRegisterAdding,
 }: {
-    registersFilters?: Filter[];
     disableRegisterAdding?: boolean;
 }) {
+    const { type: registerTypeIndex, year: registerYear } = useParams();
+    const registerType =
+        Number(registerTypeIndex) > 0
+            ? REGISTER_TYPES[Number(registerTypeIndex) - 1]
+            : null;
+
     // const registersDBTable = useDBTable<DB.Rows.Register>("registers", initialRegistersFilters); // prettier-ignore
     // const communesDBTable = useDBTable<DB.Rows.Commune>("communes"); // prettier-ignore
     // const placesDBTable = useDBTable<DB.Rows.Place>("places"); // prettier-ignore
@@ -66,10 +74,51 @@ export default function PageRegisters({
 
     return (
         // <PageRegistersContext.Provider value={context}>
-        <RegisterTableEdit
-            disableRowAdding={disableRegisterAdding}
-            initialRegistersFilters={initialRegistersFilters}
-        />
+        <>
+            <Heading>
+                <Highlight
+                    query={[registerType ?? "", registerYear ?? ""]}
+                    styles={{
+                        px: "0.5",
+                        bg: "blue.subtle",
+                        color: "blue.fg",
+                    }}
+                >
+                    {`Rejestry ${registerType ?? ""} ${
+                        registerYear ? `z ${registerYear} roku` : ""
+                    }`}
+                </Highlight>
+            </Heading>
+            <Separator />
+            <br />
+            <Text color="gray">
+                {registerType && REGISTER_TYPE_DESCRIPTIONS[registerType]}
+            </Text>
+            <br />
+            <RegisterTableEdit
+                disableRowAdding={disableRegisterAdding}
+                initialRegistersFilters={[
+                    ...(registerTypeIndex && registerType
+                        ? [
+                              {
+                                  key: "type",
+                                  operator: "=",
+                                  value: registerType,
+                              } satisfies Filter,
+                          ]
+                        : []),
+                    ...(registerYear
+                        ? [
+                              {
+                                  key: "app_submission_date",
+                                  operator: "like",
+                                  value: `%${registerYear}%`,
+                              } satisfies Filter,
+                          ]
+                        : []),
+                ]}
+            />
+        </>
         // </PageRegistersContext.Provider>
     );
 }
