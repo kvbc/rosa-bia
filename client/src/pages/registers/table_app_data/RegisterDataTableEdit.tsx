@@ -31,6 +31,8 @@ import {
 import PageInvestors from "@/pages/investors/PageInvestors";
 import { MyTableContext } from "@/contexts/components/MyTableContext";
 import TableEditContext from "@/contexts/components/TableEditContext";
+import { TableEditMentionButton } from "@/components/table_edit/TableEditMentionButton";
+import RegisterTableEdit from "../RegisterTableEdit";
 
 export default function RegisterDataTableEdit({
     inputs,
@@ -87,6 +89,36 @@ export default function RegisterDataTableEdit({
         }
     }, [row.type]);
 
+    const MentionButton: React.FC<
+        ComponentProps<typeof TableEditMentionButton> & {
+            rowKey: keyof ClientRegister & string;
+        }
+    > = ({ rowKey, ...restProps }) => {
+        return (
+            <TableEditMentionButton
+                color="green"
+                opacity="20%"
+                offset={true}
+                {...restProps}
+            >
+                <MyTableContext.Provider value={0}>
+                    <TableEditContext.Provider value={null}>
+                        <RegisterTableEdit
+                            disableRowAdding={true}
+                            initialRegistersFilters={[
+                                {
+                                    key: rowKey,
+                                    operator: "like",
+                                    value: `%${row[rowKey]}%`, // includes
+                                },
+                            ]}
+                        />
+                    </TableEditContext.Provider>
+                </MyTableContext.Provider>
+            </TableEditMentionButton>
+        );
+    };
+
     return (
         <Tb overflow="visible" {...myTableProps}>
             <Th colSpan={2}>
@@ -120,6 +152,10 @@ export default function RegisterDataTableEdit({
                             <HStack gap="1">
                                 {ftoggles.app_number}
                                 Numer wniosku
+                                <MentionButton
+                                    rowKey="app_number"
+                                    subtitle={`Numer wniosku: ${row.app_number}`}
+                                />
                             </HStack>
                         </Tc>
                         <Tc>{inputs.app_number}</Tc>
@@ -129,6 +165,10 @@ export default function RegisterDataTableEdit({
                             <HStack gap="1">
                                 {ftoggles.app_submission_date}
                                 Data złożenia
+                                <MentionButton
+                                    rowKey="app_submission_date"
+                                    subtitle={`Data złożenia: ${row.app_submission_date}`}
+                                />
                             </HStack>
                             {/* show more button */}
                             {children}
@@ -185,6 +225,12 @@ export default function RegisterDataTableEdit({
                                                         </DialogBody>
                                                     </DialogContent>
                                                 </DialogRoot>
+                                                <MentionButton
+                                                    rowKey="app_investor_id"
+                                                    subtitle="Inwestor"
+                                                    opacity="100%"
+                                                    offset={false}
+                                                />
                                             </HStack>
                                         </Th>
                                         <Tr>

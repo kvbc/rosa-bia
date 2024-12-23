@@ -110,12 +110,15 @@ export function TableEditRow<TRow extends TableEditRowType>({
 
     const isKeyFiltered = useCallback(
         (rowKey: keyof TRow & string): boolean =>
-            row["FILTER_" + rowKey] as boolean,
+            Boolean(row["FILTER_" + rowKey]),
         [row]
     );
 
     const setIsKeyFiltered = useCallback(
         (rowKey: keyof TRow & string, isFiltered: boolean) => {
+            // if (isKeyFiltered(rowKey) === isFiltered) {
+            //     return;
+            // }
             setRow((row) => ({
                 ...row,
                 ["FILTER_" + rowKey]: isFiltered,
@@ -124,6 +127,15 @@ export function TableEditRow<TRow extends TableEditRowType>({
         },
         []
     );
+
+    // FIXME work
+    // useEffect(() => {
+    //     if (isFilterRow) {
+    //         Object.keys(row).forEach((key) => {
+    //             setIsKeyFiltered(key, isKeyFiltered(key));
+    //         });
+    //     }
+    // }, [isFilterRow, row, setIsKeyFiltered, isKeyFiltered]);
 
     useEffect(() => {
         if (filterJustToggled) {

@@ -5,11 +5,11 @@
             "splitTerminals": [
                 {
                     "name": "server",
-                    "commands": ["cd server", "npm run dev"]
+                    "commands": ["cd server", "npm run devlog"]
                 },
                 {
                     "name": "client",
-                    "commands": ["cd client", "npm run dev"]
+                    "commands": ["cd client", "npm run devlog"]
                 }
             ]
         }

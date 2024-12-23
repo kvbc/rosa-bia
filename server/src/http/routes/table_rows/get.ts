@@ -25,7 +25,11 @@ const createFiltersShape = (tableName: DB.TableName) => {
             (rowKey): ZodDiscriminatedUnionOption<"key"> =>
                 z.strictObject({
                     key: z.literal(rowKey),
-                    filters: createFiltersShape(keyRelations[rowKey]!),
+                    operator: z.enum(HTTP.FILTER_OPERATORS).optional(),
+                    value: z.string().optional(),
+                    filters: createFiltersShape(
+                        keyRelations[rowKey]!
+                    ).optional(),
                 })
         );
     }

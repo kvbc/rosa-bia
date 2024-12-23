@@ -33,6 +33,7 @@ export default function PageHome() {
                                   key: "id",
                                   operator: "=",
                                   value: String(authEmployeeID),
+                                  filters: [],
                               },
                           ],
                       },

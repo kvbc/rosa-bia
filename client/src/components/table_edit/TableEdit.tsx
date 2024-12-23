@@ -6,6 +6,8 @@
 import React, {
     ComponentProps,
     Dispatch,
+    MouseEvent,
+    MouseEventHandler,
     ReactNode,
     SetStateAction,
     useCallback,
@@ -126,52 +128,61 @@ export function TableEdit<TRow extends TableEditRowType>(
     //
     // replace some inputs with ranges (number, date)
     //
-    const updateFilterRow = useCallback((): TRow | undefined => {
-        if (!defaultRow) {
-            return undefined;
-        }
-        let row = { ...defaultRow };
-        rowInputsProps.forEach((inputProps) => {
-            if (inputProps.type === "date" || inputProps.type === "number") {
-                const key = inputProps.rowKey;
-                const value = row[key] as string | number;
-                row = {
-                    ...row,
-                    [key]: { from: value, to: value } satisfies Range<
-                        string | number
-                    >,
-                };
+    const updateFilterRow = useCallback(
+        (useFilters: boolean = true): TRow | undefined => {
+            if (!defaultRow) {
+                return undefined;
             }
-        });
-        filters.forEach((filter) => {
-            if ("operator" in filter) {
-                row = { ...row, ["FILTER_" + filter.key]: true };
-                switch (filter.operator) {
-                    case ">=":
-                        (row[filter.key] as Range).from = filter.value;
-                        break;
-                    case "<=":
-                        (row[filter.key] as Range).to = filter.value;
-                        break;
-                    case "=":
-                        row = { ...row, [filter.key]: filter.value };
-                        break;
-                    case "like":
-                        row = {
-                            ...row,
-                            [filter.key]: (filter.value as string).replace(
-                                /%/g,
-                                ""
-                            ),
-                        };
-                        break;
+            let row = { ...defaultRow };
+            rowInputsProps.forEach((inputProps) => {
+                if (
+                    inputProps.type === "date" ||
+                    inputProps.type === "number"
+                ) {
+                    const key = inputProps.rowKey;
+                    const value = row[key] as string | number;
+                    row = {
+                        ...row,
+                        [key]: { from: value, to: value } satisfies Range<
+                            string | number
+                        >,
+                    };
                 }
-            } else {
-                console.error("oopsie");
+            });
+            if (!useFilters) {
+                return row;
             }
-        });
-        return row;
-    }, [defaultRow, rowInputsProps, filters]);
+            filters.forEach((filter) => {
+                if ("operator" in filter) {
+                    row = { ...row, ["FILTER_" + filter.key]: true };
+                    switch (filter.operator) {
+                        case ">=":
+                            (row[filter.key] as Range).from = filter.value;
+                            break;
+                        case "<=":
+                            (row[filter.key] as Range).to = filter.value;
+                            break;
+                        case "=":
+                            row = { ...row, [filter.key]: filter.value };
+                            break;
+                        case "like":
+                            row = {
+                                ...row,
+                                [filter.key]: (filter.value as string).replace(
+                                    /%/g,
+                                    ""
+                                ),
+                            };
+                            break;
+                    }
+                } else {
+                    console.error("oopsie, really bad error");
+                }
+            });
+            return row;
+        },
+        [defaultRow, rowInputsProps, filters]
+    );
 
     // useEffect(() => {
     //     setFilterRow(updateFilterRow());
@@ -481,9 +492,16 @@ export function TableEdit<TRow extends TableEditRowType>(
         setFilters(newFilters);
     }, [filterRow, setFilters]);
 
-    const handleFilterResetButtonClicked = useCallback(() => {
-        setFilterRow(updateFilterRow());
-    }, [updateFilterRow]);
+    const handleFilterResetButtonClicked = useCallback(
+        (event: MouseEvent<HTMLButtonElement>) => {
+            event.stopPropagation();
+            // event.preventDefault();
+            console.log("jj>>jj>> ", updateFilterRow(false));
+            setFilterRow(updateFilterRow(false));
+            setFilterRowAccordionValue([]); // hide
+        },
+        [updateFilterRow]
+    );
 
     /*
      *
@@ -606,6 +624,7 @@ export function TableEdit<TRow extends TableEditRowType>(
                                                         <IconButton
                                                             variant="plain"
                                                             size="2xs"
+                                                            // pointerEvents="none"
                                                             onClick={
                                                                 handleFilterResetButtonClicked
                                                             }
@@ -758,7 +777,9 @@ export function TableEdit<TRow extends TableEditRowType>(
                                                         <Icon color="fg.success">
                                                             <FaPlus />
                                                         </Icon>
-                                                        <Box>Wprowadź nowy</Box>
+                                                        <Box>
+                                                            Wprowadź nowy wpis
+                                                        </Box>
                                                     </AccordionItemTrigger>
                                                     <AccordionItemContent>
                                                         <MyTable
