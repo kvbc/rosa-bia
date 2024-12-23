@@ -2,9 +2,10 @@ import { Heading, Highlight, Separator, Text } from "@chakra-ui/react";
 import RegisterTableEdit from "./RegisterTableEdit";
 import * as DB from "@shared/db";
 import { REGISTER_TYPES } from "@shared/db/rows";
-import { Filter, FilterOperator } from "@shared/http";
+import { Filter } from "@shared/http";
 import { useParams } from "react-router-dom";
 import { REGISTER_TYPE_DESCRIPTIONS } from "@/constants/registers";
+import { AppNavbarLink } from "@/app/navbar/AppNavbarLink";
 
 export type ClientRegister = DB.Rows.Register;
 
@@ -93,6 +94,16 @@ export default function PageRegisters({
             <br />
             <Text color="gray">
                 {registerType && REGISTER_TYPE_DESCRIPTIONS[registerType]}
+            </Text>
+            <Text color="blue.fg">
+                {registerType === "Tymczasowe (6743.5)" && (
+                    <AppNavbarLink
+                        to="/ZARZADZENIE_STAROSTY_CZLUCHOWSKIEGO_6-2022.pdf"
+                        target="_blank"
+                    >
+                        Zarządzenie
+                    </AppNavbarLink>
+                )}
             </Text>
             <br />
             <RegisterTableEdit

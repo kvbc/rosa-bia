@@ -20,9 +20,14 @@ export const AppNavbarLinkEx = ({
         <AppNavbarLink
             key={label}
             to={path}
+            overflow="visible"
+            outlineStyle="solid"
+            outlineColor="blue.900"
+            outlineWidth="0px"
             {...(isCurrent && {
+                backgroundColor: "blue.900",
                 // color: "blue.50",
-                backgroundColor: "blue.700",
+                outlineWidth: "3px",
                 // padding: "0.5",
                 textDecoration: "underline",
             })}

@@ -131,8 +131,10 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
 
     const isEmptyDate = type === "date" && value === "";
     const isEmptyNumber = type === "number" && value === 0;
-    const isEmptyString = type === "text" && (value === "" || value === "0");
-    const isEmptySelect = type === "select" && (value === "-" || value == 1);
+    const isEmptyString =
+        type === "text" && (value === "" || value === "0" || value === "-");
+    const isEmptySelect =
+        type === "select" && (value === "-" || value == 1 || value == 0);
     const hasError =
         (shouldHighlightError ?? true) &&
         (isEmptyDate || isEmptyNumber || isEmptyString || isEmptySelect);

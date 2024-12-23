@@ -1,2 +1,4 @@
 # scripts sql output
 ./scripts/*.sql
+
+./logs/

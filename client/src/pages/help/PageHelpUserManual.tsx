@@ -10,7 +10,7 @@ export function PageHelpUserManual() {
                 </Box>
                 <Heading>Instrukcja obsługi</Heading>
             </HStack>
-            <Text>Do zrobienia ...</Text>
+            <Text> ...</Text>
         </>
     );
 }

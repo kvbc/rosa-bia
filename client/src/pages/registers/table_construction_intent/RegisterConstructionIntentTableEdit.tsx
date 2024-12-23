@@ -360,13 +360,13 @@ export default function RegisterConstructionIntentTableEdit(
 
     // const pnbConstructionIntent = constructionGroup?.name;
     let pnbConstructionIntent = "";
-    if (constructionSection) {
+    if (constructionSection && constructionSection.name !== "-") {
         pnbConstructionIntent += constructionSection.name;
     }
-    if (constructionDivision) {
+    if (constructionDivision && constructionDivision.name !== "-") {
         pnbConstructionIntent += " " + constructionDivision.name;
     }
-    if (constructionGroup) {
+    if (constructionGroup && constructionGroup.name !== "-") {
         pnbConstructionIntent += " " + constructionGroup.name;
     }
     if (pnbConstructionIntent === "") {
@@ -375,8 +375,9 @@ export default function RegisterConstructionIntentTableEdit(
 
     useEffect(() => {
         if (
-            row.object_custom_construction_intent === "" ||
-            row.object_custom_construction_intent === "-"
+            row.object_custom_construction_intent.trim() === "" ||
+            row.object_custom_construction_intent.trim() === "-" || 
+            pnbConstructionIntent.trim().includes(row.object_custom_construction_intent.trim())
         ) {
             // FIXME yeah
             setRow((row) => ({

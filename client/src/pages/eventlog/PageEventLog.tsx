@@ -11,7 +11,7 @@ export const PageEventLog: React.FC = () => {
                     Dziennik zdarzeń
                 </HStack>
             </Heading>
-            <Text>Do zrobienia ...</Text>
+            <Text> ...</Text>
         </>
     );
 };

@@ -260,10 +260,10 @@ export const registerShapeObject = z.strictObject({
     app_submission_date: z.string(),
     app_investor_id: z.number(),
     app_decision_type: registerDecisionTypeShape,
-    app_decision_number: z.number(),
+    app_decision_number: z.string(),
     app_decision_issue_date: z.string(),
     app_resolution_type: registerResolutionTypeShape,
-    app_resolution_number: z.number(),
+    app_resolution_number: z.string(),
     app_resolution_issue_date: z.string(),
     app_construction_journal_type: registerConstructionJournalTypeShape,
 

@@ -45,14 +45,14 @@ export default function RegisterTableEdit({
 
             assigned_employee_id: 1,
 
-            app_number: "0",
+            app_number: "-",
             app_submission_date: "",
             app_investor_id: 1,
             app_decision_type: "-",
-            app_decision_number: 0,
+            app_decision_number: "-",
             app_decision_issue_date: "",
             app_resolution_type: "-",
-            app_resolution_number: 0,
+            app_resolution_number: "-",
             app_resolution_issue_date: "",
             app_construction_journal_type: "Elektroniczny",
 
@@ -192,14 +192,14 @@ export default function RegisterTableEdit({
                 (row) => DB.Rows.getRegisterDecisionTypes(row.type),
                 (type) => ({ value: type, label: type })
             ),
-            { rowKey: "app_decision_number", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "app_decision_number", type: "text", isFilterable: true }, // prettier-ignore
             { rowKey: "app_decision_issue_date", type: "date", isFilterable: true }, // prettier-ignore
             getSelectRowInputProps(
                 "app_resolution_type",
                 (row) => DB.Rows.getRegisterResolutionTypes(row.type),
                 (type) => ({ value: type, label: type })
             ),
-            { rowKey: "app_resolution_number", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "app_resolution_number", type: "text", isFilterable: true }, // prettier-ignore
             { rowKey: "app_resolution_issue_date", type: "date", isFilterable: true }, // prettier-ignore
             getSelectRowInputProps(
                 "app_construction_journal_type",

@@ -82,10 +82,10 @@ create table registers(
     app_submission_date date not null, -- data zlozenia
     app_investor_id integer not null,
     app_decision_type text,
-    app_decision_number integer not null,
+    app_decision_number text not null,
     app_decision_issue_date date not null, -- data wydania decyzji wniosku
     app_resolution_type text,
-    app_resolution_number integer not null,
+    app_resolution_number text not null,
     app_resolution_issue_date date not null, -- data wydania rozstrzygniecia
     app_construction_journal_type text not null, -- typ dziennika budowy
 

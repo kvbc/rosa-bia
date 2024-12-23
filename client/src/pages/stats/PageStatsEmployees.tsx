@@ -10,7 +10,7 @@ export function PageStatsEmployees() {
                     Przydział
                 </HStack>
             </Heading>
-            <Text>Do zrobienia ...</Text>
+            <Text> ...</Text>
         </>
     );
 }

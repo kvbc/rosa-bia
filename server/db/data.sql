@@ -8,7 +8,13 @@
 -- 
 
 insert into investors values
-    (null, '-', '-');
+    (null, '-', '-'),
+    -- https://mail.google.com/mail/u/0/#starred/FMfcgzQXKhHPMFQHSvXQqXhwQQFGlGzh
+    (null, 'IVGROUP VALERII LAZARIEV', '-'),
+    (null, 'Estimet Sp. z o.o.', '-'),
+    (null, 'Hanna i Piotr Kalinowscy', '-'),
+    (null, 'Piotr Staszków', '-'),
+    (null, 'Magdalena i Piotr Majer', '-');
 -- insert into investors values
 --     (null, '"ODEJEWSKI - ODAN" Sp.  Z o.o.', 'blah blah blah'),
 --     (null, '"ROLA" Sp. z o.o.', 'blah blah blah'),
@@ -193,8 +199,8 @@ insert into registers(
     '69',
     '2022-12-19',
     1,
-    'Inne rozstrzygnięcie', 420, '2019-02-05',
-    'Bez rozpatrzenia', 2137, '2011-07-23',
+    'Inne rozstrzygnięcie', '420', '2019-02-05',
+    'Bez rozpatrzenia', '2137', '2011-07-23',
     'Elektroniczny',
 
     1,
@@ -216,7 +222,7 @@ insert into registers(
     '1999-12-19',
     1,
 
-    'Costam', 'od kogostam', 'ZG.123.KG', '1999-12-19', '2000-12-19', '2001-12-19', 'brak'
+    '', '', '', '', '', '', ''
 ), (
     null,
     'PnB (6740)',
@@ -226,8 +232,8 @@ insert into registers(
     '69420',
     '2022-12-19',
     2,
-    'Inne rozstrzygnięcie', 420, '2019-02-05',
-    'Bez rozpatrzenia', 2137, '2011-07-23',
+    'Inne rozstrzygnięcie', '420', '2019-02-05',
+    'Bez rozpatrzenia', '2137', '2011-07-23',
     'Elektroniczny',
 
     1,
@@ -249,7 +255,7 @@ insert into registers(
     '1999-12-19',
     1,
 
-    'Costam', 'od kogostam', 'ZG.123.KG', '1999-12-19', '2000-12-19', '2001-12-19', 'brak'
+    '', '', '', '', '', '', ''
 ), (
     null,
     'PnB (6740)',
@@ -259,8 +265,8 @@ insert into registers(
     '2137',
     '2022-12-19',
     3,
-    'Inne rozstrzygnięcie', 420, '2019-02-05',
-    'Bez rozpatrzenia', 2137, '2011-07-23',
+    'Inne rozstrzygnięcie', '420', '2019-02-05',
+    'Bez rozpatrzenia', '2137', '2011-07-23',
     'Elektroniczny',
 
     1,
@@ -282,7 +288,7 @@ insert into registers(
     '1999-12-19',
     1,
 
-    'Costam', 'od kogostam', 'ZG.123.KG', '1999-12-19', '2000-12-19', '2001-12-19', 'brak'
+    '', '', '', '', '', '', ''
 ), (
     null,
     'PnB (6740)',
@@ -292,8 +298,8 @@ insert into registers(
     '666',
     '2023-12-19',
     4,
-    'Inne rozstrzygnięcie', 420, '2019-02-05',
-    'Bez rozpatrzenia', 2137, '2011-07-23',
+    'Inne rozstrzygnięcie', '420', '2019-02-05',
+    'Bez rozpatrzenia', '2137', '2011-07-23',
     'Elektroniczny',
 
     1,
@@ -315,7 +321,7 @@ insert into registers(
     '1999-12-19',
     1,
 
-    'Costam', 'od kogostam', 'ZG.123.KG', '1999-12-19', '2000-12-19', '2001-12-19', 'brak'
+    '', '', '', '', '', '', ''
 ), (
     null,
     'PnB (6740)',
@@ -325,8 +331,8 @@ insert into registers(
     '619',
     '2023-12-19',
     5,
-    'Inne rozstrzygnięcie', 420, '2019-02-05',
-    'Bez rozpatrzenia', 2137, '2011-07-23',
+    'Inne rozstrzygnięcie', '420', '2019-02-05',
+    'Bez rozpatrzenia', '2137', '2011-07-23',
     'Elektroniczny',
 
     1,
@@ -348,7 +354,137 @@ insert into registers(
     '1999-12-19',
     1,
 
-    'Costam', 'od kogostam', 'ZG.123.KG', '1999-12-19', '2000-12-19', '2001-12-19', 'brak'
+    '', '', '', '', '', '', ''
+),
+--
+-- https://mail.google.com/mail/u/0/#starred/FMfcgzQXKhHPMFQHSvXQqXhwQQFGlGzh
+--
+(
+    null, 'Tymczasowe (6743.5)', 1,
+    'BiA.6743.2.114.2023', '2023-04-13', 2,
+    'Sprzeciwu', '-', '2024-07-18', -- dec
+    '-', '-', '', -- res
+    'Elektroniczny',
+
+    0,
+    'Budowa obiektu tymczasowego niepołączonego stałe z gruntem – obiekt malej gastronomii zlokalizowanego na działce nr 87/7 w m. Człuchów, ul. Rynek',
+    '-', '-',
+    0, '',
+    FALSE, FALSE,
+    0, 0, 0, 0, 0,
+    '', '',
+    0, FALSE,
+    '2023-04-13', '2023-09-31',
+    'Budynek',
+
+    0, '', 0,
+
+    '', '', '', '', '', '', ''
+), (
+    null, 'Tymczasowe (6743.5)', 1,
+    'BiA.6743.2.276.2023', '2023-08-29', 3,
+    'Pozytywna', '41.2024', '2024-02-27', -- dec
+    '-', '-', '', -- res
+    'Elektroniczny',
+
+    0,
+    'Budowa tymczasowego obiektu budowlanego – hali namiotowej – nietrwale związanej z gruntem na okres 180 dni 693/11 obr. Koczała, gm. Koczała',
+    '-', '-',
+    0, '',
+    FALSE, FALSE,
+    0, 0, 0, 0, 0,
+    '', '',
+    0, FALSE,
+    '2023-09-11', '2024-03-09',
+    'Budynek',
+
+    0, '', 0,
+
+    '', '', '', '', '', '', ''
+), (
+    null, 'Tymczasowe (6743.5)', 1,
+    'BiA.6743.2.337.2023.ED', '2023-11-08', 4,
+    '-', '-', '', -- dec
+    '-', '-', '', -- res
+    'Elektroniczny',
+
+    0,
+    'Budowa budynku tymczasowego na okres 180dni tymczasowa ekspozycja, niepołączona trwale z gruntem o pow.zab. 69,82m2 na dz. Nr 417/25 obr. Nieżywięć, gm. Człuchów',
+    '-', '-',
+    0, '',
+    FALSE, FALSE,
+    0, 0, 0, 0, 0,
+    '', '',
+    0, FALSE,
+    '2023-11-22', '2024-05-20',
+    'Budynek',
+
+    0, '', 0,
+
+    '', '', '', '', '', '', ''
+), (
+    null, 'Tymczasowe (6743.5)', 1,
+    'BiA.6743.2.104.2023', '2024-05-10', 5,
+    '-', '-', '', -- dec
+    '-', '-', '', -- res
+    'Elektroniczny',
+
+    0,
+    'Budowa budynku tymczasowego o funkcji handlowo-usługowej niepołączonym trwale z gruntem na dz. nr 2/19 w m. Człuchów.',
+    '-', '-',
+    0, '',
+    FALSE, FALSE,
+    0, 0, 0, 0, 0,
+    '', '',
+    0, FALSE,
+    '2024-07-03', '2024-09-30',
+    'Budynek',
+
+    0, '', 0,
+
+    '', '', '', '', '', '', ''
+), (
+    null, 'Tymczasowe (6743.5)', 1,
+    'BiA.6743.2.157.2024', '2024-07-09', 4,
+    '-', '-', '', -- dec
+    '-', '-', '', -- res
+    'Elektroniczny',
+
+    0,
+    'Budynek tymczasowy ekspozycyjny niepołączony trwale z gruntem o pow.zab 69,82 m2 na okres na dz. Nr 417/25 obr. Niezywięć, gm. Człuchów',
+    '-', '-',
+    0, '',
+    FALSE, FALSE,
+    0, 0, 0, 0, 0,
+    '', '',
+    0, FALSE,
+    '2024-07-30', '2025-01-27',
+    'Budynek',
+
+    0, '', 0,
+
+    '', '', '', '', '', '', ''
+), (
+    null, 'Tymczasowe (6743.5)', 1,
+    'BiA.6743.2.180.2024', '2024-08-09', 6,
+    '-', '-', '', -- dec
+    '-', '-', '', -- res
+    'Elektroniczny',
+
+    0,
+    'Postawienie tymczasowego kontenera o funkcji handlowej nie połączonego trwale z gruntem na dz. nr 334/1 obręb Przechlewo, gm. Przechlewo',
+    '-', '-',
+    0, '',
+    FALSE, FALSE,
+    0, 0, 0, 0, 0,
+    '', '',
+    0, FALSE,
+    '2024-09-02', '2025-03-01',
+    'Budynek',
+
+    0, '', 0,
+
+    '', '', '', '', '', '', ''
 );
 
 -- 
@@ -387,3 +523,27 @@ insert into info_boards values(null, 'testowa zawartosc');
 --     (null, 'BiP (6743.4)', 'Przebudowa'),
 --     (null, 'BiP (6743.4)', 'Instalacja'),
 --     (null, 'BiP (6743.4)', 'Inne');
+
+--
+-- Other
+--
+-- table registers_admin_actions( -- rejestry: czynnosci administracyjne
+--     id integer primary key autoincrement,
+--     `type` text not null,
+--     register_id integer not null,
+--     `select` boolean not null, -- wybor
+--     deadline integer not null, -- termin
+--     letter_date date not null, -- data pisma
+--     receipt_date date, -- data odebrania
+--     reply_date date, -- data odpowiedzi
+--     foreign key(register_id) references registers(id),
+--     CONSTRAINT uq UNIQUE(register_id, `type`) ON CONFLICT REPLACE
+-- );
+--
+-- https://mail.google.com/mail/u/0/#starred/FMfcgzQXKhHPMFQHSvXQqXhwQQFGlGzh
+--
+insert into registers_admin_actions values (
+    null, 'Kontrola', 10,
+    TRUE, 0,
+    '2024-07-25', '', ''
+);

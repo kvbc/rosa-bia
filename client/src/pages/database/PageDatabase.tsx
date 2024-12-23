@@ -10,7 +10,7 @@ export function PageDatabase() {
                     Zarządzanie bazą danych
                 </HStack>
             </Heading>
-            <Text>Do zrobienia ...</Text>
+            <Text> ...</Text>
         </>
     );
 }

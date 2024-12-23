@@ -25,8 +25,11 @@ export default function PageHelpProgramInfo() {
                             R.O.S.A. BiA
                             <br />
                             <Text fontWeight="normal">
-                                Rejestr Ogólnych Spraw Administracyjnych
-                                wydziału Budownictwa i Architektury
+                                <strong>R</strong>ejestr <strong>O</strong>
+                                gólnych <strong>S</strong>praw{" "}
+                                <strong>A</strong>dministracyjnych wydziału{" "}
+                                <strong>B</strong>udownictwa <strong>i</strong>{" "}
+                                <strong>A</strong>rchitektury
                             </Text>
                         </Text>
                     }
@@ -89,8 +92,9 @@ export default function PageHelpProgramInfo() {
                         użytkowników
                     </List.Item>
                     <List.Item>
-                        Tworzenie automatycznych raportów i statystyk, m.in.:
-                        B-05, B-06, GUNB-3
+                        Tworzenie automatycznych raportów i statystyk, m.in.:{" "}
+                        <strong>B-05</strong>, <strong>B-06</strong>,{" "}
+                        <strong>GUNB-3</strong>
                     </List.Item>
                     <List.Item>
                         Wyszukiwanie uczestników procesu inwestycyjnego, działek
@@ -99,6 +103,30 @@ export default function PageHelpProgramInfo() {
                     <List.Item>
                         Ułatwienie koordynacji zlecań i planowanych zadań między
                         administratorem a użytkownikiem programu.
+                    </List.Item>
+                </List.Root>
+            </VStack>
+            <br />
+            <VStack alignItems="start" gap="1">
+                <Text>Dodatkowe pomocne funkcje:</Text>
+                <List.Root>
+                    <List.Item>
+                        możliwość wydruku tabelarycznego zbiorczego z danego
+                        rejestru, (Dane wniosku, dane inwestora, zamierzenie
+                        budowlane, informacja o postępowaniu),
+                    </List.Item>
+                    <List.Item>
+                        informacja o nadchodzących terminach w danym
+                        postępowaniu,
+                    </List.Item>
+                    <List.Item>
+                        kalendarz z możliwością zapisywania nadchodzących
+                        zdarzeń dla użytkownika,
+                    </List.Item>
+                    <List.Item>
+                        wyszukiwanie z pojedynczego lub dla całego zbioru
+                        rejestrów, informacji o:: inwestorze, nr działki,
+                        zamierzeniu budowlanym,
                     </List.Item>
                 </List.Root>
             </VStack>
