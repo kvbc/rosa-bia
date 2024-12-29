@@ -13,6 +13,7 @@ export const investorShape = z.strictObject({
     id: z.number(),
     name: z.string(),
     address: z.string(),
+    is_legal: z.boolean(),
 });
 
 export type Investor = z.infer<typeof investorShape>;

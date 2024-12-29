@@ -15,6 +15,7 @@ export const employeeShape = z.object({
     password: z.string(),
     admin: z.number(),
     has_password: z.boolean(),
+    email: z.string().optional(),
 });
 
 export type Employee = z.infer<typeof employeeShape>;

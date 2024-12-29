@@ -8,12 +8,16 @@ import { TableEditHeader } from "@/components/table_edit/TableEdit";
 export default function PageInvestors() {
     const dbTable = useDBTable<DB.Rows.Investor>("investors");
 
-    const headers = useMemo<TableEditHeader[]>(() => ["Inwestor", "Adres"], []);
+    const headers = useMemo<TableEditHeader[]>(
+        () => ["Inwestor", "Adres", "Osoba prawna"],
+        []
+    );
 
     const defaultRow = useMemo<DBTableEditDefaultRow<DB.Rows.Investor>>(
         () => ({
             address: "",
             name: "",
+            is_legal: true,
         }),
         []
     );
@@ -30,6 +34,12 @@ export default function PageInvestors() {
                 type: "text",
                 rowKey: "address",
                 placeholder: "Adres",
+                isFilterable: true,
+            },
+            {
+                type: "checkbox",
+                rowKey: "is_legal",
+                placeholder: "Osoba prawna",
                 isFilterable: true,
             },
         ],

@@ -11,6 +11,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "../ui/dialog";
+import { MyTableContext } from "@/contexts/components/MyTableContext";
+import TableEditContext from "@/contexts/components/TableEditContext";
 
 export const TableEditMentionButton = ({
     children,
@@ -33,7 +35,10 @@ export const TableEditMentionButton = ({
     }
 
     return (
-        <DialogRoot size="xl">
+        <DialogRoot
+            size="xl"
+            closeOnInteractOutside={false} // some weird bugs without this
+        >
             <DialogTrigger asChild>
                 <IconButton variant="plain" size="2xs">
                     <Tooltip content="Wzmianki">{icon}</Tooltip>
@@ -45,7 +50,13 @@ export const TableEditMentionButton = ({
                     <DialogTitle>Wzmianki</DialogTitle>
                     <Text color="gray">{subtitle}</Text>
                 </DialogHeader>
-                <DialogBody>{children}</DialogBody>
+                <DialogBody>
+                    <MyTableContext.Provider value={0}>
+                        <TableEditContext.Provider value={null}>
+                            {children}
+                        </TableEditContext.Provider>
+                    </MyTableContext.Provider>
+                </DialogBody>
             </DialogContent>
         </DialogRoot>
     );

@@ -9,10 +9,12 @@ import { MyTableHeader } from "@/components/my_table/MyTableHeader";
 import { FaMap } from "react-icons/fa6";
 import { HStack } from "@chakra-ui/react";
 import useDBTable from "@/hooks/useDBTable";
+import { RegisterPlotsMentionButton } from "./RegisterPlotsMentionButton";
 
 export default function RegisterPlotsDataTableEdit({
     row,
     plotType,
+    editable,
 }: TableEditRowContentComponentProps<ClientRegister> & {
     plotType: DB.Rows.RegisterPlotType;
 }) {
@@ -57,10 +59,15 @@ export default function RegisterPlotsDataTableEdit({
                 <HStack gap="1">
                     <FaMap />
                     {plotTypeHeaders[plotType]}
+                    <RegisterPlotsMentionButton
+                        subtitle={plotTypeHeaders[plotType]}
+                        plotType={plotType}
+                        registerRowID={row.id}
+                    />
                 </HStack>
             </MyTableHeader>,
         ],
-        [plotType, plotTypeHeaders]
+        [row.id, plotType, plotTypeHeaders]
     );
 
     return (
@@ -70,6 +77,7 @@ export default function RegisterPlotsDataTableEdit({
             rows={registerPlotsDBTable.rows.filter(
                 (fRow) => fRow.register_id === row.id && fRow.type === plotType
             )}
+            editable={editable}
             defaultRow={defaultRow}
             showEmptyState={false}
             headers={headers}

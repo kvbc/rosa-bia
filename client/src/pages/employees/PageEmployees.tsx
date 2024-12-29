@@ -9,7 +9,7 @@ export default function PageEmployees() {
     const dbTable = useDBTable<DB.Rows.Employee>("employees");
 
     const headers = useMemo<TableEditHeader[]>(
-        () => ["Nazwa", "Hasło", "Administrator"],
+        () => ["Nazwa", "E-Mail", "Hasło", "Administrator"],
         []
     );
 
@@ -28,6 +28,10 @@ export default function PageEmployees() {
             {
                 type: "text",
                 rowKey: "name",
+            },
+            {
+                type: "email",
+                rowKey: "email",
             },
             {
                 type: "text",

@@ -6,12 +6,10 @@
 
 Ultra Major
 
--   [1] info o roznych info (np. dzialkach) w innych rejestrach (tzw. wzmianki)
--   [1] dzienniki budowy (ta lista rozwijana tez)
--   [1] postępowanie admin duplication bug
--   [2] generowanie bip tabelka: osoba prawna, fizyczna (lista rozwijana)
--   [3] rejestr uzupelniajacy zrobic (email)
+-   [1] wzmianki o działkach
+-   [1] dziennik i jego wzmianki
 -   [ ] dzialki (dodac gmina, obreb, etc)
+-   [ ] FINALNE TESTY (postępowanie admin duplication bug)
 
 Major
 

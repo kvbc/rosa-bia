@@ -101,20 +101,16 @@ export default function RegisterDataTableEdit({
                 offset={true}
                 {...restProps}
             >
-                <MyTableContext.Provider value={0}>
-                    <TableEditContext.Provider value={null}>
-                        <RegisterTableEdit
-                            disableRowAdding={true}
-                            initialRegistersFilters={[
-                                {
-                                    key: rowKey,
-                                    operator: "like",
-                                    value: `%${row[rowKey]}%`, // includes
-                                },
-                            ]}
-                        />
-                    </TableEditContext.Provider>
-                </MyTableContext.Provider>
+                <RegisterTableEdit
+                    disableRowAdding={true}
+                    initialRegistersFilters={[
+                        {
+                            key: rowKey,
+                            operator: "like",
+                            value: `%${row[rowKey]}%`, // includes
+                        },
+                    ]}
+                />
             </TableEditMentionButton>
         );
     };
@@ -136,7 +132,7 @@ export default function RegisterDataTableEdit({
                         <Tc>{inputs.app_submission_date}</Tc>
                     </Tr>
                     <Tr>
-                        <Tc>Nr decyzji PnB</Tc>
+                        <Tc>Nr decyzji / zaświadczenia</Tc>
                         <Tc>{inputs.app_number}</Tc>
                     </Tr>
                     <Tr>

@@ -48,6 +48,7 @@ export default function RegisterTableEdit({
             app_number: "-",
             app_submission_date: "",
             app_investor_id: 1,
+            app_new_investor_id: 1,
             app_decision_type: "-",
             app_decision_number: "-",
             app_decision_issue_date: "",
@@ -184,6 +185,11 @@ export default function RegisterTableEdit({
             { rowKey: "app_submission_date", type: "date", isFilterable: true }, // prettier-ignore
             getSelectRowInputProps(
                 "app_investor_id",
+                investorsDBTable.rows,
+                (row) => ({ value: row.id, label: row.name })
+            ),
+            getSelectRowInputProps(
+                "app_new_investor_id",
                 investorsDBTable.rows,
                 (row) => ({ value: row.id, label: row.name })
             ),

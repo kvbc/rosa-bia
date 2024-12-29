@@ -6,18 +6,24 @@ import { TableEditRowContentComponentProps } from "@/components/table_edit/row/T
 import { ClientRegister } from "../PageRegisters";
 import { FaRuler } from "react-icons/fa6";
 import { HStack } from "@chakra-ui/react";
+import { BIPTableGenerateDialog } from "./BIPTableGenerateDialog";
 
 export default function RegisterCharParamsTableEdit(
     props: TableEditRowContentComponentProps<ClientRegister>
 ) {
-    const { inputs } = props;
+    const { inputs, row } = props;
 
     return (
         <Tb height="full" isCollapsible>
             <Th colSpan={2}>
                 <HStack gap="1">
                     <FaRuler />
-                    Charakterystyczne parametry
+                    {row.type === "Uzupełniający"
+                        ? "Nowe charakterystyczne parametry"
+                        : "Charakterystyczne parametry"}
+                    {row.type === "BiP (6743.4)" && (
+                        <BIPTableGenerateDialog row={row} />
+                    )}
                 </HStack>
             </Th>
             <Tr>

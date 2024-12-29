@@ -259,6 +259,7 @@ export const registerShapeObject = z.strictObject({
     app_number: z.string(),
     app_submission_date: z.string(),
     app_investor_id: z.number(),
+    app_new_investor_id: z.number(),
     app_decision_type: registerDecisionTypeShape,
     app_decision_number: z.string(),
     app_decision_issue_date: z.string(),
@@ -328,6 +329,7 @@ export const REGISTER_KEY_TABLE_RELATIONS: DB.RowKeyTableRelations<Register> = {
     assigned_employee_id: "employees",
     object_construction_law_intent_id: "construction_law_intents",
     app_investor_id: "investors",
+    app_new_investor_id: "investors",
     object_construction_spec_id: "construction_specs",
     object_street_id: "streets",
 } as const;

@@ -248,14 +248,15 @@ sql_streets = sql_streets[:-2] + ";"
 
 df = pandas.read_excel('BiA_KOMBAJN_NACZELNIK.ods', engine="odf", sheet_name="Inwestorzy")
 
-sql_investors = "insert into investors(`id`, `name`, `address`) values\n"
+sql_investors = "insert into investors(`id`, `name`, `address`, `is_legal`) values\n"
 
 for _, row in df.iterrows():
     investor_name = filter_name(row.INWESTOR)
     address = row.adres
+    is_legal_person = True
 
     if is_valid_value(investor_name):
-        sql_investors += f"\t(null, '{investor_name}', '{address}'),\n"
+        sql_investors += f"\t(null, '{investor_name}', '{address}', {is_legal_person}),\n"
 
 sql_investors = sql_investors[:-2] + ";"
 

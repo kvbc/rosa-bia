@@ -1353,32 +1353,32 @@ insert into streets(`id`, `name`, `place_id`) values
 ------------------------------------
 
 
-insert into investors(`id`, `name`, `address`) values
-	(null, '"ODEJEWSKI - ODAN" Sp.  Z o.o.', '77-300 Człuchów, Sieroczyn 4a'),
-	(null, '"ROLA" Sp. z o.o.', '77-300 Człuchów, ul. Słowackiego 19'),
-	(null, '"SZCZEPAN" J. SZCZEPAŃSKI i Z. SZCZEPAŃSKI', '77-300 Człuchów, ul. Słowackiego 13'),
-	(null, '„POLSTYR” Sp. z o. o.', '77-300 Człuchów, ul. Koszalińska 4'),
-	(null, 'Powiat Człuchowski', '77-300 Człuchów, al. Wojska Polskiego 1'),
-	(null, 'Gmina Miejska Człuchów', '77-300 Człuchów, al. Wojska Polskiego 1'),
-	(null, 'Gmina Człuchów', '77-300 człuchów, ul. Szczecińska 33'),
-	(null, 'Wójt Człuchowa', '77-300 człuchów, ul. Szczecińska 33'),
-	(null, 'Burmistrz Miasta Człuchów', '77-300 Człuchów, al. Wojska Polskiego 1'),
-	(null, 'Gmina Czarne', '77-330 Czarne, ul. Moniuszki 12'),
-	(null, 'Burmistrz Czarnego', '77-330 Czarne, ul. Moniuszki 12'),
-	(null, 'Gmina Debrzno', '77-310 Debrzno, ul. Traugutta 2'),
-	(null, 'Burmistrz Debrzna', '77-310 Debrzno, ul. Traugutta 2'),
-	(null, 'PINB w Człuchowie', '77-300 Człuchów, al. Wojska Polskiego 5'),
-	(null, 'Gmina Przechlewo', '77-320 Przechewo, ul. Człuchowska 26'),
-	(null, 'Wójt Gminy Przechlewo', '77-320 Przechewo, ul. Człuchowska 26'),
-	(null, 'Zakład Karny w Czarnem', '77-330 Czarne, ul. Pomorska 1 '),
-	(null, 'Nadleśnictwo Czarnobór ', '78-400 Szczecinek, Czarnobór 1 '),
-	(null, 'GABI BIS JERCZYŃSKI Sp. K', '63-645 Łęka Opatowska, Piaski 9a'),
-	(null, 'Ośrodek Sportu i Rekreacji  w Człuchowie', '77-300 Człuchów, al. Wojska Polskiego 7'),
-	(null, 'POLTAREX Polskie Drewno Sp. z o.o. ', '77-320 Szczytno, Szczytno 24'),
-	(null, '"TELMAX" E.R. Gliszczyńscy', '77-300 Człuchów, ul. Batorego 2'),
-	(null, 'Spódzielnia Mieszkaniowa Lokatorsko-Własnościowa "Pomorzanka"', '77-300 Człuchów, os. Piastowskie 1'),
-	(null, 'Zarząd Powiatu Człuchowskiego', '77-300 Człuchów, al. Wojska Polskiego 1'),
-	(null, 'STEC KARTON Sp. z o.o.', '77-300 Człuchów, ul. Koszalińska 25');
+insert into investors(`id`, `name`, `address`, `is_legal`) values
+	(null, '"ODEJEWSKI - ODAN" Sp.  Z o.o.', '77-300 Człuchów, Sieroczyn 4a', True),
+	(null, '"ROLA" Sp. z o.o.', '77-300 Człuchów, ul. Słowackiego 19', True),
+	(null, '"SZCZEPAN" J. SZCZEPAŃSKI i Z. SZCZEPAŃSKI', '77-300 Człuchów, ul. Słowackiego 13', True),
+	(null, '„POLSTYR” Sp. z o. o.', '77-300 Człuchów, ul. Koszalińska 4', True),
+	(null, 'Powiat Człuchowski', '77-300 Człuchów, al. Wojska Polskiego 1', True),
+	(null, 'Gmina Miejska Człuchów', '77-300 Człuchów, al. Wojska Polskiego 1', True),
+	(null, 'Gmina Człuchów', '77-300 człuchów, ul. Szczecińska 33', True),
+	(null, 'Wójt Człuchowa', '77-300 człuchów, ul. Szczecińska 33', True),
+	(null, 'Burmistrz Miasta Człuchów', '77-300 Człuchów, al. Wojska Polskiego 1', True),
+	(null, 'Gmina Czarne', '77-330 Czarne, ul. Moniuszki 12', True),
+	(null, 'Burmistrz Czarnego', '77-330 Czarne, ul. Moniuszki 12', True),
+	(null, 'Gmina Debrzno', '77-310 Debrzno, ul. Traugutta 2', True),
+	(null, 'Burmistrz Debrzna', '77-310 Debrzno, ul. Traugutta 2', True),
+	(null, 'PINB w Człuchowie', '77-300 Człuchów, al. Wojska Polskiego 5', True),
+	(null, 'Gmina Przechlewo', '77-320 Przechewo, ul. Człuchowska 26', True),
+	(null, 'Wójt Gminy Przechlewo', '77-320 Przechewo, ul. Człuchowska 26', True),
+	(null, 'Zakład Karny w Czarnem', '77-330 Czarne, ul. Pomorska 1 ', True),
+	(null, 'Nadleśnictwo Czarnobór ', '78-400 Szczecinek, Czarnobór 1 ', True),
+	(null, 'GABI BIS JERCZYŃSKI Sp. K', '63-645 Łęka Opatowska, Piaski 9a', True),
+	(null, 'Ośrodek Sportu i Rekreacji  w Człuchowie', '77-300 Człuchów, al. Wojska Polskiego 7', True),
+	(null, 'POLTAREX Polskie Drewno Sp. z o.o. ', '77-320 Szczytno, Szczytno 24', True),
+	(null, '"TELMAX" E.R. Gliszczyńscy', '77-300 Człuchów, ul. Batorego 2', True),
+	(null, 'Spódzielnia Mieszkaniowa Lokatorsko-Własnościowa "Pomorzanka"', '77-300 Człuchów, os. Piastowskie 1', True),
+	(null, 'Zarząd Powiatu Człuchowskiego', '77-300 Człuchów, al. Wojska Polskiego 1', True),
+	(null, 'STEC KARTON Sp. z o.o.', '77-300 Człuchów, ul. Koszalińska 25', True);
 
 
 ------------------------------------

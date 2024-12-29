@@ -8,13 +8,13 @@
 -- 
 
 insert into investors values
-    (null, '-', '-'),
+    (null, '-', '-', TRUE),
     -- https://mail.google.com/mail/u/0/#starred/FMfcgzQXKhHPMFQHSvXQqXhwQQFGlGzh
-    (null, 'IVGROUP VALERII LAZARIEV', '-'),
-    (null, 'Estimet Sp. z o.o.', '-'),
-    (null, 'Hanna i Piotr Kalinowscy', '-'),
-    (null, 'Piotr Staszków', '-'),
-    (null, 'Magdalena i Piotr Majer', '-');
+    (null, 'IVGROUP VALERII LAZARIEV', '-', TRUE),
+    (null, 'Estimet Sp. z o.o.', '-', TRUE),
+    (null, 'Hanna i Piotr Kalinowscy', '-', FALSE),
+    (null, 'Piotr Staszków', '-', FALSE),
+    (null, 'Magdalena i Piotr Majer', '-', FALSE);
 -- insert into investors values
 --     (null, '"ODEJEWSKI - ODAN" Sp.  Z o.o.', 'blah blah blah'),
 --     (null, '"ROLA" Sp. z o.o.', 'blah blah blah'),
@@ -154,6 +154,7 @@ insert into registers(
     app_number,
     app_submission_date,
     app_investor_id,
+    app_new_investor_id,
     app_decision_type, app_decision_number, app_decision_issue_date,
     app_resolution_type, app_resolution_number, app_resolution_issue_date,
     app_construction_journal_type,
@@ -198,7 +199,7 @@ insert into registers(
 
     '69',
     '2022-12-19',
-    1,
+    1, 1,
     'Inne rozstrzygnięcie', '420', '2019-02-05',
     'Bez rozpatrzenia', '2137', '2011-07-23',
     'Elektroniczny',
@@ -231,7 +232,7 @@ insert into registers(
 
     '69420',
     '2022-12-19',
-    2,
+    2, 1,
     'Inne rozstrzygnięcie', '420', '2019-02-05',
     'Bez rozpatrzenia', '2137', '2011-07-23',
     'Elektroniczny',
@@ -264,7 +265,7 @@ insert into registers(
 
     '2137',
     '2022-12-19',
-    3,
+    3, 1,
     'Inne rozstrzygnięcie', '420', '2019-02-05',
     'Bez rozpatrzenia', '2137', '2011-07-23',
     'Elektroniczny',
@@ -297,7 +298,7 @@ insert into registers(
 
     '666',
     '2023-12-19',
-    4,
+    4, 1,
     'Inne rozstrzygnięcie', '420', '2019-02-05',
     'Bez rozpatrzenia', '2137', '2011-07-23',
     'Elektroniczny',
@@ -330,7 +331,7 @@ insert into registers(
 
     '619',
     '2023-12-19',
-    5,
+    5, 1,
     'Inne rozstrzygnięcie', '420', '2019-02-05',
     'Bez rozpatrzenia', '2137', '2011-07-23',
     'Elektroniczny',
@@ -361,7 +362,7 @@ insert into registers(
 --
 (
     null, 'Tymczasowe (6743.5)', 1,
-    'BiA.6743.2.114.2023', '2023-04-13', 2,
+    'BiA.6743.2.114.2023', '2023-04-13', 2, 1,
     'Sprzeciwu', '-', '2024-07-18', -- dec
     '-', '-', '', -- res
     'Elektroniczny',
@@ -382,7 +383,7 @@ insert into registers(
     '', '', '', '', '', '', ''
 ), (
     null, 'Tymczasowe (6743.5)', 1,
-    'BiA.6743.2.276.2023', '2023-08-29', 3,
+    'BiA.6743.2.276.2023', '2023-08-29', 3, 1,
     'Pozytywna', '41.2024', '2024-02-27', -- dec
     '-', '-', '', -- res
     'Elektroniczny',
@@ -403,7 +404,7 @@ insert into registers(
     '', '', '', '', '', '', ''
 ), (
     null, 'Tymczasowe (6743.5)', 1,
-    'BiA.6743.2.337.2023.ED', '2023-11-08', 4,
+    'BiA.6743.2.337.2023.ED', '2023-11-08', 4, 1,
     '-', '-', '', -- dec
     '-', '-', '', -- res
     'Elektroniczny',
@@ -424,7 +425,7 @@ insert into registers(
     '', '', '', '', '', '', ''
 ), (
     null, 'Tymczasowe (6743.5)', 1,
-    'BiA.6743.2.104.2023', '2024-05-10', 5,
+    'BiA.6743.2.104.2023', '2024-05-10', 5, 1,
     '-', '-', '', -- dec
     '-', '-', '', -- res
     'Elektroniczny',
@@ -445,7 +446,7 @@ insert into registers(
     '', '', '', '', '', '', ''
 ), (
     null, 'Tymczasowe (6743.5)', 1,
-    'BiA.6743.2.157.2024', '2024-07-09', 4,
+    'BiA.6743.2.157.2024', '2024-07-09', 4, 1,
     '-', '-', '', -- dec
     '-', '-', '', -- res
     'Elektroniczny',
@@ -466,7 +467,7 @@ insert into registers(
     '', '', '', '', '', '', ''
 ), (
     null, 'Tymczasowe (6743.5)', 1,
-    'BiA.6743.2.180.2024', '2024-08-09', 6,
+    'BiA.6743.2.180.2024', '2024-08-09', 6, 1,
     '-', '-', '', -- dec
     '-', '-', '', -- res
     'Elektroniczny',
@@ -492,16 +493,16 @@ insert into registers(
 -- 
 
 insert into employees values
-    (null, '-', '-', 0),
-    (null, 'Elżbieta Dawidziak', '', 0),
-    (null, 'Krzysztof Czuryło', '', 0),
-    (null, 'Lucyna Spisak', '', 0),
-    (null, 'Edyta Drążek', '', 0),
-    (null, 'Małgorzata Marczak', '', 0),
-    (null, 'Roman Bębenek', '', 0),
-    (null, 'Marta Kozakiewicz', '', 0),
-    (null, 'Edyta Pałubicka', '', 0),
-    (null, 'Admin', '12345', 1);
+    (null, '-', '-', 0, ''),
+    (null, 'Elżbieta Dawidziak', '', 0, ''),
+    (null, 'Krzysztof Czuryło', '', 0, ''),
+    (null, 'Lucyna Spisak', '', 0, ''),
+    (null, 'Edyta Drążek', '', 0, ''),
+    (null, 'Małgorzata Marczak', '', 0, ''),
+    (null, 'Roman Bębenek', '', 0, ''),
+    (null, 'Marta Kozakiewicz', '', 0, ''),
+    (null, 'Edyta Pałubicka', '', 0, ''),
+    (null, 'Admin', '12345', 1, '');
 
 -- 
 -- Home

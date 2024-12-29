@@ -11,7 +11,7 @@
         "dev": "nodemon src/index.ts",
         "devlog": "powershell \"npm run dev | tee ../logs/server.log\"",
         "rebuild_db": "cd db && del db.db && sqlite3 -init schema.sql db.db \".read data.sql\" \".read odsgen.sql\" && cd ..",
-        "redev": "npm run rebuild_db && npm run dev"
+        "redev": "npm run rebuild_db && npm run devlog"
     },
     "keywords": [],
     "author": "",

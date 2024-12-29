@@ -284,7 +284,7 @@ export function TableEditRow<TRow extends TableEditRowType>({
         );
         if (isActionAddButtonDisabled) {
             return (
-                <Tooltip content="Aby dodać ten wpis, dodaj pierw wpis powyżej">
+                <Tooltip content="Aby dodać ten wpis, dodaj pierw wpis zawierający">
                     {button}
                 </Tooltip>
             );

@@ -36,7 +36,8 @@
         "src/**/*.ts",
         "src/**/*.tsx",
         "environment.d.ts",
-        "../shared/src/**/*.ts"
+        "../shared/src/**/*.ts",
+        "src/pages/registers/table_construction_intent/NotoSerif-Regular-normal.ts"
     ],
     "exclude": ["node_modules", "dist"]
 }

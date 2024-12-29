@@ -5,7 +5,8 @@
 create table investors(
     id integer primary key autoincrement,
     `name` text not null,
-    `address` text not null
+    `address` text not null,
+    `is_legal` boolean not null -- osoba fizyczna? (lub prawna)
 );
 
 -- 
@@ -81,6 +82,7 @@ create table registers(
     app_number text not null unique, -- numer wniosku
     app_submission_date date not null, -- data zlozenia
     app_investor_id integer not null,
+    app_new_investor_id integer not null, -- nowy inwestor (uzupelniajacy)
     app_decision_type text,
     app_decision_number text not null,
     app_decision_issue_date date not null, -- data wydania decyzji wniosku
@@ -124,6 +126,7 @@ create table registers(
 
     foreign key(assigned_employee_id) references employees(id),
     foreign key(app_investor_id) references investors(id),
+    foreign key(app_new_investor_id) references investors(id),
     foreign key(object_construction_spec_id) references construction_specs(id),
     foreign key(object_street_id) references streets(id),
     foreign key(object_construction_law_intent_id) references construction_law_intents(id)
@@ -158,7 +161,8 @@ create table employees(
     id integer primary key autoincrement,
     `name` text not null,
     `password` text not null,
-    `admin` boolean not null
+    `admin` boolean not null,
+    `email` text not null
 );
 
 -- 

@@ -28,7 +28,7 @@ export default function RegisterTableEditRowContent(
                     <HStack gap="1">
                         {ftoggles.type}
                         <FaBook />
-                        Typ Rejestru
+                        Typ rejestru
                     </HStack>
                 </MyTableHeader>
                 <MyTableHeader width="1/2">

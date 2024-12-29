@@ -28,7 +28,8 @@ export default function RegisterAdminProceduresTableEdit(
         getDaysPassed(Date.now(), row.app_submission_date)
     );
 
-    const showCharParamsTable = row.type === "PnB (6740)";
+    const showCharParamsTable = row.type === "PnB (6740)" || row.type === "Uzupełniający"; // prettier-ignore
+    const showNewRegisterData = row.type === "Uzupełniający";
 
     useEffect(() => {
         const trySetInfoState = (infoState: string | null | undefined) => {
@@ -133,6 +134,19 @@ export default function RegisterAdminProceduresTableEdit(
                         <Tr>
                             <Tc colSpan={2}>
                                 <RegisterCharParamsTableEdit {...props} />
+                            </Tc>
+                        </Tr>
+                    )}
+                    {showNewRegisterData && (
+                        <Tr>
+                            <Tc colSpan={2}>
+                                <Tb>
+                                    <Th colSpan={2}>Nowe dane do wniosku</Th>
+                                    <Tr>
+                                        <Tc>Nowy inwestor</Tc>
+                                        <Tc>{inputs.app_new_investor_id}</Tc>
+                                    </Tr>
+                                </Tb>
                             </Tc>
                         </Tr>
                     )}
