@@ -137,7 +137,13 @@ create table registers_plots( -- rejestry: dzialki
     `type` text not null,
     `plot` text not null,
     register_id integer not null,
-    foreign key(register_id) references registers(id)
+    commune_id integer not null,
+    place_id integer not null,
+    street_id integer not null,
+    foreign key(register_id) references registers(id),
+    foreign key(commune_id) references communes(id),
+    foreign key(place_id) references places(id),
+    foreign key(street_id) references streets(id)
 );
 
 create table registers_admin_actions( -- rejestry: czynnosci administracyjne
@@ -192,3 +198,14 @@ create table construction_law_intents(
     additional_requirements text not null, -- dodatkowe wymagania
     foreign key(category_id) references construction_law_categories(id)
 );
+
+-- 
+-- Calendar event
+-- 
+
+create table calendar_events(
+    id integer primary key autoincrement,
+    `title` text not null,
+    `start` date not null,
+    `end` text
+)

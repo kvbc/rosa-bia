@@ -201,32 +201,32 @@ export default function PageStatsB05() {
                     // rozbudowa
 
                     getRowsA([11, 12], "Rozbudowa").length,
-                    "-",
-                    "-",
+                    stats.reducePremisesCount(getRowsA([11, 12], "Rozbudowa")),
+                    stats.reduceUsableArea(getRowsA([11, 12], "Rozbudowa")),
 
                     getRowsB([11, 12], "Rozbudowa").length,
-                    "-",
-                    "-",
+                    stats.reducePremisesCount(getRowsB([11, 12], "Rozbudowa")),
+                    stats.reduceUsableArea(getRowsB([11, 12], "Rozbudowa")),
 
                     // przebudowa
 
                     getRowsA([11, 12], "Przebudowa").length,
-                    "-",
-                    "-",
+                    stats.reducePremisesCount(getRowsA([11, 12], "Przebudowa")),
+                    stats.reduceUsableArea(getRowsA([11, 12], "Przebudowa")),
 
                     getRowsB([11, 12], "Przebudowa").length,
-                    "-",
-                    "-",
+                    stats.reducePremisesCount(getRowsB([11, 12], "Przebudowa")),
+                    stats.reduceUsableArea(getRowsB([11, 12], "Przebudowa")),
 
                     // nowe
 
                     "",
-                    "-",
-                    "-",
+                    stats.reducePremisesCount(getRowsA([11, 12], "Budowa")),
+                    stats.reduceUsableArea(getRowsA([11, 12], "Budowa")),
 
                     "",
-                    "-",
-                    "-",
+                    stats.reducePremisesCount(getRowsB([11, 12], "Budowa")),
+                    stats.reduceUsableArea(getRowsB([11, 12], "Budowa")),
                 ];
                 for (let ix = 0; ix < 3; ix++) {
                     for (let iy = 0; iy < 6; iy++) {

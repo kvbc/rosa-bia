@@ -23,6 +23,7 @@ import {
     ProgressCircleRoot,
 } from "@/components/ui/progress-circle";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useStats } from "@/hooks/useStats";
 
 export default function PageStatsB06() {
     const minYear = 2019;
@@ -37,6 +38,8 @@ export default function PageStatsB06() {
     const [monthIndex, setMonthIndex] = useState<number>(0);
     const [pdfObjectURL, setPDFObjectURL] = useState<string | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
+
+    const stats = useStats();
 
     const getMonthName = useCallback((monthIndex: number) => {
         return [
@@ -118,16 +121,18 @@ export default function PageStatsB06() {
                     font,
                 });
 
+                const rows = stats.getRows(null, year, monthIndex, monthIndex);
+
                 // prettier-ignore
                 const table: (number | string)[] = [
-                    "-","-","-","-",
-                    "-","-","-","-",
-                    "-","-","-","-",
-                    "-","-","-","-",
+                    stats.reducePremisesCount(rows),"-","-","-",
+                    stats.filterConstructionForm(rows, "Indywidualne").length,"-","-","-",
+                    stats.filterConstructionForm(rows, "Spółdzielcze").length,"-","-","-",
+                    stats.filterConstructionForm(rows, "Sprzedaż").length + stats.filterConstructionForm(rows, "Wynajem").length,"-","-","-",
                     "","-","-","-",
-                    "-","-","-","-",
-                    "-","-","-","-",
-                    "-","-","-","-"
+                    stats.filterConstructionForm(rows, "Komunalne").length,"-","-","-",
+                    stats.filterConstructionForm(rows, "Społeczne czynszowe").length,"-","-","-",
+                    stats.filterConstructionForm(rows, "Zakładowe").length,"-","-","-"
                 ]
                 for (let ix = 0; ix < 4; ix++) {
                     for (let iy = 0; iy < 8; iy++) {
@@ -182,7 +187,7 @@ export default function PageStatsB06() {
                 setPDFObjectURL(objectURL);
                 setIsGenerating(false);
             });
-    }, [year, monthIndex, getMonthName]);
+    }, [year, monthIndex, getMonthName, stats]);
 
     const submittionTableHeaderStyles: React.CSSProperties = {
         width: "30%",

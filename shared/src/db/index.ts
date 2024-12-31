@@ -20,6 +20,7 @@ export const TABLE_NAMES = [
     ...Rows.EMPLOYEES_TABLE_NAMES,
     ...Rows.INFO_BOARDS_TABLE_NAMES,
     ...Rows.CONSTRUCTION_LAW_TABLE_NAMES,
+    ...Rows.CALENDAR_EVENTS_TABLE_NAMES,
 ] as const;
 export type TableName = (typeof TABLE_NAMES)[number];
 
@@ -65,6 +66,7 @@ export const ROW_METAS: Record<TableName, RowMeta> = {
     ...Rows.EMPLOYEES_ROW_METAS,
     ...Rows.INFO_BOARDS_ROW_METAS,
     ...Rows.CONSTRUCTION_LAW_ROW_METAS,
+    ...Rows.CALENDAR_EVENT_ROW_METAS,
 };
 
 export function getRowMeta(tableName: TableName) {

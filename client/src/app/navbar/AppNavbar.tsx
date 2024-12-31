@@ -12,11 +12,15 @@ import { REGISTER_TYPES } from "@shared/db/rows";
 import { useLocation } from "react-router-dom";
 import { getDateNow } from "@/utils/time";
 import { AppNavbarLinkEx } from "./AppNavbarLinkEx";
+import useAuthEmployee from "@/hooks/useAuthEmployee";
 
 const SUBROUTES = ["registers", "help", "stats", "construction"] as const;
 type SubrouteType = (typeof SUBROUTES)[number] | "none";
 
 export const AppNavbar: React.FC = () => {
+    const authEmployee = useAuthEmployee();
+    const isAdmin: boolean = Boolean(authEmployee.query.data?.employee?.admin);
+
     const location = useLocation();
     const subnavType: SubrouteType = useMemo(() => {
         for (const subroute of SUBROUTES) {
@@ -120,18 +124,21 @@ export const AppNavbar: React.FC = () => {
                                 route: "gunb3",
                                 display: "Generator GUNB-03",
                             },
-                            {
+                            isAdmin && {
                                 route: "employees",
                                 display: "Przydział",
                             },
-                        ].map((entry) => (
-                            <AppNavbarLinkEx
-                                key={entry.route}
-                                label={entry.display}
-                                tooltip={entry.tooltip}
-                                path={"/stats/" + entry.route}
-                            />
-                        ))}
+                        ].map(
+                            (entry) =>
+                                entry && (
+                                    <AppNavbarLinkEx
+                                        key={entry.route}
+                                        label={entry.display}
+                                        tooltip={entry.tooltip}
+                                        path={"/stats/" + entry.route}
+                                    />
+                                )
+                        )}
                     {subnavType === "construction" &&
                         [
                             {

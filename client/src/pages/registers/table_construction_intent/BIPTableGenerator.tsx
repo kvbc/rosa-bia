@@ -95,6 +95,11 @@ export const BIPTableGenerator: React.FC<{ row: ClientRegister }> = ({
         row.app_investor_id,
         constructionLawIntentsDBTable.rows,
         row.object_construction_law_intent_id,
+        communesDBTable.rows,
+        constructionLawCategoriesDBTable.rows,
+        placesDBTable.rows,
+        row.object_street_id,
+        streetsDBTable.rows,
     ]);
 
     return (

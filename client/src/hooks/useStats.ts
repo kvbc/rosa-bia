@@ -1,6 +1,7 @@
 import useDBTable from "@/hooks/useDBTable";
 import { ClientRegister } from "../pages/registers/PageRegisters";
 import * as DB from "@shared/db";
+import { RegisterConstructionFormType } from "@shared/db/rows";
 
 export const useStats = () => {
     const communesDBTable = useDBTable<DB.Rows.Commune>("communes");
@@ -26,7 +27,7 @@ export const useStats = () => {
     };
 
     const getRows = (
-        pkobs: number | number[],
+        pkobs: number | number[] | null,
         year: number,
         fromMonthIndex: number,
         toMonthIndex: number,
@@ -70,24 +71,34 @@ export const useStats = () => {
                                     )?.place_id
                             )?.commune_id
                     )?.name === communeName) &&
-                isPKOBEqual(
-                    constructionClassesDBTable.rows.find(
-                        (ccRow) =>
-                            ccRow.id ===
-                            constructionSpecsDBTable.rows.find(
-                                (csRow) =>
-                                    csRow.id ===
-                                    rRow.object_construction_spec_id
-                            )?.class_id
-                    )?.pkob ?? 0,
-                    pkobs
-                ) !== flipPKOBs
+                (pkobs === null ||
+                    isPKOBEqual(
+                        constructionClassesDBTable.rows.find(
+                            (ccRow) =>
+                                ccRow.id ===
+                                constructionSpecsDBTable.rows.find(
+                                    (csRow) =>
+                                        csRow.id ===
+                                        rRow.object_construction_spec_id
+                                )?.class_id
+                        )?.pkob ?? 0,
+                        pkobs
+                    ) !== flipPKOBs)
         );
     };
 
     const filterIndividual = (arr: ClientRegister[]) =>
         arr.filter(
             (rRow) => rRow.object_construction_form_type === "Indywidualne"
+        );
+
+    const filterConstructionForm = (
+        arr: ClientRegister[],
+        constructionFormType: RegisterConstructionFormType
+    ) =>
+        arr.filter(
+            (rRow) =>
+                rRow.object_construction_form_type === constructionFormType
         );
 
     const filterMPZP = (arr: ClientRegister[]) =>
@@ -99,7 +110,7 @@ export const useStats = () => {
     const reducePremisesCount = (arr: ClientRegister[]) =>
         arr.reduce((total, rRow) => total + rRow.object_demo_premises_count, 0);
 
-    const reduceUsableArea = (arr: ClientRegister[], _pkob: number) =>
+    const reduceUsableArea = (arr: ClientRegister[], _pkob?: number) =>
         arr.reduce((total, rRow) => {
             //
             // "W przypadku domków wypoczynkowych, domów letnich i rezydencji wiejskich, zaklasyfikowanych według PKOB jako budynki jednorodzinne, w których nie ma lokali (mieszkań) przeznaczonych na stały pobyt ludzi, należy
@@ -130,6 +141,7 @@ export const useStats = () => {
         getRows,
         filterIndividual,
         filterMPZP,
+        filterConstructionForm,
         reduceBuildingCount,
         reducePremisesCount,
         reduceUsableArea,

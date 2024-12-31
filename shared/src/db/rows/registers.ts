@@ -26,11 +26,17 @@ export const registerPlotShape = z.strictObject({
     plot: z.string(),
     type: z.enum(REGISTER_PLOT_TYPES),
     register_id: z.number(),
+    commune_id: z.number(),
+    place_id: z.number(),
+    street_id: z.number(),
 });
 export type RegisterPlot = z.infer<typeof registerPlotShape>;
 export const REGISTER_PLOT_KEY_TABLE_RELATIONS: DB.RowKeyTableRelations<RegisterPlot> =
     {
         register_id: "registers",
+        commune_id: "communes",
+        place_id: "places",
+        street_id: "streets",
     } as const;
 
 /*

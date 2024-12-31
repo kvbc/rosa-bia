@@ -89,14 +89,6 @@ export const AppPageRoutes: React.FC = () => {
                 }
             />
             <Route
-                path="/stats/employees"
-                element={
-                    <AppPage>
-                        <PageStatsEmployees />
-                    </AppPage>
-                }
-            />
-            <Route
                 path="/help/contact"
                 element={
                     <AppPage dontRequireLogin>
@@ -211,6 +203,14 @@ export const AppPageRoutes: React.FC = () => {
                 element={
                     <AppPage isAdminOnly>
                         <PageEventLog />
+                    </AppPage>
+                }
+            />
+            <Route
+                path="/stats/employees"
+                element={
+                    <AppPage isAdminOnly>
+                        <PageStatsEmployees />
                     </AppPage>
                 }
             />

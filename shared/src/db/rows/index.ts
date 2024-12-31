@@ -5,3 +5,4 @@ export * from "./infoBoard";
 export * from "./investor";
 export * from "./pkob";
 export * from "./registers";
+export * from "./calendarEvent";
