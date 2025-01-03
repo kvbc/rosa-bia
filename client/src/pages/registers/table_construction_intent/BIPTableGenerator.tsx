@@ -104,7 +104,7 @@ export const BIPTableGenerator: React.FC<{ row: ClientRegister }> = ({
 
     return (
         <object
-            data={pdfDataURL}
+            data={pdfDataURL + "#zoom=100"}
             type="application/pdf"
             width="100%"
             height="100%"

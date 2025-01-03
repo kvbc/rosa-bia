@@ -254,7 +254,7 @@ export default function PageStatsGUNB3() {
             <Box width="3/4" position="relative">
                 {pdfObjectURL ? (
                     <object
-                        data={pdfObjectURL}
+                        data={pdfObjectURL + "#zoom=100"}
                         type="application/pdf"
                         width="100%"
                         height="100%"

@@ -1,14 +1,26 @@
 services:
     client:
+        image: starostwo-app-client:latest
         build:
-            context: . # Ensure this is the root of your project
+            context: ./
             dockerfile: ./client/Dockerfile
         container_name: client
+        volumes:
+            - ./client:/client
+            - /client/node_modules
+            - ./shared:/shared # Mount shared folder
         ports:
-            - "3000:80"
+            - "80:80"
     server:
-        build: "./server"
+        image: starostwo-app-server:latest
+        build:
+            context: ./
+            dockerfile: ./server/Dockerfile
         container_name: server
+        volumes:
+            - ./server:/server
+            - /server/node_modules
+            - ./shared:/shared # Mount shared folder
         ports:
             - "3001:3001"
             - "3002:3002"

@@ -51,7 +51,7 @@ export function PageStatsEmployees() {
             <Heading>Przydział</Heading>
             <br />
             <object
-                data={pdfDataURL}
+                data={pdfDataURL + "#zoom=100"}
                 type="application/pdf"
                 width="100%"
                 height="100%"
