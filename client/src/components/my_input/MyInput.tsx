@@ -30,6 +30,7 @@ export default function MyInput({
             size="sm"
             fontSize="2xs"
             type={type === "number" ? "text" : type}
+            {...(type === "number" ? { inputMode: "numeric" } : {})}
             // padding="0.5 !important"
             margin="0 !important"
             paddingLeft={type === "date" ? "0 !important" : "0.5 !important"}

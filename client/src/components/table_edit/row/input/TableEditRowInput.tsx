@@ -112,7 +112,11 @@ export function TableEditRowInput<TRow extends TableEditRowType>(
     const setValue = useCallback(
         (newStringValue: string) => {
             const newValue =
-                type === "number" ? Number(newStringValue) : newStringValue;
+                type === "number"
+                    ? Number.isNaN(Number(newStringValue))
+                        ? 0
+                        : Number(newStringValue)
+                    : newStringValue;
             if (isValueRange) {
                 // range
                 setRow((row) => ({

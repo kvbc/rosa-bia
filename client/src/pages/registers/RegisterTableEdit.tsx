@@ -87,7 +87,7 @@ export default function RegisterTableEdit({
             // CLIENT_object_place_id: 0,
 
             admin_construction_journal_date: "",
-            admin_construction_journal_number: 0,
+            admin_construction_journal_number: "-",
             admin_construction_journal_tome: 0,
 
             other_case_title: "",
@@ -250,7 +250,7 @@ export default function RegisterTableEdit({
             { rowKey: "object_usage_change_to", type: "text", isFilterable: true }, // prettier-ignore
             { rowKey: "object_public_info", type: "checkbox", isFilterable: true }, // prettier-ignore
             { rowKey: "admin_construction_journal_date", type: "date", isFilterable: true }, // prettier-ignore
-            { rowKey: "admin_construction_journal_number", type: "number", isFilterable: true }, // prettier-ignore
+            { rowKey: "admin_construction_journal_number", type: "string", isFilterable: true }, // prettier-ignore
             { rowKey: "object_localization_date_from", type: "date", isFilterable: true }, // prettier-ignore
             { rowKey: "object_localization_date_to", type: "date", isFilterable: true }, // prettier-ignore
             { rowKey: "admin_construction_journal_tome", type: "number", isFilterable: true }, // prettier-ignore

@@ -295,7 +295,7 @@ export const registerShapeObject = z.strictObject({
     object_localization_date_to: z.string(),
     object_neighbouring_property_type: registerNeighbouringPropertyTypeShape,
 
-    admin_construction_journal_number: z.number(),
+    admin_construction_journal_number: z.string(),
     admin_construction_journal_date: z.string(),
     admin_construction_journal_tome: z.number(),
 

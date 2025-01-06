@@ -112,7 +112,7 @@ create table registers(
     object_localization_date_to date, -- data lokalizacji do
     object_neighbouring_property_type text, -- dane nieruchomości sąsiedniej
 
-    admin_construction_journal_number integer not null, -- numer dziennika budowy
+    admin_construction_journal_number text not null, -- numer dziennika budowy
     admin_construction_journal_date date not null, -- data dziennika budowy
     admin_construction_journal_tome integer not null, -- numer tomu dziennika budowy
 
